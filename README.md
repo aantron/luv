@@ -18,12 +18,15 @@ luv is a work in progress, currently a prototype. Only TCP is implemented, but i
 The only thing to do with luv right now is to run its test cases, and try the [examples][examples].
 
 ```
-git clone https://github.com/aantron/luv.git
+git clone --recursive-submodules https://github.com/aantron/luv.git
 cd luv
 opam install --unset-root alcotest ctypes jbuilder
+make libuv
 make test
 jbuilder exec example/http_get.exe
 ```
+
+This probably only works on Linux at the moment.
 
 <br/>
 
