@@ -41,5 +41,5 @@ This probably only works on Linux at the moment.
 
 [libuv]: http://libuv.org/
 [ctypes]: https://github.com/ocamllabs/ocaml-ctypes
-[vendor]: https://github.com/aantron/luv/tree/messy-development/src/vendor
-[examples]: https://github.com/aantron/luv/tree/messy-development/example
+[vendor]: https://github.com/aantron/luv/tree/master/src/vendor
+[examples]: https://github.com/aantron/luv/tree/master/example
