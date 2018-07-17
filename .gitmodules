@@ -1,0 +1,6 @@
+[submodule "src/vendor/libuv"]
+	path = src/vendor/libuv
+	url = https://github.com/libuv/libuv.git
+[submodule "src/vendor/gyp"]
+	path = src/vendor/gyp
+	url = https://chromium.googlesource.com/external/gyp.git

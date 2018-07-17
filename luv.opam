@@ -1,0 +1,7 @@
+# TODO alcotest as a dev dependency
+# ctypes and ctypes.foreign.
+# requires 4.03 or Result. Requires Result.
+# require latest ctypes with https://github.com/ocamllabs/ocaml-ctypes/pull/568
+# conf-python?
+# base-unix
+# requires 4.02.2 because of type nonrec.

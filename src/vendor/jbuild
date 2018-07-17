@@ -1,0 +1,16 @@
+; TODO Consider triggering the libuv build from within jbuilder?
+; TODO How to copy the entire include directory?
+(copy_files libuv/out/Release/libuv.a)
+(copy_files libuv/include/*.h)
+
+(rule
+ ((targets (libuv_files))
+  (action (write-file ${@} ""))
+  (deps
+   (libuv.a
+    uv.h
+    uv-errno.h
+    uv-version.h
+    uv-unix.h
+    uv-threadpool.h
+    uv-linux.h))))
