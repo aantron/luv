@@ -38,6 +38,7 @@ This probably only works on Linux at the moment.
 - [ ] Pipes, TTYs, UDP.
 - [ ] FS events, FS polling.
 - [ ] The rest (thread pool, DNS, `dlopen`).
+- [ ] Look into using luv for native Node.js modules.
 
 [libuv]: http://libuv.org/
 [ctypes]: https://github.com/ocamllabs/ocaml-ctypes
