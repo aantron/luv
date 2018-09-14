@@ -1,5 +1,3 @@
-open Imports
-
 type poll
 type t = poll Handle.t
 
@@ -10,7 +8,7 @@ type event = [
   | `Prioritized
 ]
 
-val init : ?loop:Loop.t ptr -> fd:int -> unit -> (t, Error.Code.t) result
+val init : ?loop:Loop.t -> fd:int -> unit -> (t, Error.Code.t) Result.result
 val start :
   callback:(t -> Error.Code.t -> event list -> unit) ->
   t ->

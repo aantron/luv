@@ -1,5 +1,0 @@
-(jbuild_version 1)
-
-(executables
- ((names (delay echo_server http_get))
-  (libraries (luv))))

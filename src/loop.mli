@@ -3,17 +3,10 @@
 (* TODO Example on how to allocate a loop. *)
 (* TODO Sort and clean up. *)
 (* TODO Async exception handling. Test it as well. *)
-(* TODO Hide the Ctypes-ness of this module. *)
 
-open Imports
+type t = Luv_FFI.C.Types.Loop.t Ctypes.ptr
 
-type t = Luv_FFI.C.Types.Loop.t
-
-(* TODO Combine allocate-init. *)
-val t : t Ctypes.typ
-val allocate : unit -> t ptr
-
-val init : t ptr -> Error.Code.t
+val init : unit -> (t, Error.Code.t) Result.result
 
 module Option :
 sig
@@ -22,10 +15,10 @@ sig
   val sigprof : int
 end
 
-val configure : t ptr -> 'value Option.t -> 'value -> Error.Code.t
+val configure : t -> 'value Option.t -> 'value -> Error.Code.t
 
-val close : t ptr -> Error.Code.t
-val default : unit -> t ptr
+val close : t -> Error.Code.t
+val default : unit -> t
 
 module Run_mode :
 sig
@@ -36,22 +29,23 @@ sig
 end
 
 (* TODO Make both arguments optional? *)
-val run : t ptr -> Run_mode.t -> bool
-val alive : t ptr -> bool
-val stop : t ptr -> unit
+val run : t -> Run_mode.t -> bool
+val alive : t -> bool
+val stop : t -> unit
 val size : unit -> Unsigned.size_t
-val backend_fd : t ptr -> int
-val backend_timeout : t ptr -> int
-val now : t ptr -> Unsigned.UInt64.t
-val update_time : t ptr -> unit
+val backend_fd : t -> int
+val backend_timeout : t -> int
+val now : t -> Unsigned.UInt64.t
+val update_time : t -> unit
 
 (* TODO Note that walk is implemented in Luv.Handle.walk. *)
 
-val fork : t ptr -> Error.Code.t
+val fork : t -> Error.Code.t
 
-val get_data : t ptr -> unit ptr
-val set_data : t ptr -> unit ptr -> unit
+(* TODO Hide these? *)
+val get_data : t -> unit Ctypes.ptr
+val set_data : t -> unit Ctypes.ptr -> unit
 
 (* TODO Internal *)
 
-val or_default : t ptr option -> t ptr
+val or_default : t option -> t

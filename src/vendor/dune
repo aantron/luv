@@ -4,13 +4,13 @@
 (copy_files libuv/include/*.h)
 
 (rule
- ((targets (libuv_files))
-  (action (write-file ${@} ""))
-  (deps
-   (libuv.a
-    uv.h
-    uv-errno.h
-    uv-version.h
-    uv-unix.h
-    uv-threadpool.h
-    uv-linux.h))))
+ (targets libuv_files)
+ (action (write-file %{targets} ""))
+ (deps
+  libuv.a
+  uv.h
+  uv-errno.h
+  uv-version.h
+  uv-unix.h
+  uv-threadpool.h
+  uv-linux.h))

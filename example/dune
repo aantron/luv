@@ -1,0 +1,3 @@
+(executables
+ (names delay echo_server http_get)
+ (libraries luv))

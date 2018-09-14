@@ -1,10 +1,10 @@
 open Test_helpers
 
 let with_loop f =
-  let loop = Luv.Loop.allocate () in
-
-  Luv.Loop.init loop
-  |> check_success "init";
+  let loop =
+    Luv.Loop.init ()
+    |> check_success_result "init"
+  in
 
   f loop;
 
@@ -14,18 +14,19 @@ let with_loop f =
 let tests = [
   "loop", [
     "data", `Quick, begin fun () ->
-      let data = 42 in
-      let loop = Luv.Loop.allocate () in
+      with_loop begin fun loop ->
+        let data = 42 in
 
-      data
-      |> Nativeint.of_int
-      |> Ctypes.ptr_of_raw_address
-      |> Luv.Loop.set_data loop;
+        data
+        |> Nativeint.of_int
+        |> Ctypes.ptr_of_raw_address
+        |> Luv.Loop.set_data loop;
 
-      Luv.Loop.get_data loop
-      |> Ctypes.raw_address_of_ptr
-      |> Nativeint.to_int
-      |> Alcotest.(check int) "value" data
+        Luv.Loop.get_data loop
+        |> Ctypes.raw_address_of_ptr
+        |> Nativeint.to_int
+        |> Alcotest.(check int) "value" data
+      end
     end;
 
     "init, close", `Quick, begin fun () ->
@@ -91,12 +92,6 @@ let tests = [
     "stop", `Quick, begin fun () ->
       with_loop (fun loop ->
         Luv.Loop.stop loop)
-    end;
-
-    "size", `Quick, begin fun () ->
-      Luv.Loop.size ()
-      |> Unsigned.Size_t.to_int
-      |> Alcotest.(check int) "size" (Ctypes.sizeof Luv.Loop.t)
     end;
 
     "backend_fd", `Quick, begin fun () ->

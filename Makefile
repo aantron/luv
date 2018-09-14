@@ -1,14 +1,14 @@
 .PHONY : build
 build :
-	jbuilder build --dev
+	dune build
 
 .PHONY : test
 test : build
-	jbuilder runtest --dev -j 1 --no-buffer
+	dune runtest -j 1 --no-buffer
 
 .PHONY : clean
 clean :
-	jbuilder clean
+	dune clean
 
 # For debugging the libuv build, add V=1, i.e. V=1 BUILDTYPE=Release make ...
 .PHONY : libuv

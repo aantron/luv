@@ -1,9 +1,7 @@
-open Imports
-
 type timer
 type t = timer Handle.t
 
-val init : ?loop:Loop.t ptr -> unit -> (t, Error.Code.t) result
+val init : ?loop:Loop.t -> unit -> (t, Error.Code.t) Result.result
 
 val start :
   callback:(t -> unit) -> t -> timeout:int -> repeat:int -> Error.Code.t

@@ -20,10 +20,10 @@ The only thing to do with luv right now is to run its test cases, and try the [e
 ```
 git clone --recursive-submodules https://github.com/aantron/luv.git
 cd luv
-opam install --unset-root alcotest ctypes jbuilder
+opam install --unset-root alcotest ctypes dune
 make libuv
 make test
-jbuilder exec example/http_get.exe
+dune exec example/http_get.exe
 ```
 
 This probably only works on Linux at the moment.

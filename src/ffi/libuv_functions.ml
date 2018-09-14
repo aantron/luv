@@ -6,11 +6,6 @@
 
 module Make (F : Ctypes.FOREIGN) =
 struct
-  (* TODO Remove these aliases. *)
-  (* TODO Then remove ctypes.foreign dep. *)
-  let funptr = Foreign.funptr
-  (* let funptr_opt = Foreign.funptr_opt *)
-
   let error_code = Types.Error.t
 
   open Ctypes
@@ -68,9 +63,6 @@ struct
     let free = foreign "free" (ptr void @-> returning void)
   end
 
-  (* TODO It may still be possible to get rid of libffi dep somehow, since it
-     will be used only for converting ocaml callbacks, and not for dynamic
-     symbol lookup. *)
   module Handle =
   struct
     let t = Types.Handle.t

@@ -1,5 +1,3 @@
-(* open Imports *)
-
 (* TODO Hide? *)
 (* module Type :
 sig

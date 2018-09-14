@@ -1,5 +1,3 @@
-open Luv.Imports
-
 let pp_error_code formatter error_code =
   if error_code = Luv.Error.Code.success then
     Format.pp_print_string formatter "success (0)"
@@ -27,8 +25,8 @@ let check_error_code name expected error_code =
 
 let check_success_result name result =
   match result with
-  | Ok value -> value
-  | Error code -> fail_with_error_code name code
+  | Result.Ok value -> value
+  | Result.Error code -> fail_with_error_code name code
 
 let pointer_testable =
   let format formatter pointer =

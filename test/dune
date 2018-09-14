@@ -1,0 +1,7 @@
+(executable
+ (name tester)
+ (libraries alcotest luv))
+
+(alias
+ (name runtest)
+ (action (run %{exe:tester.exe})))

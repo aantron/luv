@@ -5,3 +5,4 @@
 # conf-python?
 # base-unix
 # requires 4.02.2 because of type nonrec.
+# dune >= 1.1.0

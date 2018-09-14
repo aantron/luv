@@ -1,17 +1,15 @@
-open Imports
-
 type 'type_ c_handle = 'type_ Luv_FFI.C.Types.Handle.t
 
 let coerce :
     type any_type_of_handle.
-    any_type_of_handle c_handle ptr ->
-      Luv_FFI.C.Types.Handle.base_handle c_handle ptr =
+    any_type_of_handle c_handle Ctypes.ptr ->
+      Luv_FFI.C.Types.Handle.base_handle c_handle Ctypes.ptr =
   Obj.magic
 
 (* TODO Document how the callback table works. Figure it out first? *)
 type 'type_ t = {
   mutable callback_table : ('type_ t -> unit) array;
-  c_handle : 'type_ c_handle ptr;
+  c_handle : 'type_ c_handle Ctypes.ptr;
 }
 
 (* TODO Multiple callbacks need to be stored in each handle somewhere. Also,

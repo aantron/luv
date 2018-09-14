@@ -16,10 +16,8 @@
 module Code = Luv_FFI.C.Types.Error
 include Luv_FFI.C.Functions.Error
 
-open Imports
-
 let to_result success_value error_code =
   if error_code = Code.success then
-    Ok success_value
+    Result.Ok success_value
   else
-    Error error_code
+    Result.Error error_code

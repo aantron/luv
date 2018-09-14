@@ -95,8 +95,7 @@ val get_write_queue_size : 'type_ t -> int
 (* TODO Internal *)
 
 val init_tcp :
-  ?loop:(Loop.t Ctypes.ptr) -> unit ->
-    (Luv_FFI.C.Types.TCP.tcp t, Error.Code.t) result
+  ?loop:Loop.t -> unit -> (Luv_FFI.C.Types.TCP.tcp t, Error.Code.t) result
 
 module Sockaddr :
 sig

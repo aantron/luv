@@ -1,13 +1,22 @@
-include Luv_FFI.C.Types.Loop
+(* TODO *)
+(* include Luv_FFI.C.Types.Loop *)
+
 include Luv_FFI.C.Functions.Loop
 
-let allocate () =
-  Ctypes.addr (Ctypes.make t)
+type t = Luv_FFI.C.Types.Loop.t Ctypes.ptr
+
+let init () =
+  let loop = Ctypes.addr (Ctypes.make Luv_FFI.C.Types.Loop.t) in
+  let result = Luv_FFI.C.Functions.Loop.init loop in
+  Error.to_result loop result
 
 let configure loop option value =
-  configure loop option (Obj.magic value)
+  Luv_FFI.C.Functions.Loop.configure loop option (Obj.magic value)
 
 let or_default maybe_loop =
   match maybe_loop with
   | Some loop -> loop
-  | None -> default ()
+  | None -> Luv_FFI.C.Functions.Loop.default ()
+
+module Run_mode = Luv_FFI.C.Types.Loop.Run_mode
+module Option = Luv_FFI.C.Types.Loop.Option

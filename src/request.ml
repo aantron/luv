@@ -1,5 +1,3 @@
-(* open Imports *)
-
 (* include Luv_FFI.C.Types.Request *)
 (* include Luv_FFI.C.Functions.Request *)
 

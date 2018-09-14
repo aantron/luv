@@ -1,5 +1,3 @@
-open Imports
-
 type tcp = Luv_FFI.C.Types.TCP.tcp
 type t = tcp Stream.t
 
@@ -41,13 +39,13 @@ let getsockname tcp =
       c_sockaddr_length
   in
   if result <> Error.Code.success then
-    Error result
+    Result.Error result
   else
     let ocaml_sockaddr =
       Luv_FFI.C.Functions.Sockaddr.c_to_ocaml
         (Ctypes.addr c_sockaddr) (Ctypes.(!@) c_sockaddr_length) (-1)
     in
-    Ok ocaml_sockaddr
+    Result.Ok ocaml_sockaddr
 
 let getpeername tcp =
   let c_sockaddr = Ctypes.make Luv_FFI.C.Types.Sockaddr.t in
@@ -60,13 +58,13 @@ let getpeername tcp =
       c_sockaddr_length
   in
   if result <> Error.Code.success then
-    Error result
+    Result.Error result
   else
     let ocaml_sockaddr =
       Luv_FFI.C.Functions.Sockaddr.c_to_ocaml
         (Ctypes.addr c_sockaddr) (Ctypes.(!@) c_sockaddr_length) (-1)
     in
-    Ok ocaml_sockaddr
+    Result.Ok ocaml_sockaddr
 
 (* TODO Lifetime of the address? Document that we think it doesn't need to be
    retained. *)

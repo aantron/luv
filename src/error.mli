@@ -90,6 +90,4 @@ val translate_sys_error : int -> Code.t
 
 (* TODO Internal *)
 
-open Imports
-
-val to_result : 'a -> Code.t -> ('a, Code.t) result
+val to_result : 'a -> Code.t -> ('a, Code.t) Result.result
