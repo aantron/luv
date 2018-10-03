@@ -1,8 +1,9 @@
-(* TODO Note that everything is in one file to cut down on Jbuilder boilerplate,
-   as it would grow proportionally in the number of files the bindings are
-   spread over. https://github.com/ocaml/dune/issues/135. *)
-(* TODO Check bool results are correct. *)
-(* TODO Make beautiful. *)
+(* Everything is in one file to cut down on Dune boilerplate, as it would grow
+   proportionally in the number of files the bindings are spread over.
+   https://github.com/ocaml/dune/issues/135. *)
+(* TODO Consider renaming Luv_ffi prefix to Luv_c for clarity. *)
+
+module Types = Luv_ffi_types
 
 module Make (F : Ctypes.FOREIGN) =
 struct
@@ -247,7 +248,6 @@ struct
 
   (* TODO Processes *)
 
-  (* TODO Streams *)
   module Stream =
   struct
     module Connect_request =
@@ -291,10 +291,10 @@ struct
       foreign "luv_address_of_connection_trampoline"
         (void @-> returning connection_trampoline)
 
-    (* TODO ssize_t *)
     let read_trampoline =
       static_funptr
-        Ctypes.(ptr t @-> size_t @-> ptr Types.Buf.t @-> returning void)
+        Ctypes.(ptr t @-> PosixTypes.ssize_t @-> ptr Types.Buf.t @->
+          returning void)
     let get_read_trampoline =
       foreign "luv_address_of_read_trampoline"
         (void @-> returning read_trampoline)
@@ -345,7 +345,7 @@ struct
   (* TODO Ctypes: release runtime lock on a per-function basis? *)
   module Sockaddr =
   struct
-    let t = Types.Sockaddr.t
+    let t = Types.Sockaddr.union
     let unix_sockaddr : Unix.sockaddr typ = ocaml_any_value
 
     let ocaml_to_c =
@@ -372,19 +372,229 @@ struct
         (ptr t @-> bool @-> returning error_code)
     let bind =
       foreign "uv_tcp_bind"
-        (ptr t @-> ptr Types.Sockaddr.gen @-> int @-> returning error_code)
+        (ptr t @-> ptr Types.Sockaddr.t @-> int @-> returning error_code)
     let getsockname =
       foreign "uv_tcp_getsockname"
-        (ptr t @-> ptr Types.Sockaddr.gen @-> ptr int @-> returning error_code)
+        (ptr t @-> ptr Types.Sockaddr.t @-> ptr int @-> returning error_code)
     let getpeername =
       foreign "uv_tcp_getpeername"
-        (ptr t @-> ptr Types.Sockaddr.gen @-> ptr int @-> returning error_code)
+        (ptr t @-> ptr Types.Sockaddr.t @-> ptr int @-> returning error_code)
     let connect =
       foreign "uv_tcp_connect"
         (ptr Types.Stream.Connect_request.t @->
          ptr t @->
-         ptr Types.Sockaddr.gen @->
+         ptr Types.Sockaddr.t @->
          Stream.Connect_request.trampoline @->
           returning error_code)
+  end
+
+  module File =
+  struct
+    (* TODO Int should be uv_file *)
+    let file = int
+    let request = Types.File.Request.t
+    (* TODO Proper types here. *)
+    let uid = int
+    let gid = int
+
+    let trampoline = static_funptr Ctypes.(ptr request @-> returning void)
+    let get_trampoline =
+      foreign "luv_address_of_fs_trampoline" (void @-> returning trampoline)
+
+    let get_null_callback =
+      foreign "luv_null_fs_callback_pointer" (void @-> returning trampoline)
+
+    let req_cleanup =
+      foreign "uv_fs_req_cleanup" (ptr request @-> returning void)
+    let close =
+      foreign "uv_fs_close"
+        (ptr Loop.t @-> ptr request @-> file @-> trampoline @->
+            returning error_code)
+    let open_ =
+      foreign "uv_fs_open"
+        (ptr Loop.t @->
+         ptr request @->
+         string @->
+         int @->
+         int @->
+         trampoline @->
+          returning error_code)
+    let read =
+      foreign "uv_fs_read"
+        (ptr Loop.t @->
+         ptr request @->
+         file @->
+         ptr Types.Buf.t @->
+         uint @->
+         int64_t @->
+         trampoline @->
+          returning error_code)
+    let write =
+      foreign "uv_fs_write"
+        (ptr Loop.t @->
+         ptr request @->
+         file @->
+         ptr Types.Buf.t @->
+         uint @->
+         int64_t @->
+         trampoline @->
+           returning error_code)
+    let unlink =
+      foreign "uv_fs_unlink"
+        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+    let mkdir =
+      foreign "uv_fs_mkdir"
+        (ptr Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
+          returning error_code)
+    let mkdtemp =
+      foreign "uv_fs_mkdtemp"
+        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+    let rmdir =
+      foreign "uv_fs_rmdir"
+        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+    let scandir =
+      foreign "uv_fs_scandir"
+        (ptr Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
+          returning error_code)
+    let scandir_next =
+      foreign "uv_fs_scandir_next"
+        (ptr request @-> ptr Types.File.Dirent.t @-> returning error_code)
+    let stat =
+      foreign "uv_fs_stat"
+        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+    let lstat =
+      foreign "uv_fs_lstat"
+        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+    let fstat =
+      foreign "uv_fs_fstat"
+        (ptr Loop.t @-> ptr request @-> file @-> trampoline @->
+          returning error_code)
+    let rename =
+      foreign "uv_fs_rename"
+        (ptr Loop.t @-> ptr request @-> string @-> string @-> trampoline @->
+          returning error_code)
+    let fsync =
+      foreign "uv_fs_fsync"
+        (ptr Loop.t @-> ptr request @-> file @-> trampoline @->
+          returning error_code)
+    let fdatasync =
+      foreign "uv_fs_fdatasync"
+        (ptr Loop.t @-> ptr request @-> file @-> trampoline @->
+          returning error_code)
+    let ftruncate =
+      foreign "uv_fs_ftruncate"
+        (ptr Loop.t @-> ptr request @-> file @-> int64_t @-> trampoline @->
+          returning error_code)
+    let copyfile =
+      foreign "uv_fs_copyfile"
+        (ptr Loop.t @->
+         ptr request @->
+         string @->
+         string @->
+         int @->
+         trampoline @->
+          returning error_code)
+    let sendfile =
+      foreign "uv_fs_sendfile"
+        (ptr Loop.t @->
+         ptr request @->
+         file @->
+         file @->
+         int64_t @->
+         size_t @->
+         trampoline @->
+          returning error_code)
+    let access =
+      foreign "uv_fs_access"
+        (ptr Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
+          returning error_code)
+    let chmod =
+      foreign "uv_fs_chmod"
+        (ptr Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
+          returning error_code)
+    let fchmod =
+      foreign "uv_fs_fchmod"
+        (ptr Loop.t @-> ptr request @-> file @-> int @-> trampoline @->
+          returning error_code)
+    let utime =
+      foreign "uv_fs_utime"
+        (ptr Loop.t @->
+         ptr request @->
+         string @->
+         float @->
+         float @->
+         trampoline @->
+          returning error_code)
+    let futime =
+      foreign "uv_fs_futime"
+        (ptr Loop.t @->
+         ptr request @->
+         file @->
+         float @->
+         float @->
+         trampoline @->
+          returning error_code)
+    let link =
+      foreign "uv_fs_link"
+        (ptr Loop.t @-> ptr request @-> string @-> string @-> trampoline @->
+          returning error_code)
+    let symlink =
+      foreign "uv_fs_symlink"
+        (ptr Loop.t @->
+         ptr request @->
+         string @->
+         string @->
+         int @->
+         trampoline @->
+          returning error_code)
+    let readlink =
+      foreign "uv_fs_readlink"
+        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+    let realpath =
+      foreign "uv_fs_realpath"
+        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+    let chown =
+      foreign "uv_fs_chown"
+        (ptr Loop.t @->
+         ptr request @->
+         string @->
+         uid @->
+         gid @->
+         trampoline @->
+          returning error_code)
+    let fchown =
+      foreign "uv_fs_fchown"
+        (ptr Loop.t @->
+         ptr request @->
+         file @->
+         uid @->
+         gid @->
+         trampoline @->
+          returning error_code)
+    (* let lchown =
+      foreign "uv_fs_lchown"
+        (ptr Loop.t @->
+         ptr request @->
+         string @->
+         uid @->
+         gid @->
+         trampoline @->
+          returning error_code) *)
+    let get_result =
+      foreign "uv_fs_get_result" (ptr request @-> returning PosixTypes.ssize_t)
+    let get_ptr =
+      foreign "uv_fs_get_ptr" (ptr request @-> returning string)
+    let get_path =
+      foreign "uv_fs_get_path" (ptr request @-> returning string)
+    let get_statbuf =
+      foreign "uv_fs_get_statbuf"
+        (ptr request @-> returning (ptr Types.File.Stat.t))
   end
 end

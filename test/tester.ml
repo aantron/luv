@@ -1,17 +1,16 @@
-(* TODO Ctypes and memory management? *)
-(* TODO Threading tests, probably with sync FS requests. *)
-
 let () =
   Alcotest.run "luv" (List.flatten [
-    Error.tests;
+    (* TODO Restore all the tests. *)
+    (* Error.tests;
     Version.tests;
-    Loop.tests;
+    Loop.tests; *)
     (* Handle.tests; *)
     (* Request.tests; *)
-    Timer.tests;
+    (* Timer.tests;
     Loop_watcher.tests;
     Async.tests;
     Poll.tests;
     Signal.tests;
-    TCP.tests;
+    TCP.tests; *)
+    File.tests;
   ])

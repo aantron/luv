@@ -1,8 +1,5 @@
-type prepare
-type t = prepare Handle.t
+type t = [ `Prepare ] Handle.t
 
-val init : ?loop:Loop.t -> unit -> (t, Error.Code.t) Result.result
-val start : callback:(t -> unit) -> t -> Error.Code.t
-val stop : t -> Error.Code.t
-
-(* TODO Note about Luv.Handle.close. *)
+val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result
+val start : callback:(t -> unit) -> t -> Error.t
+val stop : t -> Error.t

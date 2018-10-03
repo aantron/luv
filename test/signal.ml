@@ -14,7 +14,7 @@ let with_signal f =
 let send_sigusr1 () =
   Unix.kill (Unix.getpid ()) Sys.sigusr1
 
-let sigusr1 = Luv_FFI.C.Types.Signal.sigusr1_for_testing
+let sigusr1 = Luv.C.Types.Signal.sigusr1_for_testing
 
 (* TODO Document that the signal numbers are not the ones in module Sys. *)
 let tests = [

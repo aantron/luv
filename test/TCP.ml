@@ -67,7 +67,7 @@ let tests = [
         Luv.TCP.connect ~request tcp address ~callback:(fun request' result ->
           if not (request' == request) then
             Alcotest.fail "same request";
-          check_error_code "result" Luv.Error.Code.econnrefused result;
+          check_error_code "result" Luv.Error.econnrefused result;
           finished := true)
         |> check_success "connect";
 
@@ -112,7 +112,7 @@ let tests = [
       with_tcp begin fun tcp ->
         let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
         Luv.TCP.connect tcp address ~callback:(fun _ result ->
-          check_error_code "result" Luv.Error.Code.ecanceled result)
+          check_error_code "result" Luv.Error.ecanceled result)
         |> check_success "connect"
       end
     end;
@@ -122,7 +122,7 @@ let tests = [
       with_tcp begin fun tcp ->
         let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
         Luv.TCP.connect tcp address ~callback:(fun request _ ->
-          let handle : Luv.Stream.base_stream Luv.Stream.t =
+          let handle : [ `Base ] Luv.Stream.t =
             Luv.Stream.Connect_request.get_handle request in
           let handle : Luv.TCP.t = Obj.magic handle in
           if not (handle == tcp) then
@@ -131,7 +131,7 @@ let tests = [
       end
     end;
 
-    "connect, request reuse", `Quick, begin fun () ->
+    (* "connect, request reuse", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
         let request = Luv.Stream.Connect_request.make () in
@@ -147,7 +147,7 @@ let tests = [
             Luv.TCP.connect ~request tcp address ~callback:(fun _ _ -> ())
             |> ignore)
       end
-    end;
+    end; *)
 
     "listen, accept", `Quick, begin fun () ->
       let connected = ref false in

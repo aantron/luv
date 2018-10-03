@@ -32,13 +32,13 @@ This probably only works on Linux at the moment.
 
 ## Roadmap
 
-- [ ] Vendor correctly on macOS, Windows.
-- [ ] File I/O.
+- [x] File I/O.
 - [ ] Process API.
 - [ ] Pipes, TTYs, UDP.
 - [ ] FS events, FS polling.
 - [ ] The rest (thread pool, DNS, `dlopen`).
 - [ ] Look into using luv for native Node.js modules.
+- [ ] Vendor correctly on macOS, Windows.
 
 [libuv]: http://libuv.org/
 [ctypes]: https://github.com/ocamllabs/ocaml-ctypes

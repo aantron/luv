@@ -7,7 +7,7 @@ let tests = [
         "description" message (Luv.Error.strerror constant))
   in
 
-  Luv.Error.Code.[
+  Luv.Error.[
     t "SUCCESS" "Unknown system error 0" success;
     t "E2BIG" "argument list too long" e2big;
     t "EACCES" "permission denied" eacces;
@@ -94,7 +94,7 @@ let tests = [
         "error constant name" name (Luv.Error.err_name constant))
   in
 
-  Luv.Error.Code.[
+  Luv.Error.[
     t "Unknown system error 0" success;
     t "E2BIG" e2big;
     t "EACCES" eacces;
@@ -174,15 +174,14 @@ let tests = [
 
   "error", [
     "int", `Quick, begin fun () ->
-      (Luv.Error.Code.eagain :> int) |> ignore
+      (Luv.Error.eagain :> int) |> ignore
     end;
 
     (* We can't easily get the numeric value of a system error code, so
        round-trip a libuv error code. *)
     "translate_sys_error", `Quick, begin fun () ->
-      let open Luv.Error.Code in
-      Luv.Error.translate_sys_error (eagain :> int)
-      |> Test_helpers.check_error_code "round trip" eagain
+      Luv.Error.translate_sys_error (Luv.Error.eagain :> int)
+      |> Test_helpers.check_error_code "round trip" Luv.Error.eagain
     end;
   ];
 

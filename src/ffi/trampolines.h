@@ -21,6 +21,8 @@ uv_write_cb luv_address_of_write_trampoline();
 uv_connect_cb luv_address_of_connect_trampoline();
 uv_alloc_cb luv_address_of_alloc_trampoline();
 uv_shutdown_cb luv_address_of_shutdown_trampoline();
+uv_fs_cb luv_address_of_fs_trampoline();
+uv_fs_cb luv_null_fs_callback_pointer();
 
 uv_buf_t* bigstrings_to_iovecs(value bigstrings, int count);
 

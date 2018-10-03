@@ -1,5 +1,4 @@
-type poll = Luv_FFI.C.Types.Poll.poll
-type t = poll Handle.t
+type t = [ `Poll ] Handle.t
 
 type event = [
   | `Readable
@@ -15,7 +14,7 @@ let all_events = [
   `Prioritized;
 ]
 
-let event_to_bit = Luv_FFI.C.Types.Poll.Event.(function
+let event_to_bit = C.Types.Poll.Event.(function
   | `Readable -> readable
   | `Writable -> writable
   | `Disconnect -> disconnect
@@ -28,20 +27,20 @@ let event_bit_mask_to_list mask =
   List.filter (fun event -> mask land (event_to_bit event) <> 0) all_events
 
 let init ?loop ~fd () =
-  let poll = Handle.allocate Luv_FFI.C.Types.Poll.t in
-  Luv_FFI.C.Functions.Poll.init (Loop.or_default loop) (Handle.c poll) fd
+  let poll = Handle.allocate C.Types.Poll.t in
+  C.Functions.Poll.init (Loop.or_default loop) (Handle.c poll) fd
   |> Error.to_result poll
 
 let trampoline =
-  Luv_FFI.C.Functions.Poll.get_trampoline ()
+  C.Functions.Poll.get_trampoline ()
 
 let start ~callback poll events =
   let callback poll status event_mask =
     callback poll status (event_bit_mask_to_list event_mask)
   in
   Handle.set_callback poll callback;
-  Luv_FFI.C.Functions.Poll.start
+  C.Functions.Poll.start
     (Handle.c poll) (event_list_to_bit_mask events) trampoline
 
 let stop poll =
-  Luv_FFI.C.Functions.Poll.stop (Handle.c poll)
+  C.Functions.Poll.stop (Handle.c poll)

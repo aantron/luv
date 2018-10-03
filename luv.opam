@@ -1,8 +1,30 @@
-# TODO alcotest as a dev dependency
-# ctypes and ctypes.foreign.
-# requires 4.03 or Result. Requires Result.
-# require latest ctypes with https://github.com/ocamllabs/ocaml-ctypes/pull/568
-# conf-python?
-# base-unix
-# requires 4.02.2 because of type nonrec.
-# dune >= 1.1.0
+opam-version: "2.0"
+
+version: "dev"
+license: "MIT"
+homepage: "https://github.com/aantron/luv"
+bug-reports: "https://github.com/aantron/luv/issues"
+authors: "Anton Bachin <antonbachin@yahoo.com>"
+maintainer: "Anton Bachin <antonbachin@yahoo.com>"
+dev-repo: "git+https://github.com/aantron/luv.git"
+
+depends: [
+  "base-unix"
+  "ctypes"
+  "dune" {build & >= "1.0.0"}
+  # type nonrec was introduced in OCaml 4.02.2.
+  "ocaml" {>= "4.02.2"}
+  "result"
+
+  "alcotest" {dev}
+]
+# TODO Do we depend on conf-python for building libuv?
+
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+# TODO Either have Dune do the libuv build, or trigger it using a separate
+# command. Using Dune to do it is probably better for Duniverse and/or
+# portability in general.
+
+synopsis: "Binding to libuv"

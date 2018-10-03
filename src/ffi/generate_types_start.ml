@@ -5,4 +5,4 @@ let () =
   print_endline "#include \"trampolines.h\"";
 
   Cstubs_structs.write_c
-    Format.std_formatter (module Libuv_types.Make)
+    Format.std_formatter (module Luv_ffi_type_descriptions.Make)

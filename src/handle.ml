@@ -1,15 +1,14 @@
-type 'type_ c_handle = 'type_ Luv_FFI.C.Types.Handle.t
+type 'kind c_handle = 'kind C.Types.Handle.t
 
 let coerce :
     type any_type_of_handle.
-    any_type_of_handle c_handle Ctypes.ptr ->
-      Luv_FFI.C.Types.Handle.base_handle c_handle Ctypes.ptr =
+    any_type_of_handle c_handle Ctypes.ptr -> [ `Base ] c_handle Ctypes.ptr =
   Obj.magic
 
 (* TODO Document how the callback table works. Figure it out first? *)
-type 'type_ t = {
-  mutable callback_table : ('type_ t -> unit) array;
-  c_handle : 'type_ c_handle Ctypes.ptr;
+type 'kind t = {
+  mutable callback_table : ('kind t -> unit) array;
+  c_handle : 'kind c_handle Ctypes.ptr;
 }
 
 (* TODO Multiple callbacks need to be stored in each handle somewhere. Also,
@@ -21,18 +20,18 @@ type 'type_ t = {
 exception Handle_already_closed_this_is_a_programming_logic_error
 
 let is_closing handle =
-  Luv_FFI.C.Functions.Handle.is_closing (coerce (handle.c_handle))
+  C.Functions.Handle.is_closing (coerce (handle.c_handle))
 
 let raise_if_closed handle =
   if is_closing handle then
     raise Handle_already_closed_this_is_a_programming_logic_error
 
-let allocate ?(callback_count = Luv_FFI.C.Types.Handle.callback_count) t =
+let allocate ?(callback_count = C.Types.Handle.callback_count) t =
   let c_handle = Ctypes.addr (Ctypes.make t) in
   let callback_table = Array.make callback_count ignore in
   let handle = {callback_table; c_handle} in
   let gc_root = Ctypes.Root.create handle in
-  Luv_FFI.C.Functions.Handle.set_data (coerce c_handle) gc_root;
+  C.Functions.Handle.set_data (coerce c_handle) gc_root;
   handle
 
 let c handle =
@@ -41,11 +40,11 @@ let c handle =
 
 let from_c c_handle =
   coerce c_handle
-  |> Luv_FFI.C.Functions.Handle.get_data
+  |> C.Functions.Handle.get_data
   |> Ctypes.Root.get
 
 let set_callback
-    ?(index = Luv_FFI.C.Types.Handle.generic_callback_index) handle callback =
+    ?(index = C.Types.Handle.generic_callback_index) handle callback =
   raise_if_closed handle;
   let callback : (_ t -> unit) = Obj.magic callback in
   handle.callback_table.(index) <- callback
@@ -54,7 +53,7 @@ let get_callback ~index handle =
   Obj.magic handle.callback_table.(index)
 
 let close_trampoline =
-  Luv_FFI.C.Functions.Handle.get_close_trampoline ()
+  C.Functions.Handle.get_close_trampoline ()
 
 let close handle =
   if is_closing handle then
@@ -62,28 +61,28 @@ let close handle =
 
   else begin
     let close_callback handle =
-      Luv_FFI.C.Functions.Handle.get_data (coerce handle.c_handle)
+      C.Functions.Handle.get_data (coerce handle.c_handle)
       |> Ctypes.Root.release
     in
-    handle.callback_table.(Luv_FFI.C.Types.Handle.generic_callback_index) <-
+    handle.callback_table.(C.Types.Handle.generic_callback_index) <-
       close_callback;
-    Luv_FFI.C.Functions.Handle.close (coerce handle.c_handle) close_trampoline
+    C.Functions.Handle.close (coerce handle.c_handle) close_trampoline
   end
 
 let is_active handle =
-  Luv_FFI.C.Functions.Handle.is_active (coerce handle.c_handle)
+  C.Functions.Handle.is_active (coerce handle.c_handle)
 
 let ref handle =
-  Luv_FFI.C.Functions.Handle.ref (coerce handle.c_handle)
+  C.Functions.Handle.ref (coerce handle.c_handle)
 
 let unref handle =
-  Luv_FFI.C.Functions.Handle.unref (coerce handle.c_handle)
+  C.Functions.Handle.unref (coerce handle.c_handle)
 
 let has_ref handle =
-  Luv_FFI.C.Functions.Handle.has_ref (coerce handle.c_handle)
+  C.Functions.Handle.has_ref (coerce handle.c_handle)
 
 let get_loop handle =
-  Luv_FFI.C.Functions.Handle.get_loop (coerce handle.c_handle)
+  C.Functions.Handle.get_loop (coerce handle.c_handle)
 
 
 

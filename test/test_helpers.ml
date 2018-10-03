@@ -1,5 +1,5 @@
 let pp_error_code formatter error_code =
-  if error_code = Luv.Error.Code.success then
+  if error_code = Luv.Error.success then
     Format.pp_print_string formatter "success (0)"
   else
     Format.fprintf
@@ -17,7 +17,7 @@ let fail_with_error_code name error_code =
   |> Alcotest.failf "%s failed with %s" name
 
 let check_success name error_code =
-  if error_code <> Luv.Error.Code.success then
+  if error_code <> Luv.Error.success then
     fail_with_error_code name error_code
 
 let check_error_code name expected error_code =
@@ -27,6 +27,10 @@ let check_success_result name result =
   match result with
   | Result.Ok value -> value
   | Result.Error code -> fail_with_error_code name code
+
+let check_error_result name expected result =
+  Alcotest.(check (result reject error_code_testable))
+    name (Result.Error expected) result
 
 let pointer_testable =
   let format formatter pointer =
@@ -50,15 +54,35 @@ let check_pointer name expected actual =
   Alcotest.check
     pointer_testable name (Ctypes.to_voidp expected) (Ctypes.to_voidp actual)
 
-(* let pp_handle_type formatter handle_type =
-  Format.fprintf
-    formatter "%s (%i)" (Luv.Handle.type_name handle_type) (handle_type :> int)
+let pp_directory_entry formatter entry =
+  let kind =
+    match Luv.File.Directory_scan.(entry.kind) with
+    | `Regular_file -> "`Regular_file"
+    | `Directory -> "`Directory"
+    | `Symlink -> "`Symlink"
+    | `FIFO -> "`FIFO"
+    | `Socket -> "`Socket"
+    | `Character_device -> "`Character_device"
+    | `Block_device -> "`Block_device"
+    | `Unknown i -> Printf.sprintf "`Unknown(%i)" i
+  in
+  Format.fprintf formatter "%s %s" kind Luv.File.Directory_scan.(entry.name)
 
-let handle_type_testable =
-  Alcotest.of_pp pp_handle_type
+let directory_entry_testable =
+  Alcotest.of_pp pp_directory_entry
 
-let check_handle_type expected actual =
-  Alcotest.(check handle_type_testable) "handle type" expected actual *)
+let check_directory_entries name expected actual =
+  let expected =
+    expected
+    |> List.map
+      (fun name -> Luv.File.Directory_scan.{kind = `Regular_file; name})
+    |> List.sort Pervasives.compare
+  in
+  let actual =
+    actual
+    |> List.sort Pervasives.compare
+  in
+  Alcotest.(check (list directory_entry_testable)) name expected actual
 
 let count_allocated_words () =
   Gc.full_major ();
@@ -102,7 +126,7 @@ let default_loop =
 
 let run () =
   Luv.Loop.run default_loop Luv.Loop.Run_mode.default
-  |> Alcotest.(check bool) "run" false
+  |> ignore
 
 let port = ref 5000
 let port () =

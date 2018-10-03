@@ -1,55 +1,43 @@
-(* include Luv_FFI.C.Types.Request *)
-(* include Luv_FFI.C.Functions.Request *)
+type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
 
-(* type base_request = Luv_FFI.C.Types.Request.base_request *)
-(* type 'type_ t = 'type_ Luv_FFI.C.Types.Request.t ptr *)
-type 'type_ c_request = 'type_ Luv_FFI.C.Types.Request.t
-
-let coerce :
-    type any_type_of_request.
-    any_type_of_request c_request Ctypes.ptr ->
-      Luv_FFI.C.Types.Request.base_request c_request Ctypes.ptr =
+let coerce : type any_type_of_request. any_type_of_request t -> [ `Base ] t =
   Obj.magic
 
-type 'type_ t = {
-  mutable callback : 'type_ t -> Error.Code.t -> unit;
-  mutable finished : bool;
-  c_request : 'type_ c_request Ctypes.ptr;
-}
-
-exception Request_object_reused_this_is_a_programming_error
-
+(* TODO Proper memory management for cancel? *)
 let cancel request =
-  if request.finished then
-    raise Request_object_reused_this_is_a_programming_error;
-  Luv_FFI.C.Functions.Request.cancel (coerce request.c_request)
+  C.Functions.Request.cancel (coerce request)
 
 let allocate t =
-  let c_request = Ctypes.addr (Ctypes.make t) in
-  let request = {callback = (fun _ _ -> ()); finished = false; c_request} in
-  let gc_root = Ctypes.Root.create request in
-  Luv_FFI.C.Functions.Request.set_data (coerce c_request) gc_root;
+  Ctypes.addr (Ctypes.make t)
+
+(* TODO Still needed? *)
+let c request =
   request
 
-let c request =
-  request.c_request
-
 let set_callback request callback =
-  if request.finished then
-    raise Request_object_reused_this_is_a_programming_error;
-  request.callback <- callback
+  let gc_root = Ctypes.Root.create callback in
+  C.Functions.Request.set_data (coerce request) gc_root
 
-let finished request =
-  Luv_FFI.C.Functions.Request.get_data (coerce request.c_request)
-  |> Ctypes.Root.release;
-  request.finished <- true
+let clear_callback request =
+  C.Functions.Request.get_data (coerce request)
+  |> Ctypes.Root.release
 
+let set_callback_1 request callback =
+  let callback () =
+    clear_callback request;
+    callback request
+  in
+  set_callback request callback
 
-(* let get_data request =
-  get_data (coerce request)
+let set_callback_2 request callback =
+  let callback v =
+    clear_callback request;
+    callback request v
+  in
+  set_callback request callback
 
-let set_data request data =
-  set_data (coerce request) data
-
-let get_type request =
-  get_type (coerce request) *)
+let clear_callback_if_not_started request maybe_callback error_code =
+  if maybe_callback <> None && error_code <> Error.success then begin
+    clear_callback request
+  end;
+  error_code

@@ -44,7 +44,7 @@ let tests = [
     "configure, invalid", `Quick, begin fun () ->
       with_loop begin fun loop ->
         Luv.Loop.configure loop Luv.Loop.Option.block_signal 0
-        |> check_error_code "configure" Luv.Error.Code.einval
+        |> check_error_code "configure" Luv.Error.einval
       end
     end;
 

@@ -1,4 +1,3 @@
-(* TODO http://docs.libuv.org/en/v1.x/version.html *)
 
 val major : int
 val minor : int

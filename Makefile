@@ -3,7 +3,8 @@ build :
 	dune build
 
 .PHONY : test
-test : build
+test :
+	dune build test/tester.exe
 	dune runtest -j 1 --no-buffer
 
 .PHONY : clean

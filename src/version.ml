@@ -1,2 +1,2 @@
-include Luv_FFI.C.Types.Version
-include Luv_FFI.C.Functions.Version
+include C.Types.Version
+include C.Functions.Version

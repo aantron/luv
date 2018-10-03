@@ -21,10 +21,9 @@
 // TODO Explain why not using cstubs_inverted (too much factoring of ocaml code
 // required).
 
-
-static void luv_nullary_handle_trampoline(uv_handle_t *c_handle)
+static void luv_close_trampoline(uv_handle_t *c_handle)
 {
-    // TODO Restore.
+    // TODO Restore here and in all trampolines.
     // caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback(callback, ocaml_handle);
@@ -33,32 +32,62 @@ static void luv_nullary_handle_trampoline(uv_handle_t *c_handle)
 
 uv_close_cb luv_address_of_close_trampoline()
 {
-    return (uv_close_cb)luv_nullary_handle_trampoline;
+    return luv_close_trampoline;
+}
+
+static void luv_timer_trampoline(uv_timer_t *c_handle)
+{
+    GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
+    caml_callback(callback, ocaml_handle);
 }
 
 uv_timer_cb luv_address_of_timer_trampoline()
 {
-    return (uv_timer_cb)luv_nullary_handle_trampoline;
+    return luv_timer_trampoline;
+}
+
+static void luv_prepare_trampoline(uv_prepare_t *c_handle)
+{
+    GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
+    caml_callback(callback, ocaml_handle);
 }
 
 uv_prepare_cb luv_address_of_prepare_trampoline()
 {
-    return (uv_prepare_cb)luv_nullary_handle_trampoline;
+    return luv_prepare_trampoline;
+}
+
+static void luv_check_trampoline(uv_check_t *c_handle)
+{
+    GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
+    caml_callback(callback, ocaml_handle);
 }
 
 uv_check_cb luv_address_of_check_trampoline()
 {
-    return (uv_check_cb)luv_nullary_handle_trampoline;
+    return luv_check_trampoline;
+}
+
+static void luv_idle_trampoline(uv_idle_t *c_handle)
+{
+    GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
+    caml_callback(callback, ocaml_handle);
 }
 
 uv_idle_cb luv_address_of_idle_trampoline()
 {
-    return (uv_idle_cb)luv_nullary_handle_trampoline;
+    return luv_idle_trampoline;
+}
+
+static void luv_async_trampoline(uv_async_t *c_handle)
+{
+    GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
+    caml_callback(callback, ocaml_handle);
 }
 
 uv_async_cb luv_address_of_async_trampoline()
 {
-    return (uv_async_cb)luv_nullary_handle_trampoline;
+    return luv_async_trampoline;
 }
 
 
@@ -105,29 +134,57 @@ uv_connection_cb luv_address_of_connection_trampoline()
 
 #define GET_REQUEST_CALLBACK() \
     value *gc_root = uv_req_get_data((uv_req_t*)c_request); \
-    value ocaml_request = *gc_root; \
-    value callback = Field(ocaml_request, 0);
+    value callback = *gc_root;
 
-
-static void luv_nullary_request_trampoline(uv_req_t *c_request, int status)
+static void luv_connect_trampoline(uv_connect_t *c_request, int status)
 {
     GET_REQUEST_CALLBACK();
-    caml_callback2(callback, ocaml_request, Val_int(status));
+    caml_callback(callback, Val_int(status));
 }
 
 uv_connect_cb luv_address_of_connect_trampoline()
 {
-    return (uv_connect_cb)luv_nullary_request_trampoline;
+    return luv_connect_trampoline;
+}
+
+static void luv_write_trampoline(uv_write_t *c_request, int status)
+{
+    GET_REQUEST_CALLBACK();
+    caml_callback(callback, Val_int(status));
 }
 
 uv_write_cb luv_address_of_write_trampoline()
 {
-    return (uv_write_cb)luv_nullary_request_trampoline;
+    return luv_write_trampoline;
+}
+
+static void luv_shutdown_trampoline(uv_shutdown_t *c_request, int status)
+{
+    GET_REQUEST_CALLBACK();
+    caml_callback(callback, Val_int(status));
 }
 
 uv_shutdown_cb luv_address_of_shutdown_trampoline()
 {
-    return (uv_shutdown_cb)luv_nullary_request_trampoline;
+    return luv_shutdown_trampoline;
+}
+
+static void luv_fs_request_trampoline(uv_fs_t *c_request)
+{
+    GET_REQUEST_CALLBACK();
+    caml_callback(callback, Val_unit);
+}
+
+uv_fs_cb luv_address_of_fs_trampoline()
+{
+    return luv_fs_request_trampoline;
+}
+
+// This seems to be the most convenient way to get a NULL function pointer with
+// Ctypes.
+uv_fs_cb luv_null_fs_callback_pointer()
+{
+    return NULL;
 }
 
 

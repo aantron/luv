@@ -44,7 +44,7 @@ val recv_buffer_size : 'any_type_of_handle t ptr -> int ptr -> Error.Code.t *)
 
 (* TODO Note in docs that other kinds of handles can just be passed in. *)
 
-type 'type_ t
+type 'kind t
 
 val close : _ t -> unit
 exception Handle_already_closed_this_is_a_programming_logic_error
@@ -64,12 +64,12 @@ val get_loop : _ t -> Loop.t
 (* TODO Internal *)
 
 val allocate :
-  ?callback_count:int -> 'type_ Luv_FFI.C.Types.Handle.t Ctypes.typ -> 'type_ t
-val c : 'type_ t -> 'type_ Luv_FFI.C.Types.Handle.t Ctypes.ptr
+  ?callback_count:int -> 'kind C.Types.Handle.t Ctypes.typ -> 'kind t
+val c : 'kind t -> 'kind C.Types.Handle.t Ctypes.ptr
 (* TODO Make the index required. *)
-val set_callback : ?index:int -> 'type_ t -> _ -> unit
-val get_callback : index:int -> 'type_ t -> _
-val from_c : 'type_ Luv_FFI.C.Types.Handle.t Ctypes.ptr -> 'type_ t
+val set_callback : ?index:int -> 'kind t -> _ -> unit
+val get_callback : index:int -> 'kind t -> _
+val from_c : 'kind C.Types.Handle.t Ctypes.ptr -> 'kind t
 
 (* TODO docs warn about memory leak if not calling close. *)
 (* TODO docs after close, the loop must be run. *)

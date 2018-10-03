@@ -1,30 +1,30 @@
-; The final, generated and tied-together FFI module.
+; The final FFI module, containing all the OCaml bits, and linked with libuv.
 (library
- (name Luv_FFI)
+ (name luv_ffi)
  (public_name luv.ffi)
- (modules Luv_FFI FFI_generated_functions)
+ (wrapped false)
+ (modules Luv_ffi_generated_functions)
  (c_names ffi_generated_functions trampolines)
- (libraries ctypes.stubs libuv_functions)
+ (libraries ctypes.stubs luv_ffi_function_descriptions)
  (c_flags (:standard "-I ../vendor"))
  (c_library_flags (:standard -Lsrc/vendor -Lluv/src/vendor -luv -lpthread)))
-; TODO Check linking against the final library in a final revdep test.
 
 
 
 ; Everything below is the bindings generator process using ctypes. It produces
-; two OCaml modules, FFI_generated_functions and FFI_generated_types.
+; two OCaml modules, Luv_ffi_generated_functions and Luv_ffi_generated_types.
 
 ; Type bindings (FFI_generated_types).
 (library
- (name libuv_types)
- (public_name luv.types)
- (modules Libuv_types)
+ (name luv_ffi_type_descriptions)
+ (public_name luv.ffi_type_descriptions)
+ (modules Luv_ffi_type_descriptions)
  (libraries ctypes))
 
 (executable
  (name generate_types_start)
  (modules Generate_types_start)
- (libraries ctypes.stubs libuv_types))
+ (libraries ctypes.stubs luv_ffi_type_descriptions))
 
 (rule
  (targets generate_types_step_2.c)
@@ -41,10 +41,9 @@
   -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` \
   -I %{ocaml_where} \
   -I ../vendor -o %{targets}")))
-; TODO Is this portable??
 
 (rule
- (targets FFI_generated_types.ml)
+ (targets luv_ffi_generated_types.ml)
  (deps generate_types_step_2.exe)
  (action (with-stdout-to %{targets} (run %{deps}))))
 
@@ -52,22 +51,22 @@
 
 ; Function bindings.
 (library
- (name libuv_functions)
- (public_name luv.functions)
+ (name luv_ffi_function_descriptions)
+ (public_name luv.ffi_function_descriptions)
  (flags (:standard -w -9-16-27))
  (wrapped false)
- (modules FFI_generated_types Libuv_functions Types)
- (libraries ctypes libuv_types))
+ (modules Luv_ffi_generated_types Luv_ffi_function_descriptions Luv_ffi_types)
+ (libraries ctypes luv_ffi_type_descriptions))
 
 (executable
  (name generate_c_functions)
  (modules Generate_c_functions)
- (libraries ctypes.stubs libuv_functions))
+ (libraries ctypes.stubs luv_ffi_function_descriptions))
 
 (executable
  (name generate_ml_functions)
  (modules Generate_ml_functions)
- (libraries ctypes.stubs libuv_functions))
+ (libraries ctypes.stubs luv_ffi_function_descriptions))
 
 (rule
  (targets ffi_generated_functions.c)
@@ -75,6 +74,6 @@
  (action (with-stdout-to %{targets} (run %{deps} luv_stub))))
 
 (rule
- (targets FFI_generated_functions.ml)
+ (targets luv_ffi_generated_functions.ml)
  (deps generate_ml_functions.exe)
  (action (with-stdout-to %{targets} (run %{deps} luv_stub))))

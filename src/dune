@@ -1,3 +1,4 @@
 (library
+ (name luv)
  (public_name luv)
- (libraries Luv_FFI result))
+ (libraries luv_ffi result))
