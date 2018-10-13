@@ -1,3 +1,3 @@
-module Types = Luv_ffi_types
+module Types = Luv_c_types
 module Functions =
-  Luv_ffi_function_descriptions.Make (Luv_ffi_generated_functions)
+  Luv_c_function_descriptions.Descriptions (Luv_c_generated_functions)

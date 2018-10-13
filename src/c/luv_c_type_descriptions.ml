@@ -2,7 +2,10 @@
    proportionally in the number of files the bindings are spread over.
    https://github.com/ocaml/dune/issues/135. *)
 
-module Make (F : Ctypes.TYPE) =
+(* TODO Note the const warnings remain until
+  https://github.com/ocamllabs/ocaml-ctypes/issues/134 *)
+
+module Descriptions (F : Ctypes.TYPE) =
 struct
   open Ctypes
   open F
@@ -224,11 +227,12 @@ struct
     let t : ([ `Base ] t) typ = typedef (structure "`Stream") "uv_stream_t"
     let () = seal t
 
+    let somaxconn = constant "SOMAXCONN" int
+
     let callback_count = constant "LUV_STREAM_CALLBACK_COUNT" int
     let connection_callback_index = constant "LUV_CONNECTION_CALLBACK_INDEX" int
     let read_callback_index = constant "LUV_READ_CALLBACK_INDEX" int
     let allocate_callback_index = constant "LUV_ALLOCATE_CALLBACK_INDEX" int
-    let buffer_reference_index = constant "LUV_BUFFER_REFERENCE_INDEX" int
 
     let stream = t
 
@@ -268,6 +272,13 @@ struct
     let () = seal union
   end
 
+  module Domain =
+  struct
+    let unspec = constant "AF_UNSPEC" int
+    let inet = constant "AF_INET" int
+    let inet6 = constant "AF_INET6" int
+  end
+
   module TCP =
   struct
     let ipv6_only = constant "UV_TCP_IPV6ONLY" int
@@ -280,7 +291,8 @@ struct
   struct
     module Request =
     struct
-      let t : ([ `File ] Request.t) typ = typedef (structure "`File") "uv_fs_t"
+      type t = [ `File ] Request.t
+      let t : t typ = typedef (structure "`File") "uv_fs_t"
       let () = seal t
     end
 
@@ -340,20 +352,24 @@ struct
 
     module Dirent =
     struct
+      module Kind =
+      struct
+        (* TODO Actual size of this enum, and the corresponding field? *)
+        let unknown = constant "UV_DIRENT_UNKNOWN" int
+        let file = constant "UV_DIRENT_FILE" int
+        let dir = constant "UV_DIRENT_DIR" int
+        let link = constant "UV_DIRENT_LINK" int
+        let fifo = constant "UV_DIRENT_FIFO" int
+        let socket = constant "UV_DIRENT_SOCKET" int
+        let char = constant "UV_DIRENT_CHAR" int
+        let block = constant "UV_DIRENT_BLOCK" int
+      end
+
       type t = [ `Dirent ] structure
       let t : t typ = typedef (structure "`Dirent") "uv_dirent_t"
       let name = field t "name" string
       let type_ = field t "type" int
       let () = seal t
-
-      (* TODO Actual size of this enum, and the corresponding field? *)
-      let file = constant "UV_DIRENT_FILE" int
-      let dir = constant "UV_DIRENT_DIR" int
-      let link = constant "UV_DIRENT_LINK" int
-      let fifo = constant "UV_DIRENT_FIFO" int
-      let socket = constant "UV_DIRENT_SOCKET" int
-      let char = constant "UV_DIRENT_CHAR" int
-      let block = constant "UV_DIRENT_BLOCK" int
     end
 
     module Timespec =
@@ -408,5 +424,24 @@ struct
       let dir = constant "UV_FS_SYMLINK_DIR" int
       let junction = constant "UV_FS_SYMLINK_JUNCTION" int
     end
+  end
+
+  module Pipe =
+  struct
+    module Mode =
+    struct
+      let readable = Poll.Event.readable
+      let writable = Poll.Event.writable
+    end
+
+    let t : ([ `Pipe ] Stream.t) typ = typedef (structure "`Pipe") "uv_pipe_t"
+    let () = seal t
+  end
+
+  module Process =
+  struct
+    let t : ([ `Process ] Handle.t) typ =
+      typedef (structure "`Process") "uv_process_t"
+    let () = seal t
   end
 end

@@ -1,4 +1,4 @@
 (library
  (name luv)
  (public_name luv)
- (libraries luv_ffi result))
+ (libraries luv.c result))

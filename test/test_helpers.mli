@@ -9,7 +9,9 @@ val check_not_null : string -> _ Ctypes.ptr -> unit
 val check_pointer : string -> 'a Ctypes.ptr -> 'a Ctypes.ptr -> unit
 
 val check_directory_entries :
-  string -> string list -> Luv.File.Directory_scan.entry list -> unit
+  string -> string list -> Luv.File.Dirent.t list -> unit
+
+val check_address : string -> Unix.sockaddr -> Unix.sockaddr -> unit
 
 val make_callback : unit -> (_ -> unit)
 val no_memory_leak : ?base_repetitions:int -> (int -> unit) -> unit

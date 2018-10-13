@@ -4,5 +4,7 @@ let () =
   print_endline "#include <uv.h>";
   print_endline "#include \"trampolines.h\"";
 
-  Cstubs_structs.write_c
-    Format.std_formatter (module Luv_ffi_type_descriptions.Make)
+  Cstubs.write_c
+    Format.std_formatter
+    ~prefix:Sys.argv.(1)
+    (module Luv_c_function_descriptions.Descriptions)

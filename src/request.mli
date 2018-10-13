@@ -1,4 +1,4 @@
-type 'kind t
+type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
 
 (* TODO Test with a concrete type. *)
 val cancel : _ t -> Error.t

@@ -1,7 +1,19 @@
 type t = [ `TCP ] Stream.t
 
-let init =
-  Stream.init_tcp
+let init ?loop ?(domain : Misc.Domain.t option) () =
+  let tcp =
+    Handle.allocate
+      ~callback_count:C.Types.Stream.callback_count C.Types.TCP.t
+  in
+  let loop = Loop.or_default loop in
+  let c_tcp = Handle.c tcp in
+  let result =
+    match domain with
+    | None -> C.Functions.TCP.init loop c_tcp
+    | Some domain ->
+      C.Functions.TCP.init_ex loop c_tcp (Unsigned.UInt.of_int (domain :> int))
+  in
+  Error.to_result tcp result
 
 let nodelay tcp yes =
   C.Functions.TCP.nodelay (Handle.c tcp) yes
@@ -24,56 +36,44 @@ let bind ?(flags = []) tcp address =
   in
 
   C.Functions.TCP.bind
-    (Handle.c tcp) (Ctypes.addr (Stream.Sockaddr.ocaml_to_c address)) flags
+    (Handle.c tcp) (Ctypes.addr (Misc.Sockaddr.ocaml_to_c address)) flags
 
-(* TODO Factor common code in these two functions. *)
-let getsockname tcp =
+let generic_get_name c_function tcp =
   let c_sockaddr = Ctypes.make C.Types.Sockaddr.union in
-  let c_sockaddr_length = Ctypes.(allocate int) 0 in
+  let c_sockaddr_length =
+    Ctypes.(allocate int) (Ctypes.sizeof C.Types.Sockaddr.union) in
 
   let result =
-    C.Functions.TCP.getsockname
+    c_function
       (Handle.c tcp)
       (Ctypes.addr (Ctypes.getf c_sockaddr C.Types.Sockaddr.s_gen))
       c_sockaddr_length
   in
+
   if result <> Error.success then
     Result.Error result
-  else
+  else begin
     let ocaml_sockaddr =
       C.Functions.Sockaddr.c_to_ocaml
         (Ctypes.addr c_sockaddr) (Ctypes.(!@) c_sockaddr_length) (-1)
     in
     Result.Ok ocaml_sockaddr
+  end
 
-let getpeername tcp =
-  let c_sockaddr = Ctypes.make C.Types.Sockaddr.union in
-  let c_sockaddr_length = Ctypes.(allocate int) 0 in
+let getsockname = generic_get_name C.Functions.TCP.getsockname
+let getpeername = generic_get_name C.Functions.TCP.getpeername
 
-  let result =
-    C.Functions.TCP.getpeername
+let connect tcp address callback =
+  let request = Stream.Connect_request.make () in
+  Request.set_callback_2 request (fun _request -> callback);
+  let immediate_result =
+    C.Functions.TCP.connect
+      (Request.c request)
       (Handle.c tcp)
-      (Ctypes.addr (Ctypes.getf c_sockaddr C.Types.Sockaddr.s_gen))
-      c_sockaddr_length
+      (Ctypes.addr (Misc.Sockaddr.ocaml_to_c address))
+      Stream.Connect_request.trampoline
   in
-  if result <> Error.success then
-    Result.Error result
-  else
-    let ocaml_sockaddr =
-      C.Functions.Sockaddr.c_to_ocaml
-        (Ctypes.addr c_sockaddr) (Ctypes.(!@) c_sockaddr_length) (-1)
-    in
-    Result.Ok ocaml_sockaddr
-
-(* TODO Lifetime of the address? Document that we think it doesn't need to be
-   retained. *)
-(* TODO Lifetime of the handle? Can the handle's close callback be called before
-   the connect finishes? Document that it appears the close callback runs only
-   after the connect callback, so there is likely no problem. *)
-let connect ~callback ?(request = Stream.Connect_request.make ()) tcp address =
-  Request.set_callback_2 request callback;
-  C.Functions.TCP.connect
-    (Request.c request)
-    (Handle.c tcp)
-    (Ctypes.addr (Stream.Sockaddr.ocaml_to_c address))
-    Stream.Trampolines.connect
+  if immediate_result < Error.success then begin
+    Request.clear_callback request;
+    callback immediate_result
+  end

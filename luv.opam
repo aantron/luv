@@ -12,8 +12,8 @@ depends: [
   "base-unix"
   "ctypes"
   "dune" {build & >= "1.0.0"}
-  # type nonrec was introduced in OCaml 4.02.2.
-  "ocaml" {>= "4.02.2"}
+  # Sys.opaque_identity requires 4.03.
+  "ocaml" {>= "4.03.0"}
   "result"
 
   "alcotest" {dev}

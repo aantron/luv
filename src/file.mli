@@ -65,28 +65,34 @@ sig
   val (lor) : t -> t -> t
 end
 
+module Dirent :
+sig
+  module Kind :
+  sig
+    type t
+
+    val unknown : t
+    val file : t
+    val dir : t
+    val link : t
+    val fifo : t
+    val socket : t
+    val char : t
+    val block : t
+  end
+
+  type t = {
+    kind : Kind.t;
+    name : string;
+  }
+end
+
 (* DOC This requires some memory management on the user's part. *)
-(* TODO Test directory scans. *)
 module Directory_scan :
 sig
   type t
 
-  type entry_kind = [
-    | `Regular_file
-    | `Directory
-    | `Symlink
-    | `FIFO
-    | `Socket
-    | `Character_device
-    | `Block_device
-    | `Unknown of int
-  ]
-  type entry = {
-    kind : entry_kind;
-    name : string;
-  }
-
-  val next : t -> entry option
+  val next : t -> Dirent.t option
   val stop : t -> unit
 end
 
@@ -157,26 +163,36 @@ sig
   val (lor) : t -> t -> t
 end
 
+module Request :
+sig
+  type t = [ `File ] Request.t
+
+  val make : unit -> t
+end
+
 type t
 
 module Async :
 sig
   val open_ :
     ?loop:Loop.t ->
+    ?request:Request.t ->
+    ?mode:Mode.t ->
     string ->
     Open_flag.t ->
-    Mode.t ->
     ((t, Error.t) Result.result -> unit) ->
       unit
 
   val close :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     t ->
     (Error.t -> unit) ->
       unit
 
   val read :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     ?offset:int64 ->
     t ->
     Bigstring.t list ->
@@ -185,6 +201,7 @@ sig
 
   val write :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     ?offset:int64 ->
     t ->
     Bigstring.t list ->
@@ -193,55 +210,64 @@ sig
 
   val unlink :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     (Error.t -> unit) ->
       unit
 
   val mkdir :
     ?loop:Loop.t ->
+    ?request:Request.t ->
+    ?mode:Mode.t ->
     string ->
-    Mode.t ->
     (Error.t -> unit) ->
       unit
 
   val mkdtemp :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     ((string, Error.t) Result.result -> unit) ->
       unit
 
   val rmdir :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     (Error.t -> unit) ->
       unit
 
   val scandir :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     ((Directory_scan.t, Error.t) Result.result -> unit) ->
       unit
 
   val stat :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     ((Stat.t, Error.t) Result.result -> unit) ->
       unit
 
   val lstat :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     ((Stat.t, Error.t) Result.result -> unit) ->
       unit
 
   val fstat :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     t ->
     ((Stat.t, Error.t) Result.result -> unit) ->
       unit
 
   val rename :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     from:string ->
     to_:string ->
     (Error.t -> unit) ->
@@ -249,18 +275,21 @@ sig
 
   val fsync :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     t ->
     (Error.t -> unit) ->
       unit
 
   val fdatasync :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     t ->
     (Error.t -> unit) ->
       unit
 
   val ftruncate :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     t ->
     int64 ->
     (Error.t -> unit) ->
@@ -268,6 +297,7 @@ sig
 
   val copyfile :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     from:string ->
     to_:string ->
     Copy_flag.t ->
@@ -276,6 +306,7 @@ sig
 
   val sendfile :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     to_:t ->
     from:t ->
     offset:int64 ->
@@ -285,6 +316,7 @@ sig
 
   val access :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     Access_flag.t ->
     (Error.t -> unit) ->
@@ -292,6 +324,7 @@ sig
 
   val chmod :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     Mode.t ->
     (Error.t -> unit) ->
@@ -299,6 +332,7 @@ sig
 
   val fchmod :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     t ->
     Mode.t ->
     (Error.t -> unit) ->
@@ -306,6 +340,7 @@ sig
 
   val utime :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     atime:float ->
     mtime:float ->
@@ -314,6 +349,7 @@ sig
 
   val futime :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     t ->
     atime:float ->
     mtime:float ->
@@ -322,6 +358,7 @@ sig
 
   val link :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     target:string ->
     link:string ->
     (Error.t -> unit) ->
@@ -329,6 +366,7 @@ sig
 
   val symlink :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     target:string ->
     link:string ->
     Symlink_flag.t ->
@@ -337,18 +375,21 @@ sig
 
   val readlink :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     ((string, Error.t) Result.result -> unit) ->
       unit
 
   val realpath :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     ((string, Error.t) Result.result -> unit) ->
       unit
 
   val chown :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     int ->
     int ->
@@ -357,6 +398,7 @@ sig
 
   val fchown :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     t ->
     int ->
     int ->
@@ -365,6 +407,7 @@ sig
 
   (* val lchown :
     ?loop:Loop.t ->
+    ?request:Request.t ->
     string ->
     int ->
     int ->
@@ -375,7 +418,7 @@ end
 module Sync :
 sig
   val open_ :
-    string -> Open_flag.t -> Mode.t ->
+    ?mode:Mode.t -> string -> Open_flag.t ->
       (t, Error.t) Result.result
 
   val close :
@@ -395,7 +438,7 @@ sig
       Error.t
 
   val mkdir :
-    string -> Mode.t ->
+    ?mode:Mode.t -> string ->
       Error.t
 
   val mkdtemp :
@@ -500,3 +543,5 @@ sig
 end
 
 (* TODO Eliminate labeled callback arguments from all other modules, too. *)
+(* TODO Review all older code using requests for lifetime, especially in case
+   of synchronous failure. *)

@@ -5,17 +5,11 @@ let coerce :
     any_type_of_handle c_handle Ctypes.ptr -> [ `Base ] c_handle Ctypes.ptr =
   Obj.magic
 
-(* TODO Document how the callback table works. Figure it out first? *)
+(* DOC Document how the callback table works. *)
 type 'kind t = {
   mutable callback_table : ('kind t -> unit) array;
   c_handle : 'kind c_handle Ctypes.ptr;
 }
-
-(* TODO Multiple callbacks need to be stored in each handle somewhere. Also,
-   they will have different type signatures. It's probably easiest to just
-   select and call them directly from C.
-
-   The indexes can be made into an enum, and discovered from C. *)
 
 exception Handle_already_closed_this_is_a_programming_logic_error
 
@@ -83,17 +77,3 @@ let has_ref handle =
 
 let get_loop handle =
   C.Functions.Handle.get_loop (coerce handle.c_handle)
-
-
-
-(* let send_buffer_size handle size_cell =
-  send_buffer_size (coerce_ptr handle) size_cell
-
-let recv_buffer_size handle size_cell =
-  recv_buffer_size (coerce_ptr handle) size_cell
-
-let fileno handle fileno_cell =
-  fileno (coerce_ptr handle) fileno_cell *)
-
-(* let get_type handle =
-  get_type (coerce_ptr handle) *)

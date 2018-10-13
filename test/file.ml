@@ -9,7 +9,7 @@ let with_file_for_reading ?(to_fail = false) f =
   in
 
   let file =
-    Luv.File.(Sync.open_ "file.ml" flags Mode.none)
+    Luv.File.(Sync.open_ "file.ml" flags)
     |> check_success_result "open_"
   in
 
@@ -22,8 +22,7 @@ let with_file_for_writing f =
   let filename = "write_test_output" in
 
   let file =
-    Luv.File.(Sync.open_
-      filename Open_flag.(list [wronly; creat; trunc]) (Mode.octal 0o644))
+    Luv.File.(Sync.open_ filename Open_flag.(list [wronly; creat; trunc]))
     |> check_success_result "open_";
   in
 
@@ -80,9 +79,7 @@ let tests = [
     "open, read, close: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.(Async.open_
-          "file.ml" Open_flag.rdonly Mode.none) begin fun result ->
-
+      Luv.File.(Async.open_ "file.ml" Open_flag.rdonly) begin fun result ->
         let file = check_success_result "file" result in
 
         let buffer = Luv.Bigstring.create 4 in
@@ -111,7 +108,7 @@ let tests = [
 
     "open, read, close: sync", `Quick, begin fun () ->
       let file =
-        Luv.File.(Sync.open_ "file.ml" Open_flag.rdonly Mode.none)
+        Luv.File.(Sync.open_ "file.ml" Open_flag.rdonly)
         |> check_success_result "open_"
       in
 
@@ -137,7 +134,7 @@ let tests = [
       let result = ref (Result.Error Luv.Error.success) in
 
       Luv.File.(Async.open_
-          "non_existent_file" Open_flag.rdonly Mode.none) begin fun result' ->
+          "non_existent_file" Open_flag.rdonly) begin fun result' ->
 
         result := result'
       end;
@@ -147,7 +144,7 @@ let tests = [
     end;
 
     "open nonexistent: sync", `Quick, begin fun () ->
-      Luv.File.(Sync.open_ "non_existent_file" Open_flag.rdonly Mode.none)
+      Luv.File.(Sync.open_ "non_existent_file" Open_flag.rdonly)
       |> check_error_result "open_" Luv.Error.enoent
     end;
 
@@ -155,9 +152,7 @@ let tests = [
       no_memory_leak begin fun _ ->
         let finished = ref false in
 
-        Luv.File.(Async.open_ "file.ml" Open_flag.rdonly Mode.none)
-            begin fun result ->
-
+        Luv.File.(Async.open_ "file.ml" Open_flag.rdonly) begin fun result ->
           let file = check_success_result "file" result in
           Luv.File.Async.close file begin fun _ ->
             finished := true
@@ -172,7 +167,7 @@ let tests = [
     "open, close memory leak: sync", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         let file =
-          Luv.File.(Sync.open_ "file.ml" Open_flag.rdonly Mode.none)
+          Luv.File.(Sync.open_ "file.ml" Open_flag.rdonly)
           |> check_success_result "open_"
         in
 
@@ -183,7 +178,7 @@ let tests = [
 
     "open failure leak: async", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
-        Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly Mode.none)
+        Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly)
             begin fun result ->
 
           check_error_result "result" Luv.Error.enoent result
@@ -195,7 +190,7 @@ let tests = [
 
     "open failure leak: sync", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
-        Luv.File.(Sync.open_ "non_existent_file" Open_flag.rdonly Mode.none)
+        Luv.File.(Sync.open_ "non_existent_file" Open_flag.rdonly)
         |> check_error_result "open_" Luv.Error.enoent;
       end
     end;
@@ -205,7 +200,7 @@ let tests = [
 
       let called = ref false in
 
-      Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly Mode.none)
+      Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly)
           begin fun _result ->
 
         called := true
@@ -377,7 +372,7 @@ let tests = [
       let finished = ref false in
       let directory = "dummy_directory" in
 
-      Luv.File.(Async.mkdir directory (Mode.octal 0o755)) begin fun result ->
+      Luv.File.Async.mkdir directory begin fun result ->
         check_success "mkdir result" result;
         Alcotest.(check bool) "exists" true (Sys.file_exists directory);
 
@@ -397,7 +392,7 @@ let tests = [
     "mkdir, rmdir: sync", `Quick, begin fun () ->
       let directory = "dummy_directory" in
 
-      Luv.File.(Sync.mkdir directory (Mode.octal 0o755))
+      Luv.File.Sync.mkdir directory
       |> check_success "mkdir";
 
       Alcotest.(check bool) "exists" true (Sys.file_exists directory);
@@ -412,7 +407,7 @@ let tests = [
       with_dummy_file begin fun path ->
         let finished = ref false in
 
-        Luv.File.(Async.mkdir path (Mode.octal 0o755)) begin fun result ->
+        Luv.File.Async.mkdir path begin fun result ->
           check_error_code "mkdir result" Luv.Error.eexist result;
           finished := true
         end;
@@ -424,7 +419,7 @@ let tests = [
 
     "mkdir failure: sync", `Quick, begin fun () ->
       with_dummy_file begin fun path ->
-        Luv.File.(Sync.mkdir path (Mode.octal 0o755))
+        Luv.File.Sync.mkdir path
         |> check_error_code "mkdir" Luv.Error.eexist
       end
     end;

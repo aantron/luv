@@ -1,11 +1,10 @@
 (* Everything is in one file to cut down on Dune boilerplate, as it would grow
    proportionally in the number of files the bindings are spread over.
    https://github.com/ocaml/dune/issues/135. *)
-(* TODO Consider renaming Luv_ffi prefix to Luv_c for clarity. *)
 
-module Types = Luv_ffi_types
+module Types = Luv_c_types
 
-module Make (F : Ctypes.FOREIGN) =
+module Descriptions (F : Ctypes.FOREIGN) =
 struct
   let error_code = Types.Error.t
 
@@ -20,8 +19,7 @@ struct
       foreign "uv_translate_sys_error" (int @-> returning error_code)
   end
 
-  (* TODO Look into warnings about const char, and what the string combinator
-     means. *)
+  (* TODO Look into warnings about const char. *)
   module Version =
   struct
     let version = foreign "uv_version" (void @-> returning int)
@@ -362,6 +360,9 @@ struct
 
     let init =
       foreign "uv_tcp_init" (ptr Loop.t @-> ptr t @-> returning error_code)
+    let init_ex =
+      foreign "uv_tcp_init_ex"
+        (ptr Loop.t @-> ptr t @-> uint @-> returning error_code)
     let nodelay =
       foreign "uv_tcp_nodelay" (ptr t @-> bool @-> returning error_code)
     let keepalive =
@@ -391,16 +392,21 @@ struct
   module File =
   struct
     (* TODO Int should be uv_file *)
+    (* TODO Rename to "t". *)
     let file = int
     let request = Types.File.Request.t
     (* TODO Proper types here. *)
     let uid = int
     let gid = int
 
-    let trampoline = static_funptr Ctypes.(ptr request @-> returning void)
+    type trampoline = (Types.File.Request.t ptr -> unit) static_funptr
+    let trampoline : trampoline typ =
+      static_funptr Ctypes.(ptr request @-> returning void)
     let get_trampoline =
       foreign "luv_address_of_fs_trampoline" (void @-> returning trampoline)
 
+    (* TODO Try
+      https://github.com/ocamllabs/ocaml-ctypes/blob/2d55cd9dc7da2d31fe27baf06827c10a860b970b/src/ctypes/ctypes.mli#L216 *)
     let get_null_callback =
       foreign "luv_null_fs_callback_pointer" (void @-> returning trampoline)
 
@@ -414,7 +420,7 @@ struct
       foreign "uv_fs_open"
         (ptr Loop.t @->
          ptr request @->
-         string @->
+         ocaml_string @->
          int @->
          int @->
          trampoline @->
@@ -441,34 +447,34 @@ struct
            returning error_code)
     let unlink =
       foreign "uv_fs_unlink"
-        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> trampoline @->
           returning error_code)
     let mkdir =
       foreign "uv_fs_mkdir"
-        (ptr Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> int @-> trampoline @->
           returning error_code)
     let mkdtemp =
       foreign "uv_fs_mkdtemp"
-        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> trampoline @->
           returning error_code)
     let rmdir =
       foreign "uv_fs_rmdir"
-        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> trampoline @->
           returning error_code)
     let scandir =
       foreign "uv_fs_scandir"
-        (ptr Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> int @-> trampoline @->
           returning error_code)
     let scandir_next =
       foreign "uv_fs_scandir_next"
         (ptr request @-> ptr Types.File.Dirent.t @-> returning error_code)
     let stat =
       foreign "uv_fs_stat"
-        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> trampoline @->
           returning error_code)
     let lstat =
       foreign "uv_fs_lstat"
-        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> trampoline @->
           returning error_code)
     let fstat =
       foreign "uv_fs_fstat"
@@ -476,7 +482,11 @@ struct
           returning error_code)
     let rename =
       foreign "uv_fs_rename"
-        (ptr Loop.t @-> ptr request @-> string @-> string @-> trampoline @->
+        (ptr Loop.t @->
+         ptr request @->
+         ocaml_string @->
+         ocaml_string @->
+         trampoline @->
           returning error_code)
     let fsync =
       foreign "uv_fs_fsync"
@@ -494,8 +504,8 @@ struct
       foreign "uv_fs_copyfile"
         (ptr Loop.t @->
          ptr request @->
-         string @->
-         string @->
+         ocaml_string @->
+         ocaml_string @->
          int @->
          trampoline @->
           returning error_code)
@@ -511,11 +521,11 @@ struct
           returning error_code)
     let access =
       foreign "uv_fs_access"
-        (ptr Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> int @-> trampoline @->
           returning error_code)
     let chmod =
       foreign "uv_fs_chmod"
-        (ptr Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> int @-> trampoline @->
           returning error_code)
     let fchmod =
       foreign "uv_fs_fchmod"
@@ -525,7 +535,7 @@ struct
       foreign "uv_fs_utime"
         (ptr Loop.t @->
          ptr request @->
-         string @->
+         ocaml_string @->
          float @->
          float @->
          trampoline @->
@@ -541,30 +551,34 @@ struct
           returning error_code)
     let link =
       foreign "uv_fs_link"
-        (ptr Loop.t @-> ptr request @-> string @-> string @-> trampoline @->
+        (ptr Loop.t @->
+         ptr request @->
+         ocaml_string @->
+         ocaml_string @->
+         trampoline @->
           returning error_code)
     let symlink =
       foreign "uv_fs_symlink"
         (ptr Loop.t @->
          ptr request @->
-         string @->
-         string @->
+         ocaml_string @->
+         ocaml_string @->
          int @->
          trampoline @->
           returning error_code)
     let readlink =
       foreign "uv_fs_readlink"
-        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> trampoline @->
           returning error_code)
     let realpath =
       foreign "uv_fs_realpath"
-        (ptr Loop.t @-> ptr request @-> string @-> trampoline @->
+        (ptr Loop.t @-> ptr request @-> ocaml_string @-> trampoline @->
           returning error_code)
     let chown =
       foreign "uv_fs_chown"
         (ptr Loop.t @->
          ptr request @->
-         string @->
+         ocaml_string @->
          uid @->
          gid @->
          trampoline @->
@@ -582,7 +596,7 @@ struct
       foreign "uv_fs_lchown"
         (ptr Loop.t @->
          ptr request @->
-         string @->
+         ocaml_string @->
          uid @->
          gid @->
          trampoline @->
@@ -596,5 +610,39 @@ struct
     let get_statbuf =
       foreign "uv_fs_get_statbuf"
         (ptr request @-> returning (ptr Types.File.Stat.t))
+  end
+
+  module Pipe =
+  struct
+    let t = Types.Pipe.t
+
+    let init =
+      foreign "uv_pipe_init"
+        (ptr Loop.t @-> ptr t @-> bool @-> returning error_code)
+    let open_ =
+      foreign "uv_pipe_open" (ptr t @-> File.file @-> returning error_code)
+    let bind =
+      foreign "uv_pipe_bind" (ptr t @-> ocaml_string @-> returning error_code)
+    let connect =
+      foreign "uv_pipe_connect"
+        (ptr Types.Stream.Connect_request.t @->
+         ptr t @->
+         ocaml_string @->
+         Stream.Connect_request.trampoline @->
+          returning void)
+    let getsockname =
+      foreign "uv_pipe_getsockname"
+        (ptr t @-> ocaml_bytes @-> ptr size_t @-> returning error_code)
+    let getpeername =
+      foreign "uv_pipe_getpeername"
+        (ptr t @-> ocaml_bytes @-> ptr size_t @-> returning error_code)
+    let pending_instances =
+      foreign "uv_pipe_pending_instances" (ptr t @-> int @-> returning void)
+    let pending_count =
+      foreign "uv_pipe_pending_count" (ptr t @-> returning int)
+    (* TODO Type of result. *)
+    let pending_type =
+      foreign "uv_pipe_pending_type" (ptr t @-> returning int)
+    let chmod = foreign "uv_pipe_chmod" (ptr t @-> int @-> returning error_code)
   end
 end

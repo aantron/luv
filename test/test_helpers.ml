@@ -56,17 +56,19 @@ let check_pointer name expected actual =
 
 let pp_directory_entry formatter entry =
   let kind =
-    match Luv.File.Directory_scan.(entry.kind) with
-    | `Regular_file -> "`Regular_file"
-    | `Directory -> "`Directory"
-    | `Symlink -> "`Symlink"
-    | `FIFO -> "`FIFO"
-    | `Socket -> "`Socket"
-    | `Character_device -> "`Character_device"
-    | `Block_device -> "`Block_device"
-    | `Unknown i -> Printf.sprintf "`Unknown(%i)" i
+    let open Luv.File.Dirent in
+    match entry.kind with
+    | _ when entry.kind = Kind.file -> "file"
+    | _ when entry.kind = Kind.dir -> "dir"
+    | _ when entry.kind = Kind.link -> "link"
+    | _ when entry.kind = Kind.fifo -> "fifo"
+    | _ when entry.kind = Kind.socket -> "socket"
+    | _ when entry.kind = Kind.char -> "char"
+    | _ when entry.kind = Kind.block -> "block"
+    | _ when entry.kind = Kind.unknown -> "unknown"
+    | _ -> "unknown"
   in
-  Format.fprintf formatter "%s %s" kind Luv.File.Directory_scan.(entry.name)
+  Format.fprintf formatter "%s %s" kind Luv.File.Dirent.(entry.name)
 
 let directory_entry_testable =
   Alcotest.of_pp pp_directory_entry
@@ -74,8 +76,7 @@ let directory_entry_testable =
 let check_directory_entries name expected actual =
   let expected =
     expected
-    |> List.map
-      (fun name -> Luv.File.Directory_scan.{kind = `Regular_file; name})
+    |> List.map (fun name -> Luv.File.Dirent.{kind = Kind.file; name})
     |> List.sort Pervasives.compare
   in
   let actual =
@@ -83,6 +84,19 @@ let check_directory_entries name expected actual =
     |> List.sort Pervasives.compare
   in
   Alcotest.(check (list directory_entry_testable)) name expected actual
+
+let pp_address formatter address =
+  match address with
+  | Unix.ADDR_UNIX path ->
+    Format.pp_print_string formatter path
+  | Unix.ADDR_INET (address, port) ->
+    Format.fprintf formatter "%s:%i" (Unix.string_of_inet_addr address) port
+
+let address_testable =
+  Alcotest.of_pp pp_address
+
+let check_address name expected actual =
+  Alcotest.(check address_testable) name expected actual
 
 let count_allocated_words () =
   Gc.full_major ();
