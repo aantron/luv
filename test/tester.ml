@@ -13,6 +13,7 @@ let () =
     TCP.tests;
     File.tests;
     Pipe.tests;
+    Process.tests;
   ])
 
 (* TODO Apply Bisect_ppx. *)

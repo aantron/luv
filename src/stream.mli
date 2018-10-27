@@ -16,13 +16,15 @@ val read_stop : _ t -> Error.t
 
 (* DOC how to use Array1.sub to create views into the arrays. *)
 val write : _ t -> Bigstring.t list -> (Error.t -> unit) -> unit
+(* TODO Merge write2 into write1. *)
 val write2 :
-  send_handle:'other_kind t ->
   'kind t ->
   Bigstring.t list ->
+  send_handle:'other_kind t ->
   (Error.t -> unit) ->
     unit
-(* TODO Test, probably with pipes *)
+(* TODO Restrict send_handle to pipes and TCP handles, and make sure it is not
+   possible to send TTY handles. *)
 
 val try_write : _ t -> Bigstring.t list -> (int, Error.t) Result.result
 val is_readable : _ t -> bool
@@ -40,3 +42,5 @@ sig
     (C.Types.Stream.Connect_request.t Ctypes.ptr -> Error.t -> unit)
       Ctypes.static_funptr
 end
+
+val coerce : _ t -> [ `Base ] t

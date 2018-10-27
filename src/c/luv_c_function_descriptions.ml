@@ -2,6 +2,8 @@
    proportionally in the number of files the bindings are spread over.
    https://github.com/ocaml/dune/issues/135. *)
 
+(* TODO Scan strings for internal null terminators and fail if found? *)
+
 module Types = Luv_c_types
 
 module Descriptions (F : Ctypes.FOREIGN) =
@@ -11,19 +13,20 @@ struct
   open Ctypes
   open F
 
+  (* TODO For err_name, either catch (and cache) Unknown, or upgrade to 1.22 and
+     use uv_err_name_r. *)
   module Error =
   struct
-    let strerror = foreign "uv_strerror" (error_code @-> returning string)
-    let err_name = foreign "uv_err_name" (error_code @-> returning string)
+    let strerror = foreign "luv_strerror" (error_code @-> returning string)
+    let err_name = foreign "luv_err_name" (error_code @-> returning string)
     let translate_sys_error =
       foreign "uv_translate_sys_error" (int @-> returning error_code)
   end
 
-  (* TODO Look into warnings about const char. *)
   module Version =
   struct
     let version = foreign "uv_version" (void @-> returning int)
-    let string = foreign "uv_version_string" (void @-> returning string)
+    let string = foreign "luv_version_string" (void @-> returning string)
   end
 
   module Loop =
@@ -52,13 +55,9 @@ struct
 
   module Buf =
   struct
-    type bigstring =
-      (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
-    let bigstring_list : bigstring list typ = ocaml_any_value
-
     let bigstrings_to_iovecs =
-      foreign "bigstrings_to_iovecs"
-        (bigstring_list @-> int @-> returning (ptr Types.Buf.t))
+      foreign "luv_bigstrings_to_iovecs"
+        (ptr (ptr char) @-> ptr int @-> int @-> returning (ptr Types.Buf.t))
     let free = foreign "free" (ptr void @-> returning void)
   end
 
@@ -117,7 +116,7 @@ struct
     let set_data =
       foreign "uv_req_set_data" (ptr t @-> ptr void @-> returning void)
     let get_type = foreign "uv_req_get_type" (ptr t @-> returning int)
-    let type_name = foreign "uv_req_type_name" (int @-> returning string)
+    let type_name = foreign "luv_req_type_name" (int @-> returning string)
   end
 
   module Timer =
@@ -244,8 +243,6 @@ struct
     let stop = foreign "uv_signal_stop" (ptr t @-> returning error_code)
   end
 
-  (* TODO Processes *)
-
   module Stream =
   struct
     module Connect_request =
@@ -308,7 +305,7 @@ struct
         (ptr t @-> int @-> connection_trampoline @-> returning error_code)
     let accept = foreign "uv_accept" (ptr t @-> ptr t @-> returning error_code)
     let read_start =
-      foreign "uv_read_start"
+      foreign "luv_read_start"
         (ptr t @-> Handle.alloc_trampoline @-> read_trampoline @->
           returning error_code)
     let read_stop = foreign "uv_read_stop" (ptr t @-> returning error_code)
@@ -338,20 +335,6 @@ struct
       foreign "uv_stream_set_blocking" (ptr t @-> bool @-> returning error_code)
     let get_write_queue_size =
       foreign "uv_stream_get_write_queue_size" (ptr t @-> returning size_t)
-  end
-
-  (* TODO Ctypes: release runtime lock on a per-function basis? *)
-  module Sockaddr =
-  struct
-    let t = Types.Sockaddr.union
-    let unix_sockaddr : Unix.sockaddr typ = ocaml_any_value
-
-    let ocaml_to_c =
-      foreign (* ~release_runtime_lock:false *) "get_sockaddr"
-        (unix_sockaddr @-> ptr t @-> ptr int @-> returning void)
-    let c_to_ocaml =
-      foreign "alloc_sockaddr"
-        (ptr t @-> int @-> int @-> returning unix_sockaddr)
   end
 
   module TCP =
@@ -606,7 +589,7 @@ struct
     let get_ptr =
       foreign "uv_fs_get_ptr" (ptr request @-> returning string)
     let get_path =
-      foreign "uv_fs_get_path" (ptr request @-> returning string)
+      foreign "luv_fs_get_path" (ptr request @-> returning string)
     let get_statbuf =
       foreign "uv_fs_get_statbuf"
         (ptr request @-> returning (ptr Types.File.Stat.t))
@@ -644,5 +627,48 @@ struct
     let pending_type =
       foreign "uv_pipe_pending_type" (ptr t @-> returning int)
     let chmod = foreign "uv_pipe_chmod" (ptr t @-> int @-> returning error_code)
+  end
+
+  module Process =
+  struct
+    let t = Types.Process.t
+
+    (* TODO The other functions. *)
+
+    let exit_cb =
+      static_funptr Ctypes.(ptr t @-> int64_t @-> int @-> returning void)
+
+    let get_trampoline =
+      foreign "luv_address_of_exit_trampoline" (void @-> returning exit_cb)
+    let get_null_callback =
+      foreign "luv_null_exit_trampoline" (void @-> returning exit_cb)
+
+    let disable_stdio_inheritance =
+      foreign "uv_disable_stdio_inheritance" (void @-> returning void)
+    let spawn =
+      foreign "luv_spawn"
+        (ptr Loop.t @->
+         ptr t @->
+         exit_cb @->
+         ocaml_string @->
+         ptr string @->
+         int @->
+         ptr string @->
+         int @->
+         bool @->
+         ocaml_string @->
+         bool @->
+         int @->
+         int @->
+         ptr Types.Process.Redirection.t @->
+         int @->
+         int @->
+          returning error_code)
+    let process_kill =
+      foreign "uv_process_kill" (ptr t @-> int @-> returning error_code)
+    let kill =
+      foreign "uv_kill" (int @-> int @-> returning error_code)
+    let get_pid =
+      foreign "uv_process_get_pid" (ptr t @-> returning int)
   end
 end

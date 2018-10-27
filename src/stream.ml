@@ -1,8 +1,6 @@
 type 'kind t = 'kind C.Types.Stream.stream Handle.t
 
-let coerce :
-    type any_type_of_stream any_other_type_of_stream.
-    any_type_of_stream t -> any_other_type_of_stream t =
+let coerce : type kind. kind t -> [ `Base ] t =
   Obj.magic
 
 let shutdown_trampoline =
@@ -64,11 +62,11 @@ let read_start ?(allocate = Bigstring.create) stream callback =
           | None -> assert false
         in
         last_allocated_buffer := None;
-        Ok (buffer, nread)
+        Result.Ok (buffer, nread)
       end
       else begin
         last_allocated_buffer := None;
-        Error nread_or_error
+        Result.Error nread_or_error
       end
     in
     callback result
@@ -99,7 +97,7 @@ let write stream buffers callback =
   let request = Request.allocate C.Types.Stream.Write_request.t in
 
   let count = List.length buffers in
-  let iovecs = C.Functions.Buf.bigstrings_to_iovecs buffers count in
+  let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
 
   Request.set_callback_2 request (fun _request result ->
     C.Functions.Buf.free (Ctypes.to_voidp iovecs);
@@ -122,14 +120,11 @@ let write stream buffers callback =
   end
 
 (* DOC send_handle must remain open during the operation. *)
-(* TODO Tests for this like write, but with pipes? *)
-let write2 ~send_handle stream buffers callback =
+let write2 stream buffers ~send_handle callback =
   let request = Request.allocate C.Types.Stream.Write_request.t in
 
   let count = List.length buffers in
-  let iovecs = C.Functions.Buf.bigstrings_to_iovecs buffers count in
-
-  (* TODO Test retention of the buffers. *)
+  let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
 
   Request.set_callback_2 request (fun _request result ->
     C.Functions.Buf.free (Ctypes.to_voidp iovecs);
@@ -154,7 +149,7 @@ let write2 ~send_handle stream buffers callback =
 
 let try_write stream buffers =
   let count = List.length buffers in
-  let iovecs = C.Functions.Buf.bigstrings_to_iovecs buffers count in
+  let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
 
   let result =
     C.Functions.Stream.try_write

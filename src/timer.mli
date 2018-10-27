@@ -2,6 +2,7 @@ type t = [ `Timer ] Handle.t
 
 val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result
 
+(* TODO Make repeat optional, and put callback last. *)
 val start :
   callback:(t -> unit) -> t -> timeout:int -> repeat:int -> Error.t
 

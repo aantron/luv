@@ -4,7 +4,7 @@
  (public_name luv.c)
  (wrapped false)
  (modules Luv_c_generated_functions)
- (c_names c_generated_functions trampolines)
+ (c_names c_generated_functions helpers)
  (libraries ctypes.stubs luv_c_function_descriptions)
  (c_flags (:standard "-I ../vendor"))
  (c_library_flags (:standard -Lsrc/vendor -Lluv/src/vendor -luv -lpthread)))

@@ -24,10 +24,6 @@ let open_ pipe file =
 let bind pipe name_or_path =
   C.Functions.Pipe.bind (Handle.c pipe) (Ctypes.ocaml_string_start name_or_path)
 
-(* TODO Carefully review lifetimes, combine with TCP review. Test everything. *)
-(* TODO What happens with synchronous failure? *)
-(* TODO Test *)
-(* TODO Test for memory leaks. *)
 let connect pipe name_or_path callback =
   let request = Stream.Connect_request.make () in
   Request.set_callback_2 request (fun _request -> callback);
@@ -36,8 +32,6 @@ let connect pipe name_or_path callback =
     (Handle.c pipe)
     (Ctypes.ocaml_string_start name_or_path)
     Stream.Connect_request.trampoline
-
-(* TODO grep for all instances of Error not prefdgsdfgfixed with Result. *)
 
 let rec generic_getname ?(buffer_size = 128) c_function pipe =
   let length_cell =
@@ -57,16 +51,25 @@ let rec generic_getname ?(buffer_size = 128) c_function pipe =
 let getsockname = generic_getname C.Functions.Pipe.getsockname
 let getpeername = generic_getname C.Functions.Pipe.getpeername
 
-let pending_instances _pipe _count =
-  assert false
+let pending_instances pipe count =
+  C.Functions.Pipe.pending_instances (Handle.c pipe) count
 
-let pending_count _pipe =
-  assert false
+let accept_handle pipe handle =
+  C.Functions.Stream.accept
+    (Handle.c (Stream.coerce pipe)) (Handle.c (Stream.coerce handle))
 
-let pending_type _pipe =
-  assert false
+let receive_handle pipe =
+  let pending_count = C.Functions.Pipe.pending_count (Handle.c pipe) in
+  if pending_count = 0 then
+    `None
+  else
+    let pending_type = C.Functions.Pipe.pending_type (Handle.c pipe) in
+    if pending_type = C.Types.Handle.Type.tcp then
+      `TCP (accept_handle pipe)
+    else if pending_type = C.Types.Handle.Type.named_pipe then
+      `Pipe (accept_handle pipe)
+    else
+      `None
 
 let chmod pipe mode =
   C.Functions.Pipe.chmod (Handle.c pipe) mode
-
-(* TODO Tests. *)

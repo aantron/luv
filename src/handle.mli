@@ -20,7 +20,8 @@ val allocate :
 val c : 'kind t -> 'kind C.Types.Handle.t Ctypes.ptr
 val set_callback : ?index:int -> _ t -> _ -> unit
 val get_callback : index:int -> _ t -> _
-val from_c : 'kind C.Types.Handle.t Ctypes.ptr -> 'kind t
+val coerce :
+  _ C.Types.Handle.t Ctypes.ptr -> [ `Base ] C.Types.Handle.t Ctypes.ptr
 
 (* DOC warn about memory leak if not calling close. *)
 (* DOC after close, the loop must be run. *)

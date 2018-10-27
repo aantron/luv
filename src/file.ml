@@ -313,7 +313,7 @@ struct
       returns_byte_count
       (fun run ?(offset = -1L) file buffers ->
         let count = List.length buffers in
-        let iovecs = C.Functions.Buf.bigstrings_to_iovecs buffers count in
+        let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
         run
           (!file @@ !iovecs @@ uint count @@ !offset)
           (fun () ->

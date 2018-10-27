@@ -54,9 +54,7 @@ let generic_get_name c_function tcp =
     Result.Error result
   else begin
     let ocaml_sockaddr =
-      C.Functions.Sockaddr.c_to_ocaml
-        (Ctypes.addr c_sockaddr) (Ctypes.(!@) c_sockaddr_length) (-1)
-    in
+      Misc.Sockaddr.c_to_ocaml c_sockaddr (Ctypes.(!@) c_sockaddr_length) in
     Result.Ok ocaml_sockaddr
   end
 

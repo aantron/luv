@@ -138,9 +138,31 @@ let no_memory_leak ?(base_repetitions = 100) f =
 let default_loop =
   Luv.Loop.default ()
 
-let run () =
-  Luv.Loop.run default_loop Luv.Loop.Run_mode.default
-  |> ignore
+let run ?(with_timeout = false) () =
+  if with_timeout then begin
+    let timeout =
+      Luv.Timer.init ()
+      |> check_success_result "run timeout init"
+    in
+
+    let stop = ref false in
+
+    Luv.Loop.update_time default_loop;
+    Luv.Timer.start
+      timeout ~timeout:5 ~repeat:0 ~callback:(fun _ -> stop := true)
+    |> check_success "timeout timer start";
+
+    let rec run () =
+      if !stop then ()
+      else
+        if Luv.Loop.(run default_loop Run_mode.once) then run ()
+        else ()
+    in
+    run ()
+  end
+  else
+    Luv.Loop.run default_loop Luv.Loop.Run_mode.default
+    |> ignore
 
 let port = ref 5000
 let port () =

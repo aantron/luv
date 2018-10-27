@@ -1,8 +1,7 @@
 type 'kind c_handle = 'kind C.Types.Handle.t
 
 let coerce :
-    type any_type_of_handle.
-    any_type_of_handle c_handle Ctypes.ptr -> [ `Base ] c_handle Ctypes.ptr =
+    type kind. (kind c_handle) Ctypes.ptr -> ([ `Base ] c_handle) Ctypes.ptr =
   Obj.magic
 
 (* DOC Document how the callback table works. *)
@@ -32,10 +31,11 @@ let c handle =
   raise_if_closed handle;
   handle.c_handle
 
-let from_c c_handle =
+(* TODO Remove. *)
+(* let from_c c_handle =
   coerce c_handle
   |> C.Functions.Handle.get_data
-  |> Ctypes.Root.get
+  |> Ctypes.Root.get *)
 
 let set_callback
     ?(index = C.Types.Handle.generic_callback_index) handle callback =
@@ -52,7 +52,6 @@ let close_trampoline =
 let close handle =
   if is_closing handle then
     ()
-
   else begin
     let close_callback handle =
       C.Functions.Handle.get_data (coerce handle.c_handle)

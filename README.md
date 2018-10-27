@@ -33,8 +33,8 @@ This probably only works on Linux at the moment.
 ## Roadmap
 
 - [x] File I/O.
-- [ ] Process API.
-- [ ] Pipes, TTYs, UDP.
+- [x] Process API, pipes.
+- [ ] TTYs, UDP.
 - [ ] FS events, FS polling.
 - [ ] The rest (thread pool, DNS, `dlopen`).
 - [ ] Look into using luv for native Node.js modules.

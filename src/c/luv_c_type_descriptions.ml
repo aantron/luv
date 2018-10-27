@@ -141,6 +141,12 @@ struct
 
   module Handle =
   struct
+    module Type =
+    struct
+      let tcp = constant "UV_TCP" int
+      let named_pipe = constant "UV_NAMED_PIPE" int
+    end
+
     type 'kind handle
     type 'kind t = ('kind handle) structure
     let t : ([ `Base ] t) typ = typedef (structure "`Handle`") "uv_handle_t"
@@ -219,7 +225,6 @@ struct
     let sigusr1_for_testing = constant "SIGUSR1" int
   end
 
-  (* TODO Fill out. *)
   module Stream =
   struct
     type 'kind stream
@@ -260,14 +265,15 @@ struct
     end
   end
 
-  (* Sockaddr helpers from the OCaml Unix module's C code. *)
+  (* For the sockaddr helpers from the OCaml Unix module's C code. *)
   module Sockaddr =
   struct
     type t = [ `Sockaddr ] structure
     let t : t typ = structure "sockaddr"
     let () = seal t
 
-    let union : ([ `Sockaddr_union ] union) typ = union "sock_addr_union"
+    type nonrec union = [ `Sockaddr_union ] union
+    let union : union typ = union "sock_addr_union"
     let s_gen = field union "s_gen" t
     let () = seal union
   end
@@ -443,5 +449,35 @@ struct
     let t : ([ `Process ] Handle.t) typ =
       typedef (structure "`Process") "uv_process_t"
     let () = seal t
+
+    module Flag =
+    struct
+      let setuid = constant "UV_PROCESS_SETUID" int
+      let setgid = constant "UV_PROCESS_SETGID" int
+      let windows_verbatim_arguments =
+        constant "UV_PROCESS_WINDOWS_VERBATIM_ARGUMENTS" int
+      let detached = constant "UV_PROCESS_DETACHED" int
+      let windows_hide = constant "UV_PROCESS_WINDOWS_HIDE" int
+    end
+
+    module Redirection =
+    struct
+      type t = [ `Redirection ] structure
+      let t : t typ =
+        typedef (structure "`Redirection") "uv_stdio_container_t"
+      let flags = field t "flags" int
+      let stream = field t "data.stream" (ptr Handle.t)
+      let fd = field t "data.fd" int
+      let () = seal t
+
+      let ignore = constant "UV_IGNORE" int
+      let create_pipe = constant "UV_CREATE_PIPE" int
+      let inherit_fd = constant "UV_INHERIT_FD" int
+      let inherit_stream = constant "UV_INHERIT_STREAM" int
+      let readable_pipe = constant "UV_READABLE_PIPE" int
+      let writable_pipe = constant "UV_WRITABLE_PIPE" int
+      (* let overlapped_pipe = constant "UV_OVERLAPPED_PIPE" int *)
+      (* TODO Needs libuv 1.21. *)
+    end
   end
 end

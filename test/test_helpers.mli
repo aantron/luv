@@ -17,6 +17,6 @@ val make_callback : unit -> (_ -> unit)
 val no_memory_leak : ?base_repetitions:int -> (int -> unit) -> unit
 
 val default_loop : Luv.Loop.t
-val run : unit -> unit
+val run : ?with_timeout:bool -> unit -> unit
 
 val port : unit -> int
