@@ -31,11 +31,8 @@ val backend_timeout : t -> int
 val now : t -> Unsigned.UInt64.t
 val update_time : t -> unit
 
-(* TODO Note that walk is implemented in Luv.Handle.walk. *)
-
 val fork : t -> Error.t
 
-(* TODO Hide these? *)
 val get_data : t -> unit Ctypes.ptr
 val set_data : t -> unit Ctypes.ptr -> unit
 

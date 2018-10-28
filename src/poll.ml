@@ -34,7 +34,7 @@ let init ?loop ~fd () =
 let trampoline =
   C.Functions.Poll.get_trampoline ()
 
-let start ~callback poll events =
+let start poll events callback =
   let callback poll status event_mask =
     callback poll status (event_bit_mask_to_list event_mask)
   in

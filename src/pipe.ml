@@ -16,13 +16,11 @@ let init ?loop ?(for_handle_passing = false) () =
     (Loop.or_default loop) (Handle.c pipe) for_handle_passing
   |> Error.to_result pipe
 
-(* TODO Get rid of this Obj.magic once uv_file is properly defined as an
-   abstract view of int, or whatever it is. *)
 let open_ pipe file =
-  C.Functions.Pipe.open_ (Handle.c pipe) ((Obj.magic : File.t -> int) file)
+  C.Functions.Pipe.open_ (Handle.c pipe) (File.to_int file)
 
 let bind pipe name_or_path =
-  C.Functions.Pipe.bind (Handle.c pipe) (Ctypes.ocaml_string_start name_or_path)
+  C.Blocking.Pipe.bind (Handle.c pipe) name_or_path
 
 let connect pipe name_or_path callback =
   let request = Stream.Connect_request.make () in

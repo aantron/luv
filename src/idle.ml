@@ -8,7 +8,7 @@ let init ?loop () =
 let trampoline =
   C.Functions.Idle.get_trampoline ()
 
-let start ~callback idle =
+let start idle callback =
   (* If [Handle.is_active idle], then [uv_idle_start] will not overwrite the
      handle's callback. We need to emulate this behavior in the wrapper. *)
   if Handle.is_active idle then

@@ -13,18 +13,15 @@ val read_start :
   ((Bigstring.t * int, Error.t) Result.result -> unit) ->
     unit
 val read_stop : _ t -> Error.t
+(* TODO Is the data always written to the beginning of the buffer? *)
 
 (* DOC how to use Array1.sub to create views into the arrays. *)
-val write : _ t -> Bigstring.t list -> (Error.t -> unit) -> unit
-(* TODO Merge write2 into write1. *)
-val write2 :
-  'kind t ->
+val write :
+  ?send_handle:[< `TCP | `Pipe ] t ->
+  _ t ->
   Bigstring.t list ->
-  send_handle:'other_kind t ->
   (Error.t -> unit) ->
     unit
-(* TODO Restrict send_handle to pipes and TCP handles, and make sure it is not
-   possible to send TTY handles. *)
 
 val try_write : _ t -> Bigstring.t list -> (int, Error.t) Result.result
 val is_readable : _ t -> bool

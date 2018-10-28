@@ -2,9 +2,6 @@
    proportionally in the number of files the bindings are spread over.
    https://github.com/ocaml/dune/issues/135. *)
 
-(* TODO Note the const warnings remain until
-  https://github.com/ocamllabs/ocaml-ctypes/issues/134 *)
-
 module Descriptions (F : Ctypes.TYPE) =
 struct
   open Ctypes
@@ -107,9 +104,9 @@ struct
     let minor = constant "UV_VERSION_MINOR" int
     let patch = constant "UV_VERSION_PATCH" int
     let is_release = constant "UV_VERSION_IS_RELEASE" bool
-    (* TODO How to bind this? *)
-    (* let suffix = constant "UV_VERSION_SUFFIX" (ptr char) *)
     let hex = constant "UV_VERSION_HEX" int
+    (* UV_VERSION_SUFFIX cannot be bound as a constant, so it is bound as a
+       function returning that constant: C.Functions.Version.suffix. *)
   end
 
   module Loop =
@@ -132,11 +129,20 @@ struct
     let () = seal t
   end
 
-  (* TODO: Infer size and alignment, and/or move this somewhere? *)
   module Buf =
   struct
-    type t = [ `Buf ] abstract
-    let t : t typ = abstract ~name:"uv_buf_t" ~size:16 ~alignment:8
+    type t = [ `Buf ] structure
+    let t : t typ = typedef (structure "`Buf") "uv_buf_t"
+    let base = field t "base" (ptr char)
+    let len = field t "len" uint
+    let () = seal t
+  end
+
+  module Os_fd =
+  struct
+    type t = [ `Os_fd ] structure
+    let t : t typ = typedef (structure "`Os_fd") "uv_os_fd_t"
+    let () = seal t
   end
 
   module Handle =
@@ -222,7 +228,18 @@ struct
     let signum = field t "signum" int
     let () = seal t
 
-    let sigusr1_for_testing = constant "SIGUSR1" int
+    module Signum =
+    struct
+      let sigabrt = constant "SIGABRT" int
+      let sigfpe = constant "SIGFPE" int
+      let sighup = constant "SIGHUP" int
+      let sigill = constant "SIGILL" int
+      let sigint = constant "SIGINT" int
+      let sigkill = constant "SIGKILL" int
+      let sigsegv = constant "SIGSEGV" int
+      let sigterm = constant "SIGTERM" int
+      let sigwinch = constant "SIGWINCH" int
+    end
   end
 
   module Stream =
@@ -302,8 +319,8 @@ struct
       let () = seal t
     end
 
-    (* TODO This should actually be an abstract type, but it is defined as int
-       on both Unix and Windows, so this definition is ok until ctypes is
+    (* This should actually be an abstract type, but it is defined as int on
+       both Unix and Windows, so this definition is ok until Ctypes is
        patched. *)
     type t = int
     let t : t typ = int
@@ -360,7 +377,6 @@ struct
     struct
       module Kind =
       struct
-        (* TODO Actual size of this enum, and the corresponding field? *)
         let unknown = constant "UV_DIRENT_UNKNOWN" int
         let file = constant "UV_DIRENT_FILE" int
         let dir = constant "UV_DIRENT_DIR" int
@@ -476,8 +492,7 @@ struct
       let inherit_stream = constant "UV_INHERIT_STREAM" int
       let readable_pipe = constant "UV_READABLE_PIPE" int
       let writable_pipe = constant "UV_WRITABLE_PIPE" int
-      (* let overlapped_pipe = constant "UV_OVERLAPPED_PIPE" int *)
-      (* TODO Needs libuv 1.21. *)
+      let overlapped_pipe = constant "UV_OVERLAPPED_PIPE" int
     end
   end
 end

@@ -13,11 +13,11 @@ struct
     | None -> make ()
 
   let cleanup request =
-    C.Functions.File.req_cleanup (Request.c request)
+    C.Blocking.File.req_cleanup (Request.c request)
 
   let result request =
     Request.c request
-    |> C.Functions.File.get_result
+    |> C.Blocking.File.get_result
     |> PosixTypes.Ssize.to_int
     |> Error.coerce
     |> Error.clamp
@@ -25,13 +25,13 @@ struct
   let file request =
     let file_or_error =
       Request.c request
-      |> C.Functions.File.get_result
+      |> C.Blocking.File.get_result
       |> PosixTypes.Ssize.to_int
     in
     Error.to_result file_or_error (Error.coerce file_or_error)
 
   let byte_count request =
-    let count_or_error = C.Functions.File.get_result (Request.c request) in
+    let count_or_error = C.Blocking.File.get_result (Request.c request) in
     if PosixTypes.Ssize.(compare count_or_error zero) >= 0 then
       count_or_error
       |> PosixTypes.Ssize.to_int64
@@ -45,7 +45,7 @@ struct
 
   let path request =
     Request.c request
-    |> C.Functions.File.get_path
+    |> C.Blocking.File.get_path
 end
 
 module Bit_flag_operations =
@@ -100,7 +100,7 @@ struct
 
   let next scan =
     let result =
-      C.Functions.File.scandir_next
+      C.Blocking.File.scandir_next
         (Request.c scan.request) (Ctypes.addr scan.dirent)
     in
     if result <> Error.success then begin
@@ -152,7 +152,7 @@ struct
 
   let load request =
     let c_stat =
-      Ctypes.(!@) (C.Functions.File.get_statbuf (Request.c request)) in
+      Ctypes.(!@) (C.Blocking.File.get_statbuf (Request.c request)) in
     let field f = Ctypes.getf c_stat f in
     let module C_stat = C.Types.File.Stat in
     {
@@ -251,7 +251,7 @@ struct
   let returns_string = {
     from_request = (fun request ->
       Error.to_result_lazy
-        (fun () -> C.Functions.File.get_ptr (Request.c request))
+        (fun () -> C.Blocking.File.get_ptr (Request.c request))
         (Request_.result request));
     immediate_error = construct_error;
     clean_up_request_on_success = true;
@@ -260,7 +260,6 @@ end
 
 module Args =
 struct
-  let string s = fun f -> f (Ctypes.ocaml_string_start s)
   let uint i = fun f -> f (Unsigned.UInt.of_int i)
 
   let (!) v = fun f -> f v
@@ -278,7 +277,7 @@ sig
   val async_or_sync :
     (Loop.t -> Request_.t -> 'c_signature) ->
     'result Returns.t ->
-    ((('c_signature -> C.Functions.File.trampoline -> Error.t) ->
+    ((('c_signature -> C.Blocking.File.trampoline -> Error.t) ->
       (unit -> unit) ->
         'result cps_or_normal_return) ->
        'ocaml_signature) ->
@@ -291,19 +290,18 @@ struct
   open Args
 
   let async_or_sync = Async_or_sync.async_or_sync
-
   let no_cleanup = ignore
 
   let open_ =
     async_or_sync
-      C.Functions.File.open_
+      C.Blocking.File.open_
       returns_file
       (fun run ?(mode = Mode.file_default) path flags ->
-        run (string path @@ !flags @@ !mode) no_cleanup)
+        run (!path @@ !flags @@ !mode) no_cleanup)
 
   let close =
     async_or_sync
-      C.Functions.File.close
+      C.Blocking.File.close
       returns_error
       (fun run file -> run !file no_cleanup)
 
@@ -315,60 +313,60 @@ struct
         let count = List.length buffers in
         let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
         run
-          (!file @@ !iovecs @@ uint count @@ !offset)
+          (!file @@ !(Ctypes.CArray.start iovecs) @@ uint count @@ !offset)
           (fun () ->
-            C.Functions.Buf.free (Ctypes.to_voidp iovecs);
-            ignore (Sys.opaque_identity buffers)))
+            ignore (Sys.opaque_identity buffers);
+            ignore (Sys.opaque_identity iovecs)))
 
-    let read = read_or_write C.Functions.File.read
-    let write = read_or_write C.Functions.File.write
+  let read = read_or_write C.Blocking.File.read
+  let write = read_or_write C.Blocking.File.write
 
   let unlink =
     async_or_sync
-      C.Functions.File.unlink
+      C.Blocking.File.unlink
       returns_error
-      (fun run path -> run (string path) no_cleanup)
+      (fun run path -> run !path no_cleanup)
 
   let mkdir =
     async_or_sync
-      C.Functions.File.mkdir
+      C.Blocking.File.mkdir
       returns_error
       (fun run ?(mode = Mode.directory_default) path ->
-        run (string path @@ !mode) no_cleanup)
+        run (!path @@ !mode) no_cleanup)
 
   let mkdtemp =
     async_or_sync
-      C.Functions.File.mkdtemp
+      C.Blocking.File.mkdtemp
       returns_path
-      (fun run path -> run (string path) no_cleanup)
+      (fun run path -> run !path no_cleanup)
 
   let rmdir =
     async_or_sync
-      C.Functions.File.rmdir
+      C.Blocking.File.rmdir
       returns_error
-      (fun run path -> run (string path) no_cleanup)
+      (fun run path -> run !path no_cleanup)
 
   let scandir =
     async_or_sync
-      C.Functions.File.scandir
+      C.Blocking.File.scandir
       returns_directory_scan
-      (fun run path -> run (string path @@ !0) no_cleanup)
+      (fun run path -> run (!path @@ !0) no_cleanup)
 
-  let generic_stat c_function pass =
+  let generic_stat c_function =
     async_or_sync
       c_function
       returns_stat
-      (fun run argument -> run (pass argument) no_cleanup)
+      (fun run argument -> run !argument no_cleanup)
 
-  let stat = generic_stat C.Functions.File.stat string
-  let lstat = generic_stat C.Functions.File.lstat string
-  let fstat = generic_stat C.Functions.File.fstat (!)
+  let stat = generic_stat C.Blocking.File.stat
+  let lstat = generic_stat C.Blocking.File.lstat
+  let fstat = generic_stat C.Blocking.File.fstat
 
   let rename =
     async_or_sync
-      C.Functions.File.rename
+      C.Blocking.File.rename
       returns_error
-      (fun run ~from ~to_ -> run (string from @@ string to_) no_cleanup)
+      (fun run ~from ~to_ -> run (!from @@ !to_) no_cleanup)
 
   let generic_fsync c_function =
     async_or_sync
@@ -376,91 +374,90 @@ struct
       returns_error
       (fun run file -> run !file no_cleanup)
 
-  let fsync = generic_fsync C.Functions.File.fsync
-  let fdatasync = generic_fsync C.Functions.File.fdatasync
+  let fsync = generic_fsync C.Blocking.File.fsync
+  let fdatasync = generic_fsync C.Blocking.File.fdatasync
 
   let ftruncate =
     async_or_sync
-      C.Functions.File.ftruncate
+      C.Blocking.File.ftruncate
       returns_error
       (fun run file length -> run (!file @@ !length) no_cleanup)
 
   let copyfile =
     async_or_sync
-      C.Functions.File.copyfile
+      C.Blocking.File.copyfile
       returns_error
-      (fun run ~from ~to_ flags ->
-        run (string from @@ string to_ @@ !flags) no_cleanup)
+      (fun run ~from ~to_ flags -> run (!from @@ !to_ @@ !flags) no_cleanup)
 
   let sendfile =
     async_or_sync
-      C.Functions.File.sendfile
+      C.Blocking.File.sendfile
       returns_byte_count
       (fun run ~to_ ~from ~offset length ->
         run (!to_ @@ !from @@ !offset @@ !length) no_cleanup)
 
   let access =
     async_or_sync
-      C.Functions.File.access
+      C.Blocking.File.access
       returns_error
-      (fun run path mode -> run (string path @@ !mode) no_cleanup)
+      (fun run path mode -> run (!path @@ !mode) no_cleanup)
 
-  let generic_chmod c_function pass =
+  let generic_chmod c_function =
     async_or_sync
       c_function
       returns_error
-      (fun run argument mode -> run (pass argument @@ !mode) no_cleanup)
+      (fun run argument mode -> run (!argument @@ !mode) no_cleanup)
 
-  let chmod = generic_chmod C.Functions.File.chmod string
-  let fchmod = generic_chmod C.Functions.File.fchmod (!)
+  let chmod = generic_chmod C.Blocking.File.chmod
+  let fchmod = generic_chmod C.Blocking.File.fchmod
 
-  let generic_utime c_function pass =
+  let generic_utime c_function =
     async_or_sync
       c_function
       returns_error
       (fun run argument ~atime ~mtime ->
-        run (pass argument @@ !atime @@ !mtime) no_cleanup)
+        run (!argument @@ !atime @@ !mtime) no_cleanup)
 
-  let utime = generic_utime C.Functions.File.utime string
-  let futime = generic_utime C.Functions.File.futime (!)
+  let utime = generic_utime C.Blocking.File.utime
+  let futime = generic_utime C.Blocking.File.futime
 
   let link =
     async_or_sync
-      C.Functions.File.link
+      C.Blocking.File.link
       returns_error
-      (fun run ~target ~link -> run (string target @@ string link) no_cleanup)
+      (fun run ~target ~link -> run (!target @@ !link) no_cleanup)
 
   let symlink =
     async_or_sync
-      C.Functions.File.symlink
+      C.Blocking.File.symlink
       returns_error
       (fun run ~target ~link flags ->
-        run (string target @@ string link @@ !flags) no_cleanup)
+        run (!target @@ !link @@ !flags) no_cleanup)
 
   let generic_readpath c_function =
     async_or_sync
       c_function
       returns_string
-      (fun run path -> run (string path) no_cleanup)
+      (fun run path -> run !path no_cleanup)
 
-  let readlink = generic_readpath C.Functions.File.readlink
-  let realpath = generic_readpath C.Functions.File.realpath
+  let readlink = generic_readpath C.Blocking.File.readlink
+  let realpath = generic_readpath C.Blocking.File.realpath
 
-  let generic_chown c_function pass =
+  let generic_chown c_function =
     async_or_sync
       c_function
       returns_error
-      (fun run argument uid gid ->
-        run (pass argument @@ !uid @@ !gid) no_cleanup)
+      (fun run argument ~uid ~gid -> run (!argument @@ !uid @@ !gid) no_cleanup)
 
-  let chown = generic_chown C.Functions.File.chown string
-  let fchown = generic_chown C.Functions.File.fchown (!)
+  let chown = generic_chown C.Blocking.File.chown
+  let fchown = generic_chown C.Blocking.File.fchown
+  let lchown = generic_chown C.Blocking.File.lchown
 end
 
 module Async =
 struct
   let trampoline =
-    C.Functions.File.get_trampoline ()
+    C.Blocking.File.get_trampoline ()
 
   let async c_function returns get_args =
     fun ?loop ?request ->
@@ -501,7 +498,7 @@ end
 module Sync =
 struct
   let null_callback =
-    C.Functions.File.get_null_callback ()
+    C.Blocking.File.get_null_callback ()
 
   let sync c_function returns get_args =
     get_args begin fun args cleanup ->
@@ -534,3 +531,20 @@ struct
 end
 
 module Request = Request_
+
+let get_osfhandle file =
+  let handle = C.Functions.Os_fd.get_osfhandle file in
+  if C.Functions.Os_fd.is_invalid_handle_value handle then
+    Result.Error Error.ebadf
+  else
+    Result.Ok handle
+
+let open_osfhandle handle =
+  let file = C.Functions.Os_fd.open_osfhandle handle in
+  if file = -1 then
+    Result.Error Error.ebadf
+  else
+    Result.Ok file
+
+let to_int file =
+  file

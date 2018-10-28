@@ -35,9 +35,3 @@ let set_callback_2 request callback =
     callback request v
   in
   set_callback request callback
-
-let clear_callback_if_not_started request maybe_callback error_code =
-  if maybe_callback <> None && error_code <> Error.success then begin
-    clear_callback request
-  end;
-  error_code

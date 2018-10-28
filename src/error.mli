@@ -1,5 +1,5 @@
-(* TODO Document that this is private int. *)
-(* TODO Document how to convert private int to int. *)
+(* DOC Document that this is private int. *)
+(* DOC Document how to convert private int to int. *)
 type t = C.Types.Error.t
 
 val success : t
@@ -79,8 +79,6 @@ val eof : t
 val enxio : t
 val emlink : t
 
-(* TODO Notes from the libuv docs about this function sometimes leaking
-   memory. *)
 val strerror : t -> string
 val err_name : t -> string
 val translate_sys_error : int -> t

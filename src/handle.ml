@@ -31,12 +31,6 @@ let c handle =
   raise_if_closed handle;
   handle.c_handle
 
-(* TODO Remove. *)
-(* let from_c c_handle =
-  coerce c_handle
-  |> C.Functions.Handle.get_data
-  |> Ctypes.Root.get *)
-
 let set_callback
     ?(index = C.Types.Handle.generic_callback_index) handle callback =
   raise_if_closed handle;
@@ -73,6 +67,11 @@ let unref handle =
 
 let has_ref handle =
   C.Functions.Handle.has_ref (coerce handle.c_handle)
+
+let fileno handle =
+  let os_fd = Ctypes.make C.Types.Os_fd.t in
+  C.Functions.Handle.fileno (coerce handle.c_handle) (Ctypes.addr os_fd)
+  |> Error.to_result os_fd
 
 let get_loop handle =
   C.Functions.Handle.get_loop (coerce handle.c_handle)

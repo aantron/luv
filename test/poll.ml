@@ -22,14 +22,15 @@ let tests = [
 
     "start, stop", `Quick, begin fun () ->
       with_poll begin fun poll ->
-        Luv.Poll.start poll [`Writable] ~callback:(fun poll' result events ->
+        Luv.Poll.start poll [`Writable] begin fun poll' result events ->
           if not (poll' == poll) then
             Alcotest.fail "same handle";
           check_success "result" result;
           if not (events = [`Writable]) then
             Alcotest.fail "events";
           Luv.Poll.stop poll
-          |> check_success "stop")
+          |> check_success "stop"
+        end
         |> check_success "start";
 
         run ()

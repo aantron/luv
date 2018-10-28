@@ -33,11 +33,9 @@ sig
   val (lor) : t -> t -> t
 end
 
-(* TODO Portability? *)
-(* TODO "private int" so that mode can decay when returned by stat? *)
 module Mode :
 sig
-  type t
+  type t = private int
 
   val none : t
 
@@ -166,7 +164,6 @@ end
 module Request :
 sig
   type t = [ `File ] Request.t
-
   val make : unit -> t
 end
 
@@ -391,8 +388,8 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     string ->
-    int ->
-    int ->
+    uid:int ->
+    gid:int ->
     (Error.t -> unit) ->
       unit
 
@@ -400,19 +397,19 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     t ->
-    int ->
-    int ->
+    uid:int ->
+    gid:int ->
     (Error.t -> unit) ->
       unit
 
-  (* val lchown :
+  val lchown :
     ?loop:Loop.t ->
     ?request:Request.t ->
     string ->
-    int ->
-    int ->
+    uid:int ->
+    gid:int ->
     (Error.t -> unit) ->
-      unit *)
+      unit
 end
 
 module Sync :
@@ -527,21 +524,22 @@ sig
     string ->
       (string, Error.t) Result.result
 
-  (* TODO Better types for the arguments and maybe labels? *)
   val chown :
-    string -> int -> int ->
+    string -> uid:int -> gid:int ->
       Error.t
 
   val fchown :
-    t -> int -> int ->
+    t -> uid:int -> gid:int ->
       Error.t
 
-  (* TODO Requires libuv 1.21. *)
-  (* val lchown :
-    string -> int -> int ->
-      Error.t *)
+  val lchown :
+    string -> uid:int -> gid:int ->
+      Error.t
 end
 
-(* TODO Eliminate labeled callback arguments from all other modules, too. *)
-(* TODO Review all older code using requests for lifetime, especially in case
-   of synchronous failure. *)
+val get_osfhandle : t -> (Misc.Os_fd.t, Error.t) Result.result
+val open_osfhandle : Misc.Os_fd.t -> (t, Error.t) Result.result
+
+val to_int : t -> int
+(* DOC This is here largely because the Process module is defined by libuv to
+   expect ints. *)

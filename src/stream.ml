@@ -93,56 +93,35 @@ let read_stop stream =
 let write_trampoline =
   C.Functions.Stream.Write_request.get_trampoline ()
 
-let write stream buffers callback =
-  let request = Request.allocate C.Types.Stream.Write_request.t in
-
-  let count = List.length buffers in
-  let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
-
-  Request.set_callback_2 request (fun _request result ->
-    C.Functions.Buf.free (Ctypes.to_voidp iovecs);
-    ignore (Sys.opaque_identity buffers);
-    callback result);
-
-  let immediate_result =
-    C.Functions.Stream.write
-      (Request.c request)
-      (Handle.c (coerce stream))
-      iovecs
-      (Unsigned.UInt.of_int count)
-      write_trampoline
-  in
-
-  if immediate_result < Error.success then begin
-    C.Functions.Buf.free (Ctypes.to_voidp iovecs);
-    Request.clear_callback request;
-    callback immediate_result
-  end
-
 (* DOC send_handle must remain open during the operation. *)
-let write2 stream buffers ~send_handle callback =
-  let request = Request.allocate C.Types.Stream.Write_request.t in
-
+let write ?send_handle stream buffers callback =
   let count = List.length buffers in
   let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
 
+  let request = Request.allocate C.Types.Stream.Write_request.t in
+
   Request.set_callback_2 request (fun _request result ->
-    C.Functions.Buf.free (Ctypes.to_voidp iovecs);
     ignore (Sys.opaque_identity buffers);
+    ignore (Sys.opaque_identity iovecs);
     callback result);
+
+  let send_handle =
+    match send_handle with
+    | None -> Ctypes.from_voidp C.Types.Stream.t Ctypes.null
+    | Some handle -> Handle.c (coerce handle)
+  in
 
   let immediate_result =
     C.Functions.Stream.write2
       (Request.c request)
       (Handle.c (coerce stream))
-      iovecs
+      (Ctypes.CArray.start iovecs)
       (Unsigned.UInt.of_int count)
-      (Handle.c (coerce send_handle))
+      send_handle
       write_trampoline
   in
 
   if immediate_result < Error.success then begin
-    C.Functions.Buf.free (Ctypes.to_voidp iovecs);
     Request.clear_callback request;
     callback immediate_result
   end
@@ -154,12 +133,12 @@ let try_write stream buffers =
   let result =
     C.Functions.Stream.try_write
       (Handle.c (coerce stream))
-      iovecs
+      (Ctypes.CArray.start iovecs)
       (Unsigned.UInt.of_int count)
   in
 
-  C.Functions.Buf.free (Ctypes.to_voidp iovecs);
   ignore (Sys.opaque_identity buffers);
+  ignore (Sys.opaque_identity iovecs);
 
   Error.to_result (result :> int) result
 

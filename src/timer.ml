@@ -8,7 +8,7 @@ let init ?loop () =
 let trampoline =
   C.Functions.Timer.get_trampoline ()
 
-let start ~callback timer ~timeout ~repeat =
+let start ?(repeat = 0) timer timeout callback =
   Handle.set_callback timer callback;
 
   C.Functions.Timer.start

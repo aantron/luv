@@ -223,10 +223,9 @@ let tests = [
         let data, length = check_success_result "read" result in
         Alcotest.(check int)
           "length" (String.length child_working_directory) (length - 1);
-        for index = 0 to length - 2 do
-          Alcotest.(check char) "data"
-            (child_working_directory.[index]) (Bigarray.Array1.get data index)
-        done;
+        Luv.Bigstring.sub data ~offset:0 ~length:(length - 1)
+        |> Luv.Bigstring.to_string
+        |> Alcotest.(check string) "data" child_working_directory;
         finished := true
       end;
 
@@ -253,10 +252,9 @@ let tests = [
         let data, length = check_success_result "read" result in
         Alcotest.(check int)
           "length" (String.length parent_working_directory) (length - 1);
-        for index = 0 to length - 2 do
-          Alcotest.(check char) "data"
-            (parent_working_directory.[index]) (Bigarray.Array1.get data index)
-        done;
+        Luv.Bigstring.sub data ~offset:0 ~length:(length - 1)
+        |> Luv.Bigstring.to_string
+        |> Alcotest.(check string) "data" parent_working_directory;
         finished := true
       end;
 
@@ -309,13 +307,13 @@ let tests = [
       in
       let process = check_success_result "spawn" result in
 
-      Luv.Process.kill process Luv.C.Types.Signal.sigusr1_for_testing
+      Luv.Process.kill process Luv.Signal.sigint
       |> check_success "kill";
 
       run ();
 
       Alcotest.(check (option int)) "term_signal"
-        (Some Luv.C.Types.Signal.sigusr1_for_testing) !received_signal
+        (Some Luv.Signal.sigint) !received_signal
     end;
 
     "pid, kill_pid", `Quick, begin fun () ->
@@ -331,14 +329,13 @@ let tests = [
       in
       let process = check_success_result "spawn" result in
 
-      Luv.Process.(kill_pid ~pid:(pid process))
-        Luv.C.Types.Signal.sigusr1_for_testing
+      Luv.Process.(kill_pid ~pid:(pid process)) Luv.Signal.sigint
       |> check_success "kill";
 
       run ();
 
       Alcotest.(check (option int)) "term_signal"
-        (Some Luv.C.Types.Signal.sigusr1_for_testing) !received_signal
+        (Some Luv.Signal.sigint) !received_signal
     end;
   ]
 ]

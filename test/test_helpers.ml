@@ -148,8 +148,7 @@ let run ?(with_timeout = false) () =
     let stop = ref false in
 
     Luv.Loop.update_time default_loop;
-    Luv.Timer.start
-      timeout ~timeout:5 ~repeat:0 ~callback:(fun _ -> stop := true)
+    Luv.Timer.start timeout 5000 (fun _ -> stop := true)
     |> check_success "timeout timer start";
 
     let rec run () =

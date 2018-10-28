@@ -11,6 +11,10 @@ val ref : _ t -> unit
 val unref : _ t -> unit
 val has_ref : _ t -> bool
 
+val fileno :
+  [< `TCP | `UDP | `Pipe | `TTY | `Poll ] t ->
+    (Misc.Os_fd.t, Error.t) Result.result
+
 val get_loop : _ t -> Loop.t
 
 (**/**)

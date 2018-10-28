@@ -30,12 +30,7 @@ clean-libuv :
 	(cd src/vendor/libuv \
 	  && rm -r build out)
 
-# TODO Handling the submodules
-
 .PHONY : todos
 todos :
-	@grep -rn TODO . \
+	@grep -rn TODO src test Makefile README.md luv.opam \
 	  | grep -v _build | grep -v src/vendor/libuv | grep -v src/vendor/gyp
-
-# TODO Build all the examples
-# TODO In CI, run the examples

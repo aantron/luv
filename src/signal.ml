@@ -8,11 +8,11 @@ let init ?loop () =
 let trampoline =
   C.Functions.Signal.get_trampoline ()
 
-let start ~callback signal ~signum =
+let start signal signum callback =
   Handle.set_callback signal callback;
   C.Functions.Signal.start (Handle.c signal) trampoline signum
 
-let start_oneshot ~callback signal ~signum =
+let start_oneshot signal signum callback =
   Handle.set_callback signal callback;
   C.Functions.Signal.start_oneshot (Handle.c signal) trampoline signum
 
@@ -21,3 +21,5 @@ let stop signal =
 
 let get_signum signal =
   Ctypes.getf (Ctypes.(!@) (Handle.c signal)) C.Types.Signal.signum
+
+include C.Types.Signal.Signum

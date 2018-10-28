@@ -10,21 +10,17 @@ dev-repo: "git+https://github.com/aantron/luv.git"
 
 depends: [
   "base-unix"
-  "ctypes"
+  "ctypes" {>= "0.13.0"}
   "dune" {build & >= "1.0.0"}
   # Sys.opaque_identity requires 4.03.
   "ocaml" {>= "4.03.0"}
   "result"
 
-  "alcotest" {dev}
+  "alcotest" {dev & >= "0.8.1"}
 ]
-# TODO Do we depend on conf-python for building libuv?
 
 build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
-# TODO Either have Dune do the libuv build, or trigger it using a separate
-# command. Using Dune to do it is probably better for Duniverse and/or
-# portability in general.
 
 synopsis: "Binding to libuv"

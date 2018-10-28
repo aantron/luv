@@ -8,7 +8,7 @@ let init ?loop () =
 let trampoline =
   C.Functions.Prepare.get_trampoline ()
 
-let start ~callback prepare =
+let start prepare callback =
   (* If [Handle.is_active prepare], then [uv_prepare_start] will not overwrite
      the handle's callback. We need to emulate this behavior in the wrapper. *)
   if Handle.is_active prepare then

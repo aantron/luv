@@ -5,9 +5,10 @@
  (wrapped false)
  (modules Luv_c_generated_functions)
  (c_names c_generated_functions helpers)
- (libraries ctypes.stubs luv_c_function_descriptions)
- (c_flags (:standard "-I ../vendor"))
- (c_library_flags (:standard -Lsrc/vendor -Lluv/src/vendor -luv -lpthread)))
+ (libraries ctypes luv_c_function_descriptions)
+ (c_flags (:standard "-I %{project_root}/../../src/vendor/libuv/include"))
+ (c_library_flags
+  (:standard -L%{project_root}/src/vendor/libuv/out/Release -luv -lpthread)))
 
 
 
@@ -35,12 +36,12 @@
 ;   https://github.com/avsm/ocaml-yaml/blob/master/types/stubgen/jbuild#L20
 (rule
  (targets generate_types_step_2.exe)
- (deps (:c generate_types_step_2.c) ../vendor/libuv_files)
+ (deps (:c generate_types_step_2.c))
  (action (bash "\
   %{cc} %{c} \
   -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` \
   -I %{ocaml_where} \
-  -I ../vendor -o %{targets}")))
+  -I %{project_root}/../../src/vendor/libuv/include -o %{targets}")))
 
 (rule
  (targets luv_c_generated_types.ml)

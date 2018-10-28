@@ -15,7 +15,7 @@ end
 
 val to_new_pipe :
   ?mode_in_child:Pipe_mode.t ->
-  (* ?overlapped:bool -> *) (* TODO Needs more recent libuv. *)
+  ?overlapped:bool ->
   fd:int ->
   to_parent_pipe:Pipe.t ->
   unit ->

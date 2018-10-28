@@ -59,7 +59,6 @@ enum {
 // functions directly with Ctypes results in noisy warnings. These wrappers
 // suppress the warnings by performing const_casts.
 char* luv_strerror(int err);
-char* luv_err_name(int err);
 char* luv_version_string();
 char* luv_req_type_name(uv_req_type type);
 char* luv_fs_get_path(const uv_fs_t *req);
@@ -71,12 +70,21 @@ int luv_read_start(
 
 
 
+// File descriptor plumbing. The different operating systems have different
+// kinds of file descriptors. libuv, meanwhile, uses CRT file descriptors. THese
+// coincide with Unix system fds, but not Windows. In addition, there is
+// Unix.file_descr. These helpers are used for converting between all these
+// types in a relatively safe way.
+int luv_is_invalid_handle_value(uv_os_fd_t handle);
+CAMLprim value luv_unix_fd_to_os_fd(value unix_fd, value os_fd_storage);
+CAMLprim value luv_os_fd_to_unix_fd(value os_fd_storage);
+
+
+
 // Miscellaneous helpers - other things that are easiest to do in C.
 
-// Ctypes can't bind to uv_buf_init, because it returns a structure by copy.
-// So, we wrap it in a function that does the whole procedure that we want to
-// use uv_buf_init in.
-uv_buf_t* luv_bigstrings_to_iovecs(char **pointers, int *lengths, int count);
+// Ctypes.constant can't bind a char*, so we return it instead.
+char* luv_version_suffix();
 
 // The OCaml runtime has helpers for converting between Unix.sockaddr and the
 // system's sockaddr structures. However, the arguments and return values are a
@@ -110,5 +118,3 @@ int luv_spawn(
 
 
 #endif // #ifndef LUV_HELPERS_H_
-
-// TODO Rename this file.

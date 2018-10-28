@@ -3,8 +3,6 @@ let () =
     Error.tests;
     Version.tests;
     Loop.tests;
-    (* Handle.tests; *)
-    (* Request.tests; *)
     Timer.tests;
     Loop_watcher.tests;
     Async.tests;

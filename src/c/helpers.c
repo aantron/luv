@@ -12,9 +12,6 @@
 
 
 
-// TODO Deal with the runtime system lock. Do we need to take it before calling
-// a callback?
-
 // Handle trampolines.
 
 // CAMLlocal is (probably?) not needed here, because there is already a gc root
@@ -28,6 +25,8 @@
 static void luv_alloc_trampoline(
     uv_handle_t *c_handle, size_t suggested_size, uv_buf_t *buffer)
 {
+    caml_acquire_runtime_system();
+
     GET_HANDLE_CALLBACK(LUV_ALLOCATE_CALLBACK_INDEX);
 
     value bigstring =
@@ -35,75 +34,99 @@ static void luv_alloc_trampoline(
 
     buffer->base = Caml_ba_data_val(bigstring);
     buffer->len = Caml_ba_array_val(bigstring)->dim[0];
+
+    caml_release_runtime_system();
 }
 
 static void luv_async_trampoline(uv_async_t *c_handle)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback(callback, ocaml_handle);
+    caml_release_runtime_system();
 }
 
 static void luv_check_trampoline(uv_check_t *c_handle)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback(callback, ocaml_handle);
+    caml_release_runtime_system();
 }
 
 static void luv_close_trampoline(uv_handle_t *c_handle)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback(callback, ocaml_handle);
+    caml_release_runtime_system();
 }
 
 static void luv_connection_trampoline(uv_stream_t *c_handle, int status)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_CONNECTION_CALLBACK_INDEX);
     caml_callback2(callback, ocaml_handle, Val_int(status));
+    caml_release_runtime_system();
 }
 
 static void luv_exit_trampoline(
     uv_process_t *c_handle, int64_t exit_status, int term_signal)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback3(
         callback, ocaml_handle, Val_int(exit_status), Val_int(term_signal));
+    caml_release_runtime_system();
 }
 
 static void luv_idle_trampoline(uv_idle_t *c_handle)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback(callback, ocaml_handle);
+    caml_release_runtime_system();
 }
 
 static void luv_poll_trampoline(uv_poll_t *c_handle, int status, int event)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback3(callback, ocaml_handle, Val_int(status), Val_int(event));
+    caml_release_runtime_system();
 }
 
 static void luv_prepare_trampoline(uv_prepare_t *c_handle)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback(callback, ocaml_handle);
+    caml_release_runtime_system();
 }
 
 static void luv_read_trampoline(
     uv_stream_t *c_handle, ssize_t nread, uv_buf_t *buffer)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_READ_CALLBACK_INDEX);
     caml_callback2(callback, ocaml_handle, Val_int((int)nread));
+    caml_release_runtime_system();
 }
 
 static void luv_signal_trampoline(uv_signal_t *c_handle, int signum)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback2(callback, ocaml_handle, Val_int(signum));
+    caml_release_runtime_system();
 }
 
 static void luv_timer_trampoline(uv_timer_t *c_handle)
 {
+    caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_HANDLE_GENERIC_CALLBACK_INDEX);
     caml_callback(callback, ocaml_handle);
+    caml_release_runtime_system();
 }
 
 uv_alloc_cb luv_address_of_alloc_trampoline()
@@ -181,26 +204,34 @@ uv_timer_cb luv_address_of_timer_trampoline()
 
 static void luv_connect_trampoline(uv_connect_t *c_request, int status)
 {
+    caml_acquire_runtime_system();
     GET_REQUEST_CALLBACK();
     caml_callback(callback, Val_int(status));
+    caml_release_runtime_system();
 }
 
 static void luv_fs_request_trampoline(uv_fs_t *c_request)
 {
+    caml_acquire_runtime_system();
     GET_REQUEST_CALLBACK();
     caml_callback(callback, Val_unit);
+    caml_release_runtime_system();
 }
 
 static void luv_shutdown_trampoline(uv_shutdown_t *c_request, int status)
 {
+    caml_acquire_runtime_system();
     GET_REQUEST_CALLBACK();
     caml_callback(callback, Val_int(status));
+    caml_release_runtime_system();
 }
 
 static void luv_write_trampoline(uv_write_t *c_request, int status)
 {
+    caml_acquire_runtime_system();
     GET_REQUEST_CALLBACK();
     caml_callback(callback, Val_int(status));
+    caml_release_runtime_system();
 }
 
 uv_connect_cb luv_address_of_connect_trampoline()
@@ -237,11 +268,6 @@ char* luv_strerror(int err)
     return (char*)uv_strerror(err);
 }
 
-char* luv_err_name(int err)
-{
-    return (char*)uv_err_name(err);
-}
-
 char* luv_version_string()
 {
     return (char*)uv_version_string();
@@ -265,17 +291,50 @@ int luv_read_start(
 
 
 
+// File descriptor helpers.
+
+int luv_is_invalid_handle_value(uv_os_fd_t handle)
+{
+    if (handle == -1)
+        return 1;
+    else
+        return 0;
+}
+
+CAMLprim value luv_unix_fd_to_os_fd(value unix_fd, value os_fd_storage)
+{
+    uv_os_fd_t *os_fd = (uv_os_fd_t*)Nativeint_val(os_fd_storage);
+
+#ifndef _WIN32
+    *os_fd = Int_val(unix_fd);
+#else
+    if (Descr_kind_val(unix_fd) == KIND_HANDLE)
+        *os_fd = Handle_val(unix_fd);
+    else
+        *os_fd = -1;
+#endif
+
+    return Val_unit;
+}
+
+CAMLprim value luv_os_fd_to_unix_fd(value os_fd_storage)
+{
+    uv_os_fd_t *os_fd = (uv_os_fd_t*)Nativeint_val(os_fd_storage);
+
+#ifndef _WIN32
+    return Val_int(*os_fd);
+#else
+    return win_alloc_handle(*os_fd);
+#endif
+}
+
+
+
 // Other helpers.
 
-uv_buf_t* luv_bigstrings_to_iovecs(char **pointers, int *lengths, int count)
+char* luv_version_suffix()
 {
-    // TODO Error handling?
-    uv_buf_t *iovecs = malloc(sizeof(uv_buf_t) * count);
-
-    for (int index = 0; index < count; ++index)
-        iovecs[index] = uv_buf_init(pointers[index], lengths[index]);
-
-    return iovecs;
+    return UV_VERSION_SUFFIX;
 }
 
 CAMLprim value luv_get_sockaddr(value ocaml_sockaddr, value c_storage)
@@ -337,7 +396,9 @@ int luv_spawn(
     options.uid = uid;
     options.gid = gid;
 
+    caml_release_runtime_system();
     int result = uv_spawn(loop, handle, &options);
+    caml_acquire_runtime_system();
 
     return result;
 }

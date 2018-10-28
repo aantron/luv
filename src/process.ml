@@ -20,10 +20,15 @@ let no_redirection =
 
 let to_new_pipe
     ?(mode_in_child = Pipe_mode.(readable lor writable))
+    ?(overlapped = false)
     ~fd ~to_parent_pipe () =
 
   let redirection = Ctypes.make Redirection.t in
   let flags = Redirection.create_pipe lor mode_in_child in
+  let flags =
+    if overlapped then flags lor Redirection.overlapped_pipe
+    else flags
+  in
   Ctypes.setf redirection Redirection.flags flags;
   Ctypes.setf redirection Redirection.stream Handle.(coerce (c to_parent_pipe));
   (fd, redirection)

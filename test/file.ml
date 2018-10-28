@@ -83,16 +83,18 @@ let tests = [
         let file = check_success_result "file" result in
 
         let buffer = Luv.Bigstring.create 4 in
-        Bigarray.Array1.fill buffer '\000';
+        Luv.Bigstring.fill buffer '\000';
 
         Luv.File.Async.read file [buffer] begin fun result ->
-          let byte_count = check_success_result "read result" result in
-          Alcotest.(check int)
-            "byte count" 4 (Unsigned.Size_t.to_int byte_count);
-          Alcotest.(check char) "byte 0" 'o' (Bigarray.Array1.get buffer 0);
-          Alcotest.(check char) "byte 1" 'p' (Bigarray.Array1.get buffer 1);
-          Alcotest.(check char) "byte 2" 'e' (Bigarray.Array1.get buffer 2);
-          Alcotest.(check char) "byte 3" 'n' (Bigarray.Array1.get buffer 3);
+          let length =
+            check_success_result "read result" result
+            |> Unsigned.Size_t.to_int
+          in
+          Alcotest.(check int) "byte count" 4 length;
+
+          Luv.Bigstring.sub buffer ~offset:0 ~length
+          |> Luv.Bigstring.to_string
+          |> Alcotest.(check string) "data" "open";
 
           Luv.File.Async.close file begin fun result ->
             check_success "close result" result;
@@ -113,18 +115,19 @@ let tests = [
       in
 
       let buffer = Luv.Bigstring.create 4 in
-      Bigarray.Array1.fill buffer '\000';
+      Luv.Bigstring.fill buffer '\000';
 
-      let byte_count =
+      let length =
         Luv.File.Sync.read file [buffer]
         |> check_success_result "read"
+        |> Unsigned.Size_t.to_int
       in
 
-      Alcotest.(check int) "byte count" 4 (Unsigned.Size_t.to_int byte_count);
-      Alcotest.(check char) "byte 0" 'o' (Bigarray.Array1.get buffer 0);
-      Alcotest.(check char) "byte 1" 'p' (Bigarray.Array1.get buffer 1);
-      Alcotest.(check char) "byte 2" 'e' (Bigarray.Array1.get buffer 2);
-      Alcotest.(check char) "byte 3" 'n' (Bigarray.Array1.get buffer 3);
+      Alcotest.(check int) "byte count" 4 length;
+
+      Luv.Bigstring.sub buffer ~offset:0 ~length
+      |> Luv.Bigstring.to_string
+      |> Alcotest.(check string) "data" "open";
 
       Luv.File.Sync.close file
       |> check_success "close"
@@ -276,8 +279,7 @@ let tests = [
         Gc.full_major ();
 
         let called = ref false in
-        let buffer = Luv.Bigstring.create 1 in
-        Bigarray.Array1.fill buffer '\000';
+        let buffer = Luv.Bigstring.from_string "\000" in
 
         let finalized = ref false in
         Gc.finalise (fun _ -> finalized := true) buffer;
@@ -299,10 +301,7 @@ let tests = [
 
     "write: async", `Quick, begin fun () ->
       with_file_for_writing begin fun file ->
-        let buffer = Luv.Bigstring.create 3 in
-        Bigarray.Array1.set buffer 0 'o';
-        Bigarray.Array1.set buffer 1 'p';
-        Bigarray.Array1.set buffer 2 'e';
+        let buffer = Luv.Bigstring.from_string "ope" in
 
         Luv.File.Async.write file [buffer] begin fun result ->
           let byte_count = check_success_result "write result" result in
@@ -316,10 +315,7 @@ let tests = [
 
     "write: sync", `Quick, begin fun () ->
       with_file_for_writing begin fun file ->
-        let buffer = Luv.Bigstring.create 3 in
-        Bigarray.Array1.set buffer 0 'o';
-        Bigarray.Array1.set buffer 1 'p';
-        Bigarray.Array1.set buffer 2 'e';
+        let buffer = Luv.Bigstring.from_string "ope" in
 
         Luv.File.Sync.write file [buffer]
         |> check_success_result "write"
@@ -679,11 +675,7 @@ let tests = [
     end;
 
     "ftruncate: async", `Quick, begin fun () ->
-      let buffer = Luv.Bigstring.create 4 in
-      Bigarray.Array1.set buffer 0 'o';
-      Bigarray.Array1.set buffer 1 'p';
-      Bigarray.Array1.set buffer 2 'e';
-      Bigarray.Array1.set buffer 3 'n';
+      let buffer = Luv.Bigstring.from_string "open" in
 
       with_file_for_writing begin fun file ->
         Luv.File.Sync.write file [buffer]
@@ -697,11 +689,7 @@ let tests = [
     end;
 
     "ftruncate: sync", `Quick, begin fun () ->
-      let buffer = Luv.Bigstring.create 4 in
-      Bigarray.Array1.set buffer 0 'o';
-      Bigarray.Array1.set buffer 1 'p';
-      Bigarray.Array1.set buffer 2 'e';
-      Bigarray.Array1.set buffer 3 'n';
+      let buffer = Luv.Bigstring.from_string "open" in
 
       with_file_for_writing begin fun file ->
         Luv.File.Sync.write file [buffer]

@@ -8,6 +8,6 @@ type event = [
 ]
 
 val init : ?loop:Loop.t -> fd:int -> unit -> (t, Error.t) Result.result
-val start :
-  callback:(t -> Error.t -> event list -> unit) -> t -> event list -> Error.t
+(* TODO Return type should be unit, just call the callback? *)
+val start : t -> event list -> (t -> Error.t -> event list -> unit) -> Error.t
 val stop : t -> Error.t

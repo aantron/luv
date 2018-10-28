@@ -26,3 +26,10 @@ struct
   include C.Types.Loop.Option
   type 'value t = int
 end
+
+(* run must always release the runtime lock, even if called with
+   Run_mode.nowait. This is because calling run can trigger callbacks, and
+   callbacks expect to be able to take the lock (eventually). If the lock is
+   *not* released by run and a callback is called, there will be a deadlock. *)
+let run =
+  C.Blocking.Loop.run

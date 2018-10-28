@@ -44,9 +44,12 @@ let with_server_and_client ?for_handle_passing () ~server_logic ~client_logic =
 
   Alcotest.(check bool) "file deleted" false (Sys.file_exists filename)
 
-(* TODO This should be written in C and implemented by luv. *)
-let unix_fd_to_file : Unix.file_descr -> Luv.File.t =
-  Obj.magic
+let unix_fd_to_file unix_fd =
+  unix_fd
+  |> Luv.Misc.Os_fd.from_unix
+  |> check_success_result "from_unix"
+  |> Luv.File.open_osfhandle
+  |> check_success_result "get_osfhandle"
 
 let tests = [
   "pipe", [
@@ -101,9 +104,10 @@ let tests = [
               let (buffer, length) = check_success_result "read_start" result in
 
               Alcotest.(check int) "length" 3 length;
-              Alcotest.(check char) "byte 0" 'f' (Bigarray.Array1.get buffer 0);
-              Alcotest.(check char) "byte 1" 'o' (Bigarray.Array1.get buffer 1);
-              Alcotest.(check char) "byte 2" 'o' (Bigarray.Array1.get buffer 2);
+
+              Luv.Bigstring.sub buffer ~offset:0 ~length
+              |> Luv.Bigstring.to_string
+              |> Alcotest.(check string) "data" "foo";
 
               Luv.Handle.close client;
               Luv.Handle.close server;
@@ -113,12 +117,8 @@ let tests = [
           end
         ~client_logic:
           begin fun client ->
-            let buffer1 = Bigarray.(Array1.create Char C_layout 2) in
-            let buffer2 = Bigarray.(Array1.create Char C_layout 1) in
-
-            Bigarray.Array1.set buffer1 0 'f';
-            Bigarray.Array1.set buffer1 1 'o';
-            Bigarray.Array1.set buffer2 0 'o';
+            let buffer1 = Luv.Bigstring.from_string "fo" in
+            let buffer2 = Luv.Bigstring.from_string "o" in
 
             Luv.Stream.write client [buffer1; buffer2] begin fun result ->
               check_success "write" result;
@@ -159,8 +159,7 @@ let tests = [
           let received =
             Luv.Pipe.init () |> check_success_result "init received" in
           accept received |> check_success "handle accept";
-          let buffer = Luv.Bigstring.create 1 in
-          Bigarray.Array1.set buffer 0 'x';
+          let buffer = Luv.Bigstring.from_string "x" in
           Luv.Stream.try_write received [buffer]
           |> check_success_result "try_write"
           |> Alcotest.(check int) "write byte count" 1;
@@ -173,7 +172,7 @@ let tests = [
       end;
 
       let buffer = Luv.Bigstring.create 1 in
-      Luv.Stream.write2 ipc_2 [buffer] ~send_handle:passed_1 begin fun result ->
+      Luv.Stream.write ipc_2 [buffer] ~send_handle:passed_1 begin fun result ->
         check_success "write2" result
       end;
 
@@ -183,7 +182,7 @@ let tests = [
         Luv.Stream.read_stop passed_2 |> check_success "read_stop";
         let buffer, byte_count = check_success_result "read_start" result in
         Alcotest.(check int) "read byte count" 1 byte_count;
-        Alcotest.(check char) "data" 'x' (Bigarray.Array1.get buffer 0);
+        Alcotest.(check char) "data" 'x' (Luv.Bigstring.get buffer 0);
         did_read := true
       end;
 

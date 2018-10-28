@@ -13,7 +13,7 @@ end
 (* DOC Document that the pipe is not yet usable at this point. *)
 val init :
   ?loop:Loop.t -> ?for_handle_passing:bool -> unit -> (t, Error.t) Result.result
-val open_ : t -> File.t -> Error.t (* TODO Test; can test these with just STDERR. *)
+val open_ : t -> File.t -> Error.t
 val bind : t -> string -> Error.t
 val connect : t -> string -> (Error.t -> unit) -> unit
 val getsockname : t -> (string, Error.t) Result.result

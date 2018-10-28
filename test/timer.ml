@@ -30,15 +30,6 @@ let tests = [
       end
     end;
 
-    (* TODO Restore. *)
-    (* "type", `Quick, begin fun () ->
-      with_timer begin fun timer ->
-        Luv.Handle.get_type timer
-        |> check_handle_type Luv.Handle.Type.timer
-      end
-    end; *)
-    (* TODO Restore. *)
-
     "start", `Quick, begin fun () ->
       with_timer begin fun timer ->
         let finished = ref false in
@@ -47,10 +38,11 @@ let tests = [
         let start_time = Unix.gettimeofday () in
 
         Luv.Loop.update_time default_loop;
-        Luv.Timer.start timer ~timeout ~repeat:0 ~callback:(fun timer' ->
+        Luv.Timer.start timer timeout begin fun timer' ->
           if not (timer' == timer) then
             Alcotest.fail "same timer";
-          finished := true)
+          finished := true
+        end
         |> check_success "start";
 
         run ();
@@ -81,9 +73,10 @@ let tests = [
 
       let called = ref false in
 
-      Luv.Timer.start timer ~timeout:0 ~repeat:0 ~callback:(fun arg_timer ->
+      Luv.Timer.start timer 0 begin fun arg_timer ->
         Luv.Handle.close arg_timer;
-        called := true)
+        called := true
+      end
       |> check_success "start";
 
       Gc.full_major ();
@@ -97,11 +90,9 @@ let tests = [
         let first_called = ref false in
         let second_called = ref false in
 
-        Luv.Timer.start timer ~timeout:0 ~repeat:0 ~callback:(fun _ ->
-          first_called := true)
+        Luv.Timer.start timer 0 (fun _ -> first_called := true)
         |> check_success "first start";
-        Luv.Timer.start timer ~timeout:0 ~repeat:0 ~callback:(fun _ ->
-          second_called := true)
+        Luv.Timer.start timer 0 (fun _ -> second_called := true)
         |> check_success "second start";
 
         run ();
@@ -114,8 +105,7 @@ let tests = [
     "repeated start leak", `Quick, begin fun () ->
       with_timer begin fun timer ->
         no_memory_leak begin fun _n ->
-          Luv.Timer.start
-            timer ~timeout:0 ~repeat:0 ~callback:(make_callback ())
+          Luv.Timer.start timer 0 (make_callback ())
           |> check_success "start"
         end
       end
@@ -125,8 +115,7 @@ let tests = [
       with_timer begin fun timer ->
         let called = ref false in
 
-        Luv.Timer.start timer ~timeout:0 ~repeat:0 ~callback:(fun _ ->
-          called := true)
+        Luv.Timer.start timer 0 (fun _ -> called := true)
         |> check_success "start";
 
         Luv.Timer.stop timer
@@ -142,10 +131,11 @@ let tests = [
       with_timer begin fun timer ->
         let called = ref false in
 
-        Luv.Timer.start timer ~timeout:0 ~repeat:1 ~callback:(fun _ ->
+        Luv.Timer.start timer 0 ~repeat:1 begin fun _ ->
           Luv.Timer.stop timer
           |> check_success "stop";
-          called := true)
+          called := true
+        end
         |> check_success "start";
 
         Luv.Timer.stop timer
@@ -167,7 +157,7 @@ let tests = [
           |> check_success_result "init"
         in
 
-        Luv.Timer.start timer ~timeout:0 ~repeat:0 ~callback:ignore
+        Luv.Timer.start timer 0 ignore
         |> check_success "start";
 
         Luv.Handle.close timer;
@@ -201,14 +191,12 @@ let tests = [
         (fun () -> Luv.Timer.stop timer |> ignore)
     end;
 
-(* TODO Restore *)
-(*
-    "multithreading", `Quick, begin fun () ->
+    "multithreading", `Slow, begin fun () ->
       with_timer begin fun timer ->
         let ran = ref false in
 
         Luv.Loop.update_time default_loop;
-        Luv.Timer.start timer ~timeout:100 ~repeat:0 ~callback:ignore
+        Luv.Timer.start timer 100 ignore
         |> check_success "start";
 
         ignore @@ Thread.create begin fun () ->
@@ -221,7 +209,26 @@ let tests = [
         Alcotest.(check bool) "ran" true !ran
       end
     end;
-*)
+
+    (* Runs Loop.run in nowait mode. If calling Loop.run this way does not
+       release the runtime lock, even though the call is non-blocking, when the
+       callback tries to acquire the lock, there will be a deadlock. *)
+    "busywait deadlock", `Slow, begin fun () ->
+      with_timer begin fun timer ->
+        let called = ref false in
+
+        Luv.Loop.update_time default_loop;
+        Luv.Timer.start timer 10 (fun _ -> called := true)
+        |> check_success "start";
+
+        Unix.sleepf 20e-3;
+
+        Luv.Loop.(run (default ()) Run_mode.nowait) |> ignore;
+
+        Alcotest.(check bool) "called" true !called
+      end
+    end;
+
     "is_active, initial", `Quick, begin fun () ->
       with_timer begin fun timer ->
         Luv.Handle.is_active timer
@@ -231,7 +238,7 @@ let tests = [
 
     "is_active, started", `Quick, begin fun () ->
       with_timer begin fun timer ->
-        Luv.Timer.start timer ~timeout:0 ~repeat:0 ~callback:ignore
+        Luv.Timer.start timer 0 ignore
         |> check_success "start";
 
         Luv.Handle.is_active timer
@@ -290,7 +297,4 @@ let tests = [
   ]
 ]
 
-(* TODO Release locks on a per-call basis. *)
-(* TODO Test walk *)
-(* TODO What should callback labels be? *)
-(* TODO Docs: note that callbacks shouldn't raise. *)
+(* DOC note that callbacks shouldn't raise. *)

@@ -4,7 +4,7 @@ let tests = [
   "async", [
     "init, close", `Quick, begin fun () ->
       let async =
-        Luv.Async.init ~callback:ignore ()
+        Luv.Async.init ignore
         |> check_success_result "init"
       in
 
@@ -17,13 +17,14 @@ let tests = [
 
       let async_cell = ref None in
       let async =
-        Luv.Async.init () ~callback:(fun async' ->
+        Luv.Async.init begin fun async' ->
           begin
             match !async_cell with
             | Some async when async' == async -> ()
             | _ -> Alcotest.fail "same handle"
           end;
-          called := true)
+          called := true
+        end
         |> check_success_result "init"
       in
       async_cell := Some async;

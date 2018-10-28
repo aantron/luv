@@ -1,6 +1,6 @@
 open Test_helpers
 
-let for_watcher_kind init (start : callback:(_ -> unit) -> _ -> _) stop =
+let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
   let with_watcher f =
     let watcher =
       init ()
@@ -31,7 +31,7 @@ let for_watcher_kind init (start : callback:(_ -> unit) -> _ -> _) stop =
       with_watcher begin fun watcher ->
         let calls = ref 0 in
 
-        start watcher ~callback:begin fun watcher' ->
+        start watcher begin fun watcher' ->
           if not (watcher' == watcher) then
             Alcotest.fail "same prepare handle";
 
@@ -55,11 +55,9 @@ let for_watcher_kind init (start : callback:(_ -> unit) -> _ -> _) stop =
         let first_called = ref false in
         let second_called = ref false in
 
-        start watcher ~callback:(fun _ ->
-          first_called := true)
+        start watcher (fun _ -> first_called := true)
         |> check_success "first start";
-        start watcher ~callback:(fun _ ->
-          second_called := true)
+        start watcher (fun _ -> second_called := true)
         |> check_success "second start";
 
         Luv.Loop.run default_loop Luv.Loop.Run_mode.nowait |> ignore;

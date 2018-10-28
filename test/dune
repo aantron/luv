@@ -1,6 +1,6 @@
 (executable
  (name tester)
- (libraries alcotest luv))
+ (libraries alcotest luv threads))
 
 (alias
  (name runtest)

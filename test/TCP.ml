@@ -180,7 +180,9 @@ let tests = [
     "read, write", `Quick, begin fun () ->
       let write_finished = ref false in
       let read_finished = ref false in
-      let finalized = ref false in
+      let buffer1_finalized = ref false in
+      let buffer2_finalized = ref false in
+      let buffer3_finalized = ref false in
 
       with_server_and_client
         ~server_logic:
@@ -189,9 +191,10 @@ let tests = [
               let (buffer, length) = check_success_result "read_start" result in
 
               Alcotest.(check int) "length" 3 length;
-              Alcotest.(check char) "byte 0" 'f' (Bigarray.Array1.get buffer 0);
-              Alcotest.(check char) "byte 1" 'o' (Bigarray.Array1.get buffer 1);
-              Alcotest.(check char) "byte 2" 'o' (Bigarray.Array1.get buffer 2);
+
+              Luv.Bigstring.sub ~offset:0 ~length buffer
+              |> Luv.Bigstring.to_string
+              |> Alcotest.(check string) "data" "foo";
 
               Luv.Handle.close client;
               Luv.Handle.close server;
@@ -201,16 +204,15 @@ let tests = [
           end
         ~client_logic:
           begin fun client _address ->
-            let buffer1 = Bigarray.(Array1.create Char C_layout 2) in
-            let buffer2 = Bigarray.(Array1.create Char C_layout 1) in
+            let buffer1 = Luv.Bigstring.from_string "fo" in
+            let buffer2 = Luv.Bigstring.from_string "xoy" in
+            let buffer3 = Luv.Bigstring.sub buffer2 ~offset:1 ~length:1 in
 
-            Bigarray.Array1.set buffer1 0 'f';
-            Bigarray.Array1.set buffer1 1 'o';
-            Bigarray.Array1.set buffer2 0 'o';
+            Gc.finalise (fun _ -> buffer1_finalized := true) buffer1;
+            Gc.finalise (fun _ -> buffer2_finalized := true) buffer2;
+            Gc.finalise (fun _ -> buffer3_finalized := true) buffer3;
 
-            Gc.finalise (fun _ -> finalized := true) buffer1;
-
-            Luv.Stream.write client [buffer1; buffer2] begin fun result ->
+            Luv.Stream.write client [buffer1; buffer3] begin fun result ->
               check_success "write" result;
               Luv.Handle.close client;
               write_finished := true
@@ -218,7 +220,9 @@ let tests = [
 
             Alcotest.(check bool) "asynchronous" false !write_finished;
             Gc.full_major ();
-            Alcotest.(check bool) "retained" false !finalized
+            Alcotest.(check bool) "retained" false !buffer1_finalized;
+            Alcotest.(check bool) "finalized" true !buffer2_finalized;
+            Alcotest.(check bool) "retained" false !buffer3_finalized
           end;
 
       Alcotest.(check bool) "write finished" true !write_finished;
@@ -226,7 +230,8 @@ let tests = [
 
       Gc.full_major ();
 
-      Alcotest.(check bool) "finalized" true !finalized
+      Alcotest.(check bool) "finalized" true !buffer1_finalized;
+      Alcotest.(check bool) "finalized" true !buffer3_finalized
     end;
 
     "write: sync error", `Quick, begin fun () ->
@@ -268,12 +273,8 @@ let tests = [
           end
         ~client_logic:
           begin fun client _address ->
-            let buffer1 = Bigarray.(Array1.create Char C_layout 2) in
-            let buffer2 = Bigarray.(Array1.create Char C_layout 1) in
-
-            Bigarray.Array1.set buffer1 0 'f';
-            Bigarray.Array1.set buffer1 1 'o';
-            Bigarray.Array1.set buffer2 0 'o';
+            let buffer1 = Luv.Bigstring.from_string "fo" in
+            let buffer2 = Luv.Bigstring.from_string "o" in
 
             Luv.Stream.try_write client [buffer1; buffer2]
             |> check_success_result "try_write"

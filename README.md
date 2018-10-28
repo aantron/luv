@@ -37,6 +37,7 @@ This probably only works on Linux at the moment.
 - [ ] TTYs, UDP.
 - [ ] FS events, FS polling.
 - [ ] The rest (thread pool, DNS, `dlopen`).
+- [ ] OCaml threading, signals, exceptions.
 - [ ] Look into using luv for native Node.js modules.
 - [ ] Vendor correctly on macOS, Windows.
 
