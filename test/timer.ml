@@ -37,12 +37,7 @@ let tests = [
         let timeout = 10 in
         let start_time = Unix.gettimeofday () in
 
-        Luv.Loop.update_time default_loop;
-        Luv.Timer.start timer timeout begin fun timer' ->
-          if not (timer' == timer) then
-            Alcotest.fail "same timer";
-          finished := true
-        end
+        Luv.Timer.start timer timeout (fun () -> finished := true)
         |> check_success "start";
 
         run ();
@@ -58,41 +53,14 @@ let tests = [
       end
     end;
 
-    (* This test fails with a segfault if the FFI does not retain a reference to
-       the callback and the timer internally. The timer has to be retained, even
-       though the callback argument is a fresh Ctypes value, because otherwise
-       Ctypes frees the underlying C memory when the original Ctypes timer value
-       is released. *)
-    "gc", `Quick, begin fun () ->
-      let timer =
-        Luv.Timer.init ()
-        |> check_success_result "init"
-      in
-
-      Gc.full_major ();
-
-      let called = ref false in
-
-      Luv.Timer.start timer 0 begin fun arg_timer ->
-        Luv.Handle.close arg_timer;
-        called := true
-      end
-      |> check_success "start";
-
-      Gc.full_major ();
-
-      run ();
-      Alcotest.(check bool) "called" true !called
-    end;
-
     "double start", `Quick, begin fun () ->
       with_timer begin fun timer ->
         let first_called = ref false in
         let second_called = ref false in
 
-        Luv.Timer.start timer 0 (fun _ -> first_called := true)
+        Luv.Timer.start timer 0 (fun () -> first_called := true)
         |> check_success "first start";
-        Luv.Timer.start timer 0 (fun _ -> second_called := true)
+        Luv.Timer.start timer 0 (fun () -> second_called := true)
         |> check_success "second start";
 
         run ();
@@ -115,7 +83,7 @@ let tests = [
       with_timer begin fun timer ->
         let called = ref false in
 
-        Luv.Timer.start timer 0 (fun _ -> called := true)
+        Luv.Timer.start timer 0 (fun () -> called := true)
         |> check_success "start";
 
         Luv.Timer.stop timer
@@ -131,7 +99,7 @@ let tests = [
       with_timer begin fun timer ->
         let called = ref false in
 
-        Luv.Timer.start timer 0 ~repeat:1 begin fun _ ->
+        Luv.Timer.start timer 0 ~repeat:1 begin fun () ->
           Luv.Timer.stop timer
           |> check_success "stop";
           called := true
@@ -177,25 +145,10 @@ let tests = [
       run ()
     end;
 
-    "use after close", `Quick, begin fun () ->
-      let timer = init () in
-
-      Luv.Handle.close timer;
-      run ();
-
-      Gc.full_major ();
-
-      Alcotest.check_raises
-        "use"
-        Luv.Handle.Handle_already_closed_this_is_a_programming_logic_error
-        (fun () -> Luv.Timer.stop timer |> ignore)
-    end;
-
     "multithreading", `Slow, begin fun () ->
       with_timer begin fun timer ->
         let ran = ref false in
 
-        Luv.Loop.update_time default_loop;
         Luv.Timer.start timer 100 ignore
         |> check_success "start";
 
@@ -217,8 +170,7 @@ let tests = [
       with_timer begin fun timer ->
         let called = ref false in
 
-        Luv.Loop.update_time default_loop;
-        Luv.Timer.start timer 10 (fun _ -> called := true)
+        Luv.Timer.start timer 10 (fun () -> called := true)
         |> check_success "start";
 
         Unix.sleepf 20e-3;

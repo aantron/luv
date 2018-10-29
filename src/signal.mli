@@ -1,8 +1,8 @@
 type t = [ `Signal ] Handle.t
 
 val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result
-val start : t -> int -> (t -> int -> unit) -> Error.t
-val start_oneshot : t -> int -> (t -> int -> unit) -> Error.t
+val start : t -> int -> (unit -> unit) -> Error.t
+val start_oneshot : t -> int -> (unit -> unit) -> Error.t
 val stop : t -> Error.t
 val get_signum : t -> int
 

@@ -1,46 +1,34 @@
 type t = [ `Poll ] Handle.t
 
-type event = [
-  | `Readable
-  | `Writable
-  | `Disconnect
-  | `Prioritized
-]
+module Event =
+struct
+  include C.Types.Poll.Event
+  type t = int
+  let (lor) = (lor)
+  let list events = List.fold_left (lor) 0 events
+  let test events mask = (events land mask) <> 0
+end
 
-let all_events = [
-  `Readable;
-  `Writable;
-  `Disconnect;
-  `Prioritized;
-]
-
-let event_to_bit = C.Types.Poll.Event.(function
-  | `Readable -> readable
-  | `Writable -> writable
-  | `Disconnect -> disconnect
-  | `Prioritized -> prioritized)
-
-let event_list_to_bit_mask events =
-  List.fold_left (fun mask event -> mask lor (event_to_bit event)) 0 events
-
-let event_bit_mask_to_list mask =
-  List.filter (fun event -> mask land (event_to_bit event) <> 0) all_events
-
-let init ?loop ~fd () =
+let init ?loop fd =
   let poll = Handle.allocate C.Types.Poll.t in
-  C.Functions.Poll.init (Loop.or_default loop) (Handle.c poll) fd
+  C.Functions.Poll.init (Loop.or_default loop) poll fd
+  |> Error.to_result poll
+
+let init_socket ?loop socket =
+  let poll = Handle.allocate C.Types.Poll.t in
+  C.Functions.Poll.init_socket (Loop.or_default loop) poll socket
   |> Error.to_result poll
 
 let trampoline =
   C.Functions.Poll.get_trampoline ()
 
 let start poll events callback =
-  let callback poll status event_mask =
-    callback poll status (event_bit_mask_to_list event_mask)
-  in
-  Handle.set_callback poll callback;
-  C.Functions.Poll.start
-    (Handle.c poll) (event_list_to_bit_mask events) trampoline
+  Handle.set_reference poll (fun status events ->
+    callback (Error.to_result events status));
+  let immediate_result = C.Functions.Poll.start poll events trampoline in
+  if immediate_result < Error.success then begin
+    callback (Result.Error immediate_result)
+  end
 
-let stop poll =
-  C.Functions.Poll.stop (Handle.c poll)
+let stop =
+  C.Functions.Poll.stop

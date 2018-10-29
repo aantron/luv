@@ -86,7 +86,7 @@ let check_directory_entries name expected actual =
   Alcotest.(check (list directory_entry_testable)) name expected actual
 
 let pp_address formatter address =
-  match address with
+  match Luv.Misc.Sockaddr.to_unix address with
   | Unix.ADDR_UNIX path ->
     Format.pp_print_string formatter path
   | Unix.ADDR_INET (address, port) ->
@@ -167,3 +167,6 @@ let port = ref 5000
 let port () =
   port := !port + 1;
   !port
+
+let fresh_address () =
+  Luv.Misc.Sockaddr.from_unix (Unix.(ADDR_INET (inet_addr_loopback, port ())))

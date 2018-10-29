@@ -145,6 +145,13 @@ struct
     let () = seal t
   end
 
+  module Os_socket =
+  struct
+    type t = [ `Os_socket ] structure
+    let t : t typ = typedef (structure "`Os_socket") "uv_os_sock_t"
+    let () = seal t
+  end
+
   module Handle =
   struct
     module Type =
@@ -158,9 +165,9 @@ struct
     let t : ([ `Base ] t) typ = typedef (structure "`Handle`") "uv_handle_t"
     let () = seal t
 
-    let callback_count = constant "LUV_HANDLE_GENERIC_CALLBACK_COUNT" int
-    let generic_callback_index =
-      constant "LUV_HANDLE_GENERIC_CALLBACK_INDEX" int
+    let self_reference_index = constant "LUV_SELF_REFERENCE" int
+    let generic_callback_index = constant "LUV_GENERIC_CALLBACK" int
+    let minimum_reference_count = constant "LUV_MINIMUM_REFERENCE_COUNT" int
   end
 
   module Request =
@@ -251,10 +258,10 @@ struct
 
     let somaxconn = constant "SOMAXCONN" int
 
-    let callback_count = constant "LUV_STREAM_CALLBACK_COUNT" int
-    let connection_callback_index = constant "LUV_CONNECTION_CALLBACK_INDEX" int
-    let read_callback_index = constant "LUV_READ_CALLBACK_INDEX" int
-    let allocate_callback_index = constant "LUV_ALLOCATE_CALLBACK_INDEX" int
+    let reference_count = constant "LUV_STREAM_REFERENCE_COUNT" int
+    let connection_callback_index = constant "LUV_CONNECTION_CALLBACK" int
+    let read_callback_index = constant "LUV_READ_CALLBACK" int
+    let allocate_callback_index = constant "LUV_ALLOCATE_CALLBACK" int
 
     let stream = t
 
@@ -494,5 +501,14 @@ struct
       let writable_pipe = constant "UV_WRITABLE_PIPE" int
       let overlapped_pipe = constant "UV_OVERLAPPED_PIPE" int
     end
+  end
+
+  module Work =
+  struct
+    let t : ([ `Work ] Request.t) typ = typedef (structure "`Work") "uv_work_t"
+    let () = seal t
+
+    let reference_count = constant "LUV_WORK_REFERENCE_COUNT" int
+    let function_index = constant "LUV_WORK_FUNCTION" int
   end
 end

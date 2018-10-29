@@ -36,7 +36,7 @@
 ;   https://github.com/avsm/ocaml-yaml/blob/master/types/stubgen/jbuild#L20
 (rule
  (targets generate_types_step_2.exe)
- (deps (:c generate_types_step_2.c))
+ (deps (:c generate_types_step_2.c) helpers.h)
  (action (bash "\
   %{cc} %{c} \
   -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` \

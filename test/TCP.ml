@@ -14,7 +14,7 @@ let with_tcp ?(close = true) f =
   end
 
 let with_server_and_client ~server_logic ~client_logic =
-  let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
+  let address = fresh_address () in
 
   let server = Luv.TCP.init () |> check_success_result "server init" in
   Luv.TCP.bind server address |> check_success "bind";
@@ -62,7 +62,7 @@ let tests = [
 
     "bind, getsockname", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
-        let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
+        let address = fresh_address () in
 
         Luv.TCP.bind tcp address
         |> check_success "bind";
@@ -76,7 +76,7 @@ let tests = [
     "connect", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         let finished = ref false in
-        let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
+        let address = fresh_address () in
 
         Luv.TCP.connect tcp address begin fun result ->
           check_error_code "connect" Luv.Error.econnrefused result;
@@ -93,7 +93,7 @@ let tests = [
     "gc", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         let finished = ref false in
-        let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
+        let address = fresh_address () in
 
         Luv.TCP.connect tcp address begin fun _result ->
           finished := true
@@ -107,7 +107,7 @@ let tests = [
     end;
 
     "connect, callback leak", `Slow, begin fun () ->
-      let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
+      let address = fresh_address () in
 
       no_memory_leak ~base_repetitions:1 begin fun _n ->
         with_tcp begin fun tcp ->
@@ -118,7 +118,7 @@ let tests = [
     end;
 
     "connect, synchronous error", `Quick, begin fun () ->
-      let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
+      let address = fresh_address () in
       let result = ref Luv.Error.success in
 
       with_tcp begin fun tcp ->
@@ -133,7 +133,7 @@ let tests = [
     end;
 
     "connect, synchronous error leak", `Slow, begin fun () ->
-      let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
+      let address = fresh_address () in
 
       no_memory_leak ~base_repetitions:1 begin fun _n ->
         with_tcp begin fun tcp ->
@@ -146,7 +146,7 @@ let tests = [
 
     "connect, handle lifetime", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
-        let address = Unix.(ADDR_INET (inet_addr_loopback, port ())) in
+        let address = fresh_address () in
         Luv.TCP.connect tcp address begin fun result ->
           check_error_code "connect" Luv.Error.ecanceled result
         end

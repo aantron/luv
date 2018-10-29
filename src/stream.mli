@@ -13,7 +13,6 @@ val read_start :
   ((Bigstring.t * int, Error.t) Result.result -> unit) ->
     unit
 val read_stop : _ t -> Error.t
-(* TODO Is the data always written to the beginning of the buffer? *)
 
 (* DOC how to use Array1.sub to create views into the arrays. *)
 val write :
@@ -40,4 +39,5 @@ sig
       Ctypes.static_funptr
 end
 
+val allocate : ('kind C.Types.Stream.t) Ctypes.typ -> 'kind t
 val coerce : _ t -> [ `Base ] t

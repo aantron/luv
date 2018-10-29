@@ -1,44 +1,12 @@
-type 'kind c_handle = 'kind C.Types.Handle.t
-
-let coerce :
-    type kind. (kind c_handle) Ctypes.ptr -> ([ `Base ] c_handle) Ctypes.ptr =
-  Obj.magic
-
-(* DOC Document how the callback table works. *)
-type 'kind t = {
-  mutable callback_table : ('kind t -> unit) array;
-  c_handle : 'kind c_handle Ctypes.ptr;
-}
-
-exception Handle_already_closed_this_is_a_programming_logic_error
+include Helpers.Retained
+  (struct
+    include C.Types.Handle
+    type 'kind base = 'kind handle
+    include C.Functions.Handle
+  end)
 
 let is_closing handle =
-  C.Functions.Handle.is_closing (coerce (handle.c_handle))
-
-let raise_if_closed handle =
-  if is_closing handle then
-    raise Handle_already_closed_this_is_a_programming_logic_error
-
-let allocate ?(callback_count = C.Types.Handle.callback_count) t =
-  let c_handle = Ctypes.addr (Ctypes.make t) in
-  let callback_table = Array.make callback_count ignore in
-  let handle = {callback_table; c_handle} in
-  let gc_root = Ctypes.Root.create handle in
-  C.Functions.Handle.set_data (coerce c_handle) gc_root;
-  handle
-
-let c handle =
-  raise_if_closed handle;
-  handle.c_handle
-
-let set_callback
-    ?(index = C.Types.Handle.generic_callback_index) handle callback =
-  raise_if_closed handle;
-  let callback : (_ t -> unit) = Obj.magic callback in
-  handle.callback_table.(index) <- callback
-
-let get_callback ~index handle =
-  Obj.magic handle.callback_table.(index)
+  C.Functions.Handle.is_closing (coerce handle)
 
 let close_trampoline =
   C.Functions.Handle.get_close_trampoline ()
@@ -47,31 +15,45 @@ let close handle =
   if is_closing handle then
     ()
   else begin
-    let close_callback handle =
-      C.Functions.Handle.get_data (coerce handle.c_handle)
-      |> Ctypes.Root.release
-    in
-    handle.callback_table.(C.Types.Handle.generic_callback_index) <-
-      close_callback;
-    C.Functions.Handle.close (coerce handle.c_handle) close_trampoline
+    set_reference handle release;
+    C.Functions.Handle.close (coerce handle) close_trampoline
   end
 
 let is_active handle =
-  C.Functions.Handle.is_active (coerce handle.c_handle)
+  C.Functions.Handle.is_active (coerce handle)
 
 let ref handle =
-  C.Functions.Handle.ref (coerce handle.c_handle)
+  C.Functions.Handle.ref (coerce handle)
 
 let unref handle =
-  C.Functions.Handle.unref (coerce handle.c_handle)
+  C.Functions.Handle.unref (coerce handle)
 
 let has_ref handle =
-  C.Functions.Handle.has_ref (coerce handle.c_handle)
+  C.Functions.Handle.has_ref (coerce handle)
+
+let buffer_size c_function handle =
+  let size = Ctypes.(allocate int 0) in
+  c_function (coerce handle) size
+  |> Error.to_result (Ctypes.(!@) size)
+
+let send_buffer_size handle =
+  buffer_size C.Functions.Handle.send_buffer_size handle
+let recv_buffer_size handle =
+  buffer_size C.Functions.Handle.recv_buffer_size handle
+
+let set_buffer_size c_function handle size =
+  let size = Ctypes.(allocate int size) in
+  c_function (coerce handle) size
+
+let set_send_buffer_size handle size =
+  set_buffer_size C.Functions.Handle.send_buffer_size handle size
+let set_recv_buffer_size handle size =
+  set_buffer_size C.Functions.Handle.recv_buffer_size handle size
 
 let fileno handle =
   let os_fd = Ctypes.make C.Types.Os_fd.t in
-  C.Functions.Handle.fileno (coerce handle.c_handle) (Ctypes.addr os_fd)
+  C.Functions.Handle.fileno (coerce handle) (Ctypes.addr os_fd)
   |> Error.to_result os_fd
 
 let get_loop handle =
-  C.Functions.Handle.get_loop (coerce handle.c_handle)
+  C.Functions.Handle.get_loop (coerce handle)

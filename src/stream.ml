@@ -1,5 +1,8 @@
 type 'kind t = 'kind C.Types.Stream.stream Handle.t
 
+let allocate kind =
+  Handle.allocate ~reference_count:C.Types.Stream.reference_count kind
+
 let coerce : type kind. kind t -> [ `Base ] t =
   Obj.magic
 
@@ -10,35 +13,25 @@ let shutdown stream callback =
   let request = Request.allocate C.Types.Stream.Shutdown_request.t in
   Request.set_callback_2 request (fun _request -> callback);
   let immediate_result =
-    C.Functions.Stream.shutdown
-      (Request.c request) (Handle.c (coerce stream)) shutdown_trampoline
-  in
+    C.Functions.Stream.shutdown request (coerce stream) shutdown_trampoline in
   if immediate_result < Error.success then begin
-    Request.clear_callback request;
+    Request.release request;
     callback immediate_result
   end
 
 let connection_trampoline =
   C.Functions.Stream.get_connection_trampoline ()
 
-(* DOC Argue that the callback is properly memory-managed. *)
 let listen ?(backlog = C.Types.Stream.somaxconn) server callback =
-  Handle.set_callback
-    ~index:C.Types.Stream.connection_callback_index
-    server
-    (fun _server -> callback);
+  Handle.set_reference
+    ~index:C.Types.Stream.connection_callback_index server callback;
   let immediate_result =
-    C.Functions.Stream.listen
-      (Handle.c (coerce server))
-      backlog
-      connection_trampoline
-  in
+    C.Functions.Stream.listen (coerce server) backlog connection_trampoline in
   if immediate_result < Error.success then
     callback immediate_result
 
 let accept ~server ~client =
-  C.Functions.Stream.accept
-    (Handle.c (coerce server)) (Handle.c (coerce client))
+  C.Functions.Stream.accept (coerce server) (coerce client)
 
 let alloc_trampoline =
   C.Functions.Handle.get_alloc_trampoline ()
@@ -50,8 +43,8 @@ let read_trampoline =
 let read_start ?(allocate = Bigstring.create) stream callback =
   let last_allocated_buffer = ref None in
 
-  Handle.set_callback stream ~index:C.Types.Stream.read_callback_index
-      begin fun _stream (nread_or_error : Error.t) ->
+  Handle.set_reference stream ~index:C.Types.Stream.read_callback_index
+      begin fun (nread_or_error : Error.t) ->
 
     let result =
       if (nread_or_error :> int) > 0 then begin
@@ -72,8 +65,8 @@ let read_start ?(allocate = Bigstring.create) stream callback =
     callback result
   end;
 
-  Handle.set_callback stream ~index:C.Types.Stream.allocate_callback_index
-      begin fun _stream suggested_size ->
+  Handle.set_reference stream ~index:C.Types.Stream.allocate_callback_index
+      begin fun suggested_size ->
 
     let buffer = allocate suggested_size in
     last_allocated_buffer := Some buffer;
@@ -82,13 +75,13 @@ let read_start ?(allocate = Bigstring.create) stream callback =
 
   let immediate_result =
     C.Functions.Stream.read_start
-      (Handle.c (coerce stream)) alloc_trampoline read_trampoline
+      (coerce stream) alloc_trampoline read_trampoline
   in
   if immediate_result < Error.success then
     callback (Error immediate_result)
 
 let read_stop stream =
-  C.Functions.Stream.read_stop (Handle.c (coerce stream))
+  C.Functions.Stream.read_stop (coerce stream)
 
 let write_trampoline =
   C.Functions.Stream.Write_request.get_trampoline ()
@@ -96,7 +89,7 @@ let write_trampoline =
 (* DOC send_handle must remain open during the operation. *)
 let write ?send_handle stream buffers callback =
   let count = List.length buffers in
-  let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
+  let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
 
   let request = Request.allocate C.Types.Stream.Write_request.t in
 
@@ -108,13 +101,13 @@ let write ?send_handle stream buffers callback =
   let send_handle =
     match send_handle with
     | None -> Ctypes.from_voidp C.Types.Stream.t Ctypes.null
-    | Some handle -> Handle.c (coerce handle)
+    | Some handle -> coerce handle
   in
 
   let immediate_result =
     C.Functions.Stream.write2
-      (Request.c request)
-      (Handle.c (coerce stream))
+      request
+      (coerce stream)
       (Ctypes.CArray.start iovecs)
       (Unsigned.UInt.of_int count)
       send_handle
@@ -122,17 +115,17 @@ let write ?send_handle stream buffers callback =
   in
 
   if immediate_result < Error.success then begin
-    Request.clear_callback request;
+    Request.release request;
     callback immediate_result
   end
 
 let try_write stream buffers =
   let count = List.length buffers in
-  let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
+  let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
 
   let result =
     C.Functions.Stream.try_write
-      (Handle.c (coerce stream))
+      (coerce stream)
       (Ctypes.CArray.start iovecs)
       (Unsigned.UInt.of_int count)
   in
@@ -143,16 +136,16 @@ let try_write stream buffers =
   Error.to_result (result :> int) result
 
 let is_readable stream =
-  C.Functions.Stream.is_readable (Handle.c (coerce stream))
+  C.Functions.Stream.is_readable (coerce stream)
 
 let is_writable stream =
-  C.Functions.Stream.is_writable (Handle.c (coerce stream))
+  C.Functions.Stream.is_writable (coerce stream)
 
 let set_blocking stream blocking =
-  C.Functions.Stream.set_blocking (Handle.c (coerce stream)) blocking
+  C.Functions.Stream.set_blocking (coerce stream) blocking
 
 let get_write_queue_size stream =
-  C.Functions.Stream.get_write_queue_size (Handle.c (coerce stream))
+  C.Functions.Stream.get_write_queue_size (coerce stream)
   |> Unsigned.Size_t.to_int
 
 module Connect_request =

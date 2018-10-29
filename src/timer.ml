@@ -2,29 +2,34 @@ type t = [ `Timer ] Handle.t
 
 let init ?loop () =
   let timer = Handle.allocate C.Types.Timer.t in
-  C.Functions.Timer.init (Loop.or_default loop) (Handle.c timer)
+  C.Functions.Timer.init (Loop.or_default loop) timer
   |> Error.to_result timer
 
 let trampoline =
   C.Functions.Timer.get_trampoline ()
 
-let start ?(repeat = 0) timer timeout callback =
-  Handle.set_callback timer callback;
+let start ?(call_update_time = true) ?(repeat = 0) timer timeout callback =
+  Handle.set_reference timer callback;
+
+  if call_update_time then begin
+    Loop.update_time (Handle.get_loop timer)
+  end;
 
   C.Functions.Timer.start
-    (Handle.c timer)
+    timer
     trampoline
     (Unsigned.UInt64.of_int timeout)
     (Unsigned.UInt64.of_int repeat)
 
-let stop timer =
-  C.Functions.Timer.stop (Handle.c timer)
+let stop =
+  C.Functions.Timer.stop
 
-let again timer =
-  C.Functions.Timer.again (Handle.c timer)
+let again =
+  C.Functions.Timer.again
 
 let set_repeat timer repeat =
-  C.Functions.Timer.set_repeat (Handle.c timer) (Unsigned.UInt64.of_int repeat)
+  C.Functions.Timer.set_repeat timer (Unsigned.UInt64.of_int repeat)
 
 let get_repeat timer =
-  C.Functions.Timer.get_repeat (Handle.c timer)
+  C.Functions.Timer.get_repeat timer
+  |> Unsigned.UInt64.to_int

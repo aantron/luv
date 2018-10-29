@@ -1,32 +1,31 @@
 type t = [ `TCP ] Stream.t
 
 let init ?loop ?(domain : Misc.Domain.t option) () =
-  let tcp =
-    Handle.allocate
-      ~callback_count:C.Types.Stream.callback_count C.Types.TCP.t
-  in
+  let tcp : t = Stream.allocate C.Types.TCP.t in
   let loop = Loop.or_default loop in
-  let c_tcp = Handle.c tcp in
   let result =
     match domain with
-    | None -> C.Functions.TCP.init loop c_tcp
+    | None -> C.Functions.TCP.init loop tcp
     | Some domain ->
-      C.Functions.TCP.init_ex loop c_tcp (Unsigned.UInt.of_int (domain :> int))
+      C.Functions.TCP.init_ex loop tcp (Unsigned.UInt.of_int (domain :> int))
   in
   Error.to_result tcp result
 
-let nodelay tcp yes =
-  C.Functions.TCP.nodelay (Handle.c tcp) yes
+let open_ =
+  C.Functions.TCP.open_
+
+let nodelay =
+  C.Functions.TCP.nodelay
 
 let keepalive tcp maybe =
   match maybe with
   | None ->
-    C.Functions.TCP.keepalive (Handle.c tcp) false 0
+    C.Functions.TCP.keepalive tcp false 0
   | Some seconds ->
-    C.Functions.TCP.keepalive (Handle.c tcp) true seconds
+    C.Functions.TCP.keepalive tcp true seconds
 
-let simultaneous_accepts tcp yes =
-  C.Functions.TCP.simultaneous_accepts (Handle.c tcp) yes
+let simultaneous_accepts =
+  C.Functions.TCP.simultaneous_accepts
 
 let bind ?(flags = []) tcp address =
   let flags =
@@ -36,7 +35,7 @@ let bind ?(flags = []) tcp address =
   in
 
   C.Functions.TCP.bind
-    (Handle.c tcp) (Ctypes.addr (Misc.Sockaddr.ocaml_to_c address)) flags
+    tcp (Ctypes.addr (Helpers.Sockaddr.ocaml_to_c address)) flags
 
 let generic_get_name c_function tcp =
   let c_sockaddr = Ctypes.make C.Types.Sockaddr.union in
@@ -45,7 +44,7 @@ let generic_get_name c_function tcp =
 
   let result =
     c_function
-      (Handle.c tcp)
+      tcp
       (Ctypes.addr (Ctypes.getf c_sockaddr C.Types.Sockaddr.s_gen))
       c_sockaddr_length
   in
@@ -54,7 +53,7 @@ let generic_get_name c_function tcp =
     Result.Error result
   else begin
     let ocaml_sockaddr =
-      Misc.Sockaddr.c_to_ocaml c_sockaddr (Ctypes.(!@) c_sockaddr_length) in
+      Helpers.Sockaddr.c_to_ocaml c_sockaddr (Ctypes.(!@) c_sockaddr_length) in
     Result.Ok ocaml_sockaddr
   end
 
@@ -66,12 +65,12 @@ let connect tcp address callback =
   Request.set_callback_2 request (fun _request -> callback);
   let immediate_result =
     C.Functions.TCP.connect
-      (Request.c request)
-      (Handle.c tcp)
-      (Ctypes.addr (Misc.Sockaddr.ocaml_to_c address))
+      request
+      tcp
+      (Ctypes.addr (Helpers.Sockaddr.ocaml_to_c address))
       Stream.Connect_request.trampoline
   in
   if immediate_result < Error.success then begin
-    Request.clear_callback request;
+    Request.release request;
     callback immediate_result
   end

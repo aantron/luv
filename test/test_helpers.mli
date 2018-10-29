@@ -11,7 +11,7 @@ val check_pointer : string -> 'a Ctypes.ptr -> 'a Ctypes.ptr -> unit
 val check_directory_entries :
   string -> string list -> Luv.File.Dirent.t list -> unit
 
-val check_address : string -> Unix.sockaddr -> Unix.sockaddr -> unit
+val check_address : string -> Luv.Misc.Sockaddr.t -> Luv.Misc.Sockaddr.t -> unit
 
 val make_callback : unit -> (_ -> unit)
 val no_memory_leak : ?base_repetitions:int -> (int -> unit) -> unit
@@ -20,3 +20,4 @@ val default_loop : Luv.Loop.t
 val run : ?with_timeout:bool -> unit -> unit
 
 val port : unit -> int
+val fresh_address : unit -> Luv.Misc.Sockaddr.t

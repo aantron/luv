@@ -17,6 +17,7 @@ let tests = [
 
       let async_cell = ref None in
       let async =
+        check_success_result "init" @@
         Luv.Async.init begin fun async' ->
           begin
             match !async_cell with
@@ -25,7 +26,6 @@ let tests = [
           end;
           called := true
         end
-        |> check_success_result "init"
       in
       async_cell := Some async;
 
@@ -40,15 +40,14 @@ let tests = [
       Alcotest.(check bool) "called" true !called
     end;
 
-(* TODO Restore. *)
-(*
     "multithreading", `Quick, begin fun () ->
       let called = ref false in
       let async =
-        Luv.Async.init () ~callback:(fun async ->
+        check_success_result "init" @@
+        Luv.Async.init begin fun async ->
           called := true;
-          Luv.Handle.close async)
-        |> check_success_result "init"
+          Luv.Handle.close async
+        end
       in
 
       ignore @@ Thread.create begin fun () ->
@@ -59,6 +58,6 @@ let tests = [
       run ();
 
       Alcotest.(check bool) "called" true !called
-    end; *)
+    end;
   ]
 ]

@@ -447,18 +447,13 @@ struct
       foreign "uv_has_ref"
         (ptr t @-> returning bool)
 
-    (* TODO ??? *)
-    (* let send_buffer_size =
-      foreign "uv_send_buffer_size" (ptr t @-> ptr int @-> returning error_code)
+    let send_buffer_size =
+      foreign "uv_send_buffer_size"
+        (ptr t @-> ptr int @-> returning error_code)
+
     let recv_buffer_size =
-      foreign "uv_recv_buffer_size" (ptr t @-> ptr int @-> returning error_code)
-       *)
-    (* let walk =
-      foreign "uv_walk"
-        (ptr Loop.t @->
-         funptr Ctypes.(ptr t @-> ptr void @-> returning void) @->
-         ptr void @->
-          returning void) *)
+      foreign "uv_recv_buffer_size"
+        (ptr t @-> ptr int @-> returning error_code)
 
     let fileno =
       foreign "uv_fileno"
@@ -628,7 +623,6 @@ struct
         (ptr t @-> returning error_code)
   end
 
-  (* TODO Finish after there is a way of getting an fd? *)
   module Poll =
   struct
     let t = Types.Poll.t
@@ -645,10 +639,9 @@ struct
       foreign "uv_poll_init"
         (ptr Loop.t @-> ptr t @-> int @-> returning error_code)
 
-    (* TODO Bind uv_os_sock_t, and create a custom stub. *)
-    (* let init_socket =
+    let init_socket =
       foreign "uv_poll_init_socket"
-        (ptr Loop.t @-> ptr t @-> Types.Misc.Os_fd.t @-> returning error_code) *)
+        (ptr Loop.t @-> ptr t @-> Types.Os_socket.t @-> returning error_code)
 
     let start =
       foreign "uv_poll_start"
@@ -812,6 +805,10 @@ struct
       foreign "uv_tcp_init_ex"
         (ptr Loop.t @-> ptr t @-> uint @-> returning error_code)
 
+    let open_ =
+      foreign "uv_tcp_open"
+        (ptr t @-> Types.Os_socket.t @-> returning error_code)
+
     let nodelay =
       foreign "uv_tcp_nodelay"
         (ptr t @-> bool @-> returning error_code)
@@ -958,6 +955,13 @@ struct
         (Types.Os_fd.t @-> returning bool)
   end
 
+  module Os_socket =
+  struct
+    let is_invalid_socket_value =
+      foreign "luv_is_invalid_socket_value"
+        (Types.Os_socket.t @-> returning bool)
+  end
+
   module Bigstring =
   struct
     let memcpy_to_bytes =
@@ -967,5 +971,43 @@ struct
     let memcpy_from_bytes =
       foreign "memcpy"
         (ptr char @-> ocaml_bytes @-> int @-> returning void)
+  end
+
+  module Work =
+  struct
+    let t = Types.Work.t
+
+    let work_trampoline =
+      static_funptr
+        Ctypes.(ptr t @-> returning void)
+
+    let after_work_trampoline =
+      static_funptr
+        Ctypes.(ptr t @-> int @-> returning void)
+
+    let get_work_trampoline =
+      foreign "luv_address_of_work_trampoline"
+        (void @-> returning work_trampoline)
+
+    let get_after_work_trampoline =
+      foreign "luv_address_of_after_work_trampoline"
+        (void @-> returning after_work_trampoline)
+
+    let get_c_work_trampoline =
+      foreign "luv_address_of_c_work_trampoline"
+        (void @-> returning work_trampoline)
+
+    let get_after_c_work_trampoline =
+      foreign "luv_address_of_after_c_work_trampoline"
+        (void @-> returning after_work_trampoline)
+
+    let add_c_function_and_argument =
+      foreign "luv_add_c_function_and_argument"
+        (ptr t @-> nativeint @-> nativeint @-> returning bool)
+
+    let queue =
+      foreign "uv_queue_work"
+        (ptr Loop.t @-> ptr t @-> work_trampoline @-> after_work_trampoline @->
+          returning error_code)
   end
 end

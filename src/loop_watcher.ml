@@ -1,0 +1,61 @@
+module type KIND =
+sig
+  type kind
+  val t : kind C.Types.Handle.t Ctypes.typ
+  val init : Loop.t -> kind C.Types.Handle.t Ctypes.ptr -> Error.t
+  val get_trampoline :
+    unit ->
+      (kind C.Types.Handle.t Ctypes.ptr -> unit) Ctypes.static_funptr
+  val start :
+    kind C.Types.Handle.t Ctypes.ptr ->
+    (kind C.Types.Handle.t Ctypes.ptr -> unit) Ctypes.static_funptr ->
+      Error.t
+  val stop : kind C.Types.Handle.t Ctypes.ptr -> Error.t
+end
+
+module Watcher (Kind : KIND) =
+struct
+  type t = Kind.kind Handle.t
+
+  let init ?loop () =
+    let handle = Handle.allocate Kind.t in
+    Kind.init (Loop.or_default loop) handle
+    |> Error.to_result handle
+
+  let trampoline =
+    Kind.get_trampoline ()
+
+  let start handle callback =
+    (* If [Handle.is_active handle], then [uv_*_start] will not overwrite the
+       handle's callback. We need to emulate this behavior in the wrapper. *)
+    if Handle.is_active handle then
+      Error.success
+    else begin
+      Handle.set_reference handle callback;
+      Kind.start handle trampoline
+    end
+
+  let stop =
+    Kind.stop
+end
+
+module Prepare =
+  Watcher
+    (struct
+      type kind = [ `Prepare ]
+      include C.Functions.Prepare
+    end)
+
+module Check =
+  Watcher
+    (struct
+      type kind = [ `Check ]
+      include C.Functions.Check
+    end)
+
+module Idle =
+  Watcher
+    (struct
+      type kind = [ `Idle ]
+      include C.Functions.Idle
+    end)

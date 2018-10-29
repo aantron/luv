@@ -1,6 +1,6 @@
 let () =
   Alcotest.run "luv" (List.flatten [
-    Error.tests;
+    (* Error.tests;
     Version.tests;
     Loop.tests;
     Timer.tests;
@@ -11,7 +11,8 @@ let () =
     TCP.tests;
     File.tests;
     Pipe.tests;
-    Process.tests;
+    Process.tests; *)
+    Thread_.tests;
   ])
 
 (* TODO Apply Bisect_ppx. *)

@@ -1,37 +1,24 @@
-type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
-
-let coerce : type any_type_of_request. any_type_of_request t -> [ `Base ] t =
-  Obj.magic
+include Helpers.Retained
+  (struct
+    include C.Types.Request
+    type 'kind base = 'kind request
+    include C.Functions.Request
+  end)
 
 (* TODO Proper memory management for cancel? *)
 let cancel request =
   C.Functions.Request.cancel (coerce request)
 
-let allocate t =
-  Ctypes.addr (Ctypes.make t)
-
-(* TODO Still needed? *)
-let c request =
-  request
-
-let set_callback request callback =
-  let gc_root = Ctypes.Root.create callback in
-  C.Functions.Request.set_data (coerce request) gc_root
-
-let clear_callback request =
-  C.Functions.Request.get_data (coerce request)
-  |> Ctypes.Root.release
-
 let set_callback_1 request callback =
   let callback () =
-    clear_callback request;
+    release request;
     callback request
   in
-  set_callback request callback
+  set_reference request callback
 
 let set_callback_2 request callback =
   let callback v =
-    clear_callback request;
+    release request;
     callback request v
   in
-  set_callback request callback
+  set_reference request callback

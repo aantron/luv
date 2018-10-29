@@ -15,6 +15,7 @@
 // they do is retrieve the correct OCaml callback from the handle or request
 // that is passed to them by libuv, and call it.
 
+uv_after_work_cb luv_address_of_after_work_trampoline();
 uv_alloc_cb luv_address_of_alloc_trampoline();
 uv_async_cb luv_address_of_async_trampoline();
 uv_check_cb luv_address_of_check_trampoline();
@@ -31,23 +32,39 @@ uv_prepare_cb luv_address_of_prepare_trampoline();
 uv_shutdown_cb luv_address_of_shutdown_trampoline();
 uv_signal_cb luv_address_of_signal_trampoline();
 uv_timer_cb luv_address_of_timer_trampoline();
+uv_work_cb luv_address_of_work_trampoline();
 uv_write_cb luv_address_of_write_trampoline();
 
 // Handles can have multiple outstanding callbacks, so the corresponding OCaml
 // closures are stored in an array. These are the indices into that array for
 // the various callbacks.
 
+// TODO Create a separate slot for close callbacks.
 enum {
-    LUV_HANDLE_GENERIC_CALLBACK_INDEX,
-    LUV_HANDLE_GENERIC_CALLBACK_COUNT
+    LUV_SELF_REFERENCE,
+    LUV_GENERIC_CALLBACK,
+    LUV_MINIMUM_REFERENCE_COUNT
 };
 
 enum {
-    LUV_CONNECTION_CALLBACK_INDEX = LUV_HANDLE_GENERIC_CALLBACK_COUNT,
-    LUV_READ_CALLBACK_INDEX,
-    LUV_ALLOCATE_CALLBACK_INDEX,
-    LUV_STREAM_CALLBACK_COUNT
+    LUV_CONNECTION_CALLBACK = LUV_MINIMUM_REFERENCE_COUNT,
+    LUV_READ_CALLBACK,
+    LUV_ALLOCATE_CALLBACK,
+    LUV_STREAM_REFERENCE_COUNT
 };
+
+enum {
+    LUV_WORK_FUNCTION = LUV_MINIMUM_REFERENCE_COUNT,
+    LUV_WORK_REFERENCE_COUNT
+};
+
+
+
+// Helpers for setting up uv_queue_work requests that call a C function.
+int luv_add_c_function_and_argument(
+    uv_work_t *c_request, intnat function, intnat argument);
+uv_after_work_cb luv_address_of_after_c_work_trampoline();
+uv_work_cb luv_address_of_c_work_trampoline();
 
 
 
@@ -78,6 +95,9 @@ int luv_read_start(
 int luv_is_invalid_handle_value(uv_os_fd_t handle);
 CAMLprim value luv_unix_fd_to_os_fd(value unix_fd, value os_fd_storage);
 CAMLprim value luv_os_fd_to_unix_fd(value os_fd_storage);
+int luv_is_invalid_socket_value(uv_os_sock_t socket);
+CAMLprim value luv_unix_fd_to_os_socket(value unix_fd, value os_socket_storage);
+CAMLprim value luv_os_socket_to_unix_fd(value os_socket_storage);
 
 
 

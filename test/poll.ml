@@ -1,11 +1,8 @@
-(* TODO Use a pipe? *)
-(* TODO Does this test work on Windows? *)
-
 open Test_helpers
 
 let with_poll f =
   let poll =
-    Luv.Poll.init ~fd:1 ()
+    Luv.Poll.init Luv.Process.stderr
     |> check_success_result "init"
   in
 
@@ -22,18 +19,22 @@ let tests = [
 
     "start, stop", `Quick, begin fun () ->
       with_poll begin fun poll ->
-        Luv.Poll.start poll [`Writable] begin fun poll' result events ->
-          if not (poll' == poll) then
-            Alcotest.fail "same handle";
-          check_success "result" result;
-          if not (events = [`Writable]) then
-            Alcotest.fail "events";
-          Luv.Poll.stop poll
-          |> check_success "stop"
-        end
-        |> check_success "start";
+        let called = ref false in
 
-        run ()
+        Luv.Poll.(start poll Event.writable) begin fun result ->
+          check_success_result "result" result
+          |> Luv.Poll.Event.(test writable)
+          |> Alcotest.(check bool) "writable" true;
+
+          Luv.Poll.stop poll
+          |> check_success "stop";
+
+          called := true
+        end;
+
+        run ();
+
+        Alcotest.(check bool) "called" true !called
       end
     end;
   ]

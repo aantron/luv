@@ -31,16 +31,13 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
       with_watcher begin fun watcher ->
         let calls = ref 0 in
 
-        start watcher begin fun watcher' ->
-          if not (watcher' == watcher) then
-            Alcotest.fail "same prepare handle";
-
+        check_success "start" @@
+        start watcher begin fun () ->
           calls := !calls + 1;
           if !calls = 2 then
             stop watcher
             |> check_success "stop"
-        end
-        |> check_success "start";
+        end;
 
         while Luv.Loop.run default_loop Luv.Loop.Run_mode.nowait do
           ()
@@ -55,9 +52,9 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
         let first_called = ref false in
         let second_called = ref false in
 
-        start watcher (fun _ -> first_called := true)
+        start watcher (fun () -> first_called := true)
         |> check_success "first start";
-        start watcher (fun _ -> second_called := true)
+        start watcher (fun () -> second_called := true)
         |> check_success "second start";
 
         Luv.Loop.run default_loop Luv.Loop.Run_mode.nowait |> ignore;

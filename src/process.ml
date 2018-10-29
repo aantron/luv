@@ -30,7 +30,7 @@ let to_new_pipe
     else flags
   in
   Ctypes.setf redirection Redirection.flags flags;
-  Ctypes.setf redirection Redirection.stream Handle.(coerce (c to_parent_pipe));
+  Ctypes.setf redirection Redirection.stream Handle.(coerce to_parent_pipe);
   (fd, redirection)
 
 let inherit_fd ~fd ~from_parent_fd =
@@ -42,8 +42,7 @@ let inherit_fd ~fd ~from_parent_fd =
 let inherit_stream ~fd ~from_parent_stream =
   let redirection = Ctypes.make Redirection.t in
   Ctypes.setf redirection Redirection.flags Redirection.inherit_stream;
-  Ctypes.setf
-    redirection Redirection.stream Handle.(coerce (c from_parent_stream));
+  Ctypes.setf redirection Redirection.stream Handle.(coerce from_parent_stream);
   (fd, redirection)
 
 let stdin = 0
@@ -103,7 +102,7 @@ let spawn
   let callback =
     match on_exit with
     | Some callback ->
-      Handle.set_callback process callback;
+      Handle.set_reference process callback;
       trampoline
     | None ->
       null_callback
@@ -151,7 +150,7 @@ let spawn
   let result =
     C.Functions.Process.spawn
       loop
-      (Handle.c process)
+      process
       callback
       (Ctypes.ocaml_string_start path)
       (c_string_array arguments)
@@ -177,11 +176,11 @@ let spawn
 let disable_stdio_inheritance =
   C.Functions.Process.disable_stdio_inheritance
 
-let kill process signal =
-  C.Functions.Process.process_kill (Handle.c process) signal
+let kill =
+  C.Functions.Process.process_kill
 
 let kill_pid ~pid signal =
   C.Functions.Process.kill pid signal
 
-let pid process =
-  C.Functions.Process.get_pid (Handle.c process)
+let pid =
+  C.Functions.Process.get_pid

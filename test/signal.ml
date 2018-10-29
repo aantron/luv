@@ -22,24 +22,24 @@ let tests = [
 
     "start, stop", `Quick, begin fun () ->
       with_signal begin fun signal ->
-        Luv.Signal.(start signal sigint) begin fun signal' signum ->
-          if not (signal' == signal) then
-            Alcotest.fail "same handle";
-          if not (signum = Luv.Signal.sigint) then
-            Alcotest.fail "signum";
-          Luv.Signal.stop signal
-          |> check_success "stop"
-        end
-        |> check_success "start";
+        let called = ref false in
 
+        check_success "start" @@
+        Luv.Signal.(start signal sigint) begin fun () ->
+          Luv.Signal.stop signal |> check_success "stop";
+          called := true
+        end;
         send_signal ();
-        run ()
+
+        run ();
+
+        Alcotest.(check bool) "called" true !called
       end
     end;
 
     "start_oneshot", `Quick, begin fun () ->
       with_signal begin fun signal ->
-        Luv.Signal.(start_oneshot signal sigint) (fun _ -> ignore)
+        Luv.Signal.(start_oneshot signal sigint) ignore
         |> check_success "start";
 
         send_signal ();
@@ -49,7 +49,7 @@ let tests = [
 
     "get_signum", `Quick, begin fun () ->
       with_signal begin fun signal ->
-        Luv.Signal.(start signal sigint) (fun _ -> ignore)
+        Luv.Signal.(start signal sigint) ignore
         |> check_success "start";
 
         Luv.Signal.get_signum signal

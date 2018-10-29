@@ -12,11 +12,11 @@ struct
     | Some request -> request
     | None -> make ()
 
-  let cleanup request =
-    C.Blocking.File.req_cleanup (Request.c request)
+  let cleanup =
+    C.Blocking.File.req_cleanup
 
   let result request =
-    Request.c request
+    request
     |> C.Blocking.File.get_result
     |> PosixTypes.Ssize.to_int
     |> Error.coerce
@@ -24,14 +24,14 @@ struct
 
   let file request =
     let file_or_error =
-      Request.c request
+      request
       |> C.Blocking.File.get_result
       |> PosixTypes.Ssize.to_int
     in
     Error.to_result file_or_error (Error.coerce file_or_error)
 
   let byte_count request =
-    let count_or_error = C.Blocking.File.get_result (Request.c request) in
+    let count_or_error = C.Blocking.File.get_result request in
     if PosixTypes.Ssize.(compare count_or_error zero) >= 0 then
       count_or_error
       |> PosixTypes.Ssize.to_int64
@@ -43,9 +43,8 @@ struct
       |> Error.coerce
       |> fun n -> Result.Error n
 
-  let path request =
-    Request.c request
-    |> C.Blocking.File.get_path
+  let path =
+    C.Blocking.File.get_path
 end
 
 module Bit_flag_operations =
@@ -100,9 +99,7 @@ struct
 
   let next scan =
     let result =
-      C.Blocking.File.scandir_next
-        (Request.c scan.request) (Ctypes.addr scan.dirent)
-    in
+      C.Blocking.File.scandir_next scan.request (Ctypes.addr scan.dirent) in
     if result <> Error.success then begin
       stop scan;
       None
@@ -152,7 +149,7 @@ struct
 
   let load request =
     let c_stat =
-      Ctypes.(!@) (C.Blocking.File.get_statbuf (Request.c request)) in
+      Ctypes.(!@) (C.Blocking.File.get_statbuf request) in
     let field f = Ctypes.getf c_stat f in
     let module C_stat = C.Types.File.Stat in
     {
@@ -251,7 +248,7 @@ struct
   let returns_string = {
     from_request = (fun request ->
       Error.to_result_lazy
-        (fun () -> C.Blocking.File.get_ptr (Request.c request))
+        (fun () -> C.Blocking.File.get_ptr request)
         (Request_.result request));
     immediate_error = construct_error;
     clean_up_request_on_success = true;
@@ -311,7 +308,7 @@ struct
       returns_byte_count
       (fun run ?(offset = -1L) file buffers ->
         let count = List.length buffers in
-        let iovecs = Misc.Buf.bigstrings_to_iovecs buffers count in
+        let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
         run
           (!file @@ !(Ctypes.CArray.start iovecs) @@ uint count @@ !offset)
           (fun () ->
@@ -476,10 +473,10 @@ struct
         end;
 
         let immediate_result =
-          ((c_function loop (Request.c request)) |> args) trampoline in
+          ((c_function loop request) |> args) trampoline in
 
         if immediate_result < Error.success then begin
-          Request.clear_callback request;
+          Request.release request;
           Request_.cleanup request;
           cleanup ();
           callback (Returns.(returns.immediate_error) immediate_result)
@@ -503,8 +500,9 @@ struct
   let sync c_function returns get_args =
     get_args begin fun args cleanup ->
       let request = Request_.make () in
+      Request.release request;
       let immediate_result =
-        ((c_function (Loop.default ()) (Request.c request)) |> args)
+        ((c_function (Loop.default ()) request) |> args)
           null_callback
       in
 
