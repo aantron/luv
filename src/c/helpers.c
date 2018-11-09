@@ -118,6 +118,14 @@ static void luv_idle_trampoline(uv_idle_t *c_handle)
     caml_release_runtime_system();
 }
 
+uv_key_t luv_once_callback_key;
+
+static void luv_once_trampoline()
+{
+    value callback = (value)uv_key_get(&luv_once_callback_key);
+    caml_callback(callback, Val_unit);
+}
+
 static void luv_poll_trampoline(uv_poll_t *c_handle, int status, int event)
 {
     caml_acquire_runtime_system();
@@ -157,6 +165,26 @@ static void luv_signal_trampoline(uv_signal_t *c_handle, int signum)
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
+}
+
+static void luv_thread_trampoline(void *argument)
+{
+    // The argument to this trampoline is a GC root, which points to the OCaml
+    // function to call in the new thread.
+
+    caml_c_thread_register();
+    caml_acquire_runtime_system();
+
+    value *gc_root = (value*)argument;
+    value callback = *gc_root;
+
+    caml_remove_generational_global_root(gc_root);
+    caml_stat_free(gc_root);
+
+    caml_callback(callback, Val_unit);
+
+    caml_release_runtime_system();
+    caml_c_thread_unregister();
 }
 
 static void luv_timer_trampoline(uv_timer_t *c_handle)
@@ -252,6 +280,11 @@ uv_idle_cb luv_address_of_idle_trampoline()
     return luv_idle_trampoline;
 }
 
+luv_once_cb luv_address_of_once_trampoline()
+{
+    return luv_once_trampoline;
+}
+
 uv_poll_cb luv_address_of_poll_trampoline()
 {
     return luv_poll_trampoline;
@@ -275,6 +308,11 @@ uv_shutdown_cb luv_address_of_shutdown_trampoline()
 uv_signal_cb luv_address_of_signal_trampoline()
 {
     return luv_signal_trampoline;
+}
+
+uv_thread_cb luv_address_of_thread_trampoline()
+{
+    return luv_thread_trampoline;
 }
 
 uv_timer_cb luv_address_of_timer_trampoline()
@@ -343,6 +381,34 @@ uv_after_work_cb luv_address_of_after_c_work_trampoline()
 uv_work_cb luv_address_of_c_work_trampoline()
 {
     return luv_c_work_trampoline;
+}
+
+int luv_thread_create_c(uv_thread_t *tid, intnat entry, intnat arg)
+{
+    return uv_thread_create(tid, (void*)entry, (void*)arg);
+}
+
+int luv_once_init(uv_once_t *guard)
+{
+    static int tls_key_initialized = 0;
+
+    if (tls_key_initialized == 0) {
+        int result = uv_key_create(&luv_once_callback_key);
+        if (result != 0)
+            return result;
+
+        tls_key_initialized = 1;
+    }
+
+    *guard = UV_ONCE_INIT;
+
+    return 0;
+}
+
+CAMLprim value luv_set_once_callback(value callback)
+{
+    uv_key_set(&luv_once_callback_key, (void*)callback);
+    return Val_unit;
 }
 
 

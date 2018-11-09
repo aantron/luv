@@ -304,6 +304,57 @@ struct
       foreign "uv_fs_get_statbuf"
         (ptr request @-> returning (ptr Types.File.Stat.t))
   end
+
+  module Thread =
+  struct
+    let join =
+      foreign "uv_thread_join"
+        (ptr Types.Thread.t @-> returning error_code)
+  end
+
+  module Mutex =
+  struct
+    let lock =
+      foreign "uv_mutex_lock"
+        (ptr Types.Mutex.t @-> returning void)
+  end
+
+  module Rwlock =
+  struct
+    let rdlock =
+      foreign "uv_rwlock_rdlock"
+        (ptr Types.Rwlock.t @-> returning void)
+
+    let wrlock =
+      foreign "uv_rwlock_wrlock"
+        (ptr Types.Rwlock.t @-> returning void)
+  end
+
+  module Semaphore =
+  struct
+    let wait =
+      foreign "uv_sem_wait"
+        (ptr Types.Semaphore.t @-> returning void)
+  end
+
+  module Condition =
+  struct
+    let wait =
+      foreign "uv_cond_wait"
+        (ptr Types.Condition.t @-> ptr Types.Mutex.t @-> returning void)
+
+    let timedwait =
+      foreign "uv_cond_timedwait"
+        (ptr Types.Condition.t @-> ptr Types.Mutex.t @-> uint64_t @->
+          returning error_code)
+  end
+
+  module Barrier =
+  struct
+    let wait =
+      foreign "uv_barrier_wait"
+        (ptr Types.Barrier.t @-> returning bool)
+  end
 end
 
 module Descriptions (F : Ctypes.FOREIGN) =
@@ -1009,5 +1060,185 @@ struct
       foreign "uv_queue_work"
         (ptr Loop.t @-> ptr t @-> work_trampoline @-> after_work_trampoline @->
           returning error_code)
+  end
+
+  module Thread =
+  struct
+    let t = Types.Thread.t
+
+    let trampoline =
+      static_funptr
+        Ctypes.(ptr void @-> returning void)
+
+    let get_trampoline =
+      foreign "luv_address_of_thread_trampoline"
+        (void @-> returning trampoline)
+
+    let create =
+      foreign "uv_thread_create"
+        (ptr t @-> trampoline @-> ptr void @-> returning error_code)
+
+    let create_c =
+      foreign "luv_thread_create_c"
+        (ptr t @-> nativeint @-> nativeint @-> returning error_code)
+
+    let self =
+      foreign "uv_thread_self"
+        (void @-> returning t)
+
+    let equal =
+      foreign "uv_thread_equal"
+        (ptr t @-> ptr t @-> returning bool)
+  end
+
+  module TLS =
+  struct
+    let t = Types.TLS.t
+
+    let create =
+      foreign "uv_key_create"
+        (ptr t @-> returning error_code)
+
+    let delete =
+      foreign "uv_key_delete"
+        (ptr t @-> returning void)
+
+    let get =
+      foreign "uv_key_get"
+        (ptr t @-> returning (ptr void))
+
+    let set =
+      foreign "uv_key_set"
+        (ptr t @-> ptr void @-> returning void)
+  end
+
+  module Once =
+  struct
+    let t = Types.Once.t
+
+    let trampoline =
+      static_funptr
+        Ctypes.(void @-> returning void)
+
+    let get_trampoline =
+      foreign "luv_address_of_once_trampoline"
+        (void @-> returning trampoline)
+
+    let init =
+      foreign "luv_once_init"
+        (ptr t @-> returning error_code)
+
+    let once =
+      foreign "uv_once"
+        (ptr t @-> trampoline @-> returning void)
+  end
+
+  module Mutex =
+  struct
+    let t = Types.Mutex.t
+
+    let init =
+      foreign "uv_mutex_init"
+        (ptr t @-> returning error_code)
+
+    let init_recursive =
+      foreign "uv_mutex_init_recursive"
+        (ptr t @-> returning error_code)
+
+    let destroy =
+      foreign "uv_mutex_destroy"
+        (ptr t @-> returning void)
+
+    let trylock =
+      foreign "uv_mutex_trylock"
+        (ptr t @-> returning error_code)
+
+    let unlock =
+      foreign "uv_mutex_unlock"
+        (ptr t @-> returning void)
+  end
+
+  module Rwlock =
+  struct
+    let t = Types.Rwlock.t
+
+    let init =
+      foreign "uv_rwlock_init"
+        (ptr t @-> returning error_code)
+
+    let destroy =
+      foreign "uv_rwlock_destroy"
+        (ptr t @-> returning void)
+
+    let tryrdlock =
+      foreign "uv_rwlock_tryrdlock"
+        (ptr t @-> returning error_code)
+
+    let rdunlock =
+      foreign "uv_rwlock_rdunlock"
+        (ptr t @-> returning void)
+
+    let trywrlock =
+      foreign "uv_rwlock_trywrlock"
+        (ptr t @-> returning error_code)
+
+    let wrunlock =
+      foreign "uv_rwlock_wrunlock"
+        (ptr t @-> returning void)
+  end
+
+  module Semaphore =
+  struct
+    let t = Types.Semaphore.t
+
+    let init =
+      foreign "uv_sem_init"
+        (ptr t @-> uint @-> returning error_code)
+
+    let destroy =
+      foreign "uv_sem_destroy"
+        (ptr t @-> returning void)
+
+    let post =
+      foreign "uv_sem_post"
+        (ptr t @-> returning void)
+
+    let trywait =
+      foreign "uv_sem_trywait"
+        (ptr t @-> returning error_code)
+  end
+
+  module Condition =
+  struct
+    let t = Types.Condition.t
+
+    let init =
+      foreign "uv_cond_init"
+        (ptr t @-> returning error_code)
+
+    let destroy =
+      foreign "uv_cond_destroy"
+        (ptr t @-> returning void)
+
+    let signal =
+      foreign "uv_cond_signal"
+        (ptr t @-> returning void)
+
+    let broadcast =
+      foreign "uv_cond_broadcast"
+        (ptr t @-> returning void)
+  end
+
+  module Barrier =
+  struct
+    let t = Types.Barrier.t
+
+    let init =
+      foreign "uv_barrier_init"
+        (ptr t @-> uint @-> returning error_code)
+
+    let destroy =
+      foreign "uv_barrier_destroy"
+        (ptr t @-> returning void)
   end
 end

@@ -511,4 +511,60 @@ struct
     let reference_count = constant "LUV_WORK_REFERENCE_COUNT" int
     let function_index = constant "LUV_WORK_FUNCTION" int
   end
+
+  module Thread =
+  struct
+    type t = [ `Thread ] structure
+    let t : t typ = typedef (structure "`Thread") "uv_thread_t"
+    let () = seal t
+  end
+
+  module TLS =
+  struct
+    type t = [ `TLS ] structure
+    let t : t typ = typedef (structure "`TLS") "uv_key_t"
+    let () = seal t
+  end
+
+  module Once =
+  struct
+    type t = [ `Once ] structure
+    let t : t typ = typedef (structure "`Once") "uv_once_t"
+    let () = seal t
+  end
+
+  module Mutex =
+  struct
+    type t = [ `Mutex ] structure
+    let t : t typ = typedef (structure "`Mutex") "uv_mutex_t"
+    let () = seal t
+  end
+
+  module Rwlock =
+  struct
+    type t = [ `Rwlock ] structure
+    let t : t typ = typedef (structure "`Rwlock") "uv_rwlock_t"
+    let () = seal t
+  end
+
+  module Semaphore =
+  struct
+    type t = [ `Semaphore ] structure
+    let t : t typ = typedef (structure "`Semaphore") "uv_sem_t"
+    let () = seal t
+  end
+
+  module Condition =
+  struct
+    type t = [ `Condition ] structure
+    let t : t typ = typedef (structure "`Condition") "uv_cond_t"
+    let () = seal t
+  end
+
+  module Barrier =
+  struct
+    type t = [ `Barrier ] structure
+    let t : t typ = typedef (structure "`Barrier") "uv_barrier_t"
+    let () = seal t
+  end
 end

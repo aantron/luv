@@ -15,6 +15,8 @@
 // they do is retrieve the correct OCaml callback from the handle or request
 // that is passed to them by libuv, and call it.
 
+typedef void (*luv_once_cb)();
+
 uv_after_work_cb luv_address_of_after_work_trampoline();
 uv_alloc_cb luv_address_of_alloc_trampoline();
 uv_async_cb luv_address_of_async_trampoline();
@@ -27,10 +29,12 @@ uv_exit_cb luv_null_exit_trampoline();
 uv_fs_cb luv_address_of_fs_trampoline();
 uv_fs_cb luv_null_fs_callback_pointer();
 uv_idle_cb luv_address_of_idle_trampoline();
+luv_once_cb luv_address_of_once_trampoline();
 uv_poll_cb luv_address_of_poll_trampoline();
 uv_prepare_cb luv_address_of_prepare_trampoline();
 uv_shutdown_cb luv_address_of_shutdown_trampoline();
 uv_signal_cb luv_address_of_signal_trampoline();
+uv_thread_cb luv_address_of_thread_trampoline();
 uv_timer_cb luv_address_of_timer_trampoline();
 uv_work_cb luv_address_of_work_trampoline();
 uv_write_cb luv_address_of_write_trampoline();
@@ -65,6 +69,13 @@ int luv_add_c_function_and_argument(
     uv_work_t *c_request, intnat function, intnat argument);
 uv_after_work_cb luv_address_of_after_c_work_trampoline();
 uv_work_cb luv_address_of_c_work_trampoline();
+
+// Helper for calling uv_thread_create with the address of a C function.
+int luv_thread_create_c(uv_thread_t *tid, intnat entry, intnat arg);
+
+// Helpers for uv_once.
+int luv_once_init(uv_once_t *guard);
+CAMLprim value luv_set_once_callback(value callback);
 
 
 
