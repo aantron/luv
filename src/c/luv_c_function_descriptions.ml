@@ -57,7 +57,7 @@ struct
         Ctypes.(ptr request @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_fs_trampoline"
+      foreign "luv_get_fs_trampoline"
         (void @-> returning trampoline)
 
     let get_null_callback =
@@ -467,11 +467,11 @@ struct
         Ctypes.(ptr t @-> size_t @-> ptr Types.Buf.t @-> returning void)
 
     let get_close_trampoline =
-      foreign "luv_address_of_close_trampoline"
+      foreign "luv_get_close_trampoline"
         (void @-> returning close_trampoline)
 
     let get_alloc_trampoline =
-      foreign "luv_address_of_alloc_trampoline"
+      foreign "luv_get_alloc_trampoline"
         (void @-> returning alloc_trampoline)
 
     let is_active =
@@ -549,7 +549,7 @@ struct
         Ctypes.(ptr t @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_timer_trampoline"
+      foreign "luv_get_timer_trampoline"
         (void @-> returning trampoline)
 
     let init =
@@ -587,7 +587,7 @@ struct
         Ctypes.(ptr t @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_prepare_trampoline"
+      foreign "luv_get_prepare_trampoline"
         (void @-> returning trampoline)
 
     let init =
@@ -612,7 +612,7 @@ struct
         Ctypes.(ptr t @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_check_trampoline"
+      foreign "luv_get_check_trampoline"
         (void @-> returning trampoline)
 
     let init =
@@ -637,7 +637,7 @@ struct
         Ctypes.(ptr t @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_idle_trampoline"
+      foreign "luv_get_idle_trampoline"
         (void @-> returning trampoline)
 
     let init =
@@ -662,7 +662,7 @@ struct
         Ctypes.(ptr t @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_async_trampoline"
+      foreign "luv_get_async_trampoline"
         (void @-> returning trampoline)
 
     let init =
@@ -683,7 +683,7 @@ struct
         Ctypes.(ptr t @-> int @-> int @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_poll_trampoline"
+      foreign "luv_get_poll_trampoline"
         (void @-> returning trampoline)
 
     let init =
@@ -712,7 +712,7 @@ struct
         Ctypes.(ptr t @-> int @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_signal_trampoline"
+      foreign "luv_get_signal_trampoline"
         (void @-> returning trampoline)
 
     let init =
@@ -742,7 +742,7 @@ struct
             returning void)
 
       let get_trampoline =
-        foreign "luv_address_of_connect_trampoline"
+        foreign "luv_get_connect_trampoline"
           (void @-> returning trampoline)
     end
 
@@ -754,7 +754,7 @@ struct
             returning void)
 
       let get_trampoline =
-        foreign "luv_address_of_shutdown_trampoline"
+        foreign "luv_get_shutdown_trampoline"
           (void @-> returning trampoline)
     end
 
@@ -766,7 +766,7 @@ struct
             returning void)
 
       let get_trampoline =
-        foreign "luv_address_of_write_trampoline"
+        foreign "luv_get_write_trampoline"
           (void @-> returning trampoline)
     end
 
@@ -782,11 +782,11 @@ struct
           returning void)
 
     let get_connection_trampoline =
-      foreign "luv_address_of_connection_trampoline"
+      foreign "luv_get_connection_trampoline"
         (void @-> returning connection_trampoline)
 
     let get_read_trampoline =
-      foreign "luv_address_of_read_trampoline"
+      foreign "luv_get_read_trampoline"
         (void @-> returning read_trampoline)
 
     let shutdown =
@@ -938,6 +938,135 @@ struct
         (ptr t @-> int @-> returning error_code)
   end
 
+  module TTY =
+  struct
+    let t = Types.TTY.t
+
+    let init =
+      foreign "uv_tty_init"
+        (ptr Loop.t @-> ptr t @-> Types.File.t @-> int @-> returning error_code)
+
+    let set_mode =
+      foreign "uv_tty_set_mode"
+        (ptr t @-> int @-> returning error_code)
+
+    let reset_mode =
+      foreign "uv_tty_reset_mode"
+        (void @-> returning error_code)
+
+    let get_winsize =
+      foreign "uv_tty_get_winsize"
+        (ptr t @-> ptr int @-> ptr int @-> returning error_code)
+  end
+
+  module UDP =
+  struct
+    let t = Types.UDP.t
+
+    let init =
+      foreign "uv_udp_init"
+        (ptr Loop.t @-> ptr t @-> returning error_code)
+
+    let init_ex =
+      foreign "uv_udp_init_ex"
+        (ptr Loop.t @-> ptr t @-> uint @-> returning error_code)
+
+    let open_ =
+      foreign "uv_udp_open"
+        (ptr t @-> Types.Os_socket.t @-> returning error_code)
+
+    let bind =
+      foreign "uv_udp_bind"
+        (ptr t @-> ptr Types.Sockaddr.t @-> int @-> returning error_code)
+
+    let getsockname =
+      foreign "uv_udp_getsockname"
+        (ptr t @-> ptr Types.Sockaddr.t @-> ptr int @-> returning error_code)
+
+    let set_membership =
+      foreign "uv_udp_set_membership"
+        (ptr t @-> ocaml_string @-> ocaml_string @-> int @->
+          returning error_code)
+
+    let set_multicast_loop =
+      foreign "uv_udp_set_multicast_loop"
+        (ptr t @-> bool @-> returning error_code)
+
+    let set_multicast_ttl =
+      foreign "uv_udp_set_multicast_ttl"
+        (ptr t @-> int @-> returning error_code)
+
+    let set_multicast_interface =
+      foreign "uv_udp_set_multicast_interface"
+        (ptr t @-> ocaml_string @-> returning error_code)
+
+    let set_broadcast =
+      foreign "uv_udp_set_broadcast"
+        (ptr t @-> bool @-> returning error_code)
+
+    let set_ttl =
+      foreign "uv_udp_set_ttl"
+        (ptr t @-> int @-> returning error_code)
+
+    module Send_request =
+    struct
+      let trampoline =
+        static_funptr
+          Ctypes.(ptr Types.UDP.Send_request.t @-> error_code @->
+            returning void)
+
+      let get_trampoline =
+        foreign "luv_get_send_trampoline"
+          (void @-> returning trampoline)
+    end
+
+    let send =
+      foreign "uv_udp_send"
+        (ptr Types.UDP.Send_request.t @->
+         ptr t @->
+         ptr Types.Buf.t @->
+         uint @->
+         ptr Types.Sockaddr.t @->
+         Send_request.trampoline @->
+          returning error_code)
+
+    let try_send =
+      foreign "uv_udp_try_send"
+        (ptr t @-> ptr Types.Buf.t @-> uint @-> ptr Types.Sockaddr.t @->
+          returning error_code)
+
+    let recv_trampoline =
+      static_funptr
+        Ctypes.(
+          ptr t @->
+          PosixTypes.ssize_t @->
+          ptr Types.Buf.t @->
+          ptr Types.Sockaddr.t @->
+          uint @->
+            returning void)
+
+    let get_recv_trampoline =
+      foreign "luv_get_recv_trampoline"
+        (void @-> returning recv_trampoline)
+
+    let recv_start =
+      foreign "luv_udp_recv_start"
+        (ptr t @-> Handle.alloc_trampoline @-> recv_trampoline @->
+          returning error_code)
+
+    let recv_stop =
+      foreign "uv_udp_recv_stop"
+        (ptr t @-> returning error_code)
+
+    let get_send_queue_size =
+      foreign "uv_udp_get_send_queue_size"
+        (ptr t @-> returning size_t)
+
+    let get_send_queue_count =
+      foreign "uv_udp_get_send_queue_count"
+        (ptr t @-> returning size_t)
+  end
+
   module Process =
   struct
     let t = Types.Process.t
@@ -947,7 +1076,7 @@ struct
         Ctypes.(ptr t @-> int64_t @-> int @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_exit_trampoline"
+      foreign "luv_get_exit_trampoline"
         (void @-> returning exit_cb)
 
     let get_null_callback =
@@ -989,6 +1118,135 @@ struct
     let get_pid =
       foreign "uv_process_get_pid"
         (ptr t @-> returning int)
+  end
+
+  module FS_event =
+  struct
+    let t = Types.FS_event.t
+
+    let trampoline =
+      static_funptr
+        Ctypes.(ptr t @-> ptr char @-> int @-> error_code @-> returning void)
+
+    let get_trampoline =
+      foreign "luv_get_fs_event_trampoline"
+        (void @-> returning trampoline)
+
+    let init =
+      foreign "uv_fs_event_init"
+        (ptr Loop.t @-> ptr t @-> returning error_code)
+
+    let start =
+      foreign "luv_fs_event_start"
+        (ptr t @-> trampoline @-> ocaml_string @-> int @-> returning error_code)
+
+    let stop =
+      foreign "uv_fs_event_stop"
+        (ptr t @-> returning error_code)
+  end
+
+  module FS_poll =
+  struct
+    let t = Types.FS_poll.t
+
+    let trampoline =
+      static_funptr
+        Ctypes.(
+          ptr t @->
+          error_code @->
+          ptr Types.File.Stat.t @->
+          ptr Types.File.Stat.t @->
+            returning void)
+
+    let get_trampoline =
+      foreign "luv_get_fs_poll_trampoline"
+        (void @-> returning trampoline)
+
+    let init =
+      foreign "uv_fs_poll_init"
+        (ptr Loop.t @-> ptr t @-> returning error_code)
+
+    let start =
+      foreign "luv_fs_poll_start"
+        (ptr t @-> trampoline @-> ocaml_string @-> int @-> returning error_code)
+
+    let stop =
+      foreign "uv_fs_poll_stop"
+        (ptr t @-> returning error_code)
+  end
+
+  module DNS =
+  struct
+    module Getaddrinfo =
+    struct
+      let t = Types.DNS.Getaddrinfo.t
+      let addrinfo = Types.DNS.Addrinfo.t
+
+      let trampoline =
+        static_funptr
+          Ctypes.(ptr t @-> error_code @-> ptr addrinfo @-> returning void)
+
+      let get_trampoline =
+        foreign "luv_get_getaddrinfo_trampoline"
+          (void @-> returning trampoline)
+
+      let getaddrinfo =
+        foreign "uv_getaddrinfo"
+          (ptr Loop.t @->
+           ptr t @->
+           trampoline @->
+           string_opt @->
+           string_opt @->
+           ptr addrinfo @->
+            returning error_code)
+
+      let free =
+        foreign "uv_freeaddrinfo"
+          (ptr addrinfo @-> returning void)
+    end
+
+    module Getnameinfo =
+    struct
+      let t = Types.DNS.Getnameinfo.t
+
+      let trampoline =
+        static_funptr
+          Ctypes.(ptr t @-> error_code @-> string @-> string @-> returning void)
+
+      let get_trampoline =
+        foreign "luv_get_getnameinfo_trampoline"
+          (void @-> returning trampoline)
+
+      let getnameinfo =
+        foreign "luv_getnameinfo"
+          (ptr Loop.t @->
+           ptr t @->
+           trampoline @->
+           ptr Types.Sockaddr.t @->
+           int @->
+            returning error_code)
+    end
+  end
+
+  module DLL =
+  struct
+    let t = Types.DLL.t
+
+    let open_ =
+      foreign "uv_dlopen"
+        (ocaml_string @-> ptr t @-> returning bool)
+
+    let close =
+      foreign "uv_dlclose"
+        (ptr t @-> returning void)
+
+    let sym =
+      foreign "uv_dlsym"
+        (ptr t @-> ocaml_string @-> ptr (ptr void) @-> returning bool)
+
+    let error =
+      foreign "luv_dlerror"
+        (ptr t @-> returning string)
   end
 
   module Os_fd =
@@ -1037,19 +1295,19 @@ struct
         Ctypes.(ptr t @-> int @-> returning void)
 
     let get_work_trampoline =
-      foreign "luv_address_of_work_trampoline"
+      foreign "luv_get_work_trampoline"
         (void @-> returning work_trampoline)
 
     let get_after_work_trampoline =
-      foreign "luv_address_of_after_work_trampoline"
+      foreign "luv_get_after_work_trampoline"
         (void @-> returning after_work_trampoline)
 
     let get_c_work_trampoline =
-      foreign "luv_address_of_c_work_trampoline"
+      foreign "luv_get_c_work_trampoline"
         (void @-> returning work_trampoline)
 
     let get_after_c_work_trampoline =
-      foreign "luv_address_of_after_c_work_trampoline"
+      foreign "luv_get_after_c_work_trampoline"
         (void @-> returning after_work_trampoline)
 
     let add_c_function_and_argument =
@@ -1071,7 +1329,7 @@ struct
         Ctypes.(ptr void @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_thread_trampoline"
+      foreign "luv_get_thread_trampoline"
         (void @-> returning trampoline)
 
     let create =
@@ -1121,7 +1379,7 @@ struct
         Ctypes.(void @-> returning void)
 
     let get_trampoline =
-      foreign "luv_address_of_once_trampoline"
+      foreign "luv_get_once_trampoline"
         (void @-> returning trampoline)
 
     let init =
@@ -1240,5 +1498,169 @@ struct
     let destroy =
       foreign "uv_barrier_destroy"
         (ptr t @-> returning void)
+  end
+
+  module Sockaddr =
+  struct
+    let ip4_addr =
+      foreign "uv_ip4_addr"
+        (ocaml_string @-> int @-> ptr Types.Sockaddr.in_ @->
+          returning error_code)
+
+    let ip6_addr =
+      foreign "uv_ip6_addr"
+        (ocaml_string @-> int @-> ptr Types.Sockaddr.in6 @->
+          returning error_code)
+
+    let ip4_name =
+      foreign "uv_ip4_name"
+        (ptr Types.Sockaddr.in_ @-> ocaml_bytes @-> size_t @->
+          returning error_code)
+
+    let ip6_name =
+      foreign "uv_ip6_name"
+        (ptr Types.Sockaddr.in6 @-> ocaml_bytes @-> size_t @->
+          returning error_code)
+
+    let memcpy_from_sockaddr =
+      foreign "memcpy"
+        (ptr Types.Sockaddr.storage @-> ptr Types.Sockaddr.t @-> int @->
+          returning void)
+
+    let ntohs =
+      foreign "ntohs"
+        (short @-> returning short)
+  end
+
+  module Resource =
+  struct
+    let resident_set_memory =
+      foreign "uv_resident_set_memory"
+        (ptr size_t @-> returning error_code)
+
+    let uptime =
+      foreign "uv_uptime"
+        (ptr double @-> returning error_code)
+
+    let loadavg =
+      foreign "uv_loadavg"
+        (ptr double @-> returning void)
+
+    let free_memory =
+      foreign "uv_get_free_memory"
+        (void @-> returning uint64_t)
+
+    let total_memory =
+      foreign "uv_get_total_memory"
+        (void @-> returning uint64_t)
+
+    let getpriority =
+      foreign "uv_os_getpriority"
+        (int @-> ptr int @-> returning error_code)
+
+    let setpriority =
+      foreign "uv_os_setpriority"
+        (int @-> int @-> returning error_code)
+
+    let rusage =
+      foreign "uv_getrusage"
+        (ptr Types.Resource.Rusage.t @-> returning error_code)
+  end
+
+  module Pid =
+  struct
+    let getpid =
+      foreign "uv_os_getpid"
+        (void @-> returning int)
+
+    let getppid =
+      foreign "uv_os_getppid"
+        (void @-> returning int)
+  end
+
+  module CPU_info =
+  struct
+    let t = Types.CPU_info.t
+
+    let cpu_info =
+      foreign "uv_cpu_info"
+        (ptr (ptr t) @-> ptr int @-> returning error_code)
+
+    let free_cpu_info =
+      foreign "uv_free_cpu_info"
+        (ptr t @-> int @-> returning void)
+  end
+
+  module Network =
+  struct
+    let if_indextoname =
+      foreign "uv_if_indextoname"
+        (uint @-> ocaml_bytes @-> ptr size_t @-> returning error_code)
+
+    let if_indextoiid =
+      foreign "uv_if_indextoiid"
+        (uint @-> ocaml_bytes @-> ptr size_t @-> returning error_code)
+
+    let gethostname =
+      foreign "uv_os_gethostname"
+        (ocaml_bytes @-> ptr size_t @-> returning error_code)
+  end
+
+  module Path =
+  struct
+    let exepath =
+      foreign "uv_exepath"
+        (ocaml_bytes @-> ptr size_t @-> returning error_code)
+
+    let cwd =
+      foreign "uv_cwd"
+        (ocaml_bytes @-> ptr size_t @-> returning error_code)
+
+    let chdir =
+      foreign "uv_chdir"
+        (ocaml_string @-> returning error_code)
+
+    let homedir =
+      foreign "uv_os_homedir"
+        (ocaml_bytes @-> ptr size_t @-> returning error_code)
+
+    let tmpdir =
+      foreign "uv_os_tmpdir"
+        (ocaml_bytes @-> ptr size_t @-> returning error_code)
+  end
+
+  module Passwd =
+  struct
+    let t = Types.Passwd.t
+
+    let get =
+      foreign "uv_os_get_passwd"
+        (ptr t @-> returning error_code)
+
+    let free =
+      foreign "uv_os_free_passwd"
+        (ptr t @-> returning void)
+  end
+
+  module Hrtime =
+  struct
+    let hrtime =
+      foreign "uv_hrtime"
+        (void @-> returning uint64_t)
+  end
+
+  module Env =
+  struct
+    let getenv =
+      foreign "uv_os_getenv"
+        (ocaml_string @-> ocaml_bytes @-> ptr size_t @-> returning error_code)
+
+    let setenv =
+      foreign "uv_os_setenv"
+        (ocaml_string @-> ocaml_string @-> returning error_code)
+
+    let unsetenv =
+      foreign "uv_os_unsetenv"
+        (ocaml_string @-> returning error_code)
   end
 end

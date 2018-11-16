@@ -1,11 +1,18 @@
 type t = [ `TCP ] Stream.t
 
-let init ?loop ?(domain : Misc.Domain.t option) () =
-  let tcp : t = Stream.allocate C.Types.TCP.t in
+module Bind_flag =
+struct
+  type t = int
+  let ipv6only = C.Types.TCP.ipv6only
+end
+
+let init ?loop ?(domain : Misc.Address_family.t option) () =
+  let tcp = Stream.allocate C.Types.TCP.t in
   let loop = Loop.or_default loop in
   let result =
     match domain with
-    | None -> C.Functions.TCP.init loop tcp
+    | None ->
+      C.Functions.TCP.init loop tcp
     | Some domain ->
       C.Functions.TCP.init_ex loop tcp (Unsigned.UInt.of_int (domain :> int))
   in
@@ -27,47 +34,21 @@ let keepalive tcp maybe =
 let simultaneous_accepts =
   C.Functions.TCP.simultaneous_accepts
 
-let bind ?(flags = []) tcp address =
-  let flags =
-    match flags with
-    | [] -> 0
-    | _ -> C.Types.TCP.ipv6_only
-  in
+let bind ?(flags = 0) tcp address =
+  C.Functions.TCP.bind tcp (Misc.Sockaddr.as_sockaddr address) flags
 
-  C.Functions.TCP.bind
-    tcp (Ctypes.addr (Helpers.Sockaddr.ocaml_to_c address)) flags
-
-let generic_get_name c_function tcp =
-  let c_sockaddr = Ctypes.make C.Types.Sockaddr.union in
-  let c_sockaddr_length =
-    Ctypes.(allocate int) (Ctypes.sizeof C.Types.Sockaddr.union) in
-
-  let result =
-    c_function
-      tcp
-      (Ctypes.addr (Ctypes.getf c_sockaddr C.Types.Sockaddr.s_gen))
-      c_sockaddr_length
-  in
-
-  if result <> Error.success then
-    Result.Error result
-  else begin
-    let ocaml_sockaddr =
-      Helpers.Sockaddr.c_to_ocaml c_sockaddr (Ctypes.(!@) c_sockaddr_length) in
-    Result.Ok ocaml_sockaddr
-  end
-
-let getsockname = generic_get_name C.Functions.TCP.getsockname
-let getpeername = generic_get_name C.Functions.TCP.getpeername
+let getsockname = Misc.Sockaddr.wrap_c_getter C.Functions.TCP.getsockname
+let getpeername = Misc.Sockaddr.wrap_c_getter C.Functions.TCP.getpeername
 
 let connect tcp address callback =
   let request = Stream.Connect_request.make () in
-  Request.set_callback_2 request (fun _request -> callback);
+  let callback = Error.catch_exceptions callback in
+  Request.set_callback request callback;
   let immediate_result =
     C.Functions.TCP.connect
       request
       tcp
-      (Ctypes.addr (Helpers.Sockaddr.ocaml_to_c address))
+      (Misc.Sockaddr.as_sockaddr address)
       Stream.Connect_request.trampoline
   in
   if immediate_result < Error.success then begin

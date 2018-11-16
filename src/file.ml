@@ -47,24 +47,17 @@ struct
     C.Blocking.File.get_path
 end
 
-module Bit_flag_operations =
-struct
-  type t = int
-  let (lor) = (lor)
-  let list flags = List.fold_left (lor) 0 flags
-end
-
 module Open_flag =
 struct
   include C.Types.File.Open_flag
-  include Bit_flag_operations
+  include Helpers.Bit_flag
   let custom i = i
 end
 
 module Mode =
 struct
   include C.Types.File.Mode
-  include Bit_flag_operations
+  include Helpers.Bit_flag
 
   let none = 0
   let octal i = i
@@ -147,10 +140,8 @@ struct
       nsec = Ctypes.getf c_timespec C.Types.File.Timespec.tv_nsec;
     }
 
-  let load request =
-    let c_stat =
-      Ctypes.(!@) (C.Blocking.File.get_statbuf request) in
-    let field f = Ctypes.getf c_stat f in
+  let load stat =
+    let field f = Ctypes.getf stat f in
     let module C_stat = C.Types.File.Stat in
     {
       dev = field C_stat.st_dev;
@@ -170,25 +161,28 @@ struct
       ctim = load_timespec (field C_stat.st_ctim);
       birthtim = load_timespec (field C_stat.st_birthtim);
     }
+
+  let from_request request =
+    load (Ctypes.(!@) (C.Blocking.File.get_statbuf request))
 end
 
 module Copy_flag =
 struct
   include C.Types.File.Copy_flag
-  include Bit_flag_operations
+  include Helpers.Bit_flag
   let none = 0
 end
 
 module Access_flag =
 struct
   include C.Types.File.Access_flag
-  include Bit_flag_operations
+  include Helpers.Bit_flag
 end
 
 module Symlink_flag =
 struct
   include C.Types.File.Symlink_flag
-  include Bit_flag_operations
+  include Helpers.Bit_flag
   let none = 0
 end
 
@@ -240,7 +234,7 @@ struct
   let returns_stat = {
     from_request = (fun request ->
       Error.to_result_lazy
-        (fun () -> Stat.load request) (Request_.result request));
+        (fun () -> Stat.from_request request) (Request_.result request));
     immediate_error = construct_error;
     clean_up_request_on_success = true;
   }
@@ -264,6 +258,10 @@ struct
 end
 
 type t = C.Types.File.t
+
+let stdin = 0
+let stdout = 1
+let stderr = 2
 
 module type ASYNC_OR_SYNC =
 sig
@@ -462,7 +460,8 @@ struct
         let loop = Loop.or_default loop in
         let request = Request_.or_make request in
 
-        Request.set_callback_1 request begin fun request ->
+        let callback = Error.catch_exceptions callback in
+        Request.set_callback request begin fun () ->
           let result = Returns.(returns.from_request request) in
           if Returns.(returns.clean_up_request_on_success)
             || Request_.result request < Error.success then begin

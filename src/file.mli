@@ -119,6 +119,10 @@ sig
     ctim : timespec;
     birthtim : timespec;
   }
+
+  (**/**)
+
+  val load : C.Types.File.Stat.t -> t
 end
 
 module Copy_flag :
@@ -168,6 +172,10 @@ sig
 end
 
 type t
+
+val stdin : t
+val stdout : t
+val stderr : t
 
 module Async :
 sig

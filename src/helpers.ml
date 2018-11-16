@@ -4,6 +4,7 @@ sig
   type 'kind t = ('kind base) Ctypes.structure
   val set_data : ([ `Base ] t) Ctypes.ptr -> unit Ctypes.ptr -> unit
   val get_data : ([ `Base ] t) Ctypes.ptr -> unit Ctypes.ptr
+  val default_reference_count : int
 end
 
 module Retained (Object : WITH_DATA_FIELD) =
@@ -14,9 +15,7 @@ struct
     Obj.magic
 
   (* DOC Explain the handle/request retention scheme. *)
-  let allocate
-      ?(reference_count = C.Types.Handle.minimum_reference_count) kind =
-
+  let allocate ?(reference_count = Object.default_reference_count) kind =
     let references = Array.make reference_count ignore in
 
     let c_object = Ctypes.addr (Ctypes.make kind) in
@@ -52,22 +51,10 @@ struct
     iovecs
 end
 
-module Sockaddr =
+module Bit_flag =
 struct
-  external get_sockaddr : Unix.sockaddr -> nativeint -> int =
-    "luv_get_sockaddr"
-
-  let ocaml_to_c address =
-    let c_sockaddr = Ctypes.make C.Types.Sockaddr.union in
-    let c_storage = Ctypes.(raw_address_of_ptr (to_voidp (addr c_sockaddr))) in
-    ignore (get_sockaddr (Misc.Sockaddr.to_unix address) c_storage);
-    let c_sockaddr = Ctypes.getf c_sockaddr C.Types.Sockaddr.s_gen in
-    c_sockaddr
-
-  external alloc_sockaddr : nativeint -> int -> Unix.sockaddr =
-    "luv_alloc_sockaddr"
-
-  let c_to_ocaml address length =
-    let c_storage = Ctypes.(raw_address_of_ptr (to_voidp (addr address))) in
-    Misc.Sockaddr.from_unix (alloc_sockaddr c_storage length)
+  type t = int
+  let (lor) = (lor)
+  let list flags = List.fold_left (lor) 0 flags
+  let test flags flag = (flags land flag) <> 0
 end

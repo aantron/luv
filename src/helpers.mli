@@ -7,6 +7,7 @@ sig
   type 'kind t = ('kind base) Ctypes.structure
   val set_data : ([ `Base ] t) Ctypes.ptr -> unit Ctypes.ptr -> unit
   val get_data : ([ `Base ] t) Ctypes.ptr -> unit Ctypes.ptr
+  val default_reference_count : int
 end
 
 module Retained (Object : WITH_DATA_FIELD) :
@@ -25,8 +26,10 @@ sig
     Bigstring.t list -> int -> C.Types.Buf.t Ctypes.carray
 end
 
-module Sockaddr :
+module Bit_flag :
 sig
-  val ocaml_to_c : Misc.Sockaddr.t -> C.Types.Sockaddr.t
-  val c_to_ocaml : C.Types.Sockaddr.union -> int -> Misc.Sockaddr.t
+  type t = int
+  val (lor) : t -> t -> t
+  val list : t list -> t
+  val test : t -> t -> bool
 end

@@ -85,19 +85,6 @@ let check_directory_entries name expected actual =
   in
   Alcotest.(check (list directory_entry_testable)) name expected actual
 
-let pp_address formatter address =
-  match Luv.Misc.Sockaddr.to_unix address with
-  | Unix.ADDR_UNIX path ->
-    Format.pp_print_string formatter path
-  | Unix.ADDR_INET (address, port) ->
-    Format.fprintf formatter "%s:%i" (Unix.string_of_inet_addr address) port
-
-let address_testable =
-  Alcotest.of_pp pp_address
-
-let check_address name expected actual =
-  Alcotest.(check address_testable) name expected actual
-
 let count_allocated_words () =
   Gc.full_major ();
   Gc.((stat ()).live_words)
@@ -169,4 +156,24 @@ let port () =
   !port
 
 let fresh_address () =
-  Luv.Misc.Sockaddr.from_unix (Unix.(ADDR_INET (inet_addr_loopback, port ())))
+  Luv.Sockaddr.ipv4 "127.0.0.1" (port ()) |> check_success_result "ipv4"
+
+let pp_exception formatter exn =
+  Format.pp_print_string formatter (Printexc.to_string exn)
+
+let exception_testable =
+  Alcotest.of_pp pp_exception
+
+let () =
+  Luv.Error.on_unhandled_exception raise
+
+exception Nothing_raised
+
+let check_exception expected f =
+  let raised = ref Nothing_raised in
+
+  Luv.Error.on_unhandled_exception ((:=) raised);
+  f ();
+  Luv.Error.on_unhandled_exception raise;
+
+  Alcotest.(check exception_testable) "exception" expected !raised

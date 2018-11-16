@@ -15,25 +15,13 @@ let tests = [
     "send", `Quick, begin fun () ->
       let called = ref false in
 
-      let async_cell = ref None in
       let async =
-        check_success_result "init" @@
-        Luv.Async.init begin fun async' ->
-          begin
-            match !async_cell with
-            | Some async when async' == async -> ()
-            | _ -> Alcotest.fail "same handle"
-          end;
-          called := true
-        end
+        Luv.Async.init (fun _ -> called := true)
+        |> check_success_result "init"
       in
-      async_cell := Some async;
 
-      Luv.Async.send async
-      |> check_success "send";
-
-      Luv.Loop.run default_loop Luv.Loop.Run_mode.nowait |> ignore;
-
+      Luv.Async.send async |> check_success "send";
+      Luv.Loop.(run default_loop Run_mode.nowait) |> ignore;
       Luv.Handle.close async;
       run ();
 
@@ -42,22 +30,37 @@ let tests = [
 
     "multithreading", `Quick, begin fun () ->
       let called = ref false in
+
       let async =
-        check_success_result "init" @@
         Luv.Async.init begin fun async ->
           called := true;
           Luv.Handle.close async
         end
+        |> check_success_result "init"
       in
 
       ignore @@ Thread.create begin fun () ->
         Unix.sleepf 10e-3;
-        Luv.Async.send async
+        Luv.Async.send async |> check_success "send"
       end ();
 
       run ();
 
       Alcotest.(check bool) "called" true !called
+    end;
+
+    "exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        let async =
+          Luv.Async.init (fun _ -> raise Exit)
+          |> check_success_result "init"
+        in
+
+        Luv.Async.send async |> check_success "send";
+        Luv.Loop.(run default_loop Run_mode.nowait) |> ignore;
+        Luv.Handle.close async;
+        run ()
+      end
     end;
   ]
 ]

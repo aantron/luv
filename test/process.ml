@@ -29,6 +29,21 @@ let tests = [
       Alcotest.(check bool) "called" true !called
     end;
 
+    "exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        ignore @@
+        check_success_result "spawn" @@
+        Luv.Process.spawn "echo" ["echo"; "-n"]
+            ~on_exit:begin fun process ~exit_status:_ ~term_signal:_ ->
+
+          Luv.Handle.close process;
+          raise Exit
+        end;
+
+        run ()
+      end
+    end;
+
     "redirect to fd", `Quick, begin fun () ->
       let parent_end, child_end = Unix.(socketpair PF_UNIX SOCK_STREAM) 0 in
       let child_end_raw : int = Obj.magic child_end in
@@ -49,7 +64,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end;
         check_success_result "read" result
-        |> snd
+        |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 3;
         finished := true
       end;
@@ -81,7 +96,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end;
         check_success_result "read" result
-        |> snd
+        |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 3;
         finished := true
       end;
@@ -105,7 +120,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end;
         check_success_result "read" result
-        |> snd
+        |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 3;
         finished := true
       end;
@@ -130,7 +145,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end;
         check_success_result "read" result
-        |> snd
+        |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 7;
         finished := true
       end;
@@ -157,7 +172,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end;
         check_success_result "read" result
-        |> snd
+        |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 7;
         finished := true
       end;
@@ -220,10 +235,8 @@ let tests = [
 
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end;
-        let data, length = check_success_result "read" result in
-        Alcotest.(check int)
-          "length" (String.length child_working_directory) (length - 1);
-        Luv.Bigstring.sub data ~offset:0 ~length:(length - 1)
+        let data = check_success_result "read" result in
+        Luv.Bigstring.sub data ~offset:0 ~length:(Luv.Bigstring.size data - 1)
         |> Luv.Bigstring.to_string
         |> Alcotest.(check string) "data" child_working_directory;
         finished := true
@@ -249,10 +262,8 @@ let tests = [
 
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end;
-        let data, length = check_success_result "read" result in
-        Alcotest.(check int)
-          "length" (String.length parent_working_directory) (length - 1);
-        Luv.Bigstring.sub data ~offset:0 ~length:(length - 1)
+        let data = check_success_result "read" result in
+        Luv.Bigstring.sub data ~offset:0 ~length:(Luv.Bigstring.size data - 1)
         |> Luv.Bigstring.to_string
         |> Alcotest.(check string) "data" parent_working_directory;
         finished := true

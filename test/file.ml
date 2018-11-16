@@ -133,7 +133,7 @@ let tests = [
       |> check_success "close"
     end;
 
-    "open nonexistent: async", `Quick, begin fun () ->
+    "open: nonexistent, async", `Quick, begin fun () ->
       let result = ref (Result.Error Luv.Error.success) in
 
       Luv.File.(Async.open_
@@ -146,12 +146,12 @@ let tests = [
       check_error_result "result" Luv.Error.enoent !result
     end;
 
-    "open nonexistent: sync", `Quick, begin fun () ->
+    "open: nonexistent, sync", `Quick, begin fun () ->
       Luv.File.(Sync.open_ "non_existent_file" Open_flag.rdonly)
       |> check_error_result "open_" Luv.Error.enoent
     end;
 
-    "open, close memory leak: async", `Quick, begin fun () ->
+    "open, close: memory leak, async", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         let finished = ref false in
 
@@ -167,7 +167,7 @@ let tests = [
       end
     end;
 
-    "open, close memory leak: sync", `Quick, begin fun () ->
+    "open, close: memory leak, sync", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         let file =
           Luv.File.(Sync.open_ "file.ml" Open_flag.rdonly)
@@ -179,7 +179,7 @@ let tests = [
       end
     end;
 
-    "open failure leak: async", `Quick, begin fun () ->
+    "open: failure leak, async", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly)
             begin fun result ->
@@ -191,14 +191,14 @@ let tests = [
       end
     end;
 
-    "open failure leak: sync", `Quick, begin fun () ->
+    "open: failure leak, sync", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         Luv.File.(Sync.open_ "non_existent_file" Open_flag.rdonly)
         |> check_error_result "open_" Luv.Error.enoent;
       end
     end;
 
-    "open gc", `Quick, begin fun () ->
+    "open: gc", `Quick, begin fun () ->
       Gc.full_major ();
 
       let called = ref false in
@@ -213,6 +213,17 @@ let tests = [
 
       run ();
       Alcotest.(check bool) "called" true !called
+    end;
+
+    "open: exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly)
+            begin fun _result ->
+
+          raise Exit
+        end;
+        run ()
+      end
     end;
 
     "read failure: async", `Quick, begin fun () ->

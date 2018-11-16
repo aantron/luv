@@ -1,7 +1,7 @@
 type t = (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
 
 val create : int -> t
-val length : t -> int
+val size : t -> int
 val get : t -> int -> char
 val set : t -> int -> char -> unit
 val sub : t -> offset:int -> length:int -> t
@@ -20,3 +20,10 @@ val blit_from_bytes : t -> bytes -> source_offset:int -> unit
 val blit_from_string : t -> string -> source_offset:int -> unit
 
 (* DOC How to use sub, sub+blit. *)
+
+module List :
+sig
+  val total_size : t list -> int
+  val count : t list -> int
+  val advance : t list -> int -> t list
+end

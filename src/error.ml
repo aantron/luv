@@ -9,6 +9,25 @@ let err_name error_code =
   let length = Bytes.index buffer '\000' in
   Bytes.sub_string buffer 0 length
 
+let exception_handler =
+  ref begin fun exn ->
+    prerr_endline (Printexc.to_string exn);
+    Printexc.print_backtrace stderr;
+    exit 2
+  end
+
+let on_unhandled_exception f =
+  exception_handler := f
+
+let unhandled_exception exn =
+  !exception_handler exn
+
+let catch_exceptions f v =
+  try
+    f v
+  with exn ->
+    unhandled_exception exn
+
 let to_result success_value error_code =
   if error_code >= success then
     Result.Ok success_value

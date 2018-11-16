@@ -31,7 +31,7 @@ struct
     if Handle.is_active handle then
       Error.success
     else begin
-      Handle.set_reference handle callback;
+      Handle.set_reference handle (Error.catch_exceptions callback);
       Kind.start handle trampoline
     end
 

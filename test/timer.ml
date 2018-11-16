@@ -181,6 +181,17 @@ let tests = [
       end
     end;
 
+    "exception", `Quick, begin fun () ->
+      with_timer begin fun timer ->
+        check_exception Exit begin fun () ->
+          Luv.Timer.start timer 0 (fun () -> raise Exit)
+          |> check_success "start";
+
+          run ()
+        end
+      end
+    end;
+
     "is_active, initial", `Quick, begin fun () ->
       with_timer begin fun timer ->
         Luv.Handle.is_active timer

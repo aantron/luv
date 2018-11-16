@@ -1,45 +1,42 @@
-module Request :
+module Pool :
 sig
-  type t
-  val make : unit -> t
+  module Request :
+  sig
+    type t = [ `Work ] Request.t
+    val make : unit -> t
+  end
+
+  val queue_work :
+    ?loop:Loop.t ->
+    ?request:Request.t ->
+    (unit -> unit) ->
+    (Error.t -> unit) ->
+      unit
+
+  (* DOC The C function should have signature void (*)(void*); *)
+  (* TODO Write an example that uses this. *)
+  val queue_c_work :
+    ?loop:Loop.t ->
+    ?request:Request.t ->
+    ?argument:nativeint ->
+    nativeint ->
+    (Error.t -> unit) ->
+      unit
+
+  (* DOC This must be called as early as possible, and there are hard limits on
+     the number of threads. *)
+  val set_size : ?if_not_already_set:bool -> int -> unit
 end
 
-val queue_work :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  (unit -> 'a) ->
-  (('a, Error.t) Result.result -> unit) ->
-    unit
-(* TODO How should exceptions in the callback be dealt with? *)
+type t
 
-(* DOC The C function should have signature void (*)(void*); *)
-(* TODO Write an example that uses this. *)
-val queue_c_work :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  ?argument:nativeint ->
-  nativeint ->
-  (Error.t -> unit) ->
-    unit
+val self : unit -> t
+val equal : t -> t -> bool
 
-(* DOC This must be called as early as possible, and there are hard limits on
-   the number of threads. *)
-val set_thread_pool_size : ?if_not_already_set:bool -> int -> unit
+val create : (unit -> unit) -> (t, Error.t) Result.result
+val create_c : ?argument:nativeint -> nativeint -> (t, Error.t) Result.result
 
-type 'a t
-
-val self : unit -> unit t
-val equal : _ t -> _ t -> bool
-
-(* TODO How should exceptions in the callback be dealt with? *)
-val create :
-  (unit -> 'a) -> ('a t, Error.t) Result.result
-
-val create_c :
-  ?argument:nativeint -> nativeint -> (unit t, Error.t) Result.result
-
-val join :
-  'a t -> ('a, Error.t) Result.result
+val join : t -> Error.t
 (* DOC Document that concurrent join is undefined? Sequenced joins return ESRCH.
    Basically, each thread can be joined once. *)
 

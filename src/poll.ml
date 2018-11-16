@@ -24,7 +24,7 @@ let trampoline =
 
 let start poll events callback =
   Handle.set_reference poll (fun status events ->
-    callback (Error.to_result events status));
+    Error.catch_exceptions callback (Error.to_result events status));
   let immediate_result = C.Functions.Poll.start poll events trampoline in
   if immediate_result < Error.success then begin
     callback (Result.Error immediate_result)

@@ -20,7 +20,8 @@ let bind =
 
 let connect pipe name_or_path callback =
   let request = Stream.Connect_request.make () in
-  Request.set_callback_2 request (fun _request -> callback);
+  let callback = Error.catch_exceptions callback in
+  Request.set_callback request (Error.catch_exceptions callback);
   C.Functions.Pipe.connect
     request
     pipe

@@ -9,11 +9,11 @@ let trampoline =
   C.Functions.Signal.get_trampoline ()
 
 let start signal signum callback =
-  Handle.set_reference signal callback;
+  Handle.set_reference signal (Error.catch_exceptions callback);
   C.Functions.Signal.start signal trampoline signum
 
 let start_oneshot signal signum callback =
-  Handle.set_reference signal callback;
+  Handle.set_reference signal (Error.catch_exceptions callback);
   C.Functions.Signal.start_oneshot signal trampoline signum
 
 let stop =

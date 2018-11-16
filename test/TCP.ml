@@ -69,7 +69,9 @@ let tests = [
 
         Luv.TCP.getsockname tcp
         |> check_success_result "getsockname result"
-        |> check_address "getsockname address" address
+        |> Luv.Sockaddr.to_string
+        |> Alcotest.(check string) "getsockname address"
+          (Luv.Sockaddr.to_string address)
       end
     end;
 
@@ -168,13 +170,56 @@ let tests = [
           begin fun client address ->
             Luv.TCP.getpeername client
             |> check_success_result "getpeername result"
-            |> check_address "getpeername address" address;
+            |> Luv.Sockaddr.to_string
+            |> Alcotest.(check string) "getpeername address"
+              (Luv.Sockaddr.to_string address);
             connected := true;
             Luv.Handle.close client
           end;
 
       Alcotest.(check bool) "accepted" true !accepted;
       Alcotest.(check bool) "connected" true !connected
+    end;
+
+    "listen: exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_server_and_client
+          ~server_logic:
+            begin fun server client ->
+              Luv.Handle.close client;
+              Luv.Handle.close server;
+              raise Exit
+            end
+          ~client_logic:(fun client _address -> Luv.Handle.close client)
+      end
+    end;
+
+    "connect: exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_server_and_client
+          ~server_logic:
+            begin fun server client ->
+              Luv.Handle.close client;
+              Luv.Handle.close server
+            end
+          ~client_logic:
+            begin fun client _address ->
+              Luv.Handle.close client;
+              raise Exit
+            end
+      end
+    end;
+
+    "connect, sync exception", `Quick, begin fun () ->
+      let address = fresh_address () in
+
+      check_exception Exit begin fun () ->
+        with_tcp begin fun tcp ->
+          Luv.TCP.connect tcp address ignore;
+          Luv.TCP.connect tcp address (fun _result -> raise Exit);
+          run ()
+        end
+      end
     end;
 
     "read, write", `Quick, begin fun () ->
@@ -188,11 +233,7 @@ let tests = [
         ~server_logic:
           begin fun server client ->
             Luv.Stream.read_start client begin fun result ->
-              let (buffer, length) = check_success_result "read_start" result in
-
-              Alcotest.(check int) "length" 3 length;
-
-              Luv.Bigstring.sub ~offset:0 ~length buffer
+              check_success_result "read_start" result
               |> Luv.Bigstring.to_string
               |> Alcotest.(check string) "data" "foo";
 
@@ -212,9 +253,10 @@ let tests = [
             Gc.finalise (fun _ -> buffer2_finalized := true) buffer2;
             Gc.finalise (fun _ -> buffer3_finalized := true) buffer3;
 
-            Luv.Stream.write client [buffer1; buffer3] begin fun result ->
-              check_success "write" result;
+            Luv.Stream.write client [buffer1; buffer3] begin fun result count ->
               Luv.Handle.close client;
+              check_success "write" result;
+              Alcotest.(check int) "count" 3 count;
               write_finished := true
             end;
 
@@ -238,8 +280,9 @@ let tests = [
       with_tcp begin fun tcp ->
         let called = ref false in
 
-        Luv.Stream.write tcp [] begin fun result ->
+        Luv.Stream.write tcp [] begin fun result count ->
           check_error_code "write" Luv.Error.ebadf result;
+          Alcotest.(check int) "count" 0 count;
           called := true
         end;
 
@@ -250,7 +293,73 @@ let tests = [
     "write: sync error leak", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         no_memory_leak begin fun _ ->
-          Luv.Stream.write tcp [] (make_callback ())
+          Luv.Stream.write tcp [] (fun _ -> make_callback ())
+        end
+      end
+    end;
+
+    "read: exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_server_and_client
+          ~server_logic:
+            begin fun server client ->
+              Luv.Stream.read_start client begin fun result ->
+                ignore (check_success_result "read_start" result);
+                Luv.Handle.close client;
+                Luv.Handle.close server;
+                raise Exit
+              end
+            end
+          ~client_logic:
+            begin fun client _address ->
+              let buffer = Luv.Bigstring.from_string "f" in
+              Luv.Stream.write client [buffer] begin fun result count ->
+                check_success "write" result;
+                Alcotest.(check int) "count" 1 count;
+                Luv.Handle.close client
+              end
+            end
+      end
+    end;
+
+    "read: sync exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_tcp begin fun tcp ->
+          Luv.Stream.read_start tcp (fun _result -> raise Exit)
+        end
+      end
+    end;
+
+    "write: exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_server_and_client
+          ~server_logic:
+            begin fun server client ->
+              Luv.Stream.read_start client begin fun result ->
+                ignore (check_success_result "read_start" result);
+                Luv.Handle.close client;
+                Luv.Handle.close server
+              end
+            end
+          ~client_logic:
+            begin fun client _address ->
+              let buffer = Luv.Bigstring.from_string "f" in
+              Luv.Stream.write client [buffer] begin fun result ->
+                check_success "write" result;
+                Luv.Handle.close client;
+                raise Exit
+              end
+            end
+      end
+    end;
+
+    "write: sync exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_tcp begin fun tcp ->
+          Luv.Stream.write tcp [] begin fun result ->
+            check_error_code "write" Luv.Error.ebadf result;
+            raise Exit
+          end
         end
       end
     end;
@@ -264,10 +373,8 @@ let tests = [
           begin fun server client ->
             Luv.Stream.read_start client begin fun result ->
               ignore (check_success_result "read_start" result);
-
               Luv.Handle.close client;
               Luv.Handle.close server;
-
               read_finished := true
             end
           end
@@ -339,6 +446,29 @@ let tests = [
       with_tcp begin fun tcp ->
         no_memory_leak begin fun _ ->
           Luv.Stream.shutdown tcp (make_callback ())
+        end
+      end
+    end;
+
+    "shutdown: exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_server_and_client
+          ~server_logic:
+            begin fun server client ->
+              Luv.Stream.shutdown client begin fun _result ->
+                Luv.Handle.close client;
+                Luv.Handle.close server;
+                raise Exit
+              end
+            end
+          ~client_logic:(fun client _address -> Luv.Handle.close client)
+      end
+    end;
+
+    "shutdown: sync exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_tcp begin fun tcp ->
+          Luv.Stream.shutdown tcp (fun _result -> raise Exit)
         end
       end
     end;

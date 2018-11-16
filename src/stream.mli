@@ -10,23 +10,23 @@ val accept : server:'kind t -> client:'kind t -> Error.t
 val read_start :
   ?allocate:(int -> Bigstring.t) ->
   _ t ->
-  ((Bigstring.t * int, Error.t) Result.result -> unit) ->
+  ((Bigstring.t, Error.t) Result.result -> unit) ->
     unit
 val read_stop : _ t -> Error.t
 
 (* DOC how to use Array1.sub to create views into the arrays. *)
+(* DOC What is the int returned in case of error? *)
 val write :
   ?send_handle:[< `TCP | `Pipe ] t ->
   _ t ->
   Bigstring.t list ->
-  (Error.t -> unit) ->
+  (Error.t -> int -> unit) ->
     unit
 
 val try_write : _ t -> Bigstring.t list -> (int, Error.t) Result.result
 val is_readable : _ t -> bool
 val is_writable : _ t -> bool
 val set_blocking : _ t -> bool -> Error.t
-val get_write_queue_size : _ t -> int
 
 (**/**)
 

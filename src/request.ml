@@ -9,16 +9,9 @@ include Helpers.Retained
 let cancel request =
   C.Functions.Request.cancel (coerce request)
 
-let set_callback_1 request callback =
-  let callback () =
+let set_callback request callback =
+  let callback value =
     release request;
-    callback request
-  in
-  set_reference request callback
-
-let set_callback_2 request callback =
-  let callback v =
-    release request;
-    callback request v
+    callback value
   in
   set_reference request callback

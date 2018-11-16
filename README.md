@@ -39,12 +39,13 @@ This probably only works on Linux at the moment.
 - [x] File I/O.
 - [x] Process API, pipes.
 - [x] Thread pool.
-- [ ] TTYs, UDP.
-- [ ] FS events, FS polling.
-- [ ] The rest (DNS, `dlopen`).
-- [ ] Signals, exceptions.
+- [x] Signals, exceptions.
+- [x] TTYs, UDP.
+- [x] FS events, FS polling.
+- [x] The rest (DNS, `dlopen`).
 - [ ] Look into using luv for native Node.js modules.
 - [ ] Vendor correctly on macOS, Windows.
+- [ ] Documentation, examples, user-friendly repo.
 
 [libuv]: http://libuv.org/
 [ctypes]: https://github.com/ocamllabs/ocaml-ctypes

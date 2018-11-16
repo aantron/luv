@@ -46,7 +46,7 @@ let with_server_and_client ?for_handle_passing () ~server_logic ~client_logic =
 
 let unix_fd_to_file unix_fd =
   unix_fd
-  |> Luv.Misc.Os_fd.from_unix
+  |> Luv.Os_fd.from_unix
   |> check_success_result "from_unix"
   |> Luv.File.open_osfhandle
   |> check_success_result "get_osfhandle"
@@ -93,6 +93,22 @@ let tests = [
       Alcotest.(check bool) "connected" true !connected
     end;
 
+    "connect: exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        with_server_and_client ()
+          ~server_logic:
+            begin fun server client ->
+              Luv.Handle.close client;
+              Luv.Handle.close server
+            end
+          ~client_logic:
+            begin fun client ->
+              Luv.Handle.close client;
+              raise Exit
+            end
+      end
+    end;
+
     "read, write", `Quick, begin fun () ->
       let write_finished = ref false in
       let read_finished = ref false in
@@ -101,11 +117,7 @@ let tests = [
         ~server_logic:
           begin fun server client ->
             Luv.Stream.read_start client begin fun result ->
-              let (buffer, length) = check_success_result "read_start" result in
-
-              Alcotest.(check int) "length" 3 length;
-
-              Luv.Bigstring.sub buffer ~offset:0 ~length
+              check_success_result "read_start" result
               |> Luv.Bigstring.to_string
               |> Alcotest.(check string) "data" "foo";
 
@@ -120,8 +132,9 @@ let tests = [
             let buffer1 = Luv.Bigstring.from_string "fo" in
             let buffer2 = Luv.Bigstring.from_string "o" in
 
-            Luv.Stream.write client [buffer1; buffer2] begin fun result ->
+            Luv.Stream.write client [buffer1; buffer2] begin fun result count ->
               check_success "write" result;
+              Alcotest.(check int) "count" 3 count;
               Luv.Handle.close client;
               write_finished := true
             end
@@ -151,7 +164,7 @@ let tests = [
         Luv.Stream.read_stop ipc_1 |> check_success "read_stop";
 
         check_success_result "read_start" result
-        |> snd
+        |> Luv.Bigstring.size
         |> Alcotest.(check int) "read byte count" 1;
 
         begin match Luv.Pipe.receive_handle ipc_1 with
@@ -172,17 +185,20 @@ let tests = [
       end;
 
       let buffer = Luv.Bigstring.create 1 in
-      Luv.Stream.write ipc_2 [buffer] ~send_handle:passed_1 begin fun result ->
-        check_success "write2" result
+      Luv.Stream.write ipc_2 [buffer] ~send_handle:passed_1
+          begin fun result count ->
+
+        check_success "write2" result;
+        Alcotest.(check int) "count" 1 count;
       end;
 
       let did_read = ref false in
 
       Luv.Stream.read_start passed_2 begin fun result ->
         Luv.Stream.read_stop passed_2 |> check_success "read_stop";
-        let buffer, byte_count = check_success_result "read_start" result in
-        Alcotest.(check int) "read byte count" 1 byte_count;
-        Alcotest.(check char) "data" 'x' (Luv.Bigstring.get buffer 0);
+        check_success_result "read_start" result
+        |> Luv.Bigstring.to_string
+        |> Alcotest.(check string) "data" "x";
         did_read := true
       end;
 

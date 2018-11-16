@@ -83,9 +83,15 @@ val strerror : t -> string
 val err_name : t -> string
 val translate_sys_error : int -> t
 
+val on_unhandled_exception : (exn -> unit) -> unit
+
 (**/**)
 
 val to_result : 'a -> t -> ('a, t) Result.result
 val to_result_lazy : (unit -> 'a) -> t -> ('a, t) Result.result
 val clamp : t -> t
 val coerce : int -> t
+
+(* TODO Don't catch exceptions in synchronous callbacks. *)
+val catch_exceptions : ('a -> unit) -> ('a -> unit)
+val unhandled_exception : exn -> unit

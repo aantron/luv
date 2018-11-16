@@ -5,7 +5,7 @@ type t = (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Array1.t
 let create =
   Bigarray.(Array1.create Char C_layout)
 
-let length =
+let size =
   Array1.dim
 
 let get =
@@ -33,7 +33,7 @@ let blit_to_bytes bigstring bytes ~destination_offset =
   C.Functions.Bigstring.memcpy_to_bytes
     Ctypes.(ocaml_bytes_start bytes +@ destination_offset)
     Ctypes.(bigarray_start array1 bigstring)
-    (length bigstring)
+    (size bigstring)
 
 let blit_from_bytes bigstring bytes ~source_offset =
   C.Functions.Bigstring.memcpy_from_bytes
@@ -45,7 +45,7 @@ let blit_from_string bigstring string ~source_offset =
   blit_from_bytes bigstring (Bytes.unsafe_of_string string) ~source_offset
 
 let to_bytes bigstring =
-  let bytes = Bytes.create (length bigstring) in
+  let bytes = Bytes.create (size bigstring) in
   blit_to_bytes bigstring bytes ~destination_offset:0;
   bytes
 
@@ -59,3 +59,24 @@ let from_bytes bytes =
 
 let from_string string =
   from_bytes (Bytes.unsafe_of_string string)
+
+module List =
+struct
+  let total_size bigstrings =
+    List.fold_left (fun total bigstring -> total + size bigstring) 0 bigstrings
+
+  let count =
+    List.length
+
+  let rec advance bigstrings count =
+    if count <= 0 then bigstrings
+    else
+      match bigstrings with
+      | [] -> bigstrings
+      | first::rest ->
+        let size = size first in
+        if count < size then
+          (sub first ~offset:count ~length:(size - count))::rest
+        else
+          advance rest (count - size)
+end

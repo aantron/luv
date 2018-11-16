@@ -1,121 +1,104 @@
-module Request_ =
+module Pool =
 struct
-  type t = [ `Work ] Request.t
+  module Request_ =
+  struct
+    type t = [ `Work ] Request.t
 
-  let make () =
-    Request.allocate
-      ~reference_count:C.Types.Work.reference_count C.Types.Work.t
-end
-
-let work_trampoline =
-  C.Functions.Work.get_work_trampoline ()
-
-let after_work_trampoline =
-  C.Functions.Work.get_after_work_trampoline ()
-
-let queue_work ?loop ?(request = Request_.make ()) f callback =
-  let return_value_cell = ref None in
-  let f () = return_value_cell := Some (f ()) in
-  Request.set_reference ~index:C.Types.Work.function_index request f;
-  Request.set_reference ~index:C.Types.Handle.generic_callback_index request
-      begin fun result ->
-
-    Request.release request;
-    result
-    |> Error.to_result_lazy (fun () ->
-      match !return_value_cell with
-      | Some result -> result
-      | None -> assert false)
-    |> callback
-  end;
-
-  let immediate_result =
-    C.Functions.Work.queue
-      (Loop.or_default loop) request work_trampoline after_work_trampoline
-  in
-
-  if immediate_result < Error.success then begin
-    Request.release request;
-    callback (Result.Error immediate_result)
+    let make () =
+      Request.allocate
+        ~reference_count:C.Types.Work.reference_count C.Types.Work.t
   end
 
-let c_work_trampoline =
-  C.Functions.Work.get_c_work_trampoline ()
+  let work_trampoline =
+    C.Functions.Work.get_work_trampoline ()
 
-let after_c_work_trampoline =
-  C.Functions.Work.get_after_c_work_trampoline ()
+  let after_work_trampoline =
+    C.Functions.Work.get_after_work_trampoline ()
 
-let queue_c_work
-    ?loop
-    ?(request = Request_.make ())
-    ?(argument = Nativeint.zero)
-    f
-    callback =
+  let queue_work ?loop ?(request = Request_.make ()) f callback =
+    let f = Error.catch_exceptions f in
+    let callback = Error.catch_exceptions callback in
+    Request.set_reference ~index:C.Types.Work.function_index request f;
+    Request.set_callback request callback;
 
-  Request.set_reference ~index:C.Types.Handle.generic_callback_index request
-      begin fun result ->
-
-    Request.release request;
-    callback result
-  end;
-
-  let result =
-    C.Functions.Work.add_c_function_and_argument request f argument in
-  if not result then begin
-    Request.release request;
-    callback Error.enomem
-  end
-
-  else begin
     let immediate_result =
       C.Functions.Work.queue
-        (Loop.or_default loop) request c_work_trampoline after_c_work_trampoline
+        (Loop.or_default loop) request work_trampoline after_work_trampoline
     in
 
     if immediate_result < Error.success then begin
       Request.release request;
       callback immediate_result
     end
-  end
 
-module Request = Request_
+  let c_work_trampoline =
+    C.Functions.Work.get_c_work_trampoline ()
 
-let set_thread_pool_size ?(if_not_already_set = false) thread_count =
-  let already_set =
-    try ignore (Unix.getenv "UV_THREADPOOL_SIZE"); true
-    with Not_found -> false
-  in
-  if already_set && if_not_already_set then
-    ()
-  else
-    Unix.putenv "UV_THREADPOOL_SIZE" (string_of_int thread_count)
+  let after_c_work_trampoline =
+    C.Functions.Work.get_after_c_work_trampoline ()
 
-type 'a t = {
-  id : C.Types.Thread.t Ctypes.ptr;
-  mutable return_value_cell : 'a option;
-}
+  let queue_c_work
+      ?loop
+      ?(request = Request_.make ())
+      ?(argument = Nativeint.zero)
+      f
+      callback =
 
-let self () = {
-  id = Ctypes.addr (C.Functions.Thread.self ());
-  return_value_cell = Some ()
-}
+    let callback = Error.catch_exceptions callback in
+    Request.set_callback request callback;
 
-let equal thread_1 thread_2 =
-  C.Functions.Thread.equal thread_1.id thread_2.id
+    let result =
+      C.Functions.Work.add_c_function_and_argument request f argument in
+    if not result then begin
+      Request.release request;
+      callback Error.enomem
+    end
+
+    else begin
+      let immediate_result =
+        C.Functions.Work.queue
+          (Loop.or_default loop)
+          request
+          c_work_trampoline
+          after_c_work_trampoline
+      in
+
+      if immediate_result < Error.success then begin
+        Request.release request;
+        callback immediate_result
+      end
+    end
+
+  module Request = Request_
+
+  let set_size ?(if_not_already_set = false) thread_count =
+    let already_set =
+      try ignore (Unix.getenv "UV_THREADPOOL_SIZE"); true
+      with Not_found -> false
+    in
+    if already_set && if_not_already_set then
+      ()
+    else
+      Unix.putenv "UV_THREADPOOL_SIZE" (string_of_int thread_count)
+end
+
+type t = C.Types.Thread.t Ctypes.ptr
+
+let self () =
+  Ctypes.addr (C.Functions.Thread.self ())
+
+let equal =
+  C.Functions.Thread.equal
 
 let thread_trampoline =
   C.Functions.Thread.get_trampoline ()
 
 let create f =
-  let thread = {
-    id = Ctypes.addr (Ctypes.make C.Types.Thread.t);
-    return_value_cell = None;
-  }
-  in
-  let f () = thread.return_value_cell <- Some (f ()) in
+  let thread = Ctypes.addr (Ctypes.make C.Types.Thread.t) in
+  let f = Error.catch_exceptions f in
   let f_gc_root = Ctypes.Root.create f in
   let result =
-    C.Functions.Thread.create thread.id thread_trampoline f_gc_root in
+    C.Functions.Thread.create thread thread_trampoline f_gc_root in
   if result < Error.success then begin
     Ctypes.Root.release f_gc_root;
     Result.Error result
@@ -124,20 +107,12 @@ let create f =
     Result.Ok thread
 
 let create_c ?(argument = Nativeint.zero) f =
-  let thread = {
-    id = Ctypes.addr (Ctypes.make C.Types.Thread.t);
-    return_value_cell = Some ();
-  }
-  in
-  C.Functions.Thread.create_c thread.id f argument
+  let thread = Ctypes.addr (Ctypes.make C.Types.Thread.t) in
+  C.Functions.Thread.create_c thread f argument
   |> Error.to_result thread
 
-let join thread =
-  C.Blocking.Thread.join thread.id
-  |> Error.to_result_lazy (fun () ->
-    match thread.return_value_cell with
-    | Some value -> value
-    | None -> assert false)
+let join =
+  C.Blocking.Thread.join
 
 module TLS =
 struct

@@ -5,7 +5,7 @@ let trampoline =
 
 let init ?loop callback =
   let async = Handle.allocate C.Types.Async.t in
-  Handle.set_reference async callback;
+  Handle.set_reference async (Error.catch_exceptions callback);
   C.Functions.Async.init (Loop.or_default loop) async trampoline
   |> Error.to_result async
 

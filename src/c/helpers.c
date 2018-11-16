@@ -4,7 +4,6 @@
 #include <caml/bigarray.h>
 #include <caml/callback.h>
 #include <caml/mlvalues.h>
-#include <caml/socketaddr.h>
 #include "ctypes_cstubs_internals.h"
 
 #include <uv.h>
@@ -71,7 +70,7 @@ static void luv_check_trampoline(uv_check_t *c_handle)
 static void luv_close_trampoline(uv_handle_t *c_handle)
 {
     caml_acquire_runtime_system();
-    GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
+    GET_HANDLE_CALLBACK(LUV_CLOSE_CALLBACK);
     caml_callback(callback, ocaml_object);
     caml_release_runtime_system();
 }
@@ -102,11 +101,52 @@ static void luv_exit_trampoline(
     caml_release_runtime_system();
 }
 
-static void luv_fs_request_trampoline(uv_fs_t *c_request)
+static void luv_fs_trampoline(uv_fs_t *c_request)
 {
     caml_acquire_runtime_system();
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
+    caml_release_runtime_system();
+}
+
+static void luv_fs_event_trampoline(
+    uv_fs_event_t *c_handle, char *filename, int events, int status)
+{
+    caml_acquire_runtime_system();
+    GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
+    caml_callback3(
+        callback, caml_copy_string(filename), Val_int(events), Val_int(status));
+    caml_release_runtime_system();
+}
+
+static void luv_fs_poll_trampoline(
+    uv_fs_poll_t *c_handle, int status, uv_stat_t *prev, uv_stat_t *curr)
+{
+    caml_acquire_runtime_system();
+    GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
+    caml_callback3(
+        callback, Val_int(status), caml_copy_nativeint((intnat)prev),
+        caml_copy_nativeint((intnat)curr));
+    caml_release_runtime_system();
+}
+
+static void luv_getaddrinfo_trampoline(
+    uv_getaddrinfo_t *c_request, int status, struct addrinfo *res)
+{
+    caml_acquire_runtime_system();
+    GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
+    caml_callback(callback, Val_int(status));
+    caml_release_runtime_system();
+}
+
+static void luv_getnameinfo_trampoline(
+    uv_getnameinfo_t *c_request, int status, char *hostname, char *service)
+{
+    caml_acquire_runtime_system();
+    GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
+    fprintf(stderr, "%p %p\n", hostname, service);
+    fflush(stderr);
+    caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
 }
 
@@ -146,8 +186,28 @@ static void luv_read_trampoline(
     uv_stream_t *c_handle, ssize_t nread, uv_buf_t *buffer)
 {
     caml_acquire_runtime_system();
-    GET_HANDLE_CALLBACK(LUV_READ_CALLBACK);
+    GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int((int)nread));
+    caml_release_runtime_system();
+}
+
+static void luv_recv_trampoline(
+    uv_udp_t *c_handle, ssize_t nread, uv_buf_t *buffer, struct sockaddr *addr,
+    unsigned int flags)
+{
+    caml_acquire_runtime_system();
+    GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
+    caml_callback3(
+        callback, Val_int((int)nread), caml_copy_nativeint((intnat)addr),
+        Val_int(flags));
+    caml_release_runtime_system();
+}
+
+static void luv_send_trampoline(uv_udp_send_t *c_request, int status)
+{
+    caml_acquire_runtime_system();
+    GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
+    caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
 }
 
@@ -220,42 +280,42 @@ static void luv_write_trampoline(uv_write_t *c_request, int status)
     caml_release_runtime_system();
 }
 
-uv_after_work_cb luv_address_of_after_work_trampoline()
+uv_after_work_cb luv_get_after_work_trampoline()
 {
     return luv_after_work_trampoline;
 }
 
-uv_alloc_cb luv_address_of_alloc_trampoline()
+uv_alloc_cb luv_get_alloc_trampoline()
 {
     return luv_alloc_trampoline;
 }
 
-uv_async_cb luv_address_of_async_trampoline()
+uv_async_cb luv_get_async_trampoline()
 {
     return luv_async_trampoline;
 }
 
-uv_check_cb luv_address_of_check_trampoline()
+uv_check_cb luv_get_check_trampoline()
 {
     return luv_check_trampoline;
 }
 
-uv_close_cb luv_address_of_close_trampoline()
+uv_close_cb luv_get_close_trampoline()
 {
     return luv_close_trampoline;
 }
 
-uv_connect_cb luv_address_of_connect_trampoline()
+uv_connect_cb luv_get_connect_trampoline()
 {
     return luv_connect_trampoline;
 }
 
-uv_connection_cb luv_address_of_connection_trampoline()
+uv_connection_cb luv_get_connection_trampoline()
 {
     return luv_connection_trampoline;
 }
 
-uv_exit_cb luv_address_of_exit_trampoline()
+uv_exit_cb luv_get_exit_trampoline()
 {
     return luv_exit_trampoline;
 }
@@ -265,9 +325,9 @@ uv_exit_cb luv_null_exit_trampoline()
     return NULL;
 }
 
-uv_fs_cb luv_address_of_fs_trampoline()
+uv_fs_cb luv_get_fs_trampoline()
 {
-    return luv_fs_request_trampoline;
+    return luv_fs_trampoline;
 }
 
 uv_fs_cb luv_null_fs_callback_pointer()
@@ -275,57 +335,87 @@ uv_fs_cb luv_null_fs_callback_pointer()
     return NULL;
 }
 
-uv_idle_cb luv_address_of_idle_trampoline()
+luv_fs_event_cb luv_get_fs_event_trampoline()
+{
+    return luv_fs_event_trampoline;
+}
+
+luv_fs_poll_cb luv_get_fs_poll_trampoline()
+{
+    return luv_fs_poll_trampoline;
+}
+
+uv_getaddrinfo_cb luv_get_getaddrinfo_trampoline()
+{
+    return luv_getaddrinfo_trampoline;
+}
+
+luv_getnameinfo_cb luv_get_getnameinfo_trampoline()
+{
+    return luv_getnameinfo_trampoline;
+}
+
+uv_idle_cb luv_get_idle_trampoline()
 {
     return luv_idle_trampoline;
 }
 
-luv_once_cb luv_address_of_once_trampoline()
+luv_once_cb luv_get_once_trampoline()
 {
     return luv_once_trampoline;
 }
 
-uv_poll_cb luv_address_of_poll_trampoline()
+uv_poll_cb luv_get_poll_trampoline()
 {
     return luv_poll_trampoline;
 }
 
-uv_prepare_cb luv_address_of_prepare_trampoline()
+uv_prepare_cb luv_get_prepare_trampoline()
 {
     return luv_prepare_trampoline;
 }
 
-luv_read_cb luv_address_of_read_trampoline()
+luv_read_cb luv_get_read_trampoline()
 {
     return luv_read_trampoline;
 }
 
-uv_shutdown_cb luv_address_of_shutdown_trampoline()
+luv_udp_recv_cb luv_get_recv_trampoline()
+{
+    return luv_recv_trampoline;
+}
+
+uv_udp_send_cb luv_get_send_trampoline()
+{
+    return luv_send_trampoline;
+}
+
+uv_shutdown_cb luv_get_shutdown_trampoline()
 {
     return luv_shutdown_trampoline;
 }
 
-uv_signal_cb luv_address_of_signal_trampoline()
+uv_signal_cb luv_get_signal_trampoline()
 {
     return luv_signal_trampoline;
 }
 
-uv_thread_cb luv_address_of_thread_trampoline()
+uv_thread_cb luv_get_thread_trampoline()
 {
     return luv_thread_trampoline;
 }
 
-uv_timer_cb luv_address_of_timer_trampoline()
+uv_timer_cb luv_get_timer_trampoline()
 {
     return luv_timer_trampoline;
 }
 
-uv_work_cb luv_address_of_work_trampoline()
+uv_work_cb luv_get_work_trampoline()
 {
     return luv_work_trampoline;
 }
 
-uv_write_cb luv_address_of_write_trampoline()
+uv_write_cb luv_get_write_trampoline()
 {
     return luv_write_trampoline;
 }
@@ -373,12 +463,12 @@ static void luv_c_work_trampoline(uv_work_t *c_request)
     function(argument);
 }
 
-uv_after_work_cb luv_address_of_after_c_work_trampoline()
+uv_after_work_cb luv_get_after_c_work_trampoline()
 {
     return luv_after_c_work_trampoline;
 }
 
-uv_work_cb luv_address_of_c_work_trampoline()
+uv_work_cb luv_get_c_work_trampoline()
 {
     return luv_c_work_trampoline;
 }
@@ -437,10 +527,44 @@ char* luv_fs_get_path(const uv_fs_t *req)
     return (char*)uv_fs_get_path(req);
 }
 
+char* luv_dlerror(const uv_lib_t *lib)
+{
+    return (char*)uv_dlerror(lib);
+}
+
+int luv_fs_event_start(
+    uv_fs_event_t *handle, luv_fs_event_cb cb, const char *path,
+    unsigned int flags)
+{
+    return uv_fs_event_start(handle, (uv_fs_event_cb)cb, path, flags);
+}
+
+int luv_fs_poll_start(
+    uv_fs_poll_t *handle, luv_fs_poll_cb poll_cb, const char *path,
+    unsigned int interval)
+{
+    return uv_fs_poll_start(handle, (uv_fs_poll_cb)poll_cb, path, interval);
+}
+
+int luv_getnameinfo(
+    uv_loop_t *loop, uv_getnameinfo_t *req, luv_getnameinfo_cb getnameinfo_cb,
+    const struct sockaddr *addr, int flags)
+{
+    return
+        uv_getnameinfo(
+            loop, req, (uv_getnameinfo_cb)getnameinfo_cb, addr, flags);
+}
+
 int luv_read_start(
     uv_stream_t *stream, uv_alloc_cb alloc_cb, luv_read_cb read_cb)
 {
     return uv_read_start(stream, alloc_cb, (uv_read_cb)read_cb);
+}
+
+int luv_udp_recv_start(
+    uv_udp_t *handle, uv_alloc_cb alloc_cb, luv_udp_recv_cb recv_cb)
+{
+    return uv_udp_recv_start(handle, alloc_cb, (uv_udp_recv_cb)recv_cb);
 }
 
 
@@ -524,25 +648,6 @@ CAMLprim value luv_os_socket_to_unix_fd(value os_socket_storage)
 char* luv_version_suffix()
 {
     return UV_VERSION_SUFFIX;
-}
-
-CAMLprim value luv_get_sockaddr(value ocaml_sockaddr, value c_storage)
-{
-    socklen_param_type length;
-    union sock_addr_union *c_sockaddr =
-        (union sock_addr_union*)Nativeint_val(c_storage);
-
-    get_sockaddr(ocaml_sockaddr, c_sockaddr, &length);
-
-    return Val_int(length);
-}
-
-CAMLprim value luv_alloc_sockaddr(value c_storage, value length)
-{
-    union sock_addr_union *c_sockaddr =
-        (union sock_addr_union*)Nativeint_val(c_storage);
-
-    return alloc_sockaddr(c_sockaddr, Int_val(length), -1);
 }
 
 int luv_spawn(

@@ -1,6 +1,6 @@
 let () =
   Alcotest.run "luv" (List.flatten [
-    (* Error.tests;
+    Error.tests;
     Version.tests;
     Loop.tests;
     Timer.tests;
@@ -9,9 +9,14 @@ let () =
     Poll.tests;
     Signal.tests;
     TCP.tests;
-    File.tests;
     Pipe.tests;
-    Process.tests; *)
+    UDP.tests;
+    TTY.tests;
+    File.tests;
+    Process.tests;
+    FS_event.tests;
+    FS_poll.tests;
+    DNS.tests;
     Thread_.tests;
   ])
 

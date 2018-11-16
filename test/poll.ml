@@ -37,5 +37,18 @@ let tests = [
         Alcotest.(check bool) "called" true !called
       end
     end;
+
+    "exception", `Quick, begin fun () ->
+      with_poll begin fun poll ->
+        check_exception Exit begin fun () ->
+          Luv.Poll.(start poll Event.writable) begin fun _ ->
+            Luv.Poll.stop poll |> ignore;
+            raise Exit
+          end;
+
+          run ()
+        end
+      end
+    end;
   ]
 ]

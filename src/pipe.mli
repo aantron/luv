@@ -21,6 +21,7 @@ val getpeername : t -> (string, Error.t) Result.result
 val pending_instances : t -> int -> unit
 val chmod : t -> Mode.t -> Error.t
 
+(* DOC This absolutely requires documentation to be usable. *)
 val receive_handle :
   t -> [
     | `TCP of TCP.t -> Error.t

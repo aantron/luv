@@ -34,20 +34,32 @@ let get_thread_id () =
 let tests = [
   "thread", [
     "work", `Quick, begin fun () ->
+      let ran = ref false in
       let finished = ref false in
 
-      Luv.Thread.queue_work get_thread_id begin fun result ->
-        let worker_thread_id = check_success_result "queue_work" result in
-        let main_thread_id = get_thread_id () in
-        if worker_thread_id = main_thread_id then
-          Alcotest.failf "Expected different thread ids, got %i and %i"
-            worker_thread_id main_thread_id;
+      Luv.Thread.Pool.queue_work (fun () -> ran := true) begin fun result ->
+        check_success "queue_work" result;
         finished := true
       end;
 
       run ();
 
+      Alcotest.(check bool) "ran" true !ran;
       Alcotest.(check bool) "finished" true !finished
+    end;
+
+    "work: work exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        Luv.Thread.Pool.queue_work (fun () -> raise Exit) ignore;
+        run ()
+      end
+    end;
+
+    "work: end exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        Luv.Thread.Pool.queue_work ignore (fun _ -> raise Exit);
+        run ()
+      end
     end;
 
     "create", `Quick, begin fun () ->
@@ -103,9 +115,18 @@ let tests = [
       Alcotest.(check bool) "not started" false !ran;
 
       Luv.Thread.join child
-      |> check_success_result "join";
+      |> check_success "join";
 
       Alcotest.(check bool) "ran" true !ran
+    end;
+
+    "create: exception", `Quick, begin fun () ->
+      check_exception Exit begin fun () ->
+        Luv.Thread.create (fun () -> raise Exit)
+        |> check_success_result "create"
+        |> Luv.Thread.join
+        |> check_success "join"
+      end
     end;
 
     (* This variant of the join test above failed when join was accidentally
@@ -118,26 +139,17 @@ let tests = [
       Luv.Thread.create (fun () -> ran := true)
       |> check_success_result "create"
       |> Luv.Thread.join
-      |> check_success_result "join";
+      |> check_success "join";
 
       Alcotest.(check bool) "ran" true !ran
     end;
 
-    "join: value", `Quick, begin fun () ->
-      Luv.Thread.create (fun () -> 42)
-      |> check_success_result "create"
-      |> Luv.Thread.join
-      |> check_success_result "join"
-      |> Alcotest.(check int) "result" 42
-    end;
-
     "join: sequenced", `Quick, begin fun () ->
-      Luv.Thread.create (fun () -> Luv.Thread.self ())
-      |> check_success_result "create"
-      |> Luv.Thread.join
-      |> check_success_result "join"
-      |> Luv.Thread.join
-      |> check_error_result "second join" Luv.Error.esrch
+      let child = Luv.Thread.create ignore |> check_success_result "create" in
+      Luv.Thread.join child
+      |> check_success "join";
+      Luv.Thread.join child
+      |> check_error_code "second join" Luv.Error.esrch
     end;
 
     "function leak", `Quick, begin fun () ->
@@ -145,7 +157,7 @@ let tests = [
         Luv.Thread.create (make_callback ())
         |> check_success_result "create"
         |> Luv.Thread.join
-        |> check_success_result "join"
+        |> check_success "join"
       end
     end;
 
@@ -162,7 +174,7 @@ let tests = [
       end
       |> check_success_result "create"
       |> Luv.Thread.join
-      |> check_success_result "join";
+      |> check_success "join";
       Alcotest.(check int) "child" 1337 (Nativeint.to_int !value_in_child);
 
       Alcotest.(check int) "parent final"
@@ -221,7 +233,7 @@ let tests = [
       check_error_code "child trylock" Luv.Error.ebusy !child_trylock_result;
 
       Luv.Mutex.unlock mutex;
-      Luv.Thread.join child |> check_success_result "join";
+      Luv.Thread.join child |> check_success "join";
 
       Luv.Mutex.trylock mutex |> check_error_code "trylock 3" Luv.Error.ebusy;
       Luv.Mutex.unlock mutex;
@@ -240,7 +252,7 @@ let tests = [
       end
       |> check_success_result "thread create"
       |> Luv.Thread.join
-      |> check_success_result "join";
+      |> check_success "join";
 
       Luv.Rwlock.rdunlock rwlock;
 
@@ -260,7 +272,7 @@ let tests = [
       end
       |> check_success_result "thread create"
       |> Luv.Thread.join
-      |> check_success_result "join";
+      |> check_success "join";
       check_error_code "tryrdlock" Luv.Error.ebusy !child_tryrdlock_result;
       check_error_code "trywrlock" Luv.Error.ebusy !child_trywrlock_result;
 
@@ -334,7 +346,7 @@ let tests = [
       Alcotest.(check bool) "child ran" true !child_ran;
 
       Luv.Thread.join child
-      |> check_success_result "join";
+      |> check_success "join";
 
       Alcotest.(check int) "cleanup count" 1 !cleanup_count;
 

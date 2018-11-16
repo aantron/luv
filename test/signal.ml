@@ -56,5 +56,32 @@ let tests = [
         |> Alcotest.(check int) "signum" Luv.Signal.sigint
       end
     end;
+
+    "start: exception", `Quick, begin fun () ->
+      with_signal begin fun signal ->
+        check_exception Exit begin fun () ->
+          check_success "start" @@
+          Luv.Signal.(start signal sigint) begin fun () ->
+            Luv.Signal.stop signal |> check_success "stop";
+            raise Exit
+          end;
+          send_signal ();
+
+          run ()
+        end
+      end
+    end;
+
+    "start_oneshot: exception", `Quick, begin fun () ->
+      with_signal begin fun signal ->
+        check_exception Exit begin fun () ->
+          Luv.Signal.(start_oneshot signal sigint) (fun () -> raise Exit)
+          |> check_success "start";
+
+          send_signal ();
+          run ()
+        end
+      end
+    end;
   ]
 ]

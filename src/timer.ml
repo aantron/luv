@@ -9,7 +9,7 @@ let trampoline =
   C.Functions.Timer.get_trampoline ()
 
 let start ?(call_update_time = true) ?(repeat = 0) timer timeout callback =
-  Handle.set_reference timer callback;
+  Handle.set_reference timer (Error.catch_exceptions callback);
 
   if call_update_time then begin
     Loop.update_time (Handle.get_loop timer)
