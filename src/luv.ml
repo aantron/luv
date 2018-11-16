@@ -1,3 +1,19 @@
+(* All the public submodules of Luv. For example, Error is a submodule. So, from
+   outside Luv, you can refer to it as Luv.Error.
+
+   To see the contents of each module, look in the sibling files in this
+   directory. For example, for Luv.Error, look in error.mli.
+
+   The modules are listed in the same order that features are documented in
+   libuv's own API documentation, available at:
+
+     http://docs.libuv.org/en/v1.x/api.html
+
+   In addition to API documentation, libuv has general information on its
+   documentation home page:
+
+     http://docs.libuv.org/en/v1.x/ *)
+
 module Error = Error
 module Version = Version
 module Loop = Loop

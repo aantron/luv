@@ -19,5 +19,3 @@ let () =
     DNS.tests;
     Thread_.tests;
   ])
-
-(* TODO Apply Bisect_ppx. *)

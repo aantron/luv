@@ -22,6 +22,7 @@ sig
   val nowait : t
 end
 
+(* TODO Consider making the Run_mode argument optional. *)
 val run : t -> Run_mode.t -> bool
 val alive : t -> bool
 val stop : t -> unit

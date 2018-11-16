@@ -12,7 +12,9 @@ depends: [
   "base-unix"
   "ctypes" {>= "0.13.0"}
   "dune" {build & >= "1.0.0"}
-  # Sys.opaque_identity requires 4.03.
+  # Sys.opaque_identity requires 4.03. luv should be ported to 4.02, but it's
+  # best to wait until CI is set up, as otherwise we are likely to never test
+  # on 4.02, and gradually lose compatibility.
   "ocaml" {>= "4.03.0"}
   "result"
 
@@ -24,3 +26,6 @@ build: [
 ]
 
 synopsis: "Binding to libuv"
+
+# TODO Need to install libuv.a, so programs depending through opam can link with
+# this package.
