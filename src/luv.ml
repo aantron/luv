@@ -62,3 +62,4 @@ module Hrtime = Misc.Hrtime
 module Env = Misc.Env
 
 module Promisify = Promisify
+module Integration = Integration
