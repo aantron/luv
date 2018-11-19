@@ -1,4 +1,4 @@
 (executable
- (name lwt_http_get)
+ (name http_get_lwt)
  (preprocess (pps lwt_ppx))
  (libraries luv_lwt))

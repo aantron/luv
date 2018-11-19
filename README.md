@@ -85,7 +85,7 @@ dependencies:
 
 ```
 opam install --unset-root lwt lwt_ppx
-dune exec example/lwt_http_get/lwt_http_get.exe -- www.google.com
+dune exec example/http_get_lwt/http_get_lwt.exe -- www.google.com
 ```
 
 You can install Luv in your opam switch, and use it in other projects:
