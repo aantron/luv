@@ -80,7 +80,7 @@ make test
 dune exec example/http_get/http_get.exe -- www.google.com
 ```
 
-You can try the Luv+Lwt HTTP GET example by installing a couple more
+You can try the Luv+[Lwt][lwt] HTTP GET example by installing a couple more
 dependencies:
 
 ```
@@ -88,12 +88,11 @@ opam install --unset-root lwt lwt_ppx
 dune exec example/http_get_lwt/http_get_lwt.exe -- www.google.com
 ```
 
-You can install Luv in your opam switch, and use it in other projects:
+Or, for the [Repromise][repromise] version:
 
 ```
-cd luv
-make libuv
-opam pin add --kind path luv .
+opam install --unset-root repromise
+dune exec example/http_get_repromise/http_get_repromise.exe -- www.google.com
 ```
 
 Luv probably only works on Linux at the moment. The code is actually highly
@@ -124,7 +123,7 @@ of links back to libuv :)
 ## Roadmap
 
 - [ ] esy packaging and build.
-- [ ] Proof-of-concept integration with Lwt and Repromise.
+- [x] Proof-of-concept integration with Lwt and Repromise.
 - [ ] Vendor correctly on macOS, Windows.
 - [ ] Documentation, examples, CI; user-friendly repo.
 - [ ] Look into using Luv for native Node.js modules.
@@ -138,3 +137,5 @@ of links back to libuv :)
 [luv.ml]: https://github.com/aantron/luv/blob/master/src/luv.ml
 [libuv-api]: http://docs.libuv.org/en/v1.x/api.html
 [libuv-docs]: http://docs.libuv.org/en/v1.x/
+[lwt]: https://github.com/ocsigen/lwt#readme
+[repromise]: https://github.com/aantron/repromise#readme
