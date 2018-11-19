@@ -5,7 +5,7 @@
  (wrapped false)
  (modules Luv_c_generated_functions)
  (c_names c_generated_functions helpers)
- (libraries ctypes luv_c_function_descriptions)
+ (libraries ctypes luv_c_function_descriptions threads)
  (c_flags (:standard "-I %{project_root}/../../src/vendor/libuv/include"))
  (c_library_flags
   (:standard -L%{project_root}/src/vendor/libuv/out/Release -luv -lpthread)))
