@@ -8,6 +8,15 @@ module type PROMISIFIED =
 sig
   type 'a promise
 
+  module Timer :
+  sig
+    val delay :
+      ?loop:Loop.t ->
+      ?call_update_time:bool ->
+      int ->
+        Error.t promise
+  end
+
   module Stream :
   sig
     open Stream
