@@ -4,7 +4,7 @@ let () =
   let url =
     try Sys.argv.(1)
     with Invalid_argument _ ->
-      prerr_endline "Usage: lwt_http_get.exe URL [PATH]";
+      Printf.eprintf "Usage: %s URL [PATH]\n" (Filename.basename Sys.argv.(0));
       exit 1
   in
   let path =
@@ -20,6 +20,7 @@ let () =
      outstanding I/O, so, unlike with Lwt_main.run, we don't have to pass it a
      promise to tell it when to exit. *)
   Lwt.async begin fun () ->
+
 
     (* Do a DNS lookup on the URL we are asked to retrieve. *)
 

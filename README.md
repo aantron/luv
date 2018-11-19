@@ -77,6 +77,7 @@ cd luv
 opam install --unset-root alcotest ctypes dune result
 make libuv
 make test
+dune exec example/http_get/http_get.exe -- www.google.com
 ```
 
 You can try the Luv+Lwt HTTP GET example by installing a couple more
