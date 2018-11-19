@@ -4,7 +4,7 @@ val init : unit -> (t, Error.t) Result.result
 
 module Option :
 sig
-  type 'value t = private int
+  type 'value t
   val block_signal : int t
   val sigprof : int
 end
@@ -16,7 +16,7 @@ val default : unit -> t
 
 module Run_mode :
 sig
-  type t = private int
+  type t
   val default : t
   val once : t
   val nowait : t

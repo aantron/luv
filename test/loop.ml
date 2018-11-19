@@ -53,12 +53,6 @@ let tests = [
       |> check_not_null "default"
     end;
 
-    "run mode", `Quick, begin fun () ->
-      Alcotest.(check int) "default" 0 (Luv.Loop.Run_mode.default :> int);
-      Alcotest.(check int) "once" 1 (Luv.Loop.Run_mode.once :> int);
-      Alcotest.(check int) "nowait" 2 (Luv.Loop.Run_mode.nowait :> int);
-    end;
-
     (* All of these loops exit right away, because there are no active I/O
        requests at this point in the test runner. *)
     "run, default", `Quick, begin fun () ->
