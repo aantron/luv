@@ -12,7 +12,7 @@ let before_io () =
   if Callbacks.callbacksPending () then
     Luv.Loop.Run_mode.nowait
   else
-    Luv.Loop.Run_mode.default
+    Luv.Loop.Run_mode.once
 
 let after_io ~more_io =
   if Callbacks.callbacksPending () then begin

@@ -10,7 +10,7 @@ include Luv.Integration.Start_and_stop
 
 let before_io () =
   if Lwt.paused_count () = 0 then
-    Luv.Loop.Run_mode.default
+    Luv.Loop.Run_mode.once
   else
     Luv.Loop.Run_mode.nowait
 
