@@ -1,6 +1,6 @@
 .PHONY : build
 build :
-	dune build
+	dune build -p luv
 
 .PHONY : test
 test :
