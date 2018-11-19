@@ -63,3 +63,5 @@ module Env = Misc.Env
 
 module Promisify = Promisify
 module Integration = Integration
+
+module Lwt = Luv_lwt

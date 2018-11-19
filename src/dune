@@ -1,4 +1,5 @@
 (library
  (name luv)
  (public_name luv)
- (libraries luv.c result))
+ (libraries luv.c result)
+ (flags (:standard -w -49)))
