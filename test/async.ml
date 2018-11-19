@@ -21,7 +21,7 @@ let tests = [
       in
 
       Luv.Async.send async |> check_success "send";
-      Luv.Loop.(run default_loop Run_mode.nowait) |> ignore;
+      Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
       Luv.Handle.close async;
       run ();
 
@@ -57,7 +57,7 @@ let tests = [
         in
 
         Luv.Async.send async |> check_success "send";
-        Luv.Loop.(run default_loop Run_mode.nowait) |> ignore;
+        Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
         Luv.Handle.close async;
         run ()
       end

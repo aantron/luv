@@ -175,7 +175,7 @@ let tests = [
 
         Unix.sleepf 20e-3;
 
-        Luv.Loop.(run (default ()) Run_mode.nowait) |> ignore;
+        Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
 
         Alcotest.(check bool) "called" true !called
       end

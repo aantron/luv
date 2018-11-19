@@ -25,7 +25,7 @@ struct
         !libraries
         |> List.map (fun library -> library.before_io ())
         |> List.fold_left minimum_run_mode Loop.Run_mode.default
-        |> Loop.(run (default ()))
+        |> fun mode -> Loop.run ~mode ()
       in
 
       !libraries

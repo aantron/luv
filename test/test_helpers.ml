@@ -141,13 +141,13 @@ let run ?(with_timeout = false) () =
     let rec run () =
       if !stop then ()
       else
-        if Luv.Loop.(run default_loop Run_mode.once) then run ()
+        if Luv.Loop.(run ~mode:Run_mode.once ()) then run ()
         else ()
     in
     run ()
   end
   else
-    Luv.Loop.run default_loop Luv.Loop.Run_mode.default
+    Luv.Loop.run ()
     |> ignore
 
 let port = ref 5000

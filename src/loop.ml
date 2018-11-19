@@ -31,5 +31,6 @@ end
    Run_mode.nowait. This is because calling run can trigger callbacks, and
    callbacks expect to be able to take the lock (eventually). If the lock is
    *not* released by run and a callback is called, there will be a deadlock. *)
-let run =
-  C.Blocking.Loop.run
+let run ?loop ?(mode = Run_mode.default) () =
+  let loop = or_default loop in
+  C.Blocking.Loop.run loop mode
