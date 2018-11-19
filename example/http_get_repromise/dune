@@ -1,0 +1,3 @@
+(executable
+ (name http_get_repromise)
+ (libraries luv_repromise))
