@@ -60,3 +60,5 @@ module Path = Misc.Path
 module Passwd = Misc.Passwd
 module Hrtime = Misc.Hrtime
 module Env = Misc.Env
+
+module Promisify = Promisify

@@ -115,6 +115,7 @@ of links back to libuv :)
 ## Roadmap
 
 - [ ] esy packaging and build.
+- [ ] Proof-of-concept integration with Lwt and Repromise.
 - [ ] Vendor correctly on macOS, Windows.
 - [ ] Documentation, examples, CI; user-friendly repo.
 - [ ] Look into using Luv for native Node.js modules.
