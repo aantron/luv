@@ -79,6 +79,14 @@ make libuv
 make test
 ```
 
+You can try the Luv+Lwt HTTP GET example by installing a couple more
+dependencies:
+
+```
+opam install --unset-root lwt lwt_ppx
+dune exec example/lwt_http_get/lwt_http_get.exe -- www.google.com
+```
+
 You can install Luv in your opam switch, and use it in other projects:
 
 ```
