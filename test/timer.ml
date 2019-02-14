@@ -45,7 +45,7 @@ let tests = [
 
         let elapsed = (Unix.gettimeofday ()) -. start_time in
         let minimum_allowed = (float_of_int (timeout - 1)) *. 1e-3 in
-        let maximum_allowed = minimum_allowed *. 2. in
+        let maximum_allowed = minimum_allowed *. 5. in
 
         if elapsed < minimum_allowed || elapsed > maximum_allowed then
           Alcotest.failf

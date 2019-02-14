@@ -477,8 +477,8 @@ let tests = [
     "mkdtemp failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.mkdtemp "foo" begin fun result ->
-        check_error_result "mkdtemp result" Luv.Error.einval result;
+      Luv.File.Async.mkdtemp "non-existent/fooXXXXXX" begin fun result ->
+        check_error_result "mkdtemp result" Luv.Error.enoent result;
         finished := true
       end;
 
@@ -487,8 +487,8 @@ let tests = [
     end;
 
     "mkdtemp failure: sync", `Quick, begin fun () ->
-      Luv.File.Sync.mkdtemp "foo"
-      |> check_error_result "mkdtemp result" Luv.Error.einval
+      Luv.File.Sync.mkdtemp "non-existent/fooXXXXXX"
+      |> check_error_result "mkdtemp result" Luv.Error.enoent
     end;
 
     "scandir: async", `Quick, begin fun () ->

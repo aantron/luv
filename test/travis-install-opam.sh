@@ -1,0 +1,16 @@
+set -e
+set -x
+
+VERSION=2.0.3
+
+case "$TRAVIS_OS_NAME" in
+    linux) OS=linux;;
+      osx) OS=macos;;
+        *) echo Unsupported system $TRAVIS_OS_NAME; exit 1;;
+esac
+
+FILENAME=opam-$VERSION-x86_64-$OS
+
+wget https://github.com/ocaml/opam/releases/download/$VERSION/$FILENAME
+sudo mv $FILENAME /usr/local/bin/opam
+sudo chmod a+x /usr/local/bin/opam

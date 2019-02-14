@@ -1,0 +1,37 @@
+language: generic
+
+matrix:
+  include:
+    - os: linux
+      env: COMPILER=4.03.0
+    - os: linux
+      env: COMPILER=4.07.1
+    - os: osx
+      env: COMPILER=4.07.1
+
+before_script:
+  - set -e
+  - bash test/travis-install-opam.sh
+  - opam init -y --bare --disable-sandboxing --disable-shell-hook
+  - opam switch create . $COMPILER $REPOSITORIES --no-install
+  - eval `opam env`
+  - ocamlc -config
+  - opam --version
+  - ocaml -version
+  - cc --version || true
+  - gcc --version || true
+  - clang --version || true
+  - opam pin add -y --no-action luv .
+  - opam install -y --deps-only luv
+
+script:
+  - make libuv
+  - make
+  - make test
+
+notifications:
+  email:
+    recipients:
+      - antonbachin@yahoo.com
+    on_success: always
+    on_failure: always

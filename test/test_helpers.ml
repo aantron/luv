@@ -177,3 +177,27 @@ let check_exception expected f =
   Luv.Error.on_unhandled_exception raise;
 
   Alcotest.(check exception_testable) "exception" expected !raised
+
+type event = [
+  | `Deferred of unit -> unit
+  | `Proceed
+] ref
+
+let event () =
+  ref (`Deferred ignore)
+
+let defer p f =
+  match !p with
+  | `Deferred _ -> p := `Deferred f
+  | `Proceed -> f ()
+
+let proceed p =
+  match !p with
+  | `Deferred f -> f ()
+  | `Proceed -> ()
+
+let in_travis =
+  match Sys.getenv "TRAVIS" with
+  | "true" -> true
+  | _ -> false
+  | exception Not_found -> false

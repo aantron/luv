@@ -21,3 +21,12 @@ val port : unit -> int
 val fresh_address : unit -> Luv.Sockaddr.t
 
 val check_exception : exn -> (unit -> unit) -> unit
+
+(* A simplistic synchronization primitive, used for controlling the order of
+   callback calls in some places in the tester. *)
+type event
+val event : unit -> event
+val defer : event -> (unit -> unit) -> unit
+val proceed : event -> unit
+
+val in_travis : bool

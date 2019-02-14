@@ -70,6 +70,12 @@ let tests = [
       let accepted = ref false in
       let connected = ref false in
 
+      (* On macOS, getpeername fails with EINVAL if the server closes the pipe
+         first. So, defer closing of handles until both the server and the
+         client have executed their main test logic. *)
+      let server_ran = event () in
+      let client_ran = event () in
+
       with_server_and_client ()
         ~server_logic:
           begin fun server client ->
@@ -77,8 +83,11 @@ let tests = [
             |> check_success_result "getsockname result"
             |> Alcotest.(check string) "getsockname address" filename;
             accepted := true;
-            Luv.Handle.close client;
-            Luv.Handle.close server
+            proceed server_ran;
+            defer client_ran begin fun () ->
+              Luv.Handle.close client;
+              Luv.Handle.close server
+            end
           end
         ~client_logic:
           begin fun client ->
@@ -86,7 +95,8 @@ let tests = [
             |> check_success_result "getpeername result"
             |> Alcotest.(check string) "getpeername address" filename;
             connected := true;
-            Luv.Handle.close client
+            proceed client_ran;
+            defer server_ran (fun () -> Luv.Handle.close client)
           end;
 
       Alcotest.(check bool) "accepted" true !accepted;

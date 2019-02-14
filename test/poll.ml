@@ -1,8 +1,20 @@
 open Test_helpers
 
+let test_fd =
+  if Sys.win32 then
+    Luv.Process.stderr
+  else begin
+    (* On Linux in Travis, trying to create a poll handle for STDERR results in
+       EPERM, so we create a dummy pipe instead. We don't bother closing it:
+       only one will be created on tester startup, and it will be closed by the
+       system on process exit. *)
+    let (_read_end, write_end) = Unix.pipe () in
+    (Obj.magic write_end : int)
+  end
+
 let with_poll f =
   let poll =
-    Luv.Poll.init Luv.Process.stderr
+    Luv.Poll.init test_fd
     |> check_success_result "init"
   in
 
