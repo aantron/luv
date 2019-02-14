@@ -3,6 +3,10 @@
 #ifndef LUV_HELPERS_H_
 #define LUV_HELPERS_H_
 
+#ifndef _WIN32
+#include <unistd.h>
+#endif
+
 #include <caml/mlvalues.h>
 #include <uv.h>
 

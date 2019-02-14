@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #define CAML_NAME_SPACE
 #include <caml/bigarray.h>
@@ -490,7 +491,8 @@ int luv_once_init(uv_once_t *guard)
         tls_key_initialized = 1;
     }
 
-    *guard = UV_ONCE_INIT;
+    static uv_once_t initial_state = UV_ONCE_INIT;
+    memcpy(guard, &initial_state, sizeof(uv_once_t));
 
     return 0;
 }
