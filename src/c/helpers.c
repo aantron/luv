@@ -18,7 +18,6 @@
 // pointing to the callback.
 #define GET_REFERENCES(callback_index) \
     value reference_array = *gc_root; \
-    value ocaml_object = Field(reference_array, LUV_SELF_REFERENCE); \
     value callback = Field(reference_array, callback_index);
 
 #define GET_HANDLE_CALLBACK(callback_index) \
@@ -56,7 +55,7 @@ static void luv_async_trampoline(uv_async_t *c_handle)
 {
     caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
-    caml_callback(callback, ocaml_object);
+    caml_callback(callback, Val_unit);
     caml_release_runtime_system();
 }
 
@@ -72,7 +71,7 @@ static void luv_close_trampoline(uv_handle_t *c_handle)
 {
     caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_CLOSE_CALLBACK);
-    caml_callback(callback, ocaml_object);
+    caml_callback(callback, Val_unit);
     caml_release_runtime_system();
 }
 
@@ -97,8 +96,7 @@ static void luv_exit_trampoline(
 {
     caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
-    caml_callback3(
-        callback, ocaml_object, Val_int(exit_status), Val_int(term_signal));
+    caml_callback2(callback, Val_int(exit_status), Val_int(term_signal));
     caml_release_runtime_system();
 }
 

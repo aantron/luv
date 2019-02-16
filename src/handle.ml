@@ -15,7 +15,10 @@ let close handle =
   if is_closing handle then
     ()
   else begin
-    set_reference ~index:C.Types.Handle.close_callback_index handle release;
+    set_reference
+      ~index:C.Types.Handle.close_callback_index
+      handle
+      (fun () -> release handle);
     C.Functions.Handle.close (coerce handle) close_trampoline
   end
 

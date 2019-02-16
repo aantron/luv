@@ -102,7 +102,7 @@ let spawn
   let callback =
     match on_exit with
     | Some callback ->
-      Handle.set_reference process (fun process exit_status term_signal ->
+      Handle.set_reference process (fun exit_status term_signal ->
         try callback process ~exit_status ~term_signal
         with exn -> Error.unhandled_exception exn);
       trampoline
