@@ -180,7 +180,8 @@ let tests = [
     (* We can't easily get the numeric value of a system error code, so
        round-trip a libuv error code. *)
     "translate_sys_error", `Quick, begin fun () ->
-      Luv.Error.translate_sys_error (Luv.Error.eagain :> int)
+      Luv.Error.translate_sys_error
+        (Luv.Error.eagain :> int) [@ocaml.warning "-18"]
       |> Test_helpers.check_error_code "round trip" Luv.Error.eagain
     end;
   ];

@@ -149,11 +149,11 @@ let tests = [
       with_timer begin fun timer ->
         let ran = ref false in
 
-        Luv.Timer.start timer 100 ignore
+        Luv.Timer.start timer 1100 ignore
         |> check_success "start";
 
         ignore @@ Thread.create begin fun () ->
-          Unix.sleepf 10e-3;
+          Unix.sleep 1;
           ran := true
         end ();
 
@@ -173,7 +173,7 @@ let tests = [
         Luv.Timer.start timer 10 (fun () -> called := true)
         |> check_success "start";
 
-        Unix.sleepf 20e-3;
+        Unix.sleep 1;
 
         Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
 

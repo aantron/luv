@@ -40,7 +40,7 @@ let tests = [
       in
 
       ignore @@ Thread.create begin fun () ->
-        Unix.sleepf 10e-3;
+        Unix.sleep 1;
         Luv.Async.send async |> check_success "send"
       end ();
 

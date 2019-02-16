@@ -7,7 +7,7 @@ let pp_error_code formatter error_code =
       "%s (%s, %i)"
       (Luv.Error.strerror error_code)
       (Luv.Error.err_name error_code)
-      (error_code :> int)
+      (error_code :> int) [@ocaml.warning "-18"]
 
 let error_code_testable =
   Alcotest.of_pp pp_error_code

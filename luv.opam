@@ -12,10 +12,7 @@ depends: [
   "base-unix"
   "ctypes" {>= "0.13.0"}
   "dune" {build}
-  # Sys.opaque_identity requires 4.03. luv should be ported to 4.02, but it's
-  # best to wait until CI is set up, as otherwise we are likely to never test
-  # on 4.02, and gradually lose compatibility.
-  "ocaml" {>= "4.03.0"}
+  "ocaml" {>= "4.02.0"}
   "result"
 
   "alcotest" {dev & >= "0.8.1"}

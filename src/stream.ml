@@ -49,7 +49,7 @@ let read_start ?(allocate = Bigstring.create) stream callback =
   Handle.set_reference stream begin fun (nread_or_error : Error.t) ->
     let result =
       if (nread_or_error :> int) > 0 then begin
-        let length = (nread_or_error :> int) in
+        let length = (nread_or_error :> int) [@ocaml.warning "-18"] in
         let buffer =
           match !last_allocated_buffer with
           | Some buffer -> buffer
@@ -96,6 +96,7 @@ let write ?send_handle stream buffers callback =
   let request = Request.allocate C.Types.Stream.Write_request.t in
 
   let wrapped_callback result =
+    let module Sys = Compatibility.Sys in
     ignore (Sys.opaque_identity buffers);
     ignore (Sys.opaque_identity iovecs);
     let bytes_unwritten =
@@ -139,6 +140,7 @@ let try_write stream buffers =
       (Unsigned.UInt.of_int count)
   in
 
+  let module Sys = Compatibility.Sys in
   ignore (Sys.opaque_identity buffers);
   ignore (Sys.opaque_identity iovecs);
 

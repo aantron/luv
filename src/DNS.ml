@@ -92,7 +92,7 @@ let getaddrinfo
         | Some family -> family
         | None -> Misc.Address_family.unspec
       in
-      Ctypes.setf hints AI.family (family :> int);
+      Ctypes.setf hints AI.family (family :> int) [@ocaml.warning "-18"];
       begin match socktype with
       | Some socktype -> Ctypes.setf hints AI.socktype (socktype :> int)
       | None -> ()

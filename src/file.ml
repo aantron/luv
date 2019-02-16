@@ -310,6 +310,7 @@ struct
         run
           (!file @@ !(Ctypes.CArray.start iovecs) @@ uint count @@ !offset)
           (fun () ->
+            let module Sys = Compatibility.Sys in
             ignore (Sys.opaque_identity buffers);
             ignore (Sys.opaque_identity iovecs)))
 

@@ -66,6 +66,7 @@ let send udp buffers address callback =
 
   let callback = Error.catch_exceptions callback in
   Request.set_callback request begin fun result ->
+    let module Sys = Compatibility.Sys in
     ignore (Sys.opaque_identity buffers);
     ignore (Sys.opaque_identity iovecs);
     callback result
@@ -98,6 +99,7 @@ let try_send udp buffers address =
       (Misc.Sockaddr.as_sockaddr address)
   in
 
+  let module Sys = Compatibility.Sys in
   ignore (Sys.opaque_identity buffers);
   ignore (Sys.opaque_identity iovecs);
 
@@ -128,7 +130,7 @@ let recv_start
       buffer_not_used ()
 
     else begin
-      let length = (nread_or_error :> int) in
+      let length = (nread_or_error :> int) [@ocaml.warning "-18"] in
       let buffer =
         match maybe_buffer with
         | Some buffer -> buffer

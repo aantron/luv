@@ -3,7 +3,7 @@ language: generic
 matrix:
   include:
     - os: linux
-      env: COMPILER=4.03.0
+      env: COMPILER=4.02.3
     - os: linux
       env: COMPILER=4.07.1
     - os: osx
