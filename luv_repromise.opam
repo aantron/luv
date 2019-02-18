@@ -1,9 +1,12 @@
 opam-version: "2.0"
 
+synopsis: "Luv (a libuv binding) with a Repromise promise-based API"
+
 version: "dev"
 license: "MIT"
 homepage: "https://github.com/aantron/luv"
 bug-reports: "https://github.com/aantron/luv/issues"
+
 authors: "Anton Bachin <antonbachin@yahoo.com>"
 maintainer: "Anton Bachin <antonbachin@yahoo.com>"
 dev-repo: "git+https://github.com/aantron/luv.git"
@@ -17,5 +20,3 @@ depends: [
 build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
-
-synopsis: "Luv (a libuv binding) with a Repromise promise-based API"
