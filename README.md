@@ -115,6 +115,8 @@ general libuv docs can be found [here][libuv-docs].
 We will eventually write and generate nice HTML docs for Luv itself, with plenty
 of links back to libuv :)
 
+luv currently uses libuv 1.26.0.
+
 
 
 <br/>
