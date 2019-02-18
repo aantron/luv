@@ -9,7 +9,7 @@ let with_file_for_reading ?(to_fail = false) f =
   in
 
   let file =
-    Luv.File.(Sync.open_ "file.ml" flags)
+    Luv.File.(Sync.open_ "read_test_input" flags)
     |> check_success_result "open_"
   in
 
@@ -79,7 +79,9 @@ let tests = [
     "open, read, close: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.(Async.open_ "file.ml" Open_flag.rdonly) begin fun result ->
+      Luv.File.(Async.open_ "read_test_input" Open_flag.rdonly)
+          begin fun result ->
+
         let file = check_success_result "file" result in
 
         let buffer = Luv.Bigstring.create 4 in
@@ -110,7 +112,7 @@ let tests = [
 
     "open, read, close: sync", `Quick, begin fun () ->
       let file =
-        Luv.File.(Sync.open_ "file.ml" Open_flag.rdonly)
+        Luv.File.(Sync.open_ "read_test_input" Open_flag.rdonly)
         |> check_success_result "open_"
       in
 
@@ -619,7 +621,7 @@ let tests = [
         run ()
       end;
 
-      Alcotest.(check int) "size" Unix.((stat "file.ml").st_size) !size
+      Alcotest.(check int) "size" Unix.((stat "read_test_input").st_size) !size
     end;
 
     "fstat: sync", `Quick, begin fun () ->
@@ -628,7 +630,7 @@ let tests = [
         |> check_success_result "fstat"
         |> fun stat -> Luv.File.Stat.(stat.size)
         |> Unsigned.UInt64.to_int
-        |> Alcotest.(check int) "size" Unix.((stat "file.ml").st_size)
+        |> Alcotest.(check int) "size" Unix.((stat "read_test_input").st_size)
       end
     end;
 

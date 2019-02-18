@@ -1,3 +1,8 @@
+(* This file is part of Luv, released under the MIT license. See LICENSE.md for
+   details, or visit https://github.com/aantron/luv/blob/master/LICENSE.md. *)
+
+
+
 module Flag = C.Types.Process.Flag
 module Redirection = C.Types.Process.Redirection
 

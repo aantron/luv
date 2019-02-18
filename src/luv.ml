@@ -1,3 +1,8 @@
+(* This file is part of Luv, released under the MIT license. See LICENSE.md for
+   details, or visit https://github.com/aantron/luv/blob/master/LICENSE.md. *)
+
+
+
 (* All the public submodules of Luv. For example, Error is a submodule. So, from
    outside Luv, you can refer to it as Luv.Error.
 

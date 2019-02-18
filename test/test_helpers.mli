@@ -1,3 +1,8 @@
+(* This file is part of Luv, released under the MIT license. See LICENSE.md for
+   details, or visit https://github.com/aantron/luv/blob/master/LICENSE.md. *)
+
+
+
 val check_success : string -> Luv.Error.t -> unit
 val check_error_code : string -> Luv.Error.t -> Luv.Error.t -> unit
 

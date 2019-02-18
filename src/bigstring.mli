@@ -1,3 +1,8 @@
+(* This file is part of Luv, released under the MIT license. See LICENSE.md for
+   details, or visit https://github.com/aantron/luv/blob/master/LICENSE.md. *)
+
+
+
 type t = (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
 
 val create : int -> t

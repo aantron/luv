@@ -4,4 +4,5 @@
 
 (alias
  (name runtest)
+ (deps read_test_input)
  (action (run %{exe:tester.exe})))

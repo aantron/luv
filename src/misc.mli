@@ -1,3 +1,8 @@
+(* This file is part of Luv, released under the MIT license. See LICENSE.md for
+   details, or visit https://github.com/aantron/luv/blob/master/LICENSE.md. *)
+
+
+
 (* DOC About the libuv mess w.r.t. fd types. *)
 (* DOC Link to where the various helpers working on these can be found. *)
 module Os_fd :
