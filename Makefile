@@ -45,6 +45,15 @@ test-installation-ci :
 	opam remove -y luv
 	opam pin remove -y luv
 
+.PHONY : docs
+docs :
+	dune build @doc -p luv
+	# cp odoc.css _build/default/_doc/_html/
+
+.PHONY : watch-docs
+watch-docs : docs
+	inotifywait -mr -e modify --format '%f' src docs | xargs -L1 -I X make docs
+
 .PHONY : clean
 clean :
 	dune clean

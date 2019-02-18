@@ -3,6 +3,7 @@
 
 
 
+(* TODO Good enough example, as it will be linked from loop.mli. *)
 type t = [ `Timer ] Handle.t
 
 val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result

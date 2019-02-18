@@ -4,6 +4,9 @@
 
 
 type t = [ `TCP ] Stream.t
+(** TCP streams.
+
+    See also the functions in {!Stream} and {!Handle}. *)
 
 val init :
   ?loop:Loop.t -> ?domain:Misc.Address_family.t -> unit ->

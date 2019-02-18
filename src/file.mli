@@ -3,6 +3,115 @@
 
 
 
+(** File system operations.
+
+    See {{:http://docs.libuv.org/en/v1.x/fs.html} {i File system operations}} in
+    the libuv documentation.
+
+    This module exposes all the file system operations of libuv with an
+    asynchronous (callback) interface. There is an additional submodule,
+    {!Luv.File.Sync}, which exposes all the same operations with a synchronous
+    (direct) interface. So, for example, there are:
+
+    {[
+      Luv.File.chmod :
+        string -> Mode.t list -> ((unit, Error.t) result -> unit) -> unit
+
+      Luv.File.Sync.chmod :
+        string -> Mode.t list -> (unit, Error.t) result
+    ]}
+
+    For file system operations, synchronous operations are generally faster,
+    because most asynchronous operations have to be run in a worker thread.
+    However, synchronous operations can block.
+
+    A general guideline is that if performance is not critical, or your code may
+    be used to access a network file system, use asynchronous operations. The
+    latter condition may be especially important if you are writing a library,
+    and cannot readily predict whether it will be used to access a network file
+    system or not.
+
+    Synchronous operations are typically best for internal applications and
+    short scripts.
+
+    It is possible to run a sequence of synchronous operations without blocking
+    the main thread by manually running them in a worker. This can be done in
+    several ways:
+
+    - Directly using the {{!Luv.Thread.Pool} libuv thread pool}.
+    - By creating a thread manually with {!Luv.Thread.create}.
+    - By creating a thread manually with OCaml's standard
+      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Thread.html}
+      [Thread]} module.
+
+    This is only worthwhile if multiple synchronous operations will be done
+    inside the worker thread. If the worker thread does only one operation, the
+    performance is identical to the asynchronous API.
+
+    Note that this performance difference does not apply to other kinds of libuv
+    operations. For example, unlike reading from a file, reading from the
+    network asynchronously is very fast. *)
+
+
+
+(** {1 Types} *)
+
+type t
+(** Files.
+
+    Roughly, on Unix, these correspond to file descriptors, and on Windows,
+    these correspond to [HANDLE]. *)
+
+(** {{!Luv.File.Request} Request objects} that can be optionally used with this
+    module.
+
+    This is a binding to {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_t}
+    [uv_fs_t]}.
+
+    By default, request objects are managed internally by Luv, and the user does
+    not need to be aware of them. The only purpose of exposing them in the API
+    is to allow the user to {{!Luv.Request.cancel} cancel} file system
+    operations.
+
+    All functions in this module that start asynchronous operations take a
+    reference to a request object in a [?request] optional argument. If the user
+    does provide a request object, Luv will use that object for the operation,
+    instead of creating a fresh request object internally. The user can then
+    cancel the operation by calling {!Luv.Request.cancel} on the request:
+
+    {[
+      let request = Luv.File.Request.make () in
+      Luv.File.chmod ~request "foo" [`IRUSR] ignore;
+      ignore (Luv.Request.cancel request);
+    ]}
+
+    This mechanism is entirely optional. If cancelation is not needed, the code
+    reduces to simply
+
+    {[
+      Luv.File.chmod "foo" [`IRUSR] ignore;
+    ]} *)
+module Request :
+sig
+  type t = [ `File ] Request.t
+  val make : unit -> t
+end
+
+
+
+(** {1 Standard I/O streams} *)
+
+val stdin : t
+val stdout : t
+val stderr : t
+
+
+
+(** {1 Basics} *)
+
+(** {{!Luv.File.Open_flag} Flags} for use with {!Luv.File.open_}. See the flags
+    in {{:http://man7.org/linux/man-pages/man3/open.3p.html#DESCRIPTION}
+    [open(3p)]}. *)
 module Open_flag :
 sig
   type t = [
@@ -35,6 +144,7 @@ sig
   ]
 end
 
+(** {{!Luv.File.Mode} Permissions bits}. *)
 module Mode :
 sig
   type t = [
@@ -59,12 +169,199 @@ sig
 
     | `NUMERIC of int
   ]
+  (** The bits.
+
+      These are accepted by operations such as {!Luv.File.chmod} in lists, e.g.
+
+      {[
+        [`IRUSR; `IWUSR; `IRGRP; `IROTH]
+      ]}
+
+      The special constructor [`NUMERIC] can be
+      used to specify bits directly in octal. The above list is equivalent to:
+
+      {[
+        [`NUMERIC 0o644]
+      ]} *)
 
   type numeric
+  (** Abstract type for a bit field of permissions bits, i.e., an [int] in which
+      multiple bits may be set. These bit fields are returned by operations such
+      as {!Luv.File.stat}. *)
 
   val test : t -> numeric -> bool
+  (** [Luv.File.Mode.test mask bits] checks whether all the bits in [mask] are
+      set in [bits]. For example, if [bits] contains [0o644],
+      [Luv.File.Mode.test `IRUSR bits] evaluates to [true]. *)
 end
 
+val open_ :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?mode:Mode.t list ->
+  string ->
+  Open_flag.t list ->
+  ((t, Error.t) Result.result -> unit) ->
+    unit
+(** Opens the file at the given path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_open} [uv_fs_open]}.
+    See {{:http://man7.org/linux/man-pages/man3/open.3p.html} [open(3p)]}. The
+    synchronous version is {!Luv.File.Sync.open_}.
+
+    The default value of the [?mode] argument is [[`NUMERIC 0o644]]. *)
+
+val close :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
+(** Closes the given file.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_close}
+    [uv_fs_close]}. See {{:http://man7.org/linux/man-pages/man3/close.3p.html}
+    [close(3p)]}. The synchronous version is {!Luv.File.Sync.close}. *)
+
+val read :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?offset:int64 ->
+  t ->
+  Bigstring.t list ->
+  ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
+    unit
+(** Reads from the given file.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_read} [uv_fs_read]}.
+    See {{:http://man7.org/linux/man-pages/man3/readv.3p.html} [readv(3p)]}. The
+    synchronous version is {!Luv.File.Sync.read}.
+
+    The incoming data is written consecutively to into the given buffers. The
+    number of bytes that the operation tries to read is the total length of the
+    buffers.
+
+    If you have a buffer a ready, but would like to read less bytes than the
+    length of the buffer, use
+    {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Bigarray.Array1.html#VALsub}
+    [Bigarray.Array1.sub]} or {!Luv.Bigstring.sub} to create a shorter view of
+    the buffer.
+
+    If the [?offset] argument is not specified, the read is done at the current
+    offset into the file, and the file offset is updated. Otherwise, a
+    positioned read is done at the given offset, and the file offset is not
+    updated. See {{:http://man7.org/linux/man-pages/man3/pread.3p.html}
+    [pread(3p)]}. *)
+
+val write :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?offset:int64 ->
+  t ->
+  Bigstring.t list ->
+  ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
+    unit
+(** Writes to the given file.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_write}
+    [uv_fs_write]}. See {{:http://man7.org/linux/man-pages/man3/writev.3p.html}
+    [writev(3p)]}. The synchronous version is {!Luv.File.Sync.write}.
+
+    See {!Luv.File.read} for notes on the lengths of the buffers and the meaning
+    of [?offset]. *)
+
+
+
+(** {1 Moving and removing} *)
+
+val unlink :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
+(** Deletes the file at the given path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_unlink}
+    [uv_fs_unlink]}. See {{:http://man7.org/linux/man-pages/man3/unlink.3p.html}
+    [unlink(3p)]}. The synchronous version is {!Luv.File.Sync.unlink}. *)
+
+val rename :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  to_:string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
+(** Moves the file at the given path to the path given by [~to_].
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_rename}
+    [uv_fs_rename]}. See {{:http://man7.org/linux/man-pages/man3/rename.3p.html}
+    [rename(3p)]}. The synchronous version is {!Luv.File.Sync.rename}. *)
+
+
+
+(** {1 Temporary files} *)
+
+val mkstemp :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((string * t, Error.t) Result.result -> unit) ->
+    unit
+(** Creates a temporary file with name based on the given pattern.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_mkstemp}
+    [uv_fs_mkstemp]}. See
+    {{:http://man7.org/linux/man-pages/man3/mkdtemp.3p.html} [mkstemp(3p)]}. The
+    synchronous version is {!Luv.File.Sync.mkstemp}. *)
+
+val mkdtemp :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((string, Error.t) Result.result -> unit) ->
+    unit
+(** Creates a temporary directory with name based on the given pattern.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_mkdtemp}
+    [uv_fs_mkdtemp]}. See
+    {{:http://man7.org/linux/man-pages/man3/mkdtemp.3p.html} [mkdtemp(3p)]}. The
+    synchronous version is {!Luv.File.Sync.mkdtemp}. *)
+
+
+
+(** {1 Directories} *)
+
+val mkdir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?mode:Mode.t list ->
+  string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
+(** Creates a directory.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_mkdir}
+    [uv_fs_mkdir]}. See {{:http://man7.org/linux/man-pages/man3/mkdir.3p.html}
+    [mkdir(3p)]}. The synchronous version is {!Luv.File.Sync.mkdir}.
+
+    The default value of the [?mode] argument is [[`NUMERIC 0o755]]. *)
+
+val rmdir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
+(** Deletes a directory.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_rmdir}
+    [uv_fs_rmdir]}. See {{:http://man7.org/linux/man-pages/man3/rmdir.3p.html}
+    [rmdir(3p)]}. The synchronous version is {!Luv.File.Sync.rmdir}. *)
+
+(** Directory entries. Binds
+    {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_dirent_t} [uv_dirent_t]}. *)
 module Dirent :
 sig
   module Kind :
@@ -87,10 +384,54 @@ sig
   }
 end
 
+(** Declares only {!Luv.File.Dir.t}, which binds
+    {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_dir_t} [uv_dir_t]}. *)
 module Dir :
 sig
   type t
 end
+
+val opendir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Dir.t, Error.t) Result.result -> unit) ->
+    unit
+(** Opens the directory at the given path for listing.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_opendir}
+    [uv_fs_opendir]}. See
+    {{:http://man7.org/linux/man-pages/man3/fdopendir.3p.html} [opendir(3p)]}.
+    The synchronous version is {!Luv.File.Sync.opendir}.
+
+    The directory must later be closed with {!Luv.File.closedir}. *)
+
+val closedir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  Dir.t ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
+(** Closes the given directory.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_closedir}
+    [uv_fs_closedir]}. See
+    {{:http://man7.org/linux/man-pages/man3/closedir.3p.html} [closedir(3p)]}.
+    The synchronous version is {!Luv.File.Sync.closedir}. *)
+
+val readdir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?number_of_entries:int ->
+  Dir.t ->
+  ((Dirent.t array, Error.t) Result.result -> unit) ->
+    unit
+(** Retrieves a directory entry.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_readdir}
+    [uv_fs_readdir]}. See
+    {{:http://man7.org/linux/man-pages/man3/readdir.3p.html} [readdir(3p)]}. The
+    synchronous version is {!Luv.File.Sync.readdir}. *)
 
 (* DOC This requires some memory management on the user's part. *)
 module Directory_scan :
@@ -101,6 +442,18 @@ sig
   val stop : t -> unit
 end
 
+val scandir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Directory_scan.t, Error.t) Result.result -> unit) ->
+    unit
+
+
+
+(** {1 Status} *)
+
+(** Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_stat_t} [uv_stat_t]}. *)
 module Stat :
 sig
   type timespec = {
@@ -132,6 +485,44 @@ sig
   val load : C.Types.File.Stat.t -> t
 end
 
+val stat :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Stat.t, Error.t) Result.result -> unit) ->
+    unit
+(** Retrieves status information for the file at the given path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_stat} [uv_fs_stat]}.
+    See {{:http://man7.org/linux/man-pages/man3/fstatat.3p.html} [stat(3p)]}.
+    The synchronous version is {!Luv.File.Sync.stat}. *)
+
+val lstat :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Stat.t, Error.t) Result.result -> unit) ->
+    unit
+(** Like {!Luv.File.stat}, but does not dereference symlinks.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_lstat}
+    [uv_fs_lstat]}. See {{:http://man7.org/linux/man-pages/man3/fstatat.3p.html}
+    [lstat(3p)]}. The synchronous version is {!Luv.File.Sync.lstat}. *)
+
+val fstat :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  ((Stat.t, Error.t) Result.result -> unit) ->
+    unit
+(** Like {!Luv.File.stat}, but takes a file instead of a path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_fstat}
+    [uv_fs_fstat]}. See {{:http://man7.org/linux/man-pages/man3/fstatat.3p.html}
+    [fstat(3p)]}. The synchronous version is {!Luv.File.Sync.fstat}. *)
+
+(** Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_statfs_t}
+    [uv_statfs_t]}. *)
 module Statfs :
 sig
   type t = {
@@ -150,162 +541,21 @@ sig
   }
 end
 
-module Access_flag :
-sig
-  type t = [
-    | `F_OK
-    | `R_OK
-    | `W_OK
-    | `X_OK
-  ]
-end
-
-module Request :
-sig
-  type t = [ `File ] Request.t
-  val make : unit -> t
-end
-
-type t
-
-val stdin : t
-val stdout : t
-val stderr : t
-
-val open_ :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  ?mode:Mode.t list ->
-  string ->
-  Open_flag.t list ->
-  ((t, Error.t) Result.result -> unit) ->
-    unit
-
-val close :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  t ->
-  ((unit, Error.t) Result.result -> unit) ->
-    unit
-
-val read :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  ?offset:int64 ->
-  t ->
-  Bigstring.t list ->
-  ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
-    unit
-
-val write :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  ?offset:int64 ->
-  t ->
-  Bigstring.t list ->
-  ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
-    unit
-
-val unlink :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  ((unit, Error.t) Result.result -> unit) ->
-    unit
-
-val mkdir :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  ?mode:Mode.t list ->
-  string ->
-  ((unit, Error.t) Result.result -> unit) ->
-    unit
-
-val mkdtemp :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  ((string, Error.t) Result.result -> unit) ->
-    unit
-
-val mkstemp :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  ((string * t, Error.t) Result.result -> unit) ->
-    unit
-
-val rmdir :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  ((unit, Error.t) Result.result -> unit) ->
-    unit
-
-val opendir :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  ((Dir.t, Error.t) Result.result -> unit) ->
-    unit
-
-val closedir :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  Dir.t ->
-  ((unit, Error.t) Result.result -> unit) ->
-    unit
-
-val readdir :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  ?number_of_entries:int ->
-  Dir.t ->
-  ((Dirent.t array, Error.t) Result.result -> unit) ->
-    unit
-
-val scandir :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  ((Directory_scan.t, Error.t) Result.result -> unit) ->
-    unit
-
-val stat :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  ((Stat.t, Error.t) Result.result -> unit) ->
-    unit
-
-val lstat :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  ((Stat.t, Error.t) Result.result -> unit) ->
-    unit
-
-val fstat :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  t ->
-  ((Stat.t, Error.t) Result.result -> unit) ->
-    unit
-
 val statfs :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
   ((Statfs.t, Error.t) Result.result -> unit) ->
     unit
+(** Retrieves status information for the file system containing the given path.
 
-val rename :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  string ->
-  to_:string ->
-  ((unit, Error.t) Result.result -> unit) ->
-    unit
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_statfs}
+    [uv_fs_statfs]}. See {{:http://man7.org/linux/man-pages/man2/statfs.2.html}
+    [statfs(2)]}. The synchronous version is {!Luv.File.Sync.statfs}. *)
+
+
+
+(** {1 Flushing} *)
 
 val fsync :
   ?loop:Loop.t ->
@@ -313,6 +563,11 @@ val fsync :
   t ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Flushes file changes to storage.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_fsync}
+    [uv_fs_fsync]}. See {{:http://man7.org/linux/man-pages/man3/fsync.3p.html}
+    [fsync(3p)]}. The synchronous version is {!Luv.File.Sync.fsync}. *)
 
 val fdatasync :
   ?loop:Loop.t ->
@@ -320,6 +575,16 @@ val fdatasync :
   t ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Like {!Luv.File.fsync}, but may omit some metadata.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_fdatasync}
+    [uv_fs_fdatasync]}. See
+    {{:http://man7.org/linux/man-pages/man2/fdatasync.2.html} [fdatasync(2)]}.
+    The synchronous version is {!Luv.File.Sync.fdatasync}. *)
+
+
+
+(** {1 Transfers} *)
 
 val ftruncate :
   ?loop:Loop.t ->
@@ -328,6 +593,12 @@ val ftruncate :
   int64 ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Truncates the given file to the given length.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_ftruncate}
+    [uv_fs_ftruncate]}. See
+    {{:http://man7.org/linux/man-pages/man3/ftruncate.3p.html}
+    [ftruncate(3p)]}. The synchronous version is {!Luv.File.Sync.ftruncate}. *)
 
 val copyfile :
   ?loop:Loop.t ->
@@ -339,6 +610,10 @@ val copyfile :
   to_:string ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Copies the file at the given path to the path given by [~to_].
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_copyfile}
+    [uv_fs_copyfile]}. The synchronous version is {!Luv.File.Sync.copyfile}. *)
 
 val sendfile :
   ?loop:Loop.t ->
@@ -349,6 +624,28 @@ val sendfile :
   Unsigned.Size_t.t ->
   ((Unsigned.Size_t.t, Error.t) Result.result -> unit)  ->
     unit
+(** Transfers data between file descriptors.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_sendfile}
+    [uv_fs_sendfile]}. See
+    {{:http://man7.org/linux/man-pages/man2/sendfile.2.html} [sendfile(2)]}.
+    The synchronous version is {!Luv.File.Sync.sendfile}. *)
+
+
+
+(** {1 Permissions} *)
+
+(** Declares [`F_OK], [`R_OK], [`W_OK], [`X_OK] for use with
+    {!Luv.File.access}. *)
+module Access_flag :
+sig
+  type t = [
+    | `F_OK
+    | `R_OK
+    | `W_OK
+    | `X_OK
+  ]
+end
 
 val access :
   ?loop:Loop.t ->
@@ -357,6 +654,12 @@ val access :
   Access_flag.t list ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Checks whether the calling process can access the file at the given path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_access}
+    [uv_fs_access]}. See
+    {{:http://man7.org/linux/man-pages/man3/access.3p.html} [access(3p)]}. The
+    synchronous version is {!Luv.File.Sync.access}. *)
 
 val chmod :
   ?loop:Loop.t ->
@@ -365,6 +668,12 @@ val chmod :
   Mode.t list ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Changes permissions of the file at the given path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_chmod}
+    [uv_fs_chmod]}. See
+    {{:http://man7.org/linux/man-pages/man3/chmod.3p.html} [chmod(3p)]}. The
+    synchronous version is {!Luv.File.Sync.chmod}. *)
 
 val fchmod :
   ?loop:Loop.t ->
@@ -373,6 +682,16 @@ val fchmod :
   Mode.t list ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Like {!Luv.File.chmod}, but takes a file instead of a path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_fchmod}
+    [uv_fs_fchmod]}. See
+    {{:http://man7.org/linux/man-pages/man3/fchmod.3p.html} [fchmod(3p)]}. The
+    synchronous version is {!Luv.File.Sync.fchmod}. *)
+
+
+
+(** {1 Timestamps} *)
 
 val utime :
   ?loop:Loop.t ->
@@ -382,6 +701,11 @@ val utime :
   mtime:float ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Sets timestamps of the file at the given path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_utime}
+    [uv_fs_utime]}. See {{:http://man7.org/linux/man-pages/man3/utime.3p.html}
+    [utime(3p)]}. The synchronous version is {!Luv.File.Sync.utime}. *)
 
 val futime :
   ?loop:Loop.t ->
@@ -391,6 +715,15 @@ val futime :
   mtime:float ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Like {!Luv.File.utime}, but takes a file instead of a path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_futime}
+    [uv_fs_futime]}. See {{:http://man7.org/linux/man-pages/man3/futime.3p.html}
+    [futime(3p)]}. The synchronous version is {!Luv.File.Sync.futime}. *)
+
+
+
+(** {1 Links} *)
 
 val link :
   ?loop:Loop.t ->
@@ -399,6 +732,11 @@ val link :
   link:string ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Hardlinks a file at the location given by [~link].
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_link} [uv_fs_link]}.
+    See {{:http://man7.org/linux/man-pages/man3/link.3p.html} [link(3p)]}. The
+    synchronous version is {!Luv.File.Sync.link}. *)
 
 val symlink :
   ?loop:Loop.t ->
@@ -409,6 +747,15 @@ val symlink :
   link:string ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Symlinks a file at the location given by [~link].
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_symlink}
+    [uv_fs_symlink]}. See
+    {{:http://man7.org/linux/man-pages/man3/symlink.3p.html} [symlink(3p)]}. The
+    synchronous version is {!Luv.File.Sync.symlink}.
+
+    See {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_symlink}
+    [uv_fs_symlink]} for the meaning of the optional arguments. *)
 
 val readlink :
   ?loop:Loop.t ->
@@ -416,6 +763,12 @@ val readlink :
   string ->
   ((string, Error.t) Result.result -> unit) ->
     unit
+(** Reads the target path of a symlink.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_readlink}
+    [uv_fs_readlink]}. See
+    {{:http://man7.org/linux/man-pages/man3/readlink.3p.html} [readlink(3p)]}.
+    The synchronous version is {!Luv.File.Sync.readlink}. *)
 
 val realpath :
   ?loop:Loop.t ->
@@ -423,6 +776,16 @@ val realpath :
   string ->
   ((string, Error.t) Result.result -> unit) ->
     unit
+(** Resolves a real absolute path to the given file.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_realpath}
+    [uv_fs_readpath]}. See
+    {{:http://man7.org/linux/man-pages/man3/realpath.3p.html} [realpath(3p)]}.
+    The synchronous version is {!Luv.File.Sync.realpath}. *)
+
+
+
+(** {1 Ownership} *)
 
 val chown :
   ?loop:Loop.t ->
@@ -432,15 +795,12 @@ val chown :
   gid:int ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Changes owneship of the file at the given path.
 
-val fchown :
-  ?loop:Loop.t ->
-  ?request:Request.t ->
-  t ->
-  uid:int ->
-  gid:int ->
-  ((unit, Error.t) Result.result -> unit) ->
-    unit
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_chown}
+    [uv_fs_chown]}. See
+    {{:http://man7.org/linux/man-pages/man3/chown.3p.html} [chown(3p)]}. The
+    synchronous version is {!Luv.File.Sync.chown}. *)
 
 val lchown :
   ?loop:Loop.t ->
@@ -450,92 +810,138 @@ val lchown :
   gid:int ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
+(** Like {!Luv.File.chown}, but does not dereference symlinks.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_lchown}
+    [uv_fs_lchown]}. See
+    {{:http://man7.org/linux/man-pages/man3/lchown.3p.html} [lchown(3p)]}. The
+    synchronous version is {!Luv.File.Sync.lchown}. *)
+
+val fchown :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  uid:int ->
+  gid:int ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
+(** Like {!Luv.File.chown}, but takes a file instead of a path.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_fchown}
+    [uv_fs_fchown]}. See
+    {{:http://man7.org/linux/man-pages/man3/fchown.3p.html} [fchown(3p)]}. The
+    synchronous version is {!Luv.File.Sync.fchown}. *)
+
+
+
+(** {1 Synchronous API} *)
 
 module Sync :
 sig
   val open_ :
     ?mode:Mode.t list -> string -> Open_flag.t list ->
       (t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.open_}. *)
 
   val close :
     t ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.close}. *)
 
   val read :
     ?offset:int64 -> t -> Bigstring.t list ->
       (Unsigned.Size_t.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.read}. *)
 
   val write :
     ?offset:int64 -> t -> Bigstring.t list ->
       (Unsigned.Size_t.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.write}. *)
 
   val unlink :
     string ->
       (unit, Error.t) Result.result
-
-  val mkdir :
-    ?mode:Mode.t list -> string ->
-      (unit, Error.t) Result.result
-
-  val mkdtemp :
-    string ->
-      (string, Error.t) Result.result
-
-  val mkstemp :
-    string ->
-      (string * t, Error.t) Result.result
-
-  val rmdir :
-    string ->
-      (unit, Error.t) Result.result
-
-  val opendir :
-    string ->
-      (Dir.t, Error.t) Result.result
-
-  val closedir :
-    Dir.t ->
-      (unit, Error.t) Result.result
-
-  val readdir :
-    ?number_of_entries:int -> Dir.t ->
-      (Dirent.t array, Error.t) Result.result
-
-  val scandir :
-    string ->
-      (Directory_scan.t, Error.t) Result.result
-
-  val stat :
-    string ->
-      (Stat.t, Error.t) Result.result
-
-  val lstat :
-    string ->
-      (Stat.t, Error.t) Result.result
-
-  val fstat :
-    t ->
-      (Stat.t, Error.t) Result.result
-
-  val statfs :
-    string ->
-      (Statfs.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.unlink}. *)
 
   val rename :
     string -> to_:string ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.rename}. *)
+
+  val mkstemp :
+    string ->
+      (string * t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.mkstemp}. *)
+
+  val mkdtemp :
+    string ->
+      (string, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.mkdtemp}. *)
+
+  val mkdir :
+    ?mode:Mode.t list -> string ->
+      (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.mkdir}. *)
+
+  val rmdir :
+    string ->
+      (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.rmdir}. *)
+
+  val opendir :
+    string ->
+      (Dir.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.opendir}. *)
+
+  val closedir :
+    Dir.t ->
+      (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.closedir}. *)
+
+  val readdir :
+    ?number_of_entries:int -> Dir.t ->
+      (Dirent.t array, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.readdir}. *)
+
+  val scandir :
+    string ->
+      (Directory_scan.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.scandir}. *)
+
+  val stat :
+    string ->
+      (Stat.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.stat}. *)
+
+  val lstat :
+    string ->
+      (Stat.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.lstat}. *)
+
+  val fstat :
+    t ->
+      (Stat.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.fstat}. *)
+
+  val statfs :
+    string ->
+      (Statfs.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.statfs}. *)
 
   val fsync :
     t ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.fsync}. *)
 
   val fdatasync :
     t ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.fdatasync}. *)
 
   val ftruncate :
     t -> int64 ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.ftruncate}. *)
 
   val copyfile :
     ?excl:bool ->
@@ -544,61 +950,77 @@ sig
     string ->
     to_:string ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.copyfile}. *)
 
-  (* DOC The offset should be optional, but current libuv doesn't seem to
-     support that. *)
   val sendfile :
     to_:t -> t -> offset:int64 -> Unsigned.Size_t.t ->
       (Unsigned.Size_t.t, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.sendfile}. *)
 
   val access :
     string -> Access_flag.t list ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.access}. *)
 
   val chmod :
     string -> Mode.t list ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.chmod}. *)
 
   val fchmod :
     t -> Mode.t list ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.fchmod}. *)
 
   val utime :
     string -> atime:float -> mtime:float ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.utime}. *)
 
   val futime :
     t -> atime:float -> mtime:float ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.futime}. *)
 
   val link :
     string -> link:string ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.link}. *)
 
   val symlink :
     ?dir:bool -> ?junction:bool -> string -> link:string ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.symlink}. *)
 
   val readlink :
     string ->
       (string, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.readlink}. *)
 
   val realpath :
     string ->
       (string, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.realpath}. *)
 
   val chown :
     string -> uid:int -> gid:int ->
       (unit, Error.t) Result.result
-
-  val fchown :
-    t -> uid:int -> gid:int ->
-      (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.chown}. *)
 
   val lchown :
     string -> uid:int -> gid:int ->
       (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.lchown}. *)
+
+  val fchown :
+    t -> uid:int -> gid:int ->
+      (unit, Error.t) Result.result
+  (** Synchronous version of {!Luv.File.fchown}. *)
 end
+
+
+
+(** {1 Conversions} *)
 
 val get_osfhandle : t -> (Misc.Os_fd.t, Error.t) Result.result
 val open_osfhandle : Misc.Os_fd.t -> (t, Error.t) Result.result

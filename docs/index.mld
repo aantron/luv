@@ -1,0 +1,63 @@
+foo bar
+
+{!modules:
+  Luv.Error
+  Luv.Version
+  Luv.Loop
+  Luv.Handle
+  Luv.Request
+  Luv.Timer
+  Luv.Prepare
+  Luv.Check
+  Luv.Idle
+  Luv.Async
+  Luv.Poll
+  Luv.Signal
+  Luv.Process
+  Luv.Stream
+  Luv.TCP
+  Luv.Pipe
+  Luv.TTY
+  Luv.UDP
+  Luv.FS_event
+  Luv.FS_poll
+  Luv.File
+  Luv.Thread_pool
+  Luv.DNS
+  Luv.DLL
+  Luv.Thread
+}
+
+{!modules:
+  Luv.TLS
+  Luv.Once
+  Luv.Mutex
+  Luv.Rwlock
+  Luv.Semaphore
+  Luv.Condition
+  Luv.Barrier
+}
+
+{!modules:
+  Luv.Os_fd
+  Luv.Os_socket
+  Luv.Address_family
+  Luv.Socket_type
+  Luv.Sockaddr
+  Luv.Resource
+  Luv.Pid
+  Luv.CPU_info
+  Luv.Network
+  Luv.Path
+  Luv.Passwd
+  Luv.Hrtime
+  Luv.Env
+  Luv.System_name
+  Luv.Time
+  Luv.Random
+  Luv.Sleep
+}
+
+{!modules:
+  Luv.Bigstring
+}

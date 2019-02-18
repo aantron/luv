@@ -265,7 +265,7 @@ let exception_handler =
     exit 2
   end
 
-let on_unhandled_exception f =
+let set_on_unhandled_exception f =
   exception_handler := f
 
 let unhandled_exception exn =

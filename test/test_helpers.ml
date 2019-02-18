@@ -158,16 +158,16 @@ let exception_testable =
   Alcotest.of_pp pp_exception
 
 let () =
-  Luv.Error.on_unhandled_exception raise
+  Luv.Error.set_on_unhandled_exception raise
 
 exception Nothing_raised
 
 let check_exception expected f =
   let raised = ref Nothing_raised in
 
-  Luv.Error.on_unhandled_exception ((:=) raised);
+  Luv.Error.set_on_unhandled_exception ((:=) raised);
   f ();
-  Luv.Error.on_unhandled_exception raise;
+  Luv.Error.set_on_unhandled_exception raise;
 
   Alcotest.(check exception_testable) "exception" expected !raised
 
