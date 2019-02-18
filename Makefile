@@ -18,6 +18,13 @@ test-examples :
 	dune exec example/interop_repromise_lwt/interop_repromise_lwt.exe
 	dune build example/tcp_echo_server/tcp_echo_server.exe
 
+.PHONY : test-installation
+test-installation : clean
+	opam pin add -y --no-action luv . --kind=path
+	opam reinstall -y luv
+	cd test/installation && dune exec ./user.exe
+	opam remove -y luv
+
 .PHONY : clean
 clean :
 	dune clean

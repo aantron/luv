@@ -20,10 +20,8 @@ depends: [
 ]
 
 build: [
+  ["dune" "build" "src/vendor/libuv.a" "--root" "."]
   ["dune" "build" "-p" name "-j" jobs]
 ]
 
 synopsis: "Binding to libuv"
-
-# TODO Need to install libuv.a, so programs depending through opam can link with
-# this package.

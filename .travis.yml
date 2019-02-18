@@ -30,6 +30,7 @@ script:
   - make
   - make test
   - make test-examples
+  - make test-installation
 
 notifications:
   email:
