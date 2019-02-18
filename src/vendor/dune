@@ -1,0 +1,14 @@
+(alias
+ (name copy-files)
+ (deps (source_tree libuv) (source_tree gyp)))
+
+(rule
+ (targets libuv.a)
+ (deps (alias copy-files) link-gyp.ml)
+ (action (progn
+  (run ocaml link-gyp.ml)
+  (chdir libuv (run ./gyp_uv.py -f make))
+  (setenv CFLAGS -fPIC
+   (setenv BUILDTYPE Release
+    (run make -C libuv/out libuv)))
+  (run cp libuv/out/Release/libuv.a libuv.a))))

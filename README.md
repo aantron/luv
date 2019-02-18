@@ -75,7 +75,6 @@ development.
 git clone --recurse-submodules https://github.com/aantron/luv.git
 cd luv
 opam install --unset-root alcotest ctypes dune result
-make libuv
 make test
 dune exec example/http_get/http_get.exe -- www.google.com
 ```

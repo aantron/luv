@@ -1,5 +1,6 @@
 .PHONY : build
 build :
+	dune build src/vendor/libuv.a
 	dune build -p luv
 
 .PHONY : test
@@ -20,25 +21,6 @@ test-examples :
 .PHONY : clean
 clean :
 	dune clean
-
-# For debugging the libuv build, add V=1, i.e. V=1 BUILDTYPE=Release make ...
-.PHONY : libuv
-libuv : gyp-link
-	(cd src/vendor/libuv \
-	  && ./gyp_uv.py -f make \
-	  && CFLAGS=-fPIC BUILDTYPE=Release make -C out libuv)
-
-.PHONY : gyp-link
-gyp-link :
-	(cd src/vendor/libuv \
-	  && ([ -L build/gyp ] \
-	    || (mkdir -p build/ \
-		  && ln -s ../../gyp build/gyp)))
-
-.PHONY : clean-libuv
-clean-libuv :
-	(cd src/vendor/libuv \
-	  && rm -r build out)
 
 .PHONY : todos
 todos :

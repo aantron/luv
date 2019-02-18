@@ -27,7 +27,6 @@ before_script:
   - opam pin add -y https://github.com/aantron/repromise.git
 
 script:
-  - make libuv
   - make
   - make test
   - make test-examples
