@@ -31,5 +31,5 @@ clean :
 
 .PHONY : todos
 todos :
-	@grep -rn TODO src test Makefile README.md luv.opam \
-	  | grep -v _build | grep -v src/vendor/libuv | grep -v src/vendor/gyp
+	@grep -rn TODO example src test .travis.yml Makefile README.md *.opam \
+	  | grep -v 'src/vendor/[^/][^/]*/' | grep -v grep
