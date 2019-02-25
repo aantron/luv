@@ -504,7 +504,7 @@ struct
 
   module UDP =
   struct
-    let t : ([ `UDP ] Stream.t) typ = typedef (structure "`UDP") "uv_udp_t"
+    let t : ([ `UDP ] Handle.t) typ = typedef (structure "`UDP") "uv_udp_t"
     let () = seal t
 
     let reference_count = constant "LUV_UDP_REFERENCE_COUNT" int

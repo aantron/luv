@@ -3,7 +3,7 @@
 
 
 
-type t = [ `UDP ] Stream.t
+type t = [ `UDP ] Handle.t
 
 module Bind_flag :
 sig
