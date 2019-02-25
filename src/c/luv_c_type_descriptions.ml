@@ -259,8 +259,7 @@ struct
 
   module Stream =
   struct
-    type 'kind stream
-    type 'kind t = ('kind stream) Handle.t
+    type 'kind t = [ `Stream of 'kind ] Handle.t
     let t : ([ `Base ] t) typ = typedef (structure "`Stream") "uv_stream_t"
     let () = seal t
 

@@ -3,7 +3,7 @@
 
 
 
-type 'kind t = 'kind C.Types.Stream.stream Handle.t
+type 'kind t = [ `Stream of 'kind ] Handle.t
 
 val shutdown : _ t -> (Error.t -> unit) -> unit
 (* DOC If backlog not provided, SOMAXCONN specified *)

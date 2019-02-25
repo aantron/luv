@@ -67,5 +67,13 @@ let tests = [
         end
       end
     end;
+
+    (* This is a compilation test. If the type constraints in handle.mli are
+       wrong, there will be a type error in this test. *)
+    "handle functions", `Quick, begin fun () ->
+      with_poll begin fun poll ->
+        ignore @@ Luv.Handle.fileno poll
+      end
+    end;
   ]
 ]

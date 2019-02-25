@@ -15,14 +15,16 @@ val unref : _ t -> unit
 val has_ref : _ t -> bool
 
 val send_buffer_size :
-  [< `TCP | `UDP | `Pipe ] t -> (int, Error.t) Result.result
+  [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> (int, Error.t) Result.result
 val recv_buffer_size :
-  [< `TCP | `UDP | `Pipe ] t -> (int, Error.t) Result.result
-val set_send_buffer_size : [< `TCP | `UDP | `Pipe ] t -> int -> Error.t
-val set_recv_buffer_size : [< `TCP | `UDP | `Pipe ] t -> int -> Error.t
+  [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> (int, Error.t) Result.result
+val set_send_buffer_size :
+  [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> int -> Error.t
+val set_recv_buffer_size :
+  [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> int -> Error.t
 
 val fileno :
-  [< `TCP | `UDP | `Pipe | `TTY | `Poll ] t ->
+  [< `Stream of [< `TCP | `Pipe | `TTY ] | `UDP | `Poll ] t ->
     (Misc.Os_fd.t, Error.t) Result.result
 
 val get_loop : _ t -> Loop.t

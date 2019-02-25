@@ -230,5 +230,17 @@ let tests = [
         Alcotest.(check bool) "sender finished" true !sender_finished
       end
     end;
+
+    (* This is a compilation test. If the type constraints in handle.mli are
+       wrong, there will be a type error in this test. *)
+    "handle functions", `Quick, begin fun () ->
+      with_udp begin fun udp ->
+        ignore @@ Luv.Handle.send_buffer_size udp;
+        ignore @@ Luv.Handle.recv_buffer_size udp;
+        ignore @@ Luv.Handle.set_send_buffer_size udp 4096;
+        ignore @@ Luv.Handle.set_recv_buffer_size udp 4096;
+        ignore @@ Luv.Handle.fileno udp
+      end
+    end;
   ]
 ]

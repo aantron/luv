@@ -3,7 +3,7 @@
 
 
 
-type 'kind t = 'kind C.Types.Stream.stream Handle.t
+type 'kind t = [ `Stream of 'kind ] Handle.t
 
 let allocate kind =
   Handle.allocate ~reference_count:C.Types.Stream.reference_count kind
