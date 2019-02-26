@@ -43,24 +43,3 @@ struct
   let stop =
     Kind.stop
 end
-
-module Prepare =
-  Watcher
-    (struct
-      type kind = [ `Prepare ]
-      include C.Functions.Prepare
-    end)
-
-module Check =
-  Watcher
-    (struct
-      type kind = [ `Check ]
-      include C.Functions.Check
-    end)
-
-module Idle =
-  Watcher
-    (struct
-      type kind = [ `Idle ]
-      include C.Functions.Idle
-    end)
