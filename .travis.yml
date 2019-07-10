@@ -5,9 +5,9 @@ matrix:
     - os: linux
       env: COMPILER=4.02.3
     - os: linux
-      env: COMPILER=4.07.1
+      env: COMPILER=4.08.0
     - os: osx
-      env: COMPILER=4.07.1
+      env: COMPILER=4.08.0
 
 before_script:
   - set -e
