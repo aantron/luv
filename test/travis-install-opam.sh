@@ -1,7 +1,7 @@
 set -e
 set -x
 
-VERSION=2.0.3
+VERSION=2.0.5
 
 case "$TRAVIS_OS_NAME" in
     linux) OS=linux;;
