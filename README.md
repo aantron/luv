@@ -94,9 +94,9 @@ opam install --unset-root repromise
 dune exec example/http_get_repromise/http_get_repromise.exe -- www.google.com
 ```
 
-Luv probably only works on Linux at the moment. The code is actually highly
+Luv probably doesn't work on Windows at the moment. The code is actually highly
 portable, but it is likely there are minor bugs and oversights, due to a lack of
-testing on other platforms. This is to be fixed in the near future :)
+testing on Windows. This is to be fixed in the near future :)
 
 Also, the build system will eventually build the vendored libuv automatically,
 so you won't have to run a separate `make libuv` command.
@@ -125,7 +125,7 @@ luv currently uses libuv 1.26.0.
 
 - [ ] esy packaging and build.
 - [x] Proof-of-concept integration with Lwt and Repromise.
-- [ ] Vendor correctly on macOS, Windows.
+- [ ] Vendor correctly Windows.
 - [ ] Documentation, examples, CI; user-friendly repo.
 - [ ] Look into using Luv for native Node.js modules.
 
