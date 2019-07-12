@@ -14,3 +14,10 @@ FILENAME=opam-$VERSION-x86_64-$OS
 wget https://github.com/ocaml/opam/releases/download/$VERSION/$FILENAME
 sudo mv $FILENAME /usr/local/bin/opam
 sudo chmod a+x /usr/local/bin/opam
+
+opam init -y --bare --disable-sandboxing --disable-shell-hook
+if [ ! -d _opam/bin ]
+then
+    rm -rf _opam
+    opam switch create . $COMPILER $REPOSITORIES --no-install
+fi

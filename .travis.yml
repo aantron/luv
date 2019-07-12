@@ -12,8 +12,6 @@ matrix:
 before_script:
   - set -e
   - bash test/travis-install-opam.sh
-  - opam init -y --bare --disable-sandboxing --disable-shell-hook
-  - opam switch create . $COMPILER $REPOSITORIES --no-install
   - eval `opam env`
   - ocamlc -config
   - opam --version
@@ -32,6 +30,11 @@ script:
   - make test-examples
   - make test-installation
   - opam lint .
+
+cache:
+  directories:
+    - $HOME/.opam
+    - ./_opam
 
 notifications:
   email:
