@@ -459,3 +459,21 @@ struct
       }
     end
 end
+
+module Time =
+struct
+  type t = {
+    tv_sec : int64;
+    tv_usec : int32;
+  }
+
+  let gettimeofday () =
+    let timeval = Ctypes.make C.Types.Time.Timeval.t in
+    C.Functions.Time.gettimeofday (Ctypes.addr timeval)
+    |> Error.to_result_lazy begin fun () ->
+      {
+        tv_sec = Ctypes.getf timeval C.Types.Time.Timeval.sec;
+        tv_usec = Ctypes.getf timeval C.Types.Time.Timeval.usec;
+      }
+    end
+end

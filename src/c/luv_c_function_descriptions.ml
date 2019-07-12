@@ -1683,4 +1683,11 @@ struct
       foreign "luv_os_uname"
         (ocaml_bytes @-> returning error_code)
   end
+
+  module Time =
+  struct
+    let gettimeofday =
+      foreign "uv_gettimeofday"
+        (ptr Types.Time.Timeval.t @-> returning error_code)
+  end
 end

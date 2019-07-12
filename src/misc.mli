@@ -188,3 +188,13 @@ sig
 
   val uname : unit -> (t, Error.t) Result.result
 end
+
+module Time :
+sig
+  type t = {
+    tv_sec : int64;
+    tv_usec : int32;
+  }
+
+  val gettimeofday : unit -> (t, Error.t) Result.result
+end

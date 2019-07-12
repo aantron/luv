@@ -9,4 +9,21 @@ let tests = [
       Alcotest.(check string) "machine" "x86_64" uname.machine;
     end;
   ];
+
+  "time", [
+    "gettimeofday", `Quick, begin fun () ->
+      let timeval =
+        Luv.Time.gettimeofday () |> check_success_result "gettimeofday" in
+      let uv_time =
+        let open Luv.Time in
+        (Int64.to_float timeval.tv_sec) +.
+          (Int32.to_float timeval.tv_usec) *. 1e-6
+      in
+      let ocaml_time = Unix.gettimeofday () in
+
+      let delta = abs_float (uv_time -. ocaml_time) in
+      if delta > 1. then
+        Alcotest.failf "times: %f %f" uv_time ocaml_time
+    end;
+  ];
 ]

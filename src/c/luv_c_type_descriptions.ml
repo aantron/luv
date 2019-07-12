@@ -794,4 +794,16 @@ struct
     let homedir = field t "homedir" string
     let () = seal t
   end
+
+  module Time =
+  struct
+    module Timeval =
+    struct
+      let t : ([ `Timeval64 ] structure) typ =
+        typedef (structure "`Timeval64") "uv_timeval64_t"
+      let sec = field t "tv_sec" int64_t
+      let usec = field t "tv_usec" int32_t
+      let () = seal t
+    end
+  end
 end

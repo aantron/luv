@@ -66,6 +66,7 @@ module Passwd = Misc.Passwd
 module Hrtime = Misc.Hrtime
 module Env = Misc.Env
 module System_name = Misc.System_name
+module Time = Misc.Time
 
 module Promisify = Promisify
 module Integration = Integration
