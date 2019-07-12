@@ -119,7 +119,11 @@ uv_after_work_cb luv_get_after_c_work_trampoline();
 uv_work_cb luv_get_c_work_trampoline();
 
 // Helper for calling uv_thread_create with the address of a C function.
-int luv_thread_create_c(uv_thread_t *tid, intnat entry, intnat arg);
+int luv_thread_create_c(
+    uv_thread_t *tid,
+    const uv_thread_options_t* options,
+    intnat entry,
+    intnat arg);
 
 // Helpers for uv_once.
 int luv_once_init(uv_once_t *guard);

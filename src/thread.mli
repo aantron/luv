@@ -38,8 +38,12 @@ type t
 val self : unit -> t
 val equal : t -> t -> bool
 
-val create : (unit -> unit) -> (t, Error.t) Result.result
-val create_c : ?argument:nativeint -> nativeint -> (t, Error.t) Result.result
+val create : ?stack_size:int -> (unit -> unit) -> (t, Error.t) Result.result
+val create_c :
+  ?stack_size:int ->
+  ?argument:nativeint ->
+  nativeint ->
+    (t, Error.t) Result.result
 
 val join : t -> Error.t
 (* DOC Document that concurrent join is undefined? Sequenced joins return ESRCH.

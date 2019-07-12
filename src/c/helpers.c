@@ -477,9 +477,13 @@ uv_work_cb luv_get_c_work_trampoline()
     return luv_c_work_trampoline;
 }
 
-int luv_thread_create_c(uv_thread_t *tid, intnat entry, intnat arg)
+int luv_thread_create_c(
+    uv_thread_t *tid,
+    const uv_thread_options_t* options,
+    intnat entry,
+    intnat arg)
 {
-    return uv_thread_create(tid, (void*)entry, (void*)arg);
+    return uv_thread_create_ex(tid, options, (void*)entry, (void*)arg);
 }
 
 int luv_once_init(uv_once_t *guard)

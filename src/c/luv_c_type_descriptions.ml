@@ -673,6 +673,19 @@ struct
     type t = [ `Thread ] structure
     let t : t typ = typedef (structure "`Thread") "uv_thread_t"
     let () = seal t
+
+    module Options =
+    struct
+      type t = [ `Thread_options ] structure
+      let t : t typ =
+        typedef (structure "`Thread_options") "uv_thread_options_t"
+      let flags = field t "flags" int
+      let stack_size = field t "stack_size" size_t
+      let () = seal t
+
+      let no_flags = constant "UV_THREAD_NO_FLAGS" int
+      let has_stack_size = constant "UV_THREAD_HAS_STACK_SIZE" int
+    end
   end
 
   module TLS =

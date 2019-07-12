@@ -1336,6 +1336,7 @@ struct
   module Thread =
   struct
     let t = Types.Thread.t
+    let options = Types.Thread.Options.t
 
     let trampoline =
       static_funptr
@@ -1346,12 +1347,14 @@ struct
         (void @-> returning trampoline)
 
     let create =
-      foreign "uv_thread_create"
-        (ptr t @-> trampoline @-> ptr void @-> returning error_code)
+      foreign "uv_thread_create_ex"
+        (ptr t @-> ptr options @-> trampoline @-> ptr void @->
+          returning error_code)
 
     let create_c =
       foreign "luv_thread_create_c"
-        (ptr t @-> nativeint @-> nativeint @-> returning error_code)
+        (ptr t @-> ptr options @-> nativeint @-> nativeint @->
+          returning error_code)
 
     let self =
       foreign "uv_thread_self"
