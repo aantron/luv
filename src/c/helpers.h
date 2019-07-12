@@ -158,6 +158,9 @@ int luv_read_start(
 int luv_udp_recv_start(
     uv_udp_t *handle, uv_alloc_cb alloc_cb, luv_udp_recv_cb recv_cb);
 
+// Helper for uv_os_uname, which uses an inconvenient buffer argument type.
+int luv_os_uname(char *buffer);
+
 
 
 // File descriptor plumbing. The different operating systems have different

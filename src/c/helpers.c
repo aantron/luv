@@ -572,6 +572,11 @@ int luv_udp_recv_start(
     return uv_udp_recv_start(handle, alloc_cb, (uv_udp_recv_cb)recv_cb);
 }
 
+int luv_os_uname(char *buffer)
+{
+    return uv_os_uname((uv_utsname_t*)buffer);
+}
+
 
 
 // File descriptor helpers.

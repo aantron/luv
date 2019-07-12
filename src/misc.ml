@@ -425,3 +425,37 @@ struct
   let unsetenv variable =
     C.Functions.Env.unsetenv (Ctypes.ocaml_string_start variable)
 end
+
+module System_name =
+struct
+  type t = {
+    sysname : string;
+    release : string;
+    version : string;
+    machine : string;
+  }
+
+  let field_length = 256
+
+  let extract_field buffer index =
+    let offset = index * field_length in
+    let length =
+      match Bytes.index_from buffer offset '\000' with
+      | n when n < offset + field_length -> n - offset
+      | _ -> field_length
+      | exception Not_found -> field_length
+    in
+    Bytes.sub_string buffer offset length
+
+  let uname () =
+    let buffer = Bytes.create (field_length * 4) in
+    C.Functions.System_name.uname (Ctypes.ocaml_bytes_start buffer)
+    |> Error.to_result_lazy begin fun () ->
+      {
+        sysname = extract_field buffer 0;
+        release = extract_field buffer 1;
+        version = extract_field buffer 2;
+        machine = extract_field buffer 3;
+      }
+    end
+end

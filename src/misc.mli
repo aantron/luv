@@ -176,3 +176,15 @@ sig
   val setenv : string -> string -> Error.t
   val unsetenv : string -> Error.t
 end
+
+module System_name :
+sig
+  type t = {
+    sysname : string;
+    release : string;
+    version : string;
+    machine : string;
+  }
+
+  val uname : unit -> (t, Error.t) Result.result
+end

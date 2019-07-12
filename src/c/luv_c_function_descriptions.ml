@@ -1676,4 +1676,11 @@ struct
       foreign "uv_os_unsetenv"
         (ocaml_string @-> returning error_code)
   end
+
+  module System_name =
+  struct
+    let uname =
+      foreign "luv_os_uname"
+        (ocaml_bytes @-> returning error_code)
+  end
 end

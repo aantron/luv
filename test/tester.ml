@@ -23,4 +23,5 @@ let () =
     FS_poll.tests;
     DNS.tests;
     Thread_.tests;
+    Misc.tests;
   ])
