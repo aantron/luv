@@ -544,6 +544,8 @@ struct
         constant "UV_PROCESS_WINDOWS_VERBATIM_ARGUMENTS" int
       let detached = constant "UV_PROCESS_DETACHED" int
       let windows_hide = constant "UV_PROCESS_WINDOWS_HIDE" int
+      let windows_hide_console = constant "UV_PROCESS_WINDOWS_HIDE_CONSOLE" int
+      let windows_hide_gui = constant "UV_PROCESS_WINDOWS_HIDE_GUI" int
     end
 
     module Redirection =

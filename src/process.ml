@@ -99,6 +99,8 @@ let spawn
     ?windows_verbatim_arguments
     ?detached
     ?windows_hide
+    ?windows_hide_console
+    ?windows_hide_gui
     path arguments =
 
   let loop = Loop.or_default loop in
@@ -150,6 +152,8 @@ let spawn
     |> maybe_flag windows_verbatim_arguments Flag.windows_verbatim_arguments
     |> maybe_flag detached Flag.detached
     |> maybe_flag windows_hide Flag.windows_hide
+    |> maybe_flag windows_hide_console Flag.windows_hide_console
+    |> maybe_flag windows_hide_gui Flag.windows_hide_gui
   in
 
   let redirections, redirection_count = build_redirection_array redirect in

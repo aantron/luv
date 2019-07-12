@@ -51,6 +51,8 @@ val spawn :
   ?windows_verbatim_arguments:bool ->
   ?detached:bool ->
   ?windows_hide:bool ->
+  ?windows_hide_console:bool ->
+  ?windows_hide_gui:bool ->
   string ->
   string list ->
     (t, Error.t) Result.result
