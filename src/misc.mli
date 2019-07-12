@@ -78,6 +78,7 @@ sig
   val loadavg : unit -> float * float * float
   val free_memory : unit -> Unsigned.uint64
   val total_memory : unit -> Unsigned.uint64
+  val constrained_memory : unit -> Unsigned.uint64 option
   val getpriority : int -> (int, Error.t) Result.result
   val setpriority : int -> int -> Error.t
   val resident_set_memory_size :

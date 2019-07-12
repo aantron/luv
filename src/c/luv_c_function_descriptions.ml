@@ -1570,6 +1570,10 @@ struct
       foreign "uv_get_total_memory"
         (void @-> returning uint64_t)
 
+    let constrained_memory =
+      foreign "uv_get_constrained_memory"
+        (void @-> returning uint64_t)
+
     let getpriority =
       foreign "uv_os_getpriority"
         (int @-> ptr int @-> returning error_code)
