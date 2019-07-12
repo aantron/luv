@@ -74,6 +74,9 @@ struct
     Ctypes.(coerce
       (ptr C.Types.Sockaddr.storage) (ptr C.Types.Sockaddr.t) (addr address))
 
+  let null =
+    Ctypes.(coerce (ptr void) (ptr C.Types.Sockaddr.t) null)
+
   let as_in address =
     Ctypes.(coerce
       (ptr C.Types.Sockaddr.storage) (ptr C.Types.Sockaddr.in_) (addr address))

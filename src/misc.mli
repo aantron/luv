@@ -65,6 +65,7 @@ sig
   val copy_sockaddr : C.Types.Sockaddr.t Ctypes.ptr -> int -> t
 
   val as_sockaddr : t -> C.Types.Sockaddr.t Ctypes.ptr
+  val null : C.Types.Sockaddr.t Ctypes.ptr
 
   val wrap_c_getter :
     ('handle -> C.Types.Sockaddr.t Ctypes.ptr -> int Ctypes.ptr -> Error.t) ->

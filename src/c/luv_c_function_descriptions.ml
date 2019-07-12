@@ -984,6 +984,14 @@ struct
       foreign "uv_udp_bind"
         (ptr t @-> ptr Types.Sockaddr.t @-> int @-> returning error_code)
 
+    let connect =
+      foreign "uv_udp_connect"
+        (ptr t @-> ptr Types.Sockaddr.t @-> returning error_code)
+
+    let getpeername =
+      foreign "uv_udp_getpeername"
+        (ptr t @-> ptr Types.Sockaddr.t @-> ptr int @-> returning error_code)
+
     let getsockname =
       foreign "uv_udp_getsockname"
         (ptr t @-> ptr Types.Sockaddr.t @-> ptr int @-> returning error_code)

@@ -51,3 +51,12 @@ val recv_start :
 val recv_stop : t -> Error.t
 val get_send_queue_size : t -> int
 val get_send_queue_count : t -> int
+
+module Connected :
+sig
+  val connect : t -> Misc.Sockaddr.t -> Error.t
+  val disconnect : t -> Error.t
+  val getpeername : t -> (Misc.Sockaddr.t, Error.t) Result.result
+  val send : t -> Bigstring.t list -> (Error.t -> unit) -> unit
+  val try_send : t -> Bigstring.t list -> Error.t
+end

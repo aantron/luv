@@ -242,5 +242,98 @@ let tests = [
         ignore @@ Luv.Handle.fileno udp
       end
     end;
+
+    "connect, getpeername", `Quick, begin fun () ->
+      with_udp begin fun udp ->
+        Luv.UDP.bind udp (fresh_address ()) |> check_success "bind";
+
+        Luv.UDP.Connected.getpeername udp
+        |> check_error_result "getpeername, initial" Luv.Error.enotconn;
+
+        let remote = fresh_address () in
+
+        Luv.UDP.Connected.connect udp remote |> check_success "connect";
+        Luv.UDP.Connected.getpeername udp
+        |> check_success_result "getpeername, connected"
+        |> Luv.Sockaddr.to_string
+        |> Alcotest.(check string) "address" (Luv.Sockaddr.to_string remote);
+
+        Luv.UDP.Connected.disconnect udp |> check_success "disconnect";
+
+        Luv.UDP.Connected.getpeername udp
+        |> check_error_result "getpeername, disconnected" Luv.Error.enotconn
+      end
+    end;
+
+    "double connect", `Quick, begin fun () ->
+      with_udp begin fun udp ->
+        Luv.UDP.bind udp (fresh_address ()) |> check_success "bind";
+
+        let remote = fresh_address () in
+        Luv.UDP.Connected.connect udp remote |> check_success "first connect";
+        Luv.UDP.Connected.connect udp remote
+        |> check_error_code "second connect" Luv.Error.eisconn;
+      end
+    end;
+
+    "initial disconnect", `Quick, begin fun () ->
+      with_udp begin fun udp ->
+        Luv.UDP.bind udp (fresh_address ()) |> check_success "bind";
+        Luv.UDP.Connected.disconnect udp
+        |> check_error_code "disconnect" Luv.Error.enotconn
+      end
+    end;
+
+    "connected, send", `Quick, begin fun () ->
+      let receiver_finished = ref false in
+      let sender_finished = ref false in
+
+      with_sender_and_receiver
+        ~receiver_logic:
+          begin fun receiver ->
+            expect receiver "foo" begin fun () ->
+              Luv.Handle.close receiver;
+              receiver_finished := true
+            end
+          end
+        ~sender_logic:
+          begin fun sender address ->
+            Luv.UDP.Connected.connect sender address |> check_success "connect";
+            Luv.UDP.Connected.send sender [Luv.Bigstring.from_string "foo"]
+                begin fun result ->
+              check_success "send" result;
+              Luv.Handle.close sender;
+              sender_finished := true
+            end
+          end;
+
+      Alcotest.(check bool) "receiver finished" true !receiver_finished;
+      Alcotest.(check bool) "sender finished" true !sender_finished
+    end;
+
+    "try_send", `Quick, begin fun () ->
+      let receiver_finished = ref false in
+      let sender_finished = ref false in
+
+      with_sender_and_receiver
+        ~receiver_logic:
+          begin fun receiver ->
+            expect receiver "foo" begin fun () ->
+              Luv.Handle.close receiver;
+              receiver_finished := true
+            end
+          end
+        ~sender_logic:
+          begin fun sender address ->
+            Luv.UDP.Connected.connect sender address |> check_success "connect";
+            Luv.UDP.Connected.try_send sender [Luv.Bigstring.from_string "foo"]
+            |> check_success "try_send";
+            Luv.Handle.close sender;
+            sender_finished := true
+          end;
+
+      Alcotest.(check bool) "receiver finished" true !receiver_finished;
+      Alcotest.(check bool) "sender finished" true !sender_finished
+    end;
   ]
 ]

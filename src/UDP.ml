@@ -63,7 +63,7 @@ let set_ttl =
 let send_trampoline =
   C.Functions.UDP.Send_request.get_trampoline ()
 
-let send udp buffers address callback =
+let send_general udp buffers address callback =
   let count = List.length buffers in
   let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
 
@@ -83,7 +83,7 @@ let send udp buffers address callback =
       udp
       (Ctypes.CArray.start iovecs)
       (Unsigned.UInt.of_int count)
-      (Misc.Sockaddr.as_sockaddr address)
+      address
       send_trampoline
   in
 
@@ -92,7 +92,10 @@ let send udp buffers address callback =
     callback immediate_result
   end
 
-let try_send udp buffers address =
+let send udp buffers address callback =
+  send_general udp buffers (Misc.Sockaddr.as_sockaddr address) callback
+
+let try_send_general udp buffers address =
   let count = List.length buffers in
   let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
 
@@ -101,7 +104,7 @@ let try_send udp buffers address =
       udp
       (Ctypes.CArray.start iovecs)
       (Unsigned.UInt.of_int count)
-      (Misc.Sockaddr.as_sockaddr address)
+      address
   in
 
   let module Sys = Compatibility.Sys in
@@ -109,6 +112,9 @@ let try_send udp buffers address =
   ignore (Sys.opaque_identity iovecs);
 
   Error.clamp result
+
+let try_send udp buffers address =
+  try_send_general udp buffers (Misc.Sockaddr.as_sockaddr address)
 
 let alloc_trampoline =
   C.Functions.Handle.get_alloc_trampoline ()
@@ -176,3 +182,20 @@ let get_send_queue_size udp =
 let get_send_queue_count udp =
   C.Functions.UDP.get_send_queue_count udp
   |> Unsigned.Size_t.to_int
+
+module Connected =
+struct
+  let connect udp address =
+    C.Functions.UDP.connect udp (Misc.Sockaddr.as_sockaddr address)
+
+  let disconnect udp =
+    C.Functions.UDP.connect udp Misc.Sockaddr.null
+
+  let getpeername = Misc.Sockaddr.wrap_c_getter C.Functions.UDP.getpeername
+
+  let send udp buffers callback =
+    send_general udp buffers Misc.Sockaddr.null callback
+
+  let try_send udp buffers =
+    try_send_general udp buffers Misc.Sockaddr.null
+end
