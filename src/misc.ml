@@ -306,10 +306,9 @@ struct
   let if_indextoname = generic_toname C.Functions.Network.if_indextoname
   let if_indextoiid = generic_toname C.Functions.Network.if_indextoiid
 
-  (* TODO There is some common code to factor out here. Also, research good
-     initial length values, and respond to UV_ENOBUFS. *)
+  (* TODO There is some common code to factor out here. *)
   let gethostname () =
-    let length = 1024 in
+    let length = C.Types.Network.maxhostnamesize in
     let buffer = Bytes.create length in
     C.Functions.Network.gethostname
       (Ctypes.ocaml_bytes_start buffer)

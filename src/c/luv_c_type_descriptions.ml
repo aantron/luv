@@ -796,6 +796,7 @@ struct
   module Network =
   struct
     let if_namesize = constant "UV_IF_NAMESIZE" int
+    let maxhostnamesize = constant "UV_MAXHOSTNAMESIZE" int
   end
 
   module Passwd =
