@@ -1,58 +1,61 @@
 <h1 align="center">Luv</h1>
-<br/>
 
+#### What is Luv?
 
-
-**Luv** is an OCaml and Reason binding to [libuv][libuv].
+**Luv** is a binding from OCaml/ReasonML to [libuv][libuv]. It looks like this:
 
 ```ocaml
 let _ =
+  (* Create a 1-second timer. *)
   let Ok timer = Luv.Timer.init () in
   Luv.Timer.start timer 1000 (fun () -> print_endline "Hello, world!");
+
+  (* Run the main loop. *)
   Luv.Loop.(run (default ()) Run_mode.default)
 
 (* ocamlfind opt -linkpkg -package luv foo.ml *)
 ```
 
-libuv is the native I/O library that Node.js is built on. libuv is similar in
-scope and design to Lwt and Async: it binds system calls for file I/O, TCP
-servers, DNS, etc. Like Lwt and Async, libuv is asynchronous, but its API uses
-plain callbacks instead of promises.
+<br/>
 
-Because libuv is critical to Node.js, it is very portable and very
-well-maintained.
+#### What is libuv?
 
-Luv inherits these properties. It exposes the libuv API in OCaml, taking care of
-the tricky parts of interfacing with libuv, such as:
+[libuv][libuv] is the C library in Node.js that runs Node's event loop and does
+its asynchronous I/O.
 
-- **Memory management** &mdash; For example, Luv keeps track of the lifetimes of
-  OCaml callbacks that have been passed to libuv, and are no longer referenced
-  from the OCaml "world."
+<br/><br/>
+
+Because libuv is critical to Node.js, it is [**cross-platform**][platforms] and
+[**well-maintained**][maintainers]. Luv inherits these properties, taking care
+of the tricky parts of calling into libuv from OCaml:
+
+- **Memory management** &mdash; Luv keeps track of OCaml objects that have been
+  passed to libuv, and are no longer otherwise retained on the OCaml side.
 - **The runtime lock** &mdash; Multithreaded OCaml and libuv programs operate
   normally.
 - **API problems** &mdash; Where libuv is forced to offer difficult APIs due to
-  the limitations of C, libuv's implementation language, Luv provides slightly
-  more user-friendly APIs, without loss of expressiveness. Otherwise, Luv
-  translates the C APIs into OCaml as literally as possible, in order to keep
-  the correspondence with libuv's docs obvious.
+  the limitations of C, Luv provides more natural APIs.
+- **The build** &mdash; When Luv is installed, it builds libuv, so users don't
+  have to figure out how to do it.
 
-Luv is usable standalone, but its main goal is to be integrated as a back end
-into other projects, such as Repromise and Lwt. So, apart from the above, Luv
-aims to be...
+<br/>
 
-- **Minimalist** &mdash; Luv only takes care of *inherent* libuv headaches, such
-  as memory management, and adds no bloat.
+Luv is usable standalone, but its main purpose is to be integrated as a back end
+into bigger I/O libraries, such as [Repromise][repromise] and [Lwt][lwt]. To
+that end, Luv aims to be...
+
+- **Minimalist** &mdash; Luv only takes care of inherent libuv headaches, such
+  as memory management, building as little as possible over libuv.
 - **Unopinionated** &mdash; Luv avoids committing to design decisions beyond
-  those dictated by libuv and OCaml. This keeps it suitable for multiple
-  projects that might want to integrate it. This is especially important, as two
-  previously incompatible I/O libraries that integrate Luv become compatible by
-  doing so.
+  those dictated by libuv and OCaml.
 - **Maintainable** &mdash; Luv uses [Ctypes][ctypes] to minimize the amount of C
-  code, and [vendors][vendor] libuv to avoid versioning issues.
+  code in this repo, and [vendors][vendor] libuv to avoid versioning issues.
 
-Luv is pretty [well-tested][tests]. Apart from code producing the right values
-and I/O effects, the test cases also check for memory leaks, lost references,
-and potential issues with multithreading support.
+<br/>
+
+Luv is [well-tested][tests]. Apart from checking return values and I/O behavior,
+the test cases also check for memory leaks, lost references, and potential
+issues with multithreading.
 
 
 
@@ -98,9 +101,6 @@ Luv probably doesn't work on Windows at the moment. The code is actually highly
 portable, but it is likely there are minor bugs and oversights, due to a lack of
 testing on Windows. This is to be fixed in the near future :)
 
-Also, the build system will eventually build the vendored libuv automatically,
-so you won't have to run a separate `make libuv` command.
-
 
 
 <br/>
@@ -115,7 +115,7 @@ general libuv docs can be found [here][libuv-docs].
 We will eventually write and generate nice HTML docs for Luv itself, with plenty
 of links back to libuv :)
 
-luv currently uses libuv 1.26.0.
+luv currently uses libuv 1.31.1.
 
 
 
@@ -131,8 +131,10 @@ luv currently uses libuv 1.26.0.
 
 
 
-[libuv]: https://github.com/libuv/libuv
-[ctypes]: https://github.com/ocamllabs/ocaml-ctypes
+[libuv]: https://libuv.org/
+[platforms]: https://github.com/libuv/libuv/blob/master/SUPPORTED_PLATFORMS.md#readme
+[maintainers]: https://github.com/libuv/libuv/blob/master/MAINTAINERS.md#readme
+[ctypes]: https://github.com/ocamllabs/ocaml-ctypes#readme
 [vendor]: https://github.com/aantron/luv/tree/master/src/vendor
 [tests]: https://github.com/aantron/luv/tree/master/test
 [luv.ml]: https://github.com/aantron/luv/blob/master/src/luv.ml
