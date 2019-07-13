@@ -20,19 +20,18 @@ struct
   let cleanup =
     C.Blocking.File.req_cleanup
 
-  let result request =
+  let int_result request =
     request
     |> C.Blocking.File.get_result
     |> PosixTypes.Ssize.to_int
+
+  let result request =
+    int_result request
     |> Error.coerce
     |> Error.clamp
 
   let file request =
-    let file_or_error =
-      request
-      |> C.Blocking.File.get_result
-      |> PosixTypes.Ssize.to_int
-    in
+    let file_or_error = int_result request in
     Error.to_result file_or_error (Error.coerce file_or_error)
 
   let byte_count request =
@@ -83,6 +82,21 @@ struct
     kind : Kind.t;
     name : string;
   }
+
+  let from_c c_dirent =
+    {
+      kind = Ctypes.getf c_dirent C.Types.File.Dirent.type_;
+      name = Ctypes.getf c_dirent C.Types.File.Dirent.name
+    }
+end
+
+module Dir =
+struct
+  type t = C.Types.File.Dir.t Ctypes.ptr
+
+  let from_request request =
+    C.Blocking.File.get_ptr request
+    |> Ctypes.from_voidp C.Types.File.Dir.t
 end
 
 module Directory_scan =
@@ -102,11 +116,8 @@ struct
       stop scan;
       None
     end
-    else begin
-      let kind = Ctypes.getf scan.dirent C.Types.File.Dirent.type_ in
-      let name = Ctypes.getf scan.dirent C.Types.File.Dirent.name in
-      Some Dirent.{kind; name}
-    end
+    else
+      Some (Dirent.from_c scan.dirent)
 
   let start request =
     let dirent = Ctypes.make C.Types.File.Dirent.t in
@@ -228,6 +239,33 @@ struct
     clean_up_request_on_success = true;
   }
 
+  let returns_directory_handle = {
+    from_request = (fun request ->
+      Error.to_result_lazy
+        (fun () -> Dir.from_request request)
+        (Request_.result request));
+    immediate_error = construct_error;
+    clean_up_request_on_success = true;
+  }
+
+  let returns_directory_entries = {
+    from_request = (fun request ->
+      Error.to_result_lazy
+        (fun () ->
+          let dirents =
+            Dir.from_request request
+            |> Ctypes.(!@)
+            |> fun dir -> Ctypes.getf dir C.Types.File.Dir.dirents
+          in
+          Array.init
+            (Request_.int_result request)
+            (fun index ->
+              Dirent.from_c Ctypes.(!@ (dirents +@ index))))
+        (Request_.result request));
+      immediate_error = construct_error;
+      clean_up_request_on_success = true;
+  }
+
   let returns_directory_scan = {
     from_request = (fun request ->
       Error.to_result_lazy
@@ -247,7 +285,7 @@ struct
   let returns_string = {
     from_request = (fun request ->
       Error.to_result_lazy
-        (fun () -> C.Blocking.File.get_ptr request)
+        (fun () -> C.Blocking.File.get_ptr_as_string request)
         (Request_.result request));
     immediate_error = construct_error;
     clean_up_request_on_success = true;
@@ -346,6 +384,34 @@ struct
       C.Blocking.File.rmdir
       returns_error
       (fun run path -> run !path no_cleanup)
+
+  let opendir =
+    async_or_sync
+      C.Blocking.File.opendir
+      returns_directory_handle
+      (fun run path -> run !path no_cleanup)
+
+  let closedir =
+    async_or_sync
+      C.Blocking.File.closedir
+      returns_error
+      (fun run dir -> run !dir no_cleanup)
+
+  let readdir =
+    async_or_sync
+      C.Blocking.File.readdir
+      returns_directory_entries
+      (fun run ?(number_of_entries = 1024) dir ->
+        let dirents =
+          Ctypes.allocate_n C.Types.File.Dirent.t ~count:number_of_entries in
+        let dir' = Ctypes.(!@) dir in
+        Ctypes.setf dir' C.Types.File.Dir.dirents dirents;
+        Ctypes.setf
+          dir'
+          C.Types.File.Dir.nentries
+          (Unsigned.Size_t.of_int number_of_entries);
+        run !dir (fun () ->
+          ignore (Compatibility.Sys.opaque_identity dirents)))
 
   let scandir =
     async_or_sync

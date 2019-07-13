@@ -130,6 +130,27 @@ struct
         (ptr Types.Loop.t @-> ptr request @-> string @-> trampoline @->
           returning error_code)
 
+    let opendir =
+      foreign "uv_fs_opendir"
+        (ptr Types.Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+
+    let closedir =
+      foreign "uv_fs_closedir"
+        (ptr Types.Loop.t @->
+         ptr request @->
+         ptr Types.File.Dir.t @->
+         trampoline @->
+          returning error_code)
+
+    let readdir =
+      foreign "uv_fs_readdir"
+        (ptr Types.Loop.t @->
+         ptr request @->
+         ptr Types.File.Dir.t @->
+         trampoline @->
+          returning error_code)
+
     let scandir =
       foreign "uv_fs_scandir"
         (ptr Types.Loop.t @-> ptr request @-> string @-> int @-> trampoline @->
@@ -298,6 +319,10 @@ struct
         (ptr request @-> returning PosixTypes.ssize_t)
 
     let get_ptr =
+      foreign "uv_fs_get_ptr"
+        (ptr request @-> returning (ptr void))
+
+    let get_ptr_as_string =
       foreign "uv_fs_get_ptr"
         (ptr request @-> returning string)
 

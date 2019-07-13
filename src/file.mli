@@ -90,6 +90,11 @@ sig
   }
 end
 
+module Dir :
+sig
+  type t
+end
+
 (* DOC This requires some memory management on the user's part. *)
 module Directory_scan :
 sig
@@ -245,6 +250,28 @@ sig
     ?request:Request.t ->
     string ->
     (Error.t -> unit) ->
+      unit
+
+  val opendir :
+    ?loop:Loop.t ->
+    ?request:Request.t ->
+    string ->
+    ((Dir.t, Error.t) Result.result -> unit) ->
+      unit
+
+  val closedir :
+    ?loop:Loop.t ->
+    ?request:Request.t ->
+    Dir.t ->
+    (Error.t -> unit) ->
+      unit
+
+  val readdir :
+    ?loop:Loop.t ->
+    ?request:Request.t ->
+    ?number_of_entries:int ->
+    Dir.t ->
+    ((Dirent.t array, Error.t) Result.result -> unit) ->
       unit
 
   val scandir :
@@ -458,6 +485,18 @@ sig
   val rmdir :
     string ->
       Error.t
+
+  val opendir :
+    string ->
+      (Dir.t, Error.t) Result.result
+
+  val closedir :
+    Dir.t ->
+      Error.t
+
+  val readdir :
+    ?number_of_entries:int -> Dir.t ->
+      (Dirent.t array, Error.t) Result.result
 
   val scandir :
     string ->

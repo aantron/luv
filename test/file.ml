@@ -493,6 +493,92 @@ let tests = [
       |> check_error_result "mkdtemp result" Luv.Error.enoent
     end;
 
+    "opendir, closedir: async", `Quick, begin fun () ->
+      with_directory begin fun directory ->
+        Luv.File.Async.opendir directory begin fun result ->
+          let dir = check_success_result "opendir" result in
+          Luv.File.Async.closedir dir (check_success "closedir")
+        end;
+
+        run ()
+      end
+    end;
+
+    "opendir, closedir: sync", `Quick, begin fun () ->
+      with_directory begin fun directory ->
+        Luv.File.Sync.opendir directory
+        |> check_success_result "opendir"
+        |> Luv.File.Sync.closedir
+        |> check_success "closedir"
+      end
+    end;
+
+    "readdir: async", `Quick, begin fun () ->
+      with_directory begin fun directory ->
+        Luv.File.Async.opendir directory begin fun result ->
+          let dir = check_success_result "opendir" result in
+
+          Luv.File.Async.readdir dir begin fun result ->
+            check_success_result "readdir" result
+            |> Array.to_list
+            |> check_directory_entries "entries" ["foo"; "bar"];
+
+            Luv.File.Async.closedir dir (check_success "closedir")
+          end
+        end;
+
+        run ()
+      end
+    end;
+
+    "readdir: sync", `Quick, begin fun () ->
+      with_directory begin fun directory ->
+        let dir =
+          Luv.File.Sync.opendir directory |> check_success_result "opendir" in
+
+        Luv.File.Sync.readdir dir
+        |> check_success_result "readdir"
+        |> Array.to_list
+        |> check_directory_entries "entries" ["foo"; "bar"];
+
+        Luv.File.Sync.closedir dir |> check_success "closedir"
+      end
+    end;
+
+    "readdir: limit", `Quick, begin fun () ->
+      with_directory begin fun directory ->
+        let dir =
+          Luv.File.Sync.opendir directory |> check_success_result "opendir" in
+
+        Luv.File.Sync.readdir ~number_of_entries:0 dir
+        |> check_success_result "readdir"
+        |> Array.to_list
+        |> check_directory_entries "entries" [];
+
+        Luv.File.Sync.closedir dir |> check_success "closedir"
+      end
+    end;
+
+    "readdir: gc", `Quick, begin fun () ->
+      with_directory begin fun directory ->
+        Luv.File.Async.opendir directory begin fun result ->
+          let dir = check_success_result "opendir" result in
+
+          Luv.File.Async.readdir dir begin fun result ->
+            check_success_result "readdir" result
+            |> Array.to_list
+            |> check_directory_entries "entries" ["foo"; "bar"];
+
+            Luv.File.Async.closedir dir (check_success "closedir")
+          end;
+
+          Gc.full_major ();
+        end;
+
+        run ()
+      end
+    end;
+
     "scandir: async", `Quick, begin fun () ->
       with_directory begin fun directory ->
         let entries = ref [] in

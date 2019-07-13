@@ -422,6 +422,15 @@ struct
       let () = seal t
     end
 
+    module Dir =
+    struct
+      type t = [ `Dir ] structure
+      let t : t typ = typedef (structure "`Dir") "uv_dir_t"
+      let dirents = field t "dirents" (ptr Dirent.t)
+      let nentries = field t "nentries" size_t
+      let () = seal t
+    end
+
     module Timespec =
     struct
       let t : ([ `Timespec ] structure) typ =
