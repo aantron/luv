@@ -395,9 +395,9 @@ struct
 
   module Error =
   struct
-    let strerror =
-      foreign "luv_strerror"
-        (error_code @-> returning string)
+    let strerror_r =
+      foreign "uv_strerror_r"
+        (error_code @-> ocaml_bytes @-> int @-> returning void)
 
     let err_name_r =
       foreign "uv_err_name_r"

@@ -138,7 +138,6 @@ CAMLprim value luv_set_once_callback(value callback);
 // Ctypes is unable to emit the correct cv-qualifiers, so binding the libuv
 // functions directly with Ctypes results in noisy warnings. These wrappers
 // suppress the warnings by performing const_casts.
-char* luv_strerror(int err);
 char* luv_version_string();
 char* luv_req_type_name(uv_req_type type);
 char* luv_fs_get_path(const uv_fs_t *req);

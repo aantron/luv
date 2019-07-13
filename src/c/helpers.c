@@ -516,11 +516,6 @@ CAMLprim value luv_set_once_callback(value callback)
 
 // Warning-suppressing wrappers.
 
-char* luv_strerror(int err)
-{
-    return (char*)uv_strerror(err);
-}
-
 char* luv_version_string()
 {
     return (char*)uv_version_string();

@@ -6,13 +6,16 @@
 include C.Types.Error
 include C.Functions.Error
 
-let err_name error_code =
+let error_string_generic c_function error_code =
   let length = 256 in
   let buffer = Bytes.create length in
-  C.Functions.Error.err_name_r
+  c_function
     error_code (Ctypes.ocaml_bytes_start buffer) length;
   let length = Bytes.index buffer '\000' in
   Bytes.sub_string buffer 0 length
+
+let strerror = error_string_generic C.Functions.Error.strerror_r
+let err_name = error_string_generic C.Functions.Error.err_name_r
 
 let exception_handler =
   ref begin fun exn ->
