@@ -13,7 +13,7 @@ let init ?loop () =
 let stat_ptr_to_ocaml pointer =
   pointer
   |> Ctypes.ptr_of_raw_address
-  |> Ctypes.(coerce (ptr void) (ptr C.Types.File.Stat.t))
+  |> Ctypes.from_voidp C.Types.File.Stat.t
   |> Ctypes.(!@)
   |> File.Stat.load
 

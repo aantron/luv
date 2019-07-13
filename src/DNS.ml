@@ -89,7 +89,7 @@ let getaddrinfo
     let module AI = C.Types.DNS.Addrinfo in
     match family, socktype, protocol, flags with
     | None, None, None, None ->
-      Ctypes.(coerce (ptr void) (ptr AI.t) null)
+      Ctypes.(from_voidp AI.t null)
     | _ ->
       let hints = Ctypes.make AI.t in
       let family =

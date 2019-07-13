@@ -75,7 +75,7 @@ struct
       (ptr C.Types.Sockaddr.storage) (ptr C.Types.Sockaddr.t) (addr address))
 
   let null =
-    Ctypes.(coerce (ptr void) (ptr C.Types.Sockaddr.t) null)
+    Ctypes.(from_voidp C.Types.Sockaddr.t null)
 
   let as_in address =
     Ctypes.(coerce
@@ -259,7 +259,7 @@ struct
   }
 
   let get () =
-    let null = Ctypes.(coerce (ptr void) (ptr C.Types.CPU_info.t) null) in
+    let null = Ctypes.(from_voidp C.Types.CPU_info.t null) in
     let info = Ctypes.(allocate (ptr C.Types.CPU_info.t)) null in
     let count = Ctypes.(allocate int) 0 in
 

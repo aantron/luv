@@ -151,7 +151,7 @@ let recv_start
       let sockaddr =
         sockaddr
         |> Ctypes.ptr_of_raw_address
-        |> Ctypes.(coerce (ptr void) (ptr C.Types.Sockaddr.storage))
+        |> Ctypes.from_voidp C.Types.Sockaddr.storage
         |> Misc.Sockaddr.copy_storage
       in
       let truncated = (flags = C.Types.UDP.Flag.partial) in
