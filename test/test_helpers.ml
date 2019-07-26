@@ -82,12 +82,9 @@ let check_directory_entries name expected actual =
   let expected =
     expected
     |> List.map (fun name -> Luv.File.Dirent.{kind = Kind.file; name})
-    |> List.sort Pervasives.compare
+    |> List.sort compare
   in
-  let actual =
-    actual
-    |> List.sort Pervasives.compare
-  in
+  let actual = List.sort compare actual in
   Alcotest.(check (list directory_entry_testable)) name expected actual
 
 let count_allocated_words () =
@@ -99,7 +96,7 @@ let count_allocated_words_during repetitions f =
   for i = 1 to repetitions do
     f i
   done;
-  Pervasives.max 0 (count_allocated_words () - initial)
+  max 0 (count_allocated_words () - initial)
 
 let callback_index = ref 0
 let accumulator = ref 0

@@ -31,17 +31,16 @@ let with_file_for_writing f =
   Luv.File.Sync.close file
   |> check_success "close";
 
-  let channel = Pervasives.open_in filename in
-  let content = Pervasives.input_line channel in
-  Pervasives.close_in channel;
+  let channel = open_in filename in
+  let content = input_line channel in
+  close_in channel;
 
   Alcotest.(check string) "content" "ope" content
 
 let with_dummy_file f =
   let filename = "test_dummy" in
 
-  Pervasives.open_out filename
-  |> Pervasives.close_out;
+  open_out filename |> close_out;
 
   f filename;
 
@@ -54,8 +53,8 @@ let with_directory f =
   let file_2 = "dir/bar" in
 
   Unix.mkdir "dir" 0o755;
-  Pervasives.open_out file_1 |> Pervasives.close_out;
-  Pervasives.open_out file_2 |> Pervasives.close_out;
+  open_out file_1 |> close_out;
+  open_out file_2 |> close_out;
 
   f directory;
 

@@ -5,6 +5,7 @@ build :
 
 .PHONY : test
 test :
+	dune build src/vendor/libuv.a
 	dune build test/tester.exe
 	dune runtest -j 1 --no-buffer
 

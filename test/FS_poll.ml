@@ -65,8 +65,7 @@ let tests = [
             occurred := true
         end;
 
-        after 100 (fun () ->
-          Pervasives.open_out filename |> Pervasives.close_out);
+        after 100 (fun () -> open_out filename |> close_out);
 
         run ();
 

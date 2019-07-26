@@ -65,7 +65,7 @@ let find_redirection child_fd redirections =
 let max_redirected_fd redirections =
   redirections
   |> List.map fst
-  |> List.fold_left Pervasives.max 3
+  |> List.fold_left max 3
   (* libuv requires at least 3 redirections (for STDIN, STDOUT, STDERR). *)
 
 let build_redirection_array redirections =
