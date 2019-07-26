@@ -21,8 +21,6 @@ before_script:
   - clang --version || true
   - opam pin add -y --no-action luv .
   - opam install -y --deps-only luv
-  - opam install -y --unset-root lwt lwt_ppx reason
-  - opam pin add -y https://github.com/aantron/repromise.git
 
 script:
   - make
