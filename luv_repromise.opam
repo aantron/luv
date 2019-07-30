@@ -14,6 +14,7 @@ dev-repo: "git+https://github.com/aantron/luv.git"
 depends: [
   "dune"
   "luv"
+  "ocaml"
   "repromise" {>= "0.6.0"}
 ]
 
