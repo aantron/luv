@@ -12,7 +12,7 @@ maintainer: "Anton Bachin <antonbachin@yahoo.com>"
 dev-repo: "git+https://github.com/aantron/luv.git"
 
 depends: [
-  "dune" {build}
+  "dune"
   "luv"
   "repromise" {>= "0.6.0"}
 ]

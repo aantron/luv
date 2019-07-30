@@ -15,7 +15,7 @@ depends: [
   "base-unix"
   "conf-python-2-7" {build}
   "ctypes" {>= "0.13.0"}
-  "dune" {build}
+  "dune"
   "ocaml" {>= "4.02.0"}
   "result"
 
