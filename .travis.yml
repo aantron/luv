@@ -10,7 +10,6 @@ matrix:
       env: COMPILER=4.08.1
 
 before_script:
-  - set -e
   - bash test/travis-install-opam.sh
   - eval `opam env`
   - ocamlc -config
@@ -19,8 +18,8 @@ before_script:
   - cc --version || true
   - gcc --version || true
   - clang --version || true
-  - opam pin add -y --no-action luv .
-  - opam install -y --deps-only luv
+  - opam pin add -y --dev-repo bisect_ppx
+  - opam install -y --deps-only ./luv.opam
 
 script:
   - make
