@@ -18,8 +18,8 @@ before_script:
   - cc --version || true
   - gcc --version || true
   - clang --version || true
-  - opam pin add -y --dev-repo bisect_ppx
-  - opam install -y --deps-only ./luv.opam
+  - '[ -d _cache/_build ] || opam pin add -y --dev-repo bisect_ppx'
+  - '[ -d _cache/_build ] || opam install -y --deps-only ./luv.opam'
 
 script:
   - '[ ! -d _cache/_build ] || cp -r _cache/_build .'
