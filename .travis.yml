@@ -22,9 +22,12 @@ before_script:
   - opam install -y --deps-only ./luv.opam
 
 script:
+  - "[ ! -d _cache/_build ] || cp -r _cache/_build ."
   - make
   - make test
   - make test-examples
+  - mkdir -p _cache
+  - "[ -d _cache/_build ] || cp -r _build _cache"
   - "[ $REVDEPS != yes ] || make test-installation-ci"
   - opam lint .
 
@@ -36,6 +39,7 @@ cache:
   directories:
     - $HOME/.opam
     - ./_opam
+    - ./_cache
 
 notifications:
   email:
