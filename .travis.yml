@@ -25,7 +25,7 @@ script:
   - make
   - make test
   - make test-examples
-  - make test-installation
+  - make test-installation-ci
   - opam lint .
 
 before_cache:

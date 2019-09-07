@@ -26,6 +26,14 @@ test-installation : clean
 	cd test/installation && dune exec ./user.exe
 	opam remove -y luv
 
+.PHONY : test-installation-ci
+test-installation-ci :
+	opam pin add -y --no-action luv . --kind=git
+	opam install -y luv
+	cd test/installation && dune exec ./user.exe
+	opam remove -y luv
+	opam pin remove -y luv
+
 .PHONY : clean
 clean :
 	dune clean
