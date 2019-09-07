@@ -30,6 +30,7 @@ script:
 
 before_cache:
   - opam clean
+  - rm -rf _opam/.opam-switch/sources/bisect_ppx
 
 cache:
   directories:
