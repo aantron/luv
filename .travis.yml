@@ -28,6 +28,9 @@ script:
   - make test-installation
   - opam lint .
 
+before_cache:
+  - opam clean
+
 cache:
   directories:
     - $HOME/.opam
