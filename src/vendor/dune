@@ -13,3 +13,5 @@
  (section lib)
  (files libuv.a)
  (package luv))
+
+(ignored_subdirs (gyp libuv))
