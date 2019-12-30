@@ -24,11 +24,11 @@ depends: [
   "lwt_ppx" {dev}
   "odoc" {dev}
   "reason" {dev}
-  "repromise" {dev & >= "0.6.0"}
+  "promise" {dev & >= "1.0.0"}
 ]
 
 pin-depends: [
-  ["repromise.git" "git+https://github.com/aantron/repromise.git"]
+  ["promise.git" "git+https://github.com/aantron/promise.git"]
 ]
 
 build: [

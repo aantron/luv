@@ -1,6 +1,6 @@
 opam-version: "2.0"
 
-synopsis: "Luv (a libuv binding) with a Repromise promise-based API"
+synopsis: "Luv (a libuv binding) with a Promise-based API"
 
 version: "dev"
 license: "MIT"
@@ -15,7 +15,7 @@ depends: [
   "dune"
   "luv"
   "ocaml"
-  "repromise" {>= "0.6.0"}
+  "promise" {>= "1.0.0"}
 ]
 
 build: [

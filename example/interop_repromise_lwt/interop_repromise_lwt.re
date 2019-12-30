@@ -3,14 +3,18 @@
 
 
 
+open Promise.PipeFirst;
+
+
+
 let () = {
   print_endline("(0) Started.");
 
 
-  /* A delay with Repromise. */
+  /* A delay with reason-promise. */
 
   Luv.Repromise.Timer.delay(1000)
-  |> Repromise.wait((_) => print_endline("(1) Repromise delay elapsed!"));
+  ->Promise.get((_) => print_endline("(1) Repromise delay elapsed!"));
 
 
   /* A delay with Lwt (concurrent with previous). */

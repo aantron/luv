@@ -5,13 +5,13 @@
 
 include Luv.Promisify.With_promise_type
   (struct
-    type 'a promise = 'a Repromise.t
-    let make = Repromise.make
+    type 'a promise = 'a Promise.t
+    let make = Promise.pending
   end)
 
 include Luv.Integration.Start_and_stop
 
-module Callbacks = Repromise.ReadyCallbacks
+module Callbacks = Promise.ReadyCallbacks
 
 let before_io () =
   if Callbacks.callbacksPending () then

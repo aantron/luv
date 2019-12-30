@@ -3,6 +3,10 @@
 
 
 
+open Promise.PipeFirst;
+
+
+
 let () = {
   /* Process command-line arguments. */
 
@@ -22,7 +26,7 @@ let () = {
 
   Luv.Repromise.DNS.getaddrinfo(
     ~family=Luv.Address_family.inet, ~node=url, ~service="80", ())
-  |> Repromise.wait(addr_infos => {
+  ->Promise.get(addr_infos => {
     let addr_info =
       switch (addr_infos) {
       | Result.Ok([first, ..._]) => first
@@ -54,7 +58,7 @@ let () = {
         exit(1);
       };
     Luv.Repromise.TCP.connect(socket, Luv.DNS.Addr_info.(addr_info.addr))
-    |> Repromise.andThen(result => {
+    ->Promise.flatMap(result => {
       if (result != Luv.Error.success) {
         Printf.eprintf(
           "Could not connect to %s: %s\n", url, Luv.Error.strerror (result));
@@ -66,7 +70,7 @@ let () = {
 
       Luv.Repromise.Stream.write(socket, [Luv.Bigstring.from_string(request)])
     })
-    |> Repromise.wait(((result, written)) => {
+    ->Promise.get(((result, written)) => {
       if (result != Luv.Error.success) {
         Printf.eprintf(
           "Could not send request: %s", Luv.Error.strerror(result));
