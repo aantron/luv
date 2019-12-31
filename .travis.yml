@@ -2,11 +2,11 @@ language: generic
 
 matrix:
   include:
+    - os: osx
+      env: COMPILER=4.08.1
     - os: linux
       env: COMPILER=4.02.3 REVDEPS=yes
     - os: linux
-      env: COMPILER=4.08.1
-    - os: osx
       env: COMPILER=4.08.1
 
 before_script:
