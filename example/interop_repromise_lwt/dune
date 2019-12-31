@@ -1,3 +1,3 @@
 (executable
  (name interop_repromise_lwt)
- (libraries luv_lwt luv_repromise))
+ (libraries luv_lwt luv_promise))

@@ -72,4 +72,4 @@ module Promisify = Promisify
 module Integration = Integration
 
 module Lwt = Luv_lwt
-module Repromise = Luv_repromise
+module Promise = Luv_promise

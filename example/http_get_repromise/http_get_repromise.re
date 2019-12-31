@@ -24,7 +24,7 @@ let () = {
 
   /* Do a DNS lookup on the URL we are asked to retrieve. */
 
-  Luv.Repromise.DNS.getaddrinfo(
+  Luv.Promise.DNS.getaddrinfo(
     ~family=Luv.Address_family.inet, ~node=url, ~service="80", ())
   ->Promise.get(addr_infos => {
     let addr_info =
@@ -57,7 +57,7 @@ let () = {
           "Could not create TCP socket: %s\n", Luv.Error.strerror(error));
         exit(1);
       };
-    Luv.Repromise.TCP.connect(socket, Luv.DNS.Addr_info.(addr_info.addr))
+    Luv.Promise.TCP.connect(socket, Luv.DNS.Addr_info.(addr_info.addr))
     ->Promise.flatMap(result => {
       if (result != Luv.Error.success) {
         Printf.eprintf(
@@ -68,7 +68,7 @@ let () = {
 
       /* Write the GET request. */
 
-      Luv.Repromise.Stream.write(socket, [Luv.Bigstring.from_string(request)])
+      Luv.Promise.Stream.write(socket, [Luv.Bigstring.from_string(request)])
     })
     ->Promise.get(((result, written)) => {
       if (result != Luv.Error.success) {
@@ -105,5 +105,5 @@ let () = {
   /* Wait for all the I/O to finish. The calls to select, epoll, kevent, etc.,
      happen here. */
 
-  Luv.Repromise.run();
+  Luv.Promise.run();
 };

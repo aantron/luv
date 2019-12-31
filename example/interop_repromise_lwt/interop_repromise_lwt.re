@@ -13,8 +13,8 @@ let () = {
 
   /* A delay with reason-promise. */
 
-  Luv.Repromise.Timer.delay(1000)
-  ->Promise.get((_) => print_endline("(1) Repromise delay elapsed!"));
+  Luv.Promise.Timer.delay(1000)
+  ->Promise.get((_) => print_endline("(1) Promise delay elapsed!"));
 
 
   /* A delay with Lwt (concurrent with previous). */
@@ -45,5 +45,5 @@ let () = {
      Repromise and Lwt are integrated into that common Luv I/O loop as
      plugins. */
 
-  Luv.Repromise.run();
+  Luv.Promise.run();
 };
