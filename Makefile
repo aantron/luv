@@ -20,15 +20,15 @@ test-examples :
 	  example/delay/delay.exe \
 	  example/http_get/http_get.exe \
 	  example/http_get_lwt/http_get_lwt.exe \
-	  example/http_get_repromise/http_get_repromise.exe \
-	  example/interop_repromise_lwt/interop_repromise_lwt.exe \
+	  example/http_get_promise/http_get_promise.exe \
+	  example/interop_promise_lwt/interop_promise_lwt.exe \
 	  example/tcp_echo_server/tcp_echo_server.exe
 	_build/default/example/delay/delay.exe
 	_build/default/example/http_get/http_get.exe google.com > /dev/null
 	_build/default/example/http_get_lwt/http_get_lwt.exe google.com > /dev/null
-	_build/default/example/http_get_repromise/http_get_repromise.exe \
-	  google.com > /dev/null
-	_build/default/example/interop_repromise_lwt/interop_repromise_lwt.exe
+	_build/default/example/http_get_promise/http_get_promise.exe google.com \
+	  > /dev/null
+	_build/default/example/interop_promise_lwt/interop_promise_lwt.exe
 
 .PHONY : test-installation
 test-installation : clean
