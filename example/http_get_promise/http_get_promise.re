@@ -26,18 +26,19 @@ let () = {
 
   Luv.Promise.DNS.getaddrinfo(
     ~family=Luv.Address_family.inet, ~node=url, ~service="80", ())
-  ->Promise.get(addr_infos => {
+  ->Promise.tapError(error => {
+    Printf.eprintf(
+      "Could not resolve %s: %s\n", url, Luv.Error.strerror(error));
+    exit(1)
+  })
+  ->Promise.getOk(addr_infos => {
     let addr_info =
       switch (addr_infos) {
-      | Result.Ok([first, ..._]) => first
-      | Result.Ok([]) =>
+      | [] =>
         /* Not sure if Result.Ok is actually possible with the empty list. */
         Printf.eprintf("Could not resolve %s\n", url);
         exit(1);
-      | Result.Error(error) =>
-        Printf.eprintf(
-          "Could not resolve %s: %s\n", url, Luv.Error.strerror(error));
-        exit(1);
+      | [first, ..._] => first;
       };
 
 
