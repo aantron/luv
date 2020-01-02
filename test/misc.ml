@@ -1,6 +1,20 @@
 open Test_helpers
 
 let tests = [
+  "env", [
+    "environ", `Quick, begin fun () ->
+      Unix.putenv "LUV_TESTER" "42";
+      let environment = Luv.Env.environ () |> check_success_result "environ" in
+      Unix.putenv "LUV_TESTER" "";
+      let found =
+        List.exists
+          (fun (name, value) -> name = "LUV_TESTER" && value = "42") environment
+      in
+      if not found then
+        Alcotest.failf "environment variable not found"
+    end;
+  ];
+
   "system name", [
     "uname", `Quick, begin fun () ->
       let uname = Luv.System_name.uname () |> check_success_result "uname" in

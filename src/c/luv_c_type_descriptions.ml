@@ -847,4 +847,13 @@ struct
       let () = seal t
     end
   end
+
+  module Env_item =
+  struct
+    let t : ([ `Env_item ] structure) typ =
+      typedef (structure "`Env_item") "uv_env_item_t"
+    let name = field t "name" string
+    let value = field t "value" string
+    let () = seal t
+  end
 end

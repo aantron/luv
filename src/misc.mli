@@ -176,6 +176,7 @@ sig
   val getenv : string -> (string, Error.t) Result.result
   val setenv : string -> string -> Error.t
   val unsetenv : string -> Error.t
+  val environ : unit -> ((string * string) list, Error.t) Result.result
 end
 
 module System_name :

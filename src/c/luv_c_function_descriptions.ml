@@ -1712,6 +1712,14 @@ struct
     let unsetenv =
       foreign "uv_os_unsetenv"
         (ocaml_string @-> returning error_code)
+
+    let environ =
+      foreign "uv_os_environ"
+        (ptr (ptr Types.Env_item.t) @-> ptr int @-> returning error_code)
+
+    let free_environ =
+      foreign "uv_os_free_environ"
+        (ptr Types.Env_item.t @-> int @-> returning void)
   end
 
   module System_name =
