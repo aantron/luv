@@ -25,6 +25,7 @@ sig
   val append : t
   val direct : t
   val dsync : t
+  val filemap: t
   val noatime : t
   val nonblock : t
   val random : t

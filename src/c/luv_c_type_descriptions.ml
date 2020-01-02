@@ -370,6 +370,7 @@ struct
       let append = constant "UV_FS_O_APPEND" int
       let direct = constant "UV_FS_O_DIRECT" int
       let dsync = constant "UV_FS_O_DSYNC" int
+      let filemap = constant "UV_FS_O_FILEMAP" int
       let noatime = constant "UV_FS_O_NOATIME" int
       let nonblock = constant "UV_FS_O_NONBLOCK" int
       let random = constant "UV_FS_O_RANDOM" int
