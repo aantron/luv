@@ -182,6 +182,45 @@ struct
     load (Ctypes.(!@) (C.Blocking.File.get_statbuf request))
 end
 
+module Statfs =
+struct
+  type t = {
+    type_ : Unsigned.UInt64.t;
+    bsize : Unsigned.UInt64.t;
+    blocks : Unsigned.UInt64.t;
+    bfree : Unsigned.UInt64.t;
+    bavail : Unsigned.UInt64.t;
+    files : Unsigned.UInt64.t;
+    ffree : Unsigned.UInt64.t;
+    f_spare :
+      Unsigned.UInt64.t
+      * Unsigned.UInt64.t
+      * Unsigned.UInt64.t
+      * Unsigned.UInt64.t;
+  }
+
+  let from_request request =
+    let module C_statfs = C.Types.File.Statfs in
+    let c_statfs =
+      Ctypes.(!@ (from_voidp C_statfs.t (C.Blocking.File.get_ptr request))) in
+    let field f = Ctypes.getf c_statfs f in
+    {
+      type_ = field C_statfs.f_type;
+      bsize = field C_statfs.f_bsize;
+      blocks = field C_statfs.f_blocks;
+      bfree = field C_statfs.f_bfree;
+      bavail = field C_statfs.f_bavail;
+      files = field C_statfs.f_files;
+      ffree = field C_statfs.f_ffree;
+      f_spare =
+        let array = field C_statfs.f_spare in
+        Ctypes.CArray.get array 0,
+        Ctypes.CArray.get array 1,
+        Ctypes.CArray.get array 2,
+        Ctypes.CArray.get array 3
+    }
+end
+
 module Copy_flag =
 struct
   include C.Types.File.Copy_flag
@@ -278,6 +317,14 @@ struct
     from_request = (fun request ->
       Error.to_result_lazy
         (fun () -> Stat.from_request request) (Request_.result request));
+    immediate_error = construct_error;
+    clean_up_request_on_success = true;
+  }
+
+  let returns_statfs = {
+    from_request = (fun request ->
+      Error.to_result_lazy
+        (fun () -> Statfs.from_request request) (Request_.result request));
     immediate_error = construct_error;
     clean_up_request_on_success = true;
   }
@@ -428,6 +475,12 @@ struct
   let stat = generic_stat C.Blocking.File.stat
   let lstat = generic_stat C.Blocking.File.lstat
   let fstat = generic_stat C.Blocking.File.fstat
+
+  let statfs =
+    async_or_sync
+      C.Blocking.File.statfs
+      returns_statfs
+      (fun run path -> run !path no_cleanup)
 
   let rename =
     async_or_sync

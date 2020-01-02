@@ -136,6 +136,24 @@ sig
   val load : C.Types.File.Stat.t -> t
 end
 
+module Statfs :
+sig
+  type t = {
+    type_ : Unsigned.UInt64.t;
+    bsize : Unsigned.UInt64.t;
+    blocks : Unsigned.UInt64.t;
+    bfree : Unsigned.UInt64.t;
+    bavail : Unsigned.UInt64.t;
+    files : Unsigned.UInt64.t;
+    ffree : Unsigned.UInt64.t;
+    f_spare :
+      Unsigned.UInt64.t
+      * Unsigned.UInt64.t
+      * Unsigned.UInt64.t
+      * Unsigned.UInt64.t;
+  }
+end
+
 module Copy_flag :
 sig
   type t
@@ -301,6 +319,13 @@ sig
     ?request:Request.t ->
     t ->
     ((Stat.t, Error.t) Result.result -> unit) ->
+      unit
+
+  val statfs :
+    ?loop:Loop.t ->
+    ?request:Request.t ->
+    string ->
+    ((Statfs.t, Error.t) Result.result -> unit) ->
       unit
 
   val rename :
@@ -514,6 +539,10 @@ sig
   val fstat :
     t ->
       (Stat.t, Error.t) Result.result
+
+  val statfs :
+    string ->
+      (Statfs.t, Error.t) Result.result
 
   val rename :
     from:string -> to_:string ->

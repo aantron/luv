@@ -464,6 +464,21 @@ struct
       let () = seal t
     end
 
+    module Statfs =
+    struct
+      type t = [ `Statfs ] structure
+      let t : t typ = typedef (structure "`Statfs") "uv_statfs_t"
+      let f_type = field t "f_type" uint64_t
+      let f_bsize = field t "f_bsize" uint64_t
+      let f_blocks = field t "f_blocks" uint64_t
+      let f_bfree = field t "f_bfree" uint64_t
+      let f_bavail = field t "f_bavail" uint64_t
+      let f_files = field t "f_files" uint64_t
+      let f_ffree = field t "f_ffree" uint64_t
+      let f_spare = field t "f_spare" (array 4 uint64_t)
+      let () = seal t
+    end
+
     module Copy_flag =
     struct
       let excl = constant "UV_FS_COPYFILE_EXCL" int

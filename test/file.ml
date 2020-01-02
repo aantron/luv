@@ -719,6 +719,37 @@ let tests = [
       end
     end;
 
+    "statfs: async", `Quick, begin fun () ->
+      Luv.File.Async.statfs "file.ml" begin fun result ->
+        check_success_result "stat" result |> ignore
+      end;
+
+      run ()
+    end;
+
+    "statfs: sync", `Quick, begin fun () ->
+      Luv.File.Sync.statfs "file.ml"
+      |> check_success_result "stat"
+      |> ignore
+    end;
+
+    "statfs failure: async", `Quick, begin fun () ->
+      let finished = ref false in
+
+      Luv.File.Async.statfs "non_existent_file" begin fun result ->
+        check_error_result "stat" Luv.Error.enoent result;
+        finished := true
+      end;
+
+      run ();
+      Alcotest.(check bool) "finished" true !finished
+    end;
+
+    "statfs failure: sync", `Quick, begin fun () ->
+      Luv.File.Sync.statfs "non_existent_file"
+      |> check_error_result "stat" Luv.Error.enoent
+    end;
+
     "rename: async", `Quick, begin fun () ->
       with_dummy_file begin fun path ->
         let to_ = path ^ ".renamed" in

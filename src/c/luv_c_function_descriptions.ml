@@ -175,6 +175,11 @@ struct
         (ptr Types.Loop.t @-> ptr request @-> t @-> trampoline @->
           returning error_code)
 
+    let statfs =
+      foreign "uv_fs_statfs"
+        (ptr Types.Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+
     let rename =
       foreign "uv_fs_rename"
         (ptr Types.Loop.t @->
