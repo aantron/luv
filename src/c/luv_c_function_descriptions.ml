@@ -1035,6 +1035,11 @@ struct
         (ptr t @-> ocaml_string @-> ocaml_string @-> int @->
           returning error_code)
 
+    let set_source_membership =
+      foreign "uv_udp_set_source_membership"
+        (ptr t @-> ocaml_string @-> ocaml_string @-> ocaml_string @-> int @->
+          returning error_code)
+
     let set_multicast_loop =
       foreign "uv_udp_set_multicast_loop"
         (ptr t @-> bool @-> returning error_code)

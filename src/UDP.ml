@@ -47,6 +47,14 @@ let set_membership udp ~group ~interface membership =
     (Ctypes.ocaml_string_start interface)
     membership
 
+let set_source_membership udp ~group ~interface ~source membership =
+  C.Functions.UDP.set_source_membership
+    udp
+    (Ctypes.ocaml_string_start group)
+    (Ctypes.ocaml_string_start interface)
+    (Ctypes.ocaml_string_start source)
+    membership
+
 let set_multicast_loop =
   C.Functions.UDP.set_multicast_loop
 

@@ -32,6 +32,9 @@ val bind : ?flags:Bind_flag.t -> t -> Misc.Sockaddr.t -> Error.t
 val getsockname : t -> (Misc.Sockaddr.t, Error.t) Result.result
 val set_membership :
   t -> group:string -> interface:string -> Membership.t -> Error.t
+val set_source_membership :
+  t -> group:string -> interface:string -> source:string -> Membership.t ->
+    Error.t
 val set_multicast_loop : t -> bool -> Error.t
 val set_multicast_ttl : t -> int -> Error.t
 val set_multicast_interface : t -> string -> Error.t
