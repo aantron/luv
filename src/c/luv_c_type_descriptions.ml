@@ -59,6 +59,7 @@ struct
     let efault = constant "UV_EFAULT" t
     let efbig = constant "UV_EFBIG" t
     let ehostunreach = constant "UV_EHOSTUNREACH" t
+    let eilseq = constant "UV_EILSEQ" t
     let eintr = constant "UV_EINTR" t
     let einval = constant "UV_EINVAL" t
     let eio = constant "UV_EIO" t

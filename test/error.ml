@@ -46,6 +46,7 @@ let tests = [
     t "EFAULT" "bad address in system call argument" efault;
     t "EFBIG" "file too large" efbig;
     t "EHOSTUNREACH" "host is unreachable" ehostunreach;
+    t "EILSEQ" "illegal byte sequence" eilseq;
     t "EINTR" "interrupted system call" eintr;
     t "EINVAL" "invalid argument" einval;
     t "EIO" "i/o error" eio;
@@ -133,6 +134,7 @@ let tests = [
     t "EFAULT" efault;
     t "EFBIG" efbig;
     t "EHOSTUNREACH" ehostunreach;
+    t "EILSEQ" eilseq;
     t "EINTR" eintr;
     t "EINVAL" einval;
     t "EIO" eio;

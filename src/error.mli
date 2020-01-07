@@ -41,6 +41,7 @@ val eexist : t
 val efault : t
 val efbig : t
 val ehostunreach : t
+val eilseq : t
 val eintr : t
 val einval : t
 val eio : t
