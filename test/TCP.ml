@@ -478,6 +478,47 @@ let tests = [
       end
     end;
 
+    "close_reset: sync error", `Quick, begin fun () ->
+      let called = ref false in
+
+      with_tcp begin fun tcp ->
+        Luv.TCP.close_reset tcp begin fun result ->
+          check_error_code "close_reset" Luv.Error.ebadf result;
+          called := true
+        end
+      end;
+
+      Alcotest.(check bool) "called" true !called
+    end;
+
+    "close_reset", `Quick, begin fun () ->
+      let called = ref false in
+      let address = fresh_address () in
+
+      let server = Luv.TCP.init () |> check_success_result "server init" in
+      Luv.TCP.bind server address |> check_success "bind";
+      Luv.Stream.listen server begin fun result ->
+        check_success "listen" result;
+        let client =
+          Luv.TCP.init () |> check_success_result "remote client init" in
+        Luv.Stream.accept ~server ~client |> check_success "accept";
+        Luv.TCP.close_reset client begin fun result ->
+          check_success "close_reset" result;
+          Luv.Handle.close server;
+          called := true
+        end
+      end;
+
+      let client = Luv.TCP.init () |> check_success_result "client init" in
+      Luv.TCP.connect client address begin fun _result ->
+        Luv.Handle.close client
+      end;
+
+      run ();
+
+      Alcotest.(check bool) "called" true !called
+    end;
+
     (* This is a compilation test. If the type constraints in handle.mli are
        wrong, there will be a type error in this test. *)
     "handle functions", `Quick, begin fun () ->

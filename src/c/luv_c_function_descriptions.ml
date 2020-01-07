@@ -926,6 +926,10 @@ struct
          ptr Types.Sockaddr.t @->
          Stream.Connect_request.trampoline @->
           returning error_code)
+
+    let close_reset =
+      foreign "uv_tcp_close_reset"
+        (ptr t @-> Handle.close_trampoline @-> returning error_code)
   end
 
   module Pipe =

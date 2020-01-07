@@ -60,3 +60,22 @@ let connect tcp address callback =
     Request.release request;
     callback immediate_result
   end
+
+(* This code closely follows the implementation of close in handle.ml. *)
+let close_trampoline =
+  C.Functions.Handle.get_close_trampoline ()
+
+let close_reset tcp callback =
+  if Handle.is_closing tcp then
+    callback Error.success
+  else begin
+    Handle.set_reference
+      ~index:C.Types.Handle.close_callback_index
+      tcp
+      (fun () ->
+        Handle.release tcp;
+        callback Error.success);
+    let immediate_result = C.Functions.TCP.close_reset tcp close_trampoline in
+    if immediate_result < Error.success then
+      callback immediate_result
+  end

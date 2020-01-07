@@ -23,3 +23,4 @@ val bind : ?flags:Bind_flag.t -> t -> Misc.Sockaddr.t -> Error.t
 val getsockname : t -> (Misc.Sockaddr.t, Error.t) Result.result
 val getpeername : t -> (Misc.Sockaddr.t, Error.t) Result.result
 val connect : t -> Misc.Sockaddr.t -> (Error.t -> unit) -> unit
+val close_reset : t -> (Error.t -> unit) -> unit

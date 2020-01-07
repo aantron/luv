@@ -33,6 +33,7 @@ val get_loop : _ t -> Loop.t
 
 val allocate :
   ?reference_count:int -> 'kind C.Types.Handle.t Ctypes.typ -> 'kind t
+val release : _ t -> unit
 val set_reference : ?index:int -> _ t -> _ -> unit
 val coerce :
   _ C.Types.Handle.t Ctypes.ptr -> [ `Base ] C.Types.Handle.t Ctypes.ptr
