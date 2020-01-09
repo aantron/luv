@@ -125,6 +125,11 @@ struct
         (ptr Types.Loop.t @-> ptr request @-> string @-> trampoline @->
           returning error_code)
 
+    let mkstemp =
+      foreign "uv_fs_mkstemp"
+        (ptr Types.Loop.t @-> ptr request @-> string @-> trampoline @->
+          returning error_code)
+
     let rmdir =
       foreign "uv_fs_rmdir"
         (ptr Types.Loop.t @-> ptr request @-> string @-> trampoline @->

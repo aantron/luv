@@ -278,6 +278,15 @@ struct
     clean_up_request_on_success = true;
   }
 
+  let returns_path_and_file = {
+    from_request = (fun request ->
+      Error.to_result_lazy
+        (fun () -> Request_.path request, (Request_.int_result request))
+        (Request_.result request));
+    immediate_error = construct_error;
+    clean_up_request_on_success = true;
+  }
+
   let returns_directory_handle = {
     from_request = (fun request ->
       Error.to_result_lazy
@@ -424,6 +433,12 @@ struct
     async_or_sync
       C.Blocking.File.mkdtemp
       returns_path
+      (fun run path -> run !path no_cleanup)
+
+  let mkstemp =
+    async_or_sync
+      C.Blocking.File.mkstemp
+      returns_path_and_file
       (fun run path -> run !path no_cleanup)
 
   let rmdir =

@@ -264,6 +264,13 @@ sig
     ((string, Error.t) Result.result -> unit) ->
       unit
 
+  val mkstemp :
+    ?loop:Loop.t ->
+    ?request:Request.t ->
+    string ->
+    ((string * t, Error.t) Result.result -> unit) ->
+      unit
+
   val rmdir :
     ?loop:Loop.t ->
     ?request:Request.t ->
@@ -507,6 +514,10 @@ sig
   val mkdtemp :
     string ->
       (string, Error.t) Result.result
+
+  val mkstemp :
+    string ->
+      (string * t, Error.t) Result.result
 
   val rmdir :
     string ->

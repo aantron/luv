@@ -492,6 +492,56 @@ let tests = [
       |> check_error_result "mkdtemp result" Luv.Error.enoent
     end;
 
+    "mkstemp: async", `Quick, begin fun () ->
+      let finished = ref false in
+
+      Luv.File.Async.mkstemp "fooXXXXXX" begin fun result ->
+        let path, file = check_success_result "mkstemp result" result in
+
+        Luv.File.Async.close file begin fun result ->
+          check_success "close" result;
+
+          Luv.File.Async.unlink path begin fun result ->
+            check_success "unlink" result;
+            finished := true
+          end
+        end
+      end;
+
+      run ();
+      Alcotest.(check bool) "finished" true !finished
+    end;
+
+    "mkstemp: sync", `Quick, begin fun () ->
+      let path, file =
+        Luv.File.Sync.mkstemp "fooXXXXXX"
+        |> check_success_result "mkstemp"
+      in
+
+      Luv.File.Sync.close file
+      |> check_success "close";
+
+      Luv.File.Sync.unlink path
+      |> check_success "unlink"
+    end;
+
+    "mkstemp failure: async", `Quick, begin fun () ->
+      let finished = ref false in
+
+      Luv.File.Async.mkstemp "non-existent/fooXXXXXX" begin fun result ->
+        check_error_result "mkstemp result" Luv.Error.enoent result;
+        finished := true
+      end;
+
+      run ();
+      Alcotest.(check bool) "finished" true !finished
+    end;
+
+    "mkstemp failure: sync", `Quick, begin fun () ->
+      Luv.File.Sync.mkstemp "non-existent/fooXXXXXX"
+      |> check_error_result "mkstemp result" Luv.Error.enoent
+    end;
+
     "opendir, closedir: async", `Quick, begin fun () ->
       with_directory begin fun directory ->
         Luv.File.Async.opendir directory begin fun result ->
