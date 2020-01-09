@@ -1780,4 +1780,11 @@ struct
          trampoline @->
           returning error_code)
   end
+
+  module Sleep =
+  struct
+    let sleep =
+      foreign "uv_sleep"
+        (int @-> returning void)
+  end
 end

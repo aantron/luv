@@ -547,3 +547,9 @@ struct
         null_callback
   end
 end
+
+module Sleep =
+struct
+  let sleep =
+    C.Functions.Sleep.sleep
+end

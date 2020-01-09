@@ -68,6 +68,7 @@ module Env = Misc.Env
 module System_name = Misc.System_name
 module Time = Misc.Time
 module Random = Misc.Random
+module Sleep = Misc.Sleep
 
 module Promisify = Promisify
 module Integration = Integration

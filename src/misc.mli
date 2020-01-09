@@ -213,3 +213,8 @@ sig
     val random : Bigstring.t -> Error.t
   end
 end
+
+module Sleep :
+sig
+  val sleep : int -> unit
+end

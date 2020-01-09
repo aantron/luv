@@ -61,5 +61,11 @@ let tests = [
       if Luv.Bigstring.to_string buffer = content then
         Alcotest.fail "buffer contents"
     end;
-  ]
+  ];
+
+  "sleep", [
+    "sleep", `Quick, begin fun () ->
+      Luv.Sleep.sleep 100
+    end;
+  ];
 ]
