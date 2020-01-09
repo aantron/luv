@@ -996,6 +996,14 @@ struct
     let get_winsize =
       foreign "uv_tty_get_winsize"
         (ptr t @-> ptr int @-> ptr int @-> returning error_code)
+
+    let set_vterm_state =
+      foreign "uv_tty_set_vterm_state"
+        (int @-> returning void)
+
+    let get_vterm_state =
+      foreign "luv_tty_get_vterm_state"
+        (ptr int @-> returning error_code)
   end
 
   module UDP =

@@ -27,3 +27,17 @@ let get_winsize tty =
   let height = Ctypes.(allocate int) 0 in
   C.Functions.TTY.get_winsize tty width height
   |> Error.to_result_lazy (fun () -> Ctypes.(!@ width, !@ height))
+
+module Vterm_state =
+struct
+  include C.Types.TTY.Vterm_state
+  type t = int
+end
+
+let set_vterm_state =
+  C.Functions.TTY.set_vterm_state
+
+let get_vterm_state () =
+  let state = Ctypes.(allocate_n int) ~count:1 in
+  C.Functions.TTY.get_vterm_state state
+  |> Error.to_result_lazy (fun () -> Ctypes.(!@) state)

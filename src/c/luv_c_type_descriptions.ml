@@ -523,6 +523,12 @@ struct
       let io = constant "UV_TTY_MODE_IO" int
     end
 
+    module Vterm_state =
+    struct
+      let supported = constant "UV_TTY_SUPPORTED" int
+      let unsupported = constant "UV_TTY_UNSUPPORTED" int
+    end
+
     let t : ([ `TTY ] Stream.t) typ = typedef (structure "`TTY") "uv_tty_t"
     let () = seal t
   end

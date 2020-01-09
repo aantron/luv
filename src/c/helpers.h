@@ -166,6 +166,10 @@ int luv_udp_recv_start(
 // Helper for uv_os_uname, which uses an inconvenient buffer argument type.
 int luv_os_uname(char *buffer);
 
+// The libuv version of this function takes a pointer to an enum, but the Ctypes
+// enum handling is slightly awkward.
+int luv_tty_get_vterm_state(int *state);
+
 
 
 // File descriptor plumbing. The different operating systems have different
