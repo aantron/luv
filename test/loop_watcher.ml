@@ -14,7 +14,7 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
 
     let result = f watcher in
 
-    Luv.Handle.close watcher;
+    Luv.Handle.close watcher ignore;
     run ();
 
     result

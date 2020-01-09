@@ -10,7 +10,7 @@ let with_udp f =
 
   f udp;
 
-  Luv.Handle.close udp;
+  Luv.Handle.close udp ignore;
   run ()
 
 let with_sender_and_receiver ~receiver_logic ~sender_logic =
@@ -78,7 +78,7 @@ let tests = [
         ~receiver_logic:
           begin fun receiver ->
             expect receiver "foo" begin fun () ->
-              Luv.Handle.close receiver;
+              Luv.Handle.close receiver ignore;
               receiver_finished := true
             end
           end
@@ -87,7 +87,7 @@ let tests = [
             let buffer = Luv.Bigstring.from_string "foo" in
             Luv.UDP.send sender [buffer] address begin fun result ->
               check_success "send" result;
-              Luv.Handle.close sender;
+              Luv.Handle.close sender ignore;
               sender_finished := true
             end
           end;
@@ -104,7 +104,7 @@ let tests = [
         ~receiver_logic:
           begin fun receiver ->
             expect receiver "foo" begin fun () ->
-              Luv.Handle.close receiver;
+              Luv.Handle.close receiver ignore;
               receiver_finished := true
             end
           end
@@ -112,7 +112,7 @@ let tests = [
           begin fun sender address ->
             Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
             |> check_success "try_send";
-            Luv.Handle.close sender;
+            Luv.Handle.close sender ignore;
             sender_finished := true
           end;
 
@@ -125,14 +125,14 @@ let tests = [
         with_sender_and_receiver
           ~receiver_logic:
             begin fun receiver ->
-              expect receiver "foo" (fun () -> Luv.Handle.close receiver)
+              expect receiver "foo" (fun () -> Luv.Handle.close receiver ignore)
             end
           ~sender_logic:
             begin fun sender address ->
               let buffer = Luv.Bigstring.from_string "foo" in
               Luv.UDP.send sender [buffer] address begin fun result ->
                 check_success "send" result;
-                Luv.Handle.close sender;
+                Luv.Handle.close sender ignore;
                 raise Exit
               end
             end
@@ -145,7 +145,7 @@ let tests = [
           ~receiver_logic:
             begin fun receiver ->
               expect receiver "foo" begin fun () ->
-                Luv.Handle.close receiver;
+                Luv.Handle.close receiver ignore;
                 raise Exit
               end
             end
@@ -153,7 +153,7 @@ let tests = [
             begin fun sender address ->
               Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
               |> check_success "try_send";
-              Luv.Handle.close sender
+              Luv.Handle.close sender ignore
             end
       end
     end;
@@ -163,14 +163,14 @@ let tests = [
         ~receiver_logic:
           begin fun receiver ->
             expect receiver "" begin fun () ->
-              Luv.Handle.close receiver
+              Luv.Handle.close receiver ignore
             end
           end
         ~sender_logic:
           begin fun sender address ->
             Luv.UDP.try_send sender [Luv.Bigstring.from_string ""] address
             |> check_success "try_send";
-            Luv.Handle.close sender
+            Luv.Handle.close sender ignore
           end
     end;
 
@@ -180,7 +180,7 @@ let tests = [
           begin fun receiver ->
             expect receiver "foo" begin fun () ->
               expect ~buffer_not_used:true receiver "" begin fun () ->
-                Luv.Handle.close receiver
+                Luv.Handle.close receiver ignore
               end
             end
           end
@@ -188,7 +188,7 @@ let tests = [
           begin fun sender address ->
             Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
             |> check_success "try_send";
-            Luv.Handle.close sender
+            Luv.Handle.close sender ignore
           end
     end;
 
@@ -210,7 +210,7 @@ let tests = [
               |> check_success "set_membership 1";
 
               expect receiver "foo" begin fun () ->
-                Luv.Handle.close receiver;
+                Luv.Handle.close receiver ignore;
                 receiver_finished := true
               end
             end
@@ -222,7 +222,7 @@ let tests = [
               in
               Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
               |> check_success "try_send";
-              Luv.Handle.close sender;
+              Luv.Handle.close sender ignore;
               sender_finished := true
             end;
 
@@ -292,7 +292,7 @@ let tests = [
         ~receiver_logic:
           begin fun receiver ->
             expect receiver "foo" begin fun () ->
-              Luv.Handle.close receiver;
+              Luv.Handle.close receiver ignore;
               receiver_finished := true
             end
           end
@@ -302,7 +302,7 @@ let tests = [
             Luv.UDP.Connected.send sender [Luv.Bigstring.from_string "foo"]
                 begin fun result ->
               check_success "send" result;
-              Luv.Handle.close sender;
+              Luv.Handle.close sender ignore;
               sender_finished := true
             end
           end;
@@ -319,7 +319,7 @@ let tests = [
         ~receiver_logic:
           begin fun receiver ->
             expect receiver "foo" begin fun () ->
-              Luv.Handle.close receiver;
+              Luv.Handle.close receiver ignore;
               receiver_finished := true
             end
           end
@@ -328,7 +328,7 @@ let tests = [
             Luv.UDP.Connected.connect sender address |> check_success "connect";
             Luv.UDP.Connected.try_send sender [Luv.Bigstring.from_string "foo"]
             |> check_success "try_send";
-            Luv.Handle.close sender;
+            Luv.Handle.close sender ignore;
             sender_finished := true
           end;
 

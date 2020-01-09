@@ -15,7 +15,7 @@ let with_fs_event f =
 
   f event;
 
-  Luv.Handle.close event;
+  Luv.Handle.close event ignore;
   run ()
 
 let tests = [
@@ -35,7 +35,7 @@ let tests = [
         let timer = Luv.Timer.init () |> check_success_result "timer" in
         Luv.Timer.start timer 10 begin fun () ->
           Luv.FS_event.stop event |> check_success "stop";
-          Luv.Handle.close timer;
+          Luv.Handle.close timer ignore;
           timed_out := true
         end
         |> check_success "timer_start";

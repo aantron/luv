@@ -179,7 +179,7 @@ let spawn
   in
 
   if result < Error.success then begin
-    Handle.close process
+    Handle.close process ignore
   end;
 
   Error.to_result process result

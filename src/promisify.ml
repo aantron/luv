@@ -21,7 +21,7 @@ struct
       | Result.Ok timer ->
         let immediate_result =
           Timer.start ?call_update_time timer time begin fun () ->
-            Handle.close timer;
+            Handle.close timer ignore;
             resolve Error.success
           end
         in

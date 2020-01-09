@@ -10,7 +10,7 @@ let tests = [
     "basic", `Quick, begin fun () ->
       Luv.Process.spawn "echo" ["echo"; "-n"]
       |> check_success_result "spawn"
-      |> Luv.Handle.close;
+      |> fun p -> Luv.Handle.close p ignore;
 
       run ()
     end;
@@ -23,7 +23,7 @@ let tests = [
             ~on_exit:begin fun process ~exit_status ~term_signal:_ ->
 
           Alcotest.(check int) "exit status" 0 exit_status;
-          Luv.Handle.close process;
+          Luv.Handle.close process ignore;
           called := true
         end
       in
@@ -41,7 +41,7 @@ let tests = [
         Luv.Process.spawn "echo" ["echo"; "-n"]
             ~on_exit:begin fun process ~exit_status:_ ~term_signal:_ ->
 
-          Luv.Handle.close process;
+          Luv.Handle.close process ignore;
           raise Exit
         end;
 
@@ -60,14 +60,14 @@ let tests = [
         "echo" ["echo"; "-n"; "foo"]
         ~redirect:[inherit_fd ~fd:stdout ~from_parent_fd:child_end_raw])
       |> check_success_result "spawn"
-      |> Luv.Handle.close;
+      |> fun p -> Luv.Handle.close p ignore;
 
       Unix.close child_end;
 
       let finished = ref false in
 
       Luv.Stream.read_start parent_end begin fun result ->
-        Luv.Handle.close parent_end;
+        Luv.Handle.close parent_end ignore;
         check_success_result "read" result
         |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 3;
@@ -92,14 +92,14 @@ let tests = [
         "echo" ["echo"; "-n"; "foo"]
         ~redirect:[inherit_stream ~fd:stdout ~from_parent_stream:child_end])
       |> check_success_result "spawn"
-      |> Luv.Handle.close;
+      |> fun p -> Luv.Handle.close p ignore;
 
-      Luv.Handle.close child_end;
+      Luv.Handle.close child_end ignore;
 
       let finished = ref false in
 
       Luv.Stream.read_start parent_end begin fun result ->
-        Luv.Handle.close parent_end;
+        Luv.Handle.close parent_end ignore;
         check_success_result "read" result
         |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 3;
@@ -118,12 +118,12 @@ let tests = [
         "echo" ["echo"; "-n"; "foo"]
         ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
       |> check_success_result "spawn"
-      |> Luv.Handle.close;
+      |> fun p -> Luv.Handle.close p ignore;
 
       let finished = ref false in
 
       Luv.Stream.read_start parent_end begin fun result ->
-        Luv.Handle.close parent_end;
+        Luv.Handle.close parent_end ignore;
         check_success_result "read" result
         |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 3;
@@ -143,12 +143,12 @@ let tests = [
         ~environment:["FOO", "foobar"]
         ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
       |> check_success_result "spawn"
-      |> Luv.Handle.close;
+      |> fun p -> Luv.Handle.close p ignore;
 
       let finished = ref false in
 
       Luv.Stream.read_start parent_end begin fun result ->
-        Luv.Handle.close parent_end;
+        Luv.Handle.close parent_end ignore;
         check_success_result "read" result
         |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 7;
@@ -170,12 +170,12 @@ let tests = [
         "printenv" ["printenv"; "FOO"]
         ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
       |> check_success_result "spawn"
-      |> Luv.Handle.close;
+      |> fun p -> Luv.Handle.close p ignore;
 
       let finished = ref false in
 
       Luv.Stream.read_start parent_end begin fun result ->
-        Luv.Handle.close parent_end;
+        Luv.Handle.close parent_end ignore;
         check_success_result "read" result
         |> Luv.Bigstring.size
         |> Alcotest.(check int) "byte count" 7;
@@ -202,7 +202,7 @@ let tests = [
           ~environment:[]
           ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()]
           ~on_exit:begin fun process ~exit_status ~term_signal:_ ->
-            Luv.Handle.close process;
+            Luv.Handle.close process ignore;
             exit_code := Some exit_status
           end)
       in
@@ -211,7 +211,7 @@ let tests = [
       let finished = ref false in
 
       Luv.Stream.read_start parent_end begin fun result ->
-        Luv.Handle.close parent_end;
+        Luv.Handle.close parent_end ignore;
         check_error_result "read" Luv.Error.eof result;
         finished := true
       end;
@@ -234,12 +234,12 @@ let tests = [
         ~working_directory:child_working_directory
         ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
       |> check_success_result "spawn"
-      |> Luv.Handle.close;
+      |> fun p -> Luv.Handle.close p ignore;
 
       let finished = ref false in
 
       Luv.Stream.read_start parent_end begin fun result ->
-        Luv.Handle.close parent_end;
+        Luv.Handle.close parent_end ignore;
         let data = check_success_result "read" result in
         Luv.Bigstring.sub data ~offset:0 ~length:(Luv.Bigstring.size data - 1)
         |> Luv.Bigstring.to_string
@@ -261,12 +261,12 @@ let tests = [
         "pwd" ["pwd"]
         ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
       |> check_success_result "spawn"
-      |> Luv.Handle.close;
+      |> fun p -> Luv.Handle.close p ignore;
 
       let finished = ref false in
 
       Luv.Stream.read_start parent_end begin fun result ->
-        Luv.Handle.close parent_end;
+        Luv.Handle.close parent_end ignore;
         let data = check_success_result "read" result in
         Luv.Bigstring.sub data ~offset:0 ~length:(Luv.Bigstring.size data - 1)
         |> Luv.Bigstring.to_string
@@ -317,7 +317,7 @@ let tests = [
         Luv.Process.spawn "cat" ["cat"]
             ~on_exit:begin fun process ~exit_status:_ ~term_signal ->
 
-          Luv.Handle.close process;
+          Luv.Handle.close process ignore;
           received_signal := Some term_signal
         end
       in
@@ -343,7 +343,7 @@ let tests = [
         Luv.Process.spawn "cat" ["cat"]
             ~on_exit:begin fun process ~exit_status:_ ~term_signal ->
 
-          Luv.Handle.close process;
+          Luv.Handle.close process ignore;
           received_signal := Some term_signal
         end
       in

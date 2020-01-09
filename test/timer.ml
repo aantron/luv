@@ -17,7 +17,7 @@ let with_timer f =
 
   let result = f timer in
 
-  Luv.Handle.close timer;
+  Luv.Handle.close timer ignore;
   run ();
 
   result
@@ -133,7 +133,7 @@ let tests = [
         Luv.Timer.start timer 0 ignore
         |> check_success "start";
 
-        Luv.Handle.close timer;
+        Luv.Handle.close timer ignore;
         run ()
       end
     end;
@@ -141,12 +141,12 @@ let tests = [
     "double close", `Quick, begin fun () ->
       let timer = init () in
 
-      Luv.Handle.close timer;
+      Luv.Handle.close timer ignore;
       run ();
 
       Gc.full_major ();
 
-      Luv.Handle.close timer;
+      Luv.Handle.close timer ignore;
       run ()
     end;
 
@@ -223,7 +223,7 @@ let tests = [
 
     "is_closing, closing", `Quick, begin fun () ->
       with_timer begin fun timer ->
-        Luv.Handle.close timer;
+        Luv.Handle.close timer ignore;
 
         Luv.Handle.is_closing timer
         |> Alcotest.(check bool) "is_closing" true
@@ -232,7 +232,7 @@ let tests = [
 
     "is_closing, closed", `Quick, begin fun () ->
       with_timer begin fun timer ->
-        Luv.Handle.close timer;
+        Luv.Handle.close timer ignore;
         run ();
 
         Luv.Handle.is_closing timer

@@ -15,7 +15,7 @@ let with_pipe f =
 
   f pipe;
 
-  Luv.Handle.close pipe;
+  Luv.Handle.close pipe ignore;
   run ();
 
   Alcotest.(check bool) "file deleted" false (Sys.file_exists filename)
@@ -90,8 +90,8 @@ let tests = [
             accepted := true;
             proceed server_ran;
             defer client_ran begin fun () ->
-              Luv.Handle.close client;
-              Luv.Handle.close server
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore
             end
           end
         ~client_logic:
@@ -101,7 +101,7 @@ let tests = [
             |> Alcotest.(check string) "getpeername address" filename;
             connected := true;
             proceed client_ran;
-            defer server_ran (fun () -> Luv.Handle.close client)
+            defer server_ran (fun () -> Luv.Handle.close client ignore)
           end;
 
       Alcotest.(check bool) "accepted" true !accepted;
@@ -113,12 +113,12 @@ let tests = [
         with_server_and_client ()
           ~server_logic:
             begin fun server client ->
-              Luv.Handle.close client;
-              Luv.Handle.close server
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore
             end
           ~client_logic:
             begin fun client ->
-              Luv.Handle.close client;
+              Luv.Handle.close client ignore;
               raise Exit
             end
       end
@@ -136,8 +136,8 @@ let tests = [
               |> Luv.Bigstring.to_string
               |> Alcotest.(check string) "data" "foo";
 
-              Luv.Handle.close client;
-              Luv.Handle.close server;
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore;
 
               read_finished := true
             end
@@ -150,7 +150,7 @@ let tests = [
             Luv.Stream.write client [buffer1; buffer2] begin fun result count ->
               check_success "write" result;
               Alcotest.(check int) "count" 3 count;
-              Luv.Handle.close client;
+              Luv.Handle.close client ignore;
               write_finished := true
             end
           end;
@@ -191,7 +191,7 @@ let tests = [
           Luv.Stream.try_write received [buffer]
           |> check_success_result "try_write"
           |> Alcotest.(check int) "write byte count" 1;
-          Luv.Handle.close received
+          Luv.Handle.close received ignore
         | `TCP _ ->
           ignore (Alcotest.fail "expected a pipe, got a TCP handle")
         | `None ->
@@ -219,10 +219,10 @@ let tests = [
 
       run ();
 
-      Luv.Handle.close ipc_1;
-      Luv.Handle.close ipc_2;
-      Luv.Handle.close passed_1;
-      Luv.Handle.close passed_2;
+      Luv.Handle.close ipc_1 ignore;
+      Luv.Handle.close ipc_2 ignore;
+      Luv.Handle.close passed_1 ignore;
+      Luv.Handle.close passed_2 ignore;
 
       run ();
 

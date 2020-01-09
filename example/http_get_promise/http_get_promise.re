@@ -91,7 +91,7 @@ let () = {
           print_string(Luv.Bigstring.to_string(buffer))
         | Result.Error(error) =>
           if (error == Luv.Error.eof) {
-            Luv.Handle.close(socket);
+            Luv.Handle.close(socket, ignore);
           }
           else {
             Printf.eprintf(

@@ -64,7 +64,7 @@ let () =
     Luv.Stream.read_start client begin fun result ->
       match result with
       | Error error_code when error_code = Luv.Error.eof ->
-        Luv.Handle.close client
+        Luv.Handle.close client ignore
 
       | Error error_code ->
         Printf.eprintf "Error reading: %s" (Luv.Error.strerror error_code);

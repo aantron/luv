@@ -25,7 +25,7 @@ let with_poll f =
 
   f poll;
 
-  Luv.Handle.close poll;
+  Luv.Handle.close poll ignore;
   run ()
 
 let tests = [

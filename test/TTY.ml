@@ -13,7 +13,7 @@ let with_tty f =
 
   f tty;
 
-  Luv.Handle.close tty;
+  Luv.Handle.close tty ignore;
   run ()
 
 let tests = [

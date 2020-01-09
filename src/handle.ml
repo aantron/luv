@@ -16,14 +16,16 @@ let is_closing handle =
 let close_trampoline =
   C.Functions.Handle.get_close_trampoline ()
 
-let close handle =
+let close handle callback =
   if is_closing handle then
     ()
   else begin
     set_reference
       ~index:C.Types.Handle.close_callback_index
       handle
-      (fun () -> release handle);
+      (fun () ->
+        release handle;
+        callback ());
     C.Functions.Handle.close (coerce handle) close_trampoline
   end
 

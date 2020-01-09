@@ -5,7 +5,7 @@
 
 type 'kind t = 'kind C.Types.Handle.t Ctypes.ptr
 
-val close : _ t -> unit
+val close : _ t -> (unit -> unit) -> unit
 
 val is_active : _ t -> bool
 val is_closing : _ t -> bool

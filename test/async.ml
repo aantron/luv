@@ -13,7 +13,7 @@ let tests = [
         |> check_success_result "init"
       in
 
-      Luv.Handle.close async;
+      Luv.Handle.close async ignore;
       run ()
     end;
 
@@ -27,7 +27,7 @@ let tests = [
 
       Luv.Async.send async |> check_success "send";
       Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
-      Luv.Handle.close async;
+      Luv.Handle.close async ignore;
       run ();
 
       Alcotest.(check bool) "called" true !called
@@ -39,7 +39,7 @@ let tests = [
       let async =
         Luv.Async.init begin fun async ->
           called := true;
-          Luv.Handle.close async
+          Luv.Handle.close async ignore
         end
         |> check_success_result "init"
       in
@@ -63,7 +63,7 @@ let tests = [
 
         Luv.Async.send async |> check_success "send";
         Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
-        Luv.Handle.close async;
+        Luv.Handle.close async ignore;
         run ()
       end
     end;

@@ -90,7 +90,7 @@ let () =
         print_string (Luv.Bigstring.to_string buffer)
       | Result.Error error ->
         if error = Luv.Error.eof then
-          Luv.Handle.close socket
+          Luv.Handle.close socket ignore
         else begin
           Printf.eprintf
             "Could not read from socket: %s" (Luv.Error.strerror error);

@@ -15,13 +15,13 @@ let with_fs_poll f =
 
   f poll;
 
-  Luv.Handle.close poll;
+  Luv.Handle.close poll ignore;
   run ()
 
 let after time f =
   let timer = Luv.Timer.init () |> check_success_result "timer" in
   Luv.Timer.start timer time begin fun () ->
-    Luv.Handle.close timer;
+    Luv.Handle.close timer ignore;
     f ()
   end
   |> check_success "timer_start"

@@ -17,7 +17,7 @@ let () =
 
   let result =
     Luv.Timer.start timer 1000 begin fun () ->
-      Luv.Handle.close timer;
+      Luv.Handle.close timer ignore;
       print_endline " done!"
     end;
   in

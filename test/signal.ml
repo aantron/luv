@@ -13,7 +13,7 @@ let with_signal f =
 
   f signal;
 
-  Luv.Handle.close signal;
+  Luv.Handle.close signal ignore;
   run ()
 
 let send_signal () =

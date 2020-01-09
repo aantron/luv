@@ -14,7 +14,7 @@ let with_tcp ?(close = true) f =
   f tcp;
 
   if close then begin
-    Luv.Handle.close tcp;
+    Luv.Handle.close tcp ignore;
     run ()
   end
 
@@ -168,8 +168,8 @@ let tests = [
         ~server_logic:
           begin fun server client ->
             accepted := true;
-            Luv.Handle.close client;
-            Luv.Handle.close server
+            Luv.Handle.close client ignore;
+            Luv.Handle.close server ignore
           end
         ~client_logic:
           begin fun client address ->
@@ -179,7 +179,7 @@ let tests = [
             |> Alcotest.(check string) "getpeername address"
               (Luv.Sockaddr.to_string address);
             connected := true;
-            Luv.Handle.close client
+            Luv.Handle.close client ignore
           end;
 
       Alcotest.(check bool) "accepted" true !accepted;
@@ -191,11 +191,11 @@ let tests = [
         with_server_and_client
           ~server_logic:
             begin fun server client ->
-              Luv.Handle.close client;
-              Luv.Handle.close server;
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore;
               raise Exit
             end
-          ~client_logic:(fun client _address -> Luv.Handle.close client)
+          ~client_logic:(fun client _address -> Luv.Handle.close client ignore)
       end
     end;
 
@@ -204,12 +204,12 @@ let tests = [
         with_server_and_client
           ~server_logic:
             begin fun server client ->
-              Luv.Handle.close client;
-              Luv.Handle.close server
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore
             end
           ~client_logic:
             begin fun client _address ->
-              Luv.Handle.close client;
+              Luv.Handle.close client ignore;
               raise Exit
             end
       end
@@ -242,8 +242,8 @@ let tests = [
               |> Luv.Bigstring.to_string
               |> Alcotest.(check string) "data" "foo";
 
-              Luv.Handle.close client;
-              Luv.Handle.close server;
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore;
 
               read_finished := true
             end
@@ -259,7 +259,7 @@ let tests = [
             Gc.finalise (fun _ -> buffer3_finalized := true) buffer3;
 
             Luv.Stream.write client [buffer1; buffer3] begin fun result count ->
-              Luv.Handle.close client;
+              Luv.Handle.close client ignore;
               check_success "write" result;
               Alcotest.(check int) "count" 3 count;
               write_finished := true
@@ -310,8 +310,8 @@ let tests = [
             begin fun server client ->
               Luv.Stream.read_start client begin fun result ->
                 ignore (check_success_result "read_start" result);
-                Luv.Handle.close client;
-                Luv.Handle.close server;
+                Luv.Handle.close client ignore;
+                Luv.Handle.close server ignore;
                 raise Exit
               end
             end
@@ -321,7 +321,7 @@ let tests = [
               Luv.Stream.write client [buffer] begin fun result count ->
                 check_success "write" result;
                 Alcotest.(check int) "count" 1 count;
-                Luv.Handle.close client
+                Luv.Handle.close client ignore
               end
             end
       end
@@ -342,8 +342,8 @@ let tests = [
             begin fun server client ->
               Luv.Stream.read_start client begin fun result ->
                 ignore (check_success_result "read_start" result);
-                Luv.Handle.close client;
-                Luv.Handle.close server
+                Luv.Handle.close client ignore;
+                Luv.Handle.close server ignore
               end
             end
           ~client_logic:
@@ -351,7 +351,7 @@ let tests = [
               let buffer = Luv.Bigstring.from_string "f" in
               Luv.Stream.write client [buffer] begin fun result ->
                 check_success "write" result;
-                Luv.Handle.close client;
+                Luv.Handle.close client ignore;
                 raise Exit
               end
             end
@@ -378,8 +378,8 @@ let tests = [
           begin fun server client ->
             Luv.Stream.read_start client begin fun result ->
               ignore (check_success_result "read_start" result);
-              Luv.Handle.close client;
-              Luv.Handle.close server;
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore;
               read_finished := true
             end
           end
@@ -392,7 +392,7 @@ let tests = [
             |> check_success_result "try_write"
             |> Alcotest.(check int) "count" 3;
 
-            Luv.Handle.close client;
+            Luv.Handle.close client ignore;
             write_finished := true
           end;
 
@@ -416,8 +416,8 @@ let tests = [
           begin fun server client ->
             Luv.Stream.shutdown client begin fun result ->
               check_success "server shutdown" result;
-              Luv.Handle.close client;
-              Luv.Handle.close server;
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore;
               server_finished := true
             end
           end
@@ -425,7 +425,7 @@ let tests = [
           begin fun client _address ->
             Luv.Stream.shutdown client begin fun result ->
               check_success "client shutdown" result;
-              Luv.Handle.close client;
+              Luv.Handle.close client ignore;
               client_finished := true
             end
           end;
@@ -461,12 +461,12 @@ let tests = [
           ~server_logic:
             begin fun server client ->
               Luv.Stream.shutdown client begin fun _result ->
-                Luv.Handle.close client;
-                Luv.Handle.close server;
+                Luv.Handle.close client ignore;
+                Luv.Handle.close server ignore;
                 raise Exit
               end
             end
-          ~client_logic:(fun client _address -> Luv.Handle.close client)
+          ~client_logic:(fun client _address -> Luv.Handle.close client ignore)
       end
     end;
 
@@ -504,14 +504,14 @@ let tests = [
         Luv.Stream.accept ~server ~client |> check_success "accept";
         Luv.TCP.close_reset client begin fun result ->
           check_success "close_reset" result;
-          Luv.Handle.close server;
+          Luv.Handle.close server ignore;
           called := true
         end
       end;
 
       let client = Luv.TCP.init () |> check_success_result "client init" in
       Luv.TCP.connect client address begin fun _result ->
-        Luv.Handle.close client
+        Luv.Handle.close client ignore
       end;
 
       run ();

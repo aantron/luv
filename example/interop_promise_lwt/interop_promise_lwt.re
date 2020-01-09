@@ -32,7 +32,7 @@ let () = {
     | Result.Error(_) => exit(1)
     };
   Luv.Timer.start(timer, 3000, () => {
-    Luv.Handle.close(timer);
+    Luv.Handle.close(timer, ignore);
     print_endline("(3) Luv delay elapsed!");
   })
   |> ignore;
