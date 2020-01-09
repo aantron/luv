@@ -200,3 +200,16 @@ sig
 
   val gettimeofday : unit -> (t, Error.t) Result.result
 end
+
+module Random :
+sig
+  module Async :
+  sig
+    val random : ?loop:Loop.t -> Bigstring.t -> (Error.t -> unit) -> unit
+  end
+
+  module Sync :
+  sig
+    val random : Bigstring.t -> Error.t
+  end
+end

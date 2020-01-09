@@ -63,6 +63,8 @@ uv_idle_cb luv_get_idle_trampoline();
 luv_once_cb luv_get_once_trampoline();
 uv_poll_cb luv_get_poll_trampoline();
 uv_prepare_cb luv_get_prepare_trampoline();
+uv_random_cb luv_get_random_trampoline();
+uv_random_cb luv_null_random_trampoline();
 luv_read_cb luv_get_read_trampoline();
 luv_udp_recv_cb luv_get_recv_trampoline();
 uv_udp_send_cb luv_get_send_trampoline();

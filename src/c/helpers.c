@@ -186,6 +186,15 @@ static void luv_prepare_trampoline(uv_prepare_t *c_handle)
     caml_release_runtime_system();
 }
 
+static void luv_random_trampoline(
+    uv_random_t *c_request, int status, void *buffer, size_t length)
+{
+    caml_acquire_runtime_system();
+    GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
+    caml_callback(callback, Val_int(status));
+    caml_release_runtime_system();
+}
+
 static void luv_read_trampoline(
     uv_stream_t *c_handle, ssize_t nread, uv_buf_t *buffer)
 {
@@ -377,6 +386,16 @@ uv_poll_cb luv_get_poll_trampoline()
 uv_prepare_cb luv_get_prepare_trampoline()
 {
     return luv_prepare_trampoline;
+}
+
+uv_random_cb luv_get_random_trampoline()
+{
+    return luv_random_trampoline;
+}
+
+uv_random_cb luv_null_random_trampoline()
+{
+    return NULL;
 }
 
 luv_read_cb luv_get_read_trampoline()

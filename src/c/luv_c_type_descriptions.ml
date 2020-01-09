@@ -857,4 +857,14 @@ struct
     let value = field t "value" string
     let () = seal t
   end
+
+  module Random =
+  struct
+    module Request =
+    struct
+      type t = [ `Random ] Request.t
+      let t : t typ = typedef (structure "`Random") "uv_random_t"
+      let () = seal t
+    end
+  end
 end

@@ -1744,4 +1744,32 @@ struct
       foreign "uv_gettimeofday"
         (ptr Types.Time.Timeval.t @-> returning error_code)
   end
+
+  module Random =
+  struct
+    let request = Types.Random.Request.t
+
+    let trampoline =
+      static_funptr
+        Ctypes.(ptr request @-> error_code @-> ptr void @-> size_t @->
+          returning void)
+
+    let get_trampoline =
+      foreign "luv_get_random_trampoline"
+        (void @-> returning trampoline)
+
+    let get_null_callback =
+      foreign "luv_null_random_trampoline"
+        (void @-> returning trampoline)
+
+    let random =
+      foreign "uv_random"
+        (ptr Loop.t @->
+         ptr request @->
+         ptr char @->
+         size_t @->
+         uint @->
+         trampoline @->
+          returning error_code)
+  end
 end

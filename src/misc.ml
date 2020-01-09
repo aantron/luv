@@ -501,3 +501,49 @@ struct
       }
     end
 end
+
+module Random =
+struct
+  module Async =
+  struct
+    let trampoline =
+      C.Functions.Random.get_trampoline ()
+
+    let random ?loop buffer callback =
+      let request = Request.allocate C.Types.Random.Request.t in
+      Request.set_callback request begin fun result ->
+        ignore (Compatibility.Sys.opaque_identity buffer);
+        Error.catch_exceptions callback result
+      end;
+
+      let immediate_result =
+        C.Functions.Random.random
+          (Loop.or_default loop)
+          request
+          Ctypes.(bigarray_start array1 buffer)
+          (Unsigned.Size_t.of_int (Bigstring.size buffer))
+          Unsigned.UInt.zero
+          trampoline
+      in
+
+      if immediate_result < Error.success then begin
+        Request.release request;
+        callback immediate_result
+      end
+  end
+
+  module Sync =
+  struct
+    let null_callback =
+      C.Functions.Random.get_null_callback ()
+
+    let random buffer =
+      C.Functions.Random.random
+        Ctypes.(from_voidp C.Types.Loop.t null)
+        Ctypes.(from_voidp C.Types.Random.Request.t null)
+        Ctypes.(bigarray_start array1 buffer)
+        (Unsigned.Size_t.of_int (Bigstring.size buffer))
+        Unsigned.UInt.zero
+        null_callback
+  end
+end
