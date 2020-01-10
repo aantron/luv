@@ -17,15 +17,15 @@ struct
     let delay ?loop ?call_update_time time =
       let p, resolve = Promise.make () in
       begin match Timer.init ?loop () with
-      | Result.Error error -> resolve error
+      | Result.Error _ as error -> resolve error
       | Result.Ok timer ->
         let immediate_result =
           Timer.start ?call_update_time timer time begin fun () ->
             Handle.close timer ignore;
-            resolve Error.success
+            resolve (Result.Ok ())
           end
         in
-        if immediate_result <> Error.success then
+        if immediate_result <> (Result.Ok ()) then
           resolve immediate_result
       end;
       p

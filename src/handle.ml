@@ -48,6 +48,7 @@ let buffer_size c_function handle =
 
 let send_buffer_size handle =
   buffer_size C.Functions.Handle.send_buffer_size handle
+
 let recv_buffer_size handle =
   buffer_size C.Functions.Handle.recv_buffer_size handle
 
@@ -57,8 +58,11 @@ let set_buffer_size c_function handle size =
 
 let set_send_buffer_size handle size =
   set_buffer_size C.Functions.Handle.send_buffer_size handle size
+  |> Error.to_result ()
+
 let set_recv_buffer_size handle size =
   set_buffer_size C.Functions.Handle.recv_buffer_size handle size
+  |> Error.to_result ()
 
 let fileno handle =
   let os_fd = Ctypes.make C.Types.Os_fd.t in

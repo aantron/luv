@@ -27,21 +27,29 @@ end
 val init :
   ?loop:Loop.t -> ?domain:Misc.Address_family.t -> unit ->
     (t, Error.t) Result.result
-val open_ : t -> Misc.Os_socket.t -> Error.t
-val bind : ?flags:Bind_flag.t -> t -> Misc.Sockaddr.t -> Error.t
+val open_ : t -> Misc.Os_socket.t -> (unit, Error.t) Result.result
+val bind :
+  ?flags:Bind_flag.t -> t -> Misc.Sockaddr.t -> (unit, Error.t) Result.result
 val getsockname : t -> (Misc.Sockaddr.t, Error.t) Result.result
 val set_membership :
-  t -> group:string -> interface:string -> Membership.t -> Error.t
+  t -> group:string -> interface:string -> Membership.t ->
+    (unit, Error.t) Result.result
 val set_source_membership :
   t -> group:string -> interface:string -> source:string -> Membership.t ->
-    Error.t
-val set_multicast_loop : t -> bool -> Error.t
-val set_multicast_ttl : t -> int -> Error.t
-val set_multicast_interface : t -> string -> Error.t
-val set_ttl : t -> int -> Error.t
+    (unit, Error.t) Result.result
+val set_multicast_loop : t -> bool -> (unit, Error.t) Result.result
+val set_multicast_ttl : t -> int -> (unit, Error.t) Result.result
+val set_multicast_interface : t -> string -> (unit, Error.t) Result.result
+val set_ttl : t -> int -> (unit, Error.t) Result.result
 (* DOC The write is always full. *)
-val send : t -> Bigstring.t list -> Misc.Sockaddr.t -> (Error.t -> unit) -> unit
-val try_send : t -> Bigstring.t list -> Misc.Sockaddr.t -> Error.t
+val send :
+  t ->
+  Bigstring.t list ->
+  Misc.Sockaddr.t ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
+val try_send :
+  t -> Bigstring.t list -> Misc.Sockaddr.t -> (unit, Error.t) Result.result
 
 (* DOC The boolean is a flag for whether the read was partial. *)
 val recv_start :
@@ -51,15 +59,16 @@ val recv_start :
   ((Bigstring.t * Misc.Sockaddr.t * bool, Error.t) Result.result -> unit) ->
     unit
 
-val recv_stop : t -> Error.t
+val recv_stop : t -> (unit, Error.t) Result.result
 val get_send_queue_size : t -> int
 val get_send_queue_count : t -> int
 
 module Connected :
 sig
-  val connect : t -> Misc.Sockaddr.t -> Error.t
-  val disconnect : t -> Error.t
+  val connect : t -> Misc.Sockaddr.t -> (unit, Error.t) Result.result
+  val disconnect : t -> (unit, Error.t) Result.result
   val getpeername : t -> (Misc.Sockaddr.t, Error.t) Result.result
-  val send : t -> Bigstring.t list -> (Error.t -> unit) -> unit
-  val try_send : t -> Bigstring.t list -> Error.t
+  val send :
+    t -> Bigstring.t list -> ((unit, Error.t) Result.result -> unit) -> unit
+  val try_send : t -> Bigstring.t list -> (unit, Error.t) Result.result
 end

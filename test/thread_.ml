@@ -43,7 +43,7 @@ let tests = [
       let finished = ref false in
 
       Luv.Thread.Pool.queue_work (fun () -> ran := true) begin fun result ->
-        check_success "queue_work" result;
+        check_success_result "queue_work" result;
         finished := true
       end;
 
@@ -120,7 +120,7 @@ let tests = [
       Alcotest.(check bool) "not started" false !ran;
 
       Luv.Thread.join child
-      |> check_success "join";
+      |> check_success_result "join";
 
       Alcotest.(check bool) "ran" true !ran
     end;
@@ -130,7 +130,7 @@ let tests = [
         Luv.Thread.create (fun () -> raise Exit)
         |> check_success_result "create"
         |> Luv.Thread.join
-        |> check_success "join"
+        |> check_success_result "join"
       end
     end;
 
@@ -144,7 +144,7 @@ let tests = [
       Luv.Thread.create (fun () -> ran := true)
       |> check_success_result "create"
       |> Luv.Thread.join
-      |> check_success "join";
+      |> check_success_result "join";
 
       Alcotest.(check bool) "ran" true !ran
     end;
@@ -152,9 +152,9 @@ let tests = [
     "join: sequenced", `Quick, begin fun () ->
       let child = Luv.Thread.create ignore |> check_success_result "create" in
       Luv.Thread.join child
-      |> check_success "join";
+      |> check_success_result "join";
       Luv.Thread.join child
-      |> check_error_code "second join" Luv.Error.esrch
+      |> check_error_result "second join" Luv.Error.esrch
     end;
 
     "function leak", `Quick, begin fun () ->
@@ -162,7 +162,7 @@ let tests = [
         Luv.Thread.create (make_callback ())
         |> check_success_result "create"
         |> Luv.Thread.join
-        |> check_success "join"
+        |> check_success_result "join"
       end
     end;
 
@@ -179,7 +179,7 @@ let tests = [
       end
       |> check_success_result "create"
       |> Luv.Thread.join
-      |> check_success "join";
+      |> check_success_result "join";
       Alcotest.(check int) "child" 1337 (Nativeint.to_int !value_in_child);
 
       Alcotest.(check int) "parent final"
@@ -220,10 +220,10 @@ let tests = [
     "mutex", `Quick, begin fun () ->
       let mutex = Luv.Mutex.init () |> check_success_result "init" in
 
-      Luv.Mutex.trylock mutex |> check_success "trylock 1";
-      Luv.Mutex.trylock mutex |> check_error_code "trylock 2" Luv.Error.ebusy;
+      Luv.Mutex.trylock mutex |> check_success_result "trylock 1";
+      Luv.Mutex.trylock mutex |> check_error_result "trylock 2" Luv.Error.ebusy;
 
-      let child_trylock_result = ref Luv.Error.success in
+      let child_trylock_result = ref (Result.Ok ()) in
       let child_tried_to_lock = Event.create () in
       let child =
         check_success_result "thread create" @@
@@ -235,12 +235,12 @@ let tests = [
       in
 
       Event.wait child_tried_to_lock;
-      check_error_code "child trylock" Luv.Error.ebusy !child_trylock_result;
+      check_error_result "child trylock" Luv.Error.ebusy !child_trylock_result;
 
       Luv.Mutex.unlock mutex;
-      Luv.Thread.join child |> check_success "join";
+      Luv.Thread.join child |> check_success_result "join";
 
-      Luv.Mutex.trylock mutex |> check_error_code "trylock 3" Luv.Error.ebusy;
+      Luv.Mutex.trylock mutex |> check_error_result "trylock 3" Luv.Error.ebusy;
       Luv.Mutex.unlock mutex;
 
       Luv.Mutex.destroy mutex
@@ -249,7 +249,7 @@ let tests = [
     "rwlock: readers", `Quick, begin fun () ->
       let rwlock = Luv.Rwlock.init () |> check_success_result "init" in
 
-      Luv.Rwlock.tryrdlock rwlock |> check_success "tryrdlock";
+      Luv.Rwlock.tryrdlock rwlock |> check_success_result "tryrdlock";
 
       Luv.Thread.create begin fun () ->
         Luv.Rwlock.rdlock rwlock;
@@ -257,7 +257,7 @@ let tests = [
       end
       |> check_success_result "thread create"
       |> Luv.Thread.join
-      |> check_success "join";
+      |> check_success_result "join";
 
       Luv.Rwlock.rdunlock rwlock;
 
@@ -269,17 +269,17 @@ let tests = [
 
       Luv.Rwlock.wrlock rwlock;
 
-      let child_tryrdlock_result = ref Luv.Error.success in
-      let child_trywrlock_result = ref Luv.Error.success in
+      let child_tryrdlock_result = ref (Result.Ok ()) in
+      let child_trywrlock_result = ref (Result.Ok ()) in
       Luv.Thread.create begin fun () ->
         child_tryrdlock_result := Luv.Rwlock.tryrdlock rwlock;
         child_trywrlock_result := Luv.Rwlock.trywrlock rwlock
       end
       |> check_success_result "thread create"
       |> Luv.Thread.join
-      |> check_success "join";
-      check_error_code "tryrdlock" Luv.Error.ebusy !child_tryrdlock_result;
-      check_error_code "trywrlock" Luv.Error.ebusy !child_trywrlock_result;
+      |> check_success_result "join";
+      check_error_result "tryrdlock" Luv.Error.ebusy !child_tryrdlock_result;
+      check_error_result "trywrlock" Luv.Error.ebusy !child_trywrlock_result;
 
       Luv.Rwlock.wrunlock rwlock;
 
@@ -289,12 +289,12 @@ let tests = [
     "semaphore", `Quick, begin fun () ->
       let semaphore = Luv.Semaphore.init 2 |> check_success_result "init" in
 
-      Luv.Semaphore.trywait semaphore |> check_success "trywait 1";
+      Luv.Semaphore.trywait semaphore |> check_success_result "trywait 1";
       Luv.Semaphore.wait semaphore;
       Luv.Semaphore.trywait semaphore
-      |> check_error_code "trywait 2" Luv.Error.eagain;
+      |> check_error_result "trywait 2" Luv.Error.eagain;
       Luv.Semaphore.post semaphore;
-      Luv.Semaphore.trywait semaphore |> check_success "trywait 3";
+      Luv.Semaphore.trywait semaphore |> check_success_result "trywait 3";
 
       Luv.Semaphore.destroy semaphore
     end;
@@ -325,7 +325,7 @@ let tests = [
 
       (* 100ms. *)
       Luv.Condition.timedwait condition mutex 100000000
-      |> check_error_code "timedwait" Luv.Error.etimedout;
+      |> check_error_result "timedwait" Luv.Error.etimedout;
 
       Luv.Mutex.unlock mutex;
 
@@ -351,7 +351,7 @@ let tests = [
       Alcotest.(check bool) "child ran" true !child_ran;
 
       Luv.Thread.join child
-      |> check_success "join";
+      |> check_success_result "join";
 
       Alcotest.(check int) "cleanup count" 1 !cleanup_count;
 

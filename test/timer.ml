@@ -43,7 +43,7 @@ let tests = [
         let start_time = Unix.gettimeofday () in
 
         Luv.Timer.start timer timeout (fun () -> finished := true)
-        |> check_success "start";
+        |> check_success_result "start";
 
         run ();
         Alcotest.(check bool) "finished" true !finished;
@@ -64,9 +64,9 @@ let tests = [
         let second_called = ref false in
 
         Luv.Timer.start timer 0 (fun () -> first_called := true)
-        |> check_success "first start";
+        |> check_success_result "first start";
         Luv.Timer.start timer 0 (fun () -> second_called := true)
-        |> check_success "second start";
+        |> check_success_result "second start";
 
         run ();
 
@@ -79,7 +79,7 @@ let tests = [
       with_timer begin fun timer ->
         no_memory_leak begin fun _n ->
           Luv.Timer.start timer 0 (make_callback ())
-          |> check_success "start"
+          |> check_success_result "start"
         end
       end
     end;
@@ -89,10 +89,10 @@ let tests = [
         let called = ref false in
 
         Luv.Timer.start timer 0 (fun () -> called := true)
-        |> check_success "start";
+        |> check_success_result "start";
 
         Luv.Timer.stop timer
-        |> check_success "stop";
+        |> check_success_result "stop";
 
         run ();
         Alcotest.(check bool) "called" false !called
@@ -106,16 +106,16 @@ let tests = [
 
         Luv.Timer.start timer 0 ~repeat:1 begin fun () ->
           Luv.Timer.stop timer
-          |> check_success "stop";
+          |> check_success_result "stop";
           called := true
         end
-        |> check_success "start";
+        |> check_success_result "start";
 
         Luv.Timer.stop timer
-        |> check_success "stop";
+        |> check_success_result "stop";
 
         Luv.Timer.again timer
-        |> check_success "again";
+        |> check_success_result "again";
 
         run ();
         Alcotest.(check bool) "called" true !called
@@ -131,7 +131,7 @@ let tests = [
         in
 
         Luv.Timer.start timer 0 ignore
-        |> check_success "start";
+        |> check_success_result "start";
 
         Luv.Handle.close timer ignore;
         run ()
@@ -155,7 +155,7 @@ let tests = [
         let ran = ref false in
 
         Luv.Timer.start timer 1100 ignore
-        |> check_success "start";
+        |> check_success_result "start";
 
         ignore @@ Thread.create begin fun () ->
           Unix.sleep 1;
@@ -176,7 +176,7 @@ let tests = [
         let called = ref false in
 
         Luv.Timer.start timer 10 (fun () -> called := true)
-        |> check_success "start";
+        |> check_success_result "start";
 
         Unix.sleep 1;
 
@@ -190,7 +190,7 @@ let tests = [
       with_timer begin fun timer ->
         check_exception Exit begin fun () ->
           Luv.Timer.start timer 0 (fun () -> raise Exit)
-          |> check_success "start";
+          |> check_success_result "start";
 
           run ()
         end
@@ -207,7 +207,7 @@ let tests = [
     "is_active, started", `Quick, begin fun () ->
       with_timer begin fun timer ->
         Luv.Timer.start timer 0 ignore
-        |> check_success "start";
+        |> check_success_result "start";
 
         Luv.Handle.is_active timer
         |> Alcotest.(check bool) "is_active" true

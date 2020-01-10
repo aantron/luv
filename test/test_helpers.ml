@@ -21,10 +21,6 @@ let fail_with_error_code name error_code =
   Fmt.to_to_string pp_error_code error_code
   |> Alcotest.failf "%s failed with %s" name
 
-let check_success name error_code =
-  if error_code <> Luv.Error.success then
-    fail_with_error_code name error_code
-
 let check_error_code name expected error_code =
   Alcotest.check error_code_testable name expected error_code
 
@@ -138,7 +134,7 @@ let run ?(with_timeout = false) () =
 
     Luv.Loop.update_time default_loop;
     Luv.Timer.start timeout 5000 (fun _ -> stop := true)
-    |> check_success "timeout timer start";
+    |> check_success_result "timeout timer start";
 
     let rec run () =
       if !stop then ()

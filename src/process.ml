@@ -187,11 +187,13 @@ let spawn
 let disable_stdio_inheritance =
   C.Functions.Process.disable_stdio_inheritance
 
-let kill =
-  C.Functions.Process.process_kill
+let kill process signal =
+  C.Functions.Process.process_kill process signal
+  |> Error.to_result ()
 
 let kill_pid ~pid signal =
   C.Functions.Process.kill pid signal
+  |> Error.to_result ()
 
 let pid =
   C.Functions.Process.get_pid

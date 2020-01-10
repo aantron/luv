@@ -34,11 +34,11 @@ let tests = [
 
         let timer = Luv.Timer.init () |> check_success_result "timer" in
         Luv.Timer.start timer 10 begin fun () ->
-          Luv.FS_event.stop event |> check_success "stop";
+          Luv.FS_event.stop event |> check_success_result "stop";
           Luv.Handle.close timer ignore;
           timed_out := true
         end
-        |> check_success "timer_start";
+        |> check_success_result "timer_start";
 
         run ();
 
@@ -52,7 +52,7 @@ let tests = [
         let occurred = ref false in
 
         Luv.FS_event.start event Filename.current_dir_name begin fun result ->
-          Luv.FS_event.stop event |> check_success "stop";
+          Luv.FS_event.stop event |> check_success_result "stop";
           let filename', events = check_success_result "start" result in
           Alcotest.(check string) "filename" filename filename';
           Alcotest.(check bool) "rename"

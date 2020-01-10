@@ -12,4 +12,4 @@ val start :
   string ->
   ((File.Stat.t * File.Stat.t, Error.t) Result.result -> unit) ->
     unit
-val stop : t -> Error.t
+val stop : t -> (unit, Error.t) Result.result

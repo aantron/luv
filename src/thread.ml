@@ -22,9 +22,11 @@ struct
 
   let queue_work ?loop ?(request = Request_.make ()) f callback =
     let f = Error.catch_exceptions f in
-    let callback = Error.catch_exceptions callback in
+    let wrapped_callback result =
+      Error.catch_exceptions callback (Error.to_result () result)
+    in
     Request.set_reference ~index:C.Types.Work.function_index request f;
-    Request.set_callback request callback;
+    Request.set_callback request wrapped_callback;
 
     let immediate_result =
       C.Functions.Work.queue
@@ -33,7 +35,7 @@ struct
 
     if immediate_result < Error.success then begin
       Request.release request;
-      callback immediate_result
+      callback (Result.Error immediate_result)
     end
 
   let c_work_trampoline =
@@ -49,14 +51,16 @@ struct
       f
       callback =
 
-    let callback = Error.catch_exceptions callback in
-    Request.set_callback request callback;
+    let wrapped_callback result =
+      Error.catch_exceptions callback (Error.to_result () result)
+    in
+    Request.set_callback request wrapped_callback;
 
     let result =
       C.Functions.Work.add_c_function_and_argument request f argument in
     if not result then begin
       Request.release request;
-      callback Error.enomem
+      callback (Result.Error Error.enomem)
     end
 
     else begin
@@ -70,7 +74,7 @@ struct
 
       if immediate_result < Error.success then begin
         Request.release request;
-        callback immediate_result
+        callback (Result.Error immediate_result)
       end
     end
 
@@ -133,8 +137,9 @@ let create_c ?stack_size ?(argument = Nativeint.zero) f =
   C.Functions.Thread.create_c thread (make_thread_options stack_size) f argument
   |> Error.to_result thread
 
-let join =
-  C.Blocking.Thread.join
+let join thread =
+  C.Blocking.Thread.join thread
+  |> Error.to_result ()
 
 module TLS =
 struct
@@ -197,8 +202,9 @@ struct
   let lock =
     C.Blocking.Mutex.lock
 
-  let trylock =
-    C.Functions.Mutex.trylock
+  let trylock mutex =
+    C.Functions.Mutex.trylock mutex
+    |> Error.to_result ()
 
   let unlock =
     C.Functions.Mutex.unlock
@@ -219,8 +225,9 @@ struct
   let rdlock =
     C.Blocking.Rwlock.rdlock
 
-  let tryrdlock =
-    C.Functions.Rwlock.tryrdlock
+  let tryrdlock rwlock =
+    C.Functions.Rwlock.tryrdlock rwlock
+    |> Error.to_result ()
 
   let rdunlock =
     C.Functions.Rwlock.rdunlock
@@ -228,8 +235,9 @@ struct
   let wrlock =
     C.Blocking.Rwlock.wrlock
 
-  let trywrlock =
-    C.Functions.Rwlock.trywrlock
+  let trywrlock rwlock =
+    C.Functions.Rwlock.trywrlock rwlock
+    |> Error.to_result ()
 
   let wrunlock =
     C.Functions.Rwlock.wrunlock
@@ -253,8 +261,9 @@ struct
   let wait =
     C.Blocking.Semaphore.wait
 
-  let trywait =
-    C.Functions.Semaphore.trywait
+  let trywait semaphore =
+    C.Functions.Semaphore.trywait semaphore
+    |> Error.to_result ()
 end
 
 module Condition =
@@ -281,6 +290,7 @@ struct
   let timedwait condition mutex interval =
     C.Blocking.Condition.timedwait
       condition mutex (Unsigned.UInt64.of_int interval)
+    |> Error.to_result ()
 end
 
 module Barrier =

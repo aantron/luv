@@ -35,5 +35,6 @@ let start poll events callback =
     callback (Result.Error immediate_result)
   end
 
-let stop =
-  C.Functions.Poll.stop
+let stop poll =
+  C.Functions.Poll.stop poll
+  |> Error.to_result ()

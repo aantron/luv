@@ -44,7 +44,7 @@ let tests = [
           |> Alcotest.(check bool) "writable" true;
 
           Luv.Poll.stop poll
-          |> check_success "stop";
+          |> check_success_result "stop";
 
           called := true
         end;

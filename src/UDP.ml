@@ -32,11 +32,13 @@ let init ?loop ?(domain : Misc.Address_family.t option) () =
   in
   Error.to_result udp result
 
-let open_ =
-  C.Functions.UDP.open_
+let open_ udp socket =
+  C.Functions.UDP.open_ udp socket
+  |> Error.to_result ()
 
 let bind ?(flags = 0) udp address =
   C.Functions.UDP.bind udp (Misc.Sockaddr.as_sockaddr address) flags
+  |> Error.to_result ()
 
 let getsockname = Misc.Sockaddr.wrap_c_getter C.Functions.UDP.getsockname
 
@@ -46,6 +48,7 @@ let set_membership udp ~group ~interface membership =
     (Ctypes.ocaml_string_start group)
     (Ctypes.ocaml_string_start interface)
     membership
+  |> Error.to_result ()
 
 let set_source_membership udp ~group ~interface ~source membership =
   C.Functions.UDP.set_source_membership
@@ -54,19 +57,24 @@ let set_source_membership udp ~group ~interface ~source membership =
     (Ctypes.ocaml_string_start interface)
     (Ctypes.ocaml_string_start source)
     membership
+  |> Error.to_result ()
 
-let set_multicast_loop =
-  C.Functions.UDP.set_multicast_loop
+let set_multicast_loop udp on =
+  C.Functions.UDP.set_multicast_loop udp on
+  |> Error.to_result ()
 
-let set_multicast_ttl =
-  C.Functions.UDP.set_multicast_ttl
+let set_multicast_ttl udp ttl =
+  C.Functions.UDP.set_multicast_ttl udp ttl
+  |> Error.to_result ()
 
 let set_multicast_interface udp interface =
   C.Functions.UDP.set_multicast_interface
     udp (Ctypes.ocaml_string_start interface)
+  |> Error.to_result ()
 
-let set_ttl =
-  C.Functions.UDP.set_ttl
+let set_ttl udp ttl =
+  C.Functions.UDP.set_ttl udp ttl
+  |> Error.to_result ()
 
 let send_trampoline =
   C.Functions.UDP.Send_request.get_trampoline ()
@@ -77,12 +85,11 @@ let send_general udp buffers address callback =
 
   let request = Request.allocate C.Types.UDP.Send_request.t in
 
-  let callback = Error.catch_exceptions callback in
   Request.set_callback request begin fun result ->
     let module Sys = Compatibility.Sys in
     ignore (Sys.opaque_identity buffers);
     ignore (Sys.opaque_identity iovecs);
-    callback result
+    Error.catch_exceptions callback (Error.to_result () result)
   end;
 
   let immediate_result =
@@ -97,7 +104,7 @@ let send_general udp buffers address callback =
 
   if immediate_result < Error.success then begin
     Request.release request;
-    callback immediate_result
+    callback (Result.Error immediate_result)
   end
 
 let send udp buffers address callback =
@@ -119,7 +126,7 @@ let try_send_general udp buffers address =
   ignore (Sys.opaque_identity buffers);
   ignore (Sys.opaque_identity iovecs);
 
-  Error.clamp result
+  Error.to_result () result
 
 let try_send udp buffers address =
   try_send_general udp buffers (Misc.Sockaddr.as_sockaddr address)
@@ -135,7 +142,6 @@ let recv_start
 
   let last_allocated_buffer = ref None in
 
-  let callback = Error.catch_exceptions callback in
   Handle.set_reference udp
       begin fun (nread_or_error : Error.t) sockaddr flags ->
 
@@ -163,7 +169,7 @@ let recv_start
         |> Misc.Sockaddr.copy_storage
       in
       let truncated = (flags = C.Types.UDP.Flag.partial) in
-      callback (Result.Ok (buffer, sockaddr, truncated))
+      Error.catch_exceptions callback (Result.Ok (buffer, sockaddr, truncated))
     end
   end;
 
@@ -180,8 +186,9 @@ let recv_start
   if immediate_result < Error.success then
     callback (Result.Error immediate_result)
 
-let recv_stop =
-  C.Functions.UDP.recv_stop
+let recv_stop udp =
+  C.Functions.UDP.recv_stop udp
+  |> Error.to_result ()
 
 let get_send_queue_size udp =
   C.Functions.UDP.get_send_queue_size udp
@@ -195,9 +202,11 @@ module Connected =
 struct
   let connect udp address =
     C.Functions.UDP.connect udp (Misc.Sockaddr.as_sockaddr address)
+    |> Error.to_result ()
 
   let disconnect udp =
     C.Functions.UDP.connect udp Misc.Sockaddr.null
+    |> Error.to_result ()
 
   let getpeername = Misc.Sockaddr.wrap_c_getter C.Functions.UDP.getpeername
 

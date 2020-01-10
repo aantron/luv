@@ -16,7 +16,7 @@ let with_file_for_reading ?(to_fail = false) f =
   f file;
 
   Luv.File.Sync.close file
-  |> check_success "close"
+  |> check_success_result "close"
 
 let with_file_for_writing f =
   let filename = "write_test_output" in
@@ -29,7 +29,7 @@ let with_file_for_writing f =
   f file;
 
   Luv.File.Sync.close file
-  |> check_success "close";
+  |> check_success_result "close";
 
   let channel = open_in filename in
   let content = input_line channel in
@@ -98,7 +98,7 @@ let tests = [
           |> Alcotest.(check string) "data" "open";
 
           Luv.File.Async.close file begin fun result ->
-            check_success "close result" result;
+            check_success_result "close result" result;
             finished := true
           end
         end
@@ -131,7 +131,7 @@ let tests = [
       |> Alcotest.(check string) "data" "open";
 
       Luv.File.Sync.close file
-      |> check_success "close"
+      |> check_success_result "close"
     end;
 
     "open: nonexistent, async", `Quick, begin fun () ->
@@ -176,7 +176,7 @@ let tests = [
         in
 
         Luv.File.Sync.close file
-        |> check_success "close"
+        |> check_success_result "close"
       end
     end;
 
@@ -340,7 +340,7 @@ let tests = [
         Alcotest.(check bool) "exists" true (Sys.file_exists path);
 
         Luv.File.Async.unlink path begin fun result ->
-          check_success "result" result
+          check_success_result "result" result
         end;
 
         run ();
@@ -353,7 +353,7 @@ let tests = [
         Alcotest.(check bool) "exists" true (Sys.file_exists path);
 
         Luv.File.Sync.unlink path
-        |> check_success "unlink";
+        |> check_success_result "unlink";
 
         Alcotest.(check bool) "does not exist" false (Sys.file_exists path)
       end
@@ -363,7 +363,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.unlink "non_existent_file" begin fun result ->
-        check_error_code "result" Luv.Error.enoent result;
+        check_error_result "result" Luv.Error.enoent result;
         finished := true
       end;
 
@@ -373,7 +373,7 @@ let tests = [
 
     "unlink failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.unlink "non_existent_file"
-      |> check_error_code "unlink" Luv.Error.enoent
+      |> check_error_result "unlink" Luv.Error.enoent
     end;
 
     "mkdir, rmdir: async", `Quick, begin fun () ->
@@ -381,11 +381,11 @@ let tests = [
       let directory = "dummy_directory" in
 
       Luv.File.Async.mkdir directory begin fun result ->
-        check_success "mkdir result" result;
+        check_success_result "mkdir result" result;
         Alcotest.(check bool) "exists" true (Sys.file_exists directory);
 
         Luv.File.Async.rmdir directory begin fun result ->
-          check_success "rmdir result" result;
+          check_success_result "rmdir result" result;
           Alcotest.(check bool)
             "does not exist" false (Sys.file_exists directory);
 
@@ -401,12 +401,12 @@ let tests = [
       let directory = "dummy_directory" in
 
       Luv.File.Sync.mkdir directory
-      |> check_success "mkdir";
+      |> check_success_result "mkdir";
 
       Alcotest.(check bool) "exists" true (Sys.file_exists directory);
 
       Luv.File.Sync.rmdir directory
-      |> check_success "rmdir";
+      |> check_success_result "rmdir";
 
       Alcotest.(check bool) "does not exist" false (Sys.file_exists directory)
     end;
@@ -416,7 +416,7 @@ let tests = [
         let finished = ref false in
 
         Luv.File.Async.mkdir path begin fun result ->
-          check_error_code "mkdir result" Luv.Error.eexist result;
+          check_error_result "mkdir result" Luv.Error.eexist result;
           finished := true
         end;
 
@@ -428,7 +428,7 @@ let tests = [
     "mkdir failure: sync", `Quick, begin fun () ->
       with_dummy_file begin fun path ->
         Luv.File.Sync.mkdir path
-        |> check_error_code "mkdir" Luv.Error.eexist
+        |> check_error_result "mkdir" Luv.Error.eexist
       end
     end;
 
@@ -436,7 +436,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.rmdir "non_existent_file" begin fun result ->
-        check_error_code "rmdir result" Luv.Error.enoent result;
+        check_error_result "rmdir result" Luv.Error.enoent result;
         finished := true
       end;
 
@@ -446,7 +446,7 @@ let tests = [
 
     "rmdir failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.rmdir "non_existent_file"
-      |> check_error_code "rmdir" Luv.Error.enoent
+      |> check_error_result "rmdir" Luv.Error.enoent
     end;
 
     "mkdtemp: async", `Quick, begin fun () ->
@@ -456,7 +456,7 @@ let tests = [
         let path = check_success_result "mkdtemp result" result in
 
         Luv.File.Async.rmdir path begin fun result ->
-          check_success "rmdir result" result;
+          check_success_result "rmdir result" result;
           finished := true
         end
       end;
@@ -472,7 +472,7 @@ let tests = [
       in
 
       Luv.File.Sync.rmdir path
-      |> check_success "rmdir"
+      |> check_success_result "rmdir"
     end;
 
     "mkdtemp failure: async", `Quick, begin fun () ->
@@ -499,10 +499,10 @@ let tests = [
         let path, file = check_success_result "mkstemp result" result in
 
         Luv.File.Async.close file begin fun result ->
-          check_success "close" result;
+          check_success_result "close" result;
 
           Luv.File.Async.unlink path begin fun result ->
-            check_success "unlink" result;
+            check_success_result "unlink" result;
             finished := true
           end
         end
@@ -519,10 +519,10 @@ let tests = [
       in
 
       Luv.File.Sync.close file
-      |> check_success "close";
+      |> check_success_result "close";
 
       Luv.File.Sync.unlink path
-      |> check_success "unlink"
+      |> check_success_result "unlink"
     end;
 
     "mkstemp failure: async", `Quick, begin fun () ->
@@ -546,7 +546,7 @@ let tests = [
       with_directory begin fun directory ->
         Luv.File.Async.opendir directory begin fun result ->
           let dir = check_success_result "opendir" result in
-          Luv.File.Async.closedir dir (check_success "closedir")
+          Luv.File.Async.closedir dir (check_success_result "closedir")
         end;
 
         run ()
@@ -558,7 +558,7 @@ let tests = [
         Luv.File.Sync.opendir directory
         |> check_success_result "opendir"
         |> Luv.File.Sync.closedir
-        |> check_success "closedir"
+        |> check_success_result "closedir"
       end
     end;
 
@@ -572,7 +572,7 @@ let tests = [
             |> Array.to_list
             |> check_directory_entries "entries" ["foo"; "bar"];
 
-            Luv.File.Async.closedir dir (check_success "closedir")
+            Luv.File.Async.closedir dir (check_success_result "closedir")
           end
         end;
 
@@ -590,7 +590,7 @@ let tests = [
         |> Array.to_list
         |> check_directory_entries "entries" ["foo"; "bar"];
 
-        Luv.File.Sync.closedir dir |> check_success "closedir"
+        Luv.File.Sync.closedir dir |> check_success_result "closedir"
       end
     end;
 
@@ -604,7 +604,7 @@ let tests = [
         |> Array.to_list
         |> check_directory_entries "entries" [];
 
-        Luv.File.Sync.closedir dir |> check_success "closedir"
+        Luv.File.Sync.closedir dir |> check_success_result "closedir"
       end
     end;
 
@@ -618,7 +618,7 @@ let tests = [
             |> Array.to_list
             |> check_directory_entries "entries" ["foo"; "bar"];
 
-            Luv.File.Async.closedir dir (check_success "closedir")
+            Luv.File.Async.closedir dir (check_success_result "closedir")
           end;
 
           Gc.full_major ();
@@ -807,7 +807,7 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.Async.rename ~from:path ~to_ (check_success "rename");
+        Luv.File.Async.rename ~from:path ~to_ (check_success_result "rename");
         run ();
 
         Alcotest.(check bool) "original at end" false (Sys.file_exists path);
@@ -825,7 +825,7 @@ let tests = [
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
         Luv.File.Sync.rename ~from:path ~to_
-        |> check_success "rename";
+        |> check_success_result "rename";
 
         Alcotest.(check bool) "original at end" false (Sys.file_exists path);
         Alcotest.(check bool) "new at end" true (Sys.file_exists to_);
@@ -840,7 +840,7 @@ let tests = [
       Luv.File.Async.rename ~from:"non_existent_file" ~to_:"foo"
           begin fun result ->
 
-        check_error_code "rename" Luv.Error.enoent result;
+        check_error_result "rename" Luv.Error.enoent result;
         finished := true
       end;
 
@@ -850,7 +850,7 @@ let tests = [
 
     "rename failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.rename ~from:"non_existent_file" ~to_:"foo"
-      |> check_error_code "rename" Luv.Error.enoent
+      |> check_error_result "rename" Luv.Error.enoent
     end;
 
     "ftruncate: async", `Quick, begin fun () ->
@@ -862,7 +862,7 @@ let tests = [
         |> Unsigned.Size_t.to_int
         |> Alcotest.(check int) "bytes written" 4;
 
-        Luv.File.Async.ftruncate file 3L (check_success "ftruncate");
+        Luv.File.Async.ftruncate file 3L (check_success_result "ftruncate");
         run ()
       end
     end;
@@ -877,7 +877,7 @@ let tests = [
         |> Alcotest.(check int) "bytes written" 4;
 
         Luv.File.Sync.ftruncate file 3L
-        |> check_success "ftruncate"
+        |> check_success_result "ftruncate"
       end
     end;
 
@@ -886,7 +886,7 @@ let tests = [
         let finished = ref false in
 
         Luv.File.Async.ftruncate file 0L begin fun result ->
-          check_error_code "ftruncate" Luv.Error.einval result;
+          check_error_result "ftruncate" Luv.Error.einval result;
           finished := true
         end;
 
@@ -898,7 +898,7 @@ let tests = [
     "ftruncate failure: sync", `Quick, begin fun () ->
       with_file_for_reading begin fun file ->
         Luv.File.Sync.ftruncate file 0L
-        |> check_error_code "ftruncate" Luv.Error.einval
+        |> check_error_result "ftruncate" Luv.Error.einval
       end
     end;
 
@@ -910,7 +910,7 @@ let tests = [
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
         Luv.File.(Async.copyfile
-          ~from:path ~to_ Copy_flag.none) (check_success "copyfile");
+          ~from:path ~to_ Copy_flag.none) (check_success_result "copyfile");
         run ();
 
         Alcotest.(check bool) "original at end" true (Sys.file_exists path);
@@ -928,7 +928,7 @@ let tests = [
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
         Luv.File.(Sync.copyfile ~from:path ~to_ Copy_flag.none)
-        |> check_success "copyfile";
+        |> check_success_result "copyfile";
 
         Alcotest.(check bool) "original at end" true (Sys.file_exists path);
         Alcotest.(check bool) "new at end" true (Sys.file_exists to_);
@@ -944,7 +944,7 @@ let tests = [
           ~from:"non_existent_file" ~to_:"foo" Copy_flag.none)
           begin fun result ->
 
-        check_error_code "copyfile" Luv.Error.enoent result;
+        check_error_result "copyfile" Luv.Error.enoent result;
         finished := true
       end;
 
@@ -955,7 +955,7 @@ let tests = [
     "copyfile failure: sync", `Quick, begin fun () ->
       Luv.File.(Sync.copyfile
         ~from:"non_existent_file" ~to_:"foo" Copy_flag.none)
-      |> check_error_code "copyfile" Luv.Error.enoent
+      |> check_error_result "copyfile" Luv.Error.enoent
     end;
 
     "sendfile: async", `Quick, begin fun () ->
@@ -991,7 +991,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.(Async.access "file.ml" Access_flag.r) begin fun result ->
-        check_success "access" result;
+        check_success_result "access" result;
         finished := true
       end;
 
@@ -1001,7 +1001,7 @@ let tests = [
 
     "access: sync", `Quick, begin fun () ->
       Luv.File.(Sync.access "file.ml" Access_flag.r)
-      |> check_success "access"
+      |> check_success_result "access"
     end;
 
     "access failure: async", `Quick, begin fun () ->
@@ -1010,7 +1010,7 @@ let tests = [
       Luv.File.(Async.access "non_existent_file" Access_flag.r)
           begin fun result ->
 
-        check_error_code "access" Luv.Error.enoent result;
+        check_error_result "access" Luv.Error.enoent result;
         finished := true
       end;
 
@@ -1020,7 +1020,7 @@ let tests = [
 
     "access failure: sync", `Quick, begin fun () ->
       Luv.File.(Sync.access "non_existent_file" Access_flag.r)
-      |> check_error_code "access" Luv.Error.enoent
+      |> check_error_result "access" Luv.Error.enoent
     end;
   ]
 ]

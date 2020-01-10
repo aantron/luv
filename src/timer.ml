@@ -25,12 +25,15 @@ let start ?(call_update_time = true) ?(repeat = 0) timer timeout callback =
     trampoline
     (Unsigned.UInt64.of_int timeout)
     (Unsigned.UInt64.of_int repeat)
+  |> Error.to_result ()
 
-let stop =
-  C.Functions.Timer.stop
+let stop timer =
+  C.Functions.Timer.stop timer
+  |> Error.to_result ()
 
-let again =
-  C.Functions.Timer.again
+let again timer =
+  C.Functions.Timer.again timer
+  |> Error.to_result ()
 
 let set_repeat timer repeat =
   C.Functions.Timer.set_repeat timer (Unsigned.UInt64.of_int repeat)

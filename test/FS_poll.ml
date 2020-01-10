@@ -24,7 +24,7 @@ let after time f =
     Luv.Handle.close timer ignore;
     f ()
   end
-  |> check_success "timer_start"
+  |> check_success_result "timer_start"
 
 let tests = [
   "fs_poll", [
@@ -41,7 +41,7 @@ let tests = [
           poll Filename.current_dir_name (fun _ -> occurred := true);
 
         after 10 begin fun () ->
-          Luv.FS_poll.stop poll |> check_success "stop";
+          Luv.FS_poll.stop poll |> check_success_result "stop";
           timed_out := true
         end;
 
@@ -60,7 +60,7 @@ let tests = [
           match result with
           | Result.Error e when e = Luv.Error.enoent -> ()
           | _ ->
-            Luv.FS_poll.stop poll |> check_success "stop";
+            Luv.FS_poll.stop poll |> check_success_result "stop";
             check_success_result "start" result |> ignore;
             occurred := true
         end;

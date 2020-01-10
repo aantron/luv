@@ -19,14 +19,18 @@ let init ?loop ?(for_handle_passing = false) () =
 
 let open_ pipe file =
   C.Functions.Pipe.open_ pipe (File.to_int file)
+  |> Error.to_result ()
 
-let bind =
-  C.Blocking.Pipe.bind
+let bind pipe name =
+  C.Blocking.Pipe.bind pipe name
+  |> Error.to_result ()
 
 let connect pipe name_or_path callback =
   let request = Stream.Connect_request.make () in
-  let callback = Error.catch_exceptions callback in
-  Request.set_callback request (Error.catch_exceptions callback);
+  let callback result =
+    Error.catch_exceptions callback (Error.to_result () result)
+  in
+  Request.set_callback request callback;
   C.Functions.Pipe.connect
     request
     pipe
@@ -55,6 +59,7 @@ let pending_instances =
 
 let accept_handle pipe handle =
   C.Functions.Stream.accept (Stream.coerce pipe) (Stream.coerce handle)
+  |> Error.to_result ()
 
 let receive_handle pipe =
   let pending_count = C.Functions.Pipe.pending_count pipe in
@@ -69,5 +74,6 @@ let receive_handle pipe =
     else
       `None
 
-let chmod =
-  C.Functions.Pipe.chmod
+let chmod pipe mode =
+  C.Functions.Pipe.chmod pipe mode
+  |> Error.to_result ()

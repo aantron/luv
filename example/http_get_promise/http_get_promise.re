@@ -60,9 +60,11 @@ let () = {
       };
     Luv.Promise.TCP.connect(socket, Luv.DNS.Addr_info.(addr_info.addr))
     ->Promise.flatMap(result => {
-      if (result != Luv.Error.success) {
+      switch (result) {
+      | Result.Ok() => ()
+      | Result.Error(error) =>
         Printf.eprintf(
-          "Could not connect to %s: %s\n", url, Luv.Error.strerror (result));
+          "Could not connect to %s: %s\n", url, Luv.Error.strerror(error));
         exit(1);
       };
 
@@ -72,9 +74,11 @@ let () = {
       Luv.Promise.Stream.write(socket, [Luv.Bigstring.from_string(request)])
     })
     ->Promise.get(((result, written)) => {
-      if (result != Luv.Error.success) {
+      switch (result) {
+      | Result.Ok() => ()
+      | Result.Error(error) =>
         Printf.eprintf(
-          "Could not send request: %s", Luv.Error.strerror(result));
+          "Could not send request: %s", Luv.Error.strerror(error));
         exit(1);
       };
       if (written != String.length(request)) {

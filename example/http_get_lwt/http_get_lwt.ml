@@ -58,9 +58,11 @@ let () =
         exit 1
     in
     let%lwt result = Luv.Lwt.TCP.connect socket addr_info.addr in
-    if result <> Luv.Error.success then begin
+    begin match result with
+    | Result.Ok () -> ()
+    | Result.Error error ->
       Printf.eprintf
-        "Could not connect to %s: %s\n" url (Luv.Error.strerror result);
+        "Could not connect to %s: %s\n" url (Luv.Error.strerror error);
       exit 1
     end;
 
@@ -71,8 +73,10 @@ let () =
       Printf.sprintf "GET %s HTTP/1.1\r\nConnection: close\r\n\r\n" path in
     let%lwt result, written =
       Luv.Lwt.Stream.write socket [Luv.Bigstring.from_string request] in
-    if result <> Luv.Error.success then begin
-      Printf.eprintf "Could not send request: %s" (Luv.Error.strerror result);
+    begin match result with
+    | Result.Ok () -> ()
+    | Result.Error error ->
+      Printf.eprintf "Could not send request: %s" (Luv.Error.strerror error);
       exit 1
     end;
     if written <> String.length request then

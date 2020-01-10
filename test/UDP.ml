@@ -17,7 +17,7 @@ let with_sender_and_receiver ~receiver_logic ~sender_logic =
   let address = fresh_address () in
 
   let receiver = Luv.UDP.init () |> check_success_result "receiver init" in
-  Luv.UDP.bind receiver address |> check_success "bind";
+  Luv.UDP.bind receiver address |> check_success_result "bind";
 
   let sender = Luv.UDP.init () |> check_success_result "sender init" in
 
@@ -48,7 +48,7 @@ let expect ?(buffer_not_used = false) receiver expected_data k =
       Alcotest.(check string) "data"
         expected_data Luv.Bigstring.(to_string buffer)
     end;
-    Luv.UDP.recv_stop receiver |> check_success "recv_stop";
+    Luv.UDP.recv_stop receiver |> check_success_result "recv_stop";
     k ()
   end
 
@@ -62,7 +62,7 @@ let tests = [
       with_udp begin fun udp ->
         let address = fresh_address () in
 
-        Luv.UDP.bind udp address |> check_success "bind";
+        Luv.UDP.bind udp address |> check_success_result "bind";
         Luv.UDP.getsockname udp
         |> check_success_result "getsockname"
         |> Luv.Sockaddr.to_string
@@ -86,7 +86,7 @@ let tests = [
           begin fun sender address ->
             let buffer = Luv.Bigstring.from_string "foo" in
             Luv.UDP.send sender [buffer] address begin fun result ->
-              check_success "send" result;
+              check_success_result "send" result;
               Luv.Handle.close sender ignore;
               sender_finished := true
             end
@@ -111,7 +111,7 @@ let tests = [
         ~sender_logic:
           begin fun sender address ->
             Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
-            |> check_success "try_send";
+            |> check_success_result "try_send";
             Luv.Handle.close sender ignore;
             sender_finished := true
           end;
@@ -131,7 +131,7 @@ let tests = [
             begin fun sender address ->
               let buffer = Luv.Bigstring.from_string "foo" in
               Luv.UDP.send sender [buffer] address begin fun result ->
-                check_success "send" result;
+                check_success_result "send" result;
                 Luv.Handle.close sender ignore;
                 raise Exit
               end
@@ -152,7 +152,7 @@ let tests = [
           ~sender_logic:
             begin fun sender address ->
               Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
-              |> check_success "try_send";
+              |> check_success_result "try_send";
               Luv.Handle.close sender ignore
             end
       end
@@ -169,7 +169,7 @@ let tests = [
         ~sender_logic:
           begin fun sender address ->
             Luv.UDP.try_send sender [Luv.Bigstring.from_string ""] address
-            |> check_success "try_send";
+            |> check_success_result "try_send";
             Luv.Handle.close sender ignore
           end
     end;
@@ -187,7 +187,7 @@ let tests = [
         ~sender_logic:
           begin fun sender address ->
             Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
-            |> check_success "try_send";
+            |> check_success_result "try_send";
             Luv.Handle.close sender ignore
           end
     end;
@@ -207,7 +207,7 @@ let tests = [
             begin fun receiver ->
               Luv.UDP.(set_membership
                 receiver ~group ~interface:"127.0.0.1" Membership.join_group)
-              |> check_success "set_membership 1";
+              |> check_success_result "set_membership 1";
 
               expect receiver "foo" begin fun () ->
                 Luv.Handle.close receiver ignore;
@@ -221,7 +221,7 @@ let tests = [
                 |> check_success_result "group address"
               in
               Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
-              |> check_success "try_send";
+              |> check_success_result "try_send";
               Luv.Handle.close sender ignore;
               sender_finished := true
             end;
@@ -245,20 +245,20 @@ let tests = [
 
     "connect, getpeername", `Quick, begin fun () ->
       with_udp begin fun udp ->
-        Luv.UDP.bind udp (fresh_address ()) |> check_success "bind";
+        Luv.UDP.bind udp (fresh_address ()) |> check_success_result "bind";
 
         Luv.UDP.Connected.getpeername udp
         |> check_error_result "getpeername, initial" Luv.Error.enotconn;
 
         let remote = fresh_address () in
 
-        Luv.UDP.Connected.connect udp remote |> check_success "connect";
+        Luv.UDP.Connected.connect udp remote |> check_success_result "connect";
         Luv.UDP.Connected.getpeername udp
         |> check_success_result "getpeername, connected"
         |> Luv.Sockaddr.to_string
         |> Alcotest.(check string) "address" (Luv.Sockaddr.to_string remote);
 
-        Luv.UDP.Connected.disconnect udp |> check_success "disconnect";
+        Luv.UDP.Connected.disconnect udp |> check_success_result "disconnect";
 
         Luv.UDP.Connected.getpeername udp
         |> check_error_result "getpeername, disconnected" Luv.Error.enotconn
@@ -267,20 +267,21 @@ let tests = [
 
     "double connect", `Quick, begin fun () ->
       with_udp begin fun udp ->
-        Luv.UDP.bind udp (fresh_address ()) |> check_success "bind";
+        Luv.UDP.bind udp (fresh_address ()) |> check_success_result "bind";
 
         let remote = fresh_address () in
-        Luv.UDP.Connected.connect udp remote |> check_success "first connect";
         Luv.UDP.Connected.connect udp remote
-        |> check_error_code "second connect" Luv.Error.eisconn;
+        |> check_success_result "first connect";
+        Luv.UDP.Connected.connect udp remote
+        |> check_error_result "second connect" Luv.Error.eisconn;
       end
     end;
 
     "initial disconnect", `Quick, begin fun () ->
       with_udp begin fun udp ->
-        Luv.UDP.bind udp (fresh_address ()) |> check_success "bind";
+        Luv.UDP.bind udp (fresh_address ()) |> check_success_result "bind";
         Luv.UDP.Connected.disconnect udp
-        |> check_error_code "disconnect" Luv.Error.enotconn
+        |> check_error_result "disconnect" Luv.Error.enotconn
       end
     end;
 
@@ -298,10 +299,11 @@ let tests = [
           end
         ~sender_logic:
           begin fun sender address ->
-            Luv.UDP.Connected.connect sender address |> check_success "connect";
+            Luv.UDP.Connected.connect sender address
+            |> check_success_result "connect";
             Luv.UDP.Connected.send sender [Luv.Bigstring.from_string "foo"]
                 begin fun result ->
-              check_success "send" result;
+              check_success_result "send" result;
               Luv.Handle.close sender ignore;
               sender_finished := true
             end
@@ -325,9 +327,10 @@ let tests = [
           end
         ~sender_logic:
           begin fun sender address ->
-            Luv.UDP.Connected.connect sender address |> check_success "connect";
+            Luv.UDP.Connected.connect sender address
+            |> check_success_result "connect";
             Luv.UDP.Connected.try_send sender [Luv.Bigstring.from_string "foo"]
-            |> check_success "try_send";
+            |> check_success_result "try_send";
             Luv.Handle.close sender ignore;
             sender_finished := true
           end;

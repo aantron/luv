@@ -14,9 +14,9 @@ sig
   val sigprof : int
 end
 
-val configure : t -> 'value Option.t -> 'value -> Error.t
+val configure : t -> 'value Option.t -> 'value -> (unit, Error.t) Result.result
 
-val close : t -> Error.t
+val close : t -> (unit, Error.t) Result.result
 val default : unit -> t
 
 module Run_mode :
@@ -36,7 +36,7 @@ val backend_timeout : t -> int
 val now : t -> Unsigned.UInt64.t
 val update_time : t -> unit
 
-val fork : t -> Error.t
+val fork : t -> (unit, Error.t) Result.result
 
 val get_data : t -> unit Ctypes.ptr
 val set_data : t -> unit Ctypes.ptr -> unit

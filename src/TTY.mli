@@ -15,8 +15,8 @@ end
 type t = [ `TTY ] Stream.t
 
 val init : ?loop:Loop.t -> File.t -> (t, Error.t) Result.result
-val set_mode : t -> Mode.t -> Error.t
-val reset_mode : unit -> Error.t
+val set_mode : t -> Mode.t -> (unit, Error.t) Result.result
+val reset_mode : unit -> (unit, Error.t) Result.result
 val get_winsize : t -> (int * int, Error.t) Result.result
 
 module Vterm_state :

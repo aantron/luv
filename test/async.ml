@@ -25,7 +25,7 @@ let tests = [
         |> check_success_result "init"
       in
 
-      Luv.Async.send async |> check_success "send";
+      Luv.Async.send async |> check_success_result "send";
       Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
       Luv.Handle.close async ignore;
       run ();
@@ -46,7 +46,7 @@ let tests = [
 
       ignore @@ Thread.create begin fun () ->
         Unix.sleep 1;
-        Luv.Async.send async |> check_success "send"
+        Luv.Async.send async |> check_success_result "send"
       end ();
 
       run ();
@@ -61,7 +61,7 @@ let tests = [
           |> check_success_result "init"
         in
 
-        Luv.Async.send async |> check_success "send";
+        Luv.Async.send async |> check_success_result "send";
         Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
         Luv.Handle.close async ignore;
         run ()

@@ -13,6 +13,7 @@ include Helpers.Retained
 (* TODO Proper memory management for cancel? *)
 let cancel request =
   C.Functions.Request.cancel (coerce request)
+  |> Error.to_result ()
 
 let set_callback request callback =
   let callback value =

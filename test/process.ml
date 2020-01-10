@@ -54,7 +54,8 @@ let tests = [
       let child_end_raw : int = Obj.magic child_end in
       let parent_end_file : Luv.File.t = Obj.magic parent_end in
       let parent_end = Luv.Pipe.init () |> check_success_result "pipe init" in
-      Luv.Pipe.open_ parent_end parent_end_file |> check_success "pipe open";
+      Luv.Pipe.open_ parent_end parent_end_file
+      |> check_success_result "pipe open";
 
       Luv.Process.(spawn
         "echo" ["echo"; "-n"; "foo"]
@@ -83,10 +84,12 @@ let tests = [
       let parent_end, child_end = Unix.(socketpair PF_UNIX SOCK_STREAM) 0 in
       let parent_end_file : Luv.File.t = Obj.magic parent_end in
       let parent_end = Luv.Pipe.init () |> check_success_result "pipe init" in
-      Luv.Pipe.open_ parent_end parent_end_file |> check_success "pipe open";
+      Luv.Pipe.open_ parent_end parent_end_file
+      |> check_success_result "pipe open";
       let child_end_file : Luv.File.t = Obj.magic child_end in
       let child_end = Luv.Pipe.init () |> check_success_result "pipe init" in
-      Luv.Pipe.open_ child_end child_end_file |> check_success "pipe open";
+      Luv.Pipe.open_ child_end child_end_file
+      |> check_success_result "pipe open";
 
       Luv.Process.(spawn
         "echo" ["echo"; "-n"; "foo"]
@@ -324,7 +327,7 @@ let tests = [
       let process = check_success_result "spawn" result in
 
       Luv.Process.kill process Luv.Signal.sighup
-      |> check_success "kill";
+      |> check_success_result "kill";
 
       run ();
 
@@ -350,7 +353,7 @@ let tests = [
       let process = check_success_result "spawn" result in
 
       Luv.Process.(kill_pid ~pid:(pid process)) Luv.Signal.sighup
-      |> check_success "kill";
+      |> check_success_result "kill_pid";
 
       run ();
 

@@ -19,7 +19,7 @@ sig
       ?loop:Loop.t ->
       ?call_update_time:bool ->
       int ->
-        Error.t promise
+        ((unit, Error.t) Result.result) promise
   end
 
   module Stream :
@@ -28,7 +28,7 @@ sig
 
     val shutdown :
       _ t ->
-        Error.t promise
+        ((unit, Error.t) Result.result) promise
 
     val read :
       ?allocate:(int -> Bigstring.t) ->
@@ -39,7 +39,7 @@ sig
       ?send_handle:[< `TCP | `Pipe ] t ->
       _ t ->
       Bigstring.t list ->
-        (Error.t * int) promise
+        ((unit, Error.t) Result.result * int) promise
   end
 
   module TCP :
@@ -47,7 +47,7 @@ sig
     val connect :
       TCP.t ->
       Misc.Sockaddr.t ->
-        Error.t promise
+        ((unit, Error.t) Result.result) promise
   end
 
   module File :
@@ -66,7 +66,7 @@ sig
       ?loop:Loop.t ->
       ?request:Request.t ->
       t ->
-        Error.t promise
+        ((unit, Error.t) Result.result) promise
 
     val read :
       ?loop:Loop.t ->

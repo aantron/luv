@@ -36,5 +36,6 @@ let start ?(flags = 0) event path callback =
   if immediate_result < Error.success then
     callback (Result.Error immediate_result)
 
-let stop =
-  C.Functions.FS_event.stop
+let stop event =
+  C.Functions.FS_event.stop event
+  |> Error.to_result ()

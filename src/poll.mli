@@ -22,4 +22,4 @@ end
 val init : ?loop:Loop.t -> int -> (t, Error.t) Result.result
 val init_socket : ?loop:Loop.t -> Misc.Os_socket.t -> (t, Error.t) Result.result
 val start : t -> Event.t -> ((Event.t, Error.t) Result.result -> unit) -> unit
-val stop : t -> Error.t
+val stop : t -> (unit, Error.t) Result.result

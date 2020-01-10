@@ -180,8 +180,9 @@ struct
     C.Functions.Resource.getpriority pid priority
     |> Error.to_result (Ctypes.(!@) priority)
 
-  let setpriority =
-    C.Functions.Resource.setpriority
+  let setpriority pid priority =
+    C.Functions.Resource.setpriority pid priority
+    |> Error.to_result ()
 
   type timeval = {
     sec : Signed.Long.t;
@@ -352,6 +353,7 @@ struct
 
   let chdir path =
     C.Functions.Path.chdir (Ctypes.ocaml_string_start path)
+    |> Error.to_result ()
 
   let homedir () =
     let length = 1024 in
@@ -427,9 +429,11 @@ struct
   let setenv variable value =
     C.Functions.Env.setenv
       (Ctypes.ocaml_string_start variable) (Ctypes.ocaml_string_start value)
+    |> Error.to_result ()
 
   let unsetenv variable =
     C.Functions.Env.unsetenv (Ctypes.ocaml_string_start variable)
+    |> Error.to_result ()
 
   let environ () =
     let env_items = Ctypes.(allocate_n (ptr C.Types.Env_item.t) ~count:1) in
@@ -513,7 +517,7 @@ struct
       let request = Request.allocate C.Types.Random.Request.t in
       Request.set_callback request begin fun result ->
         ignore (Compatibility.Sys.opaque_identity buffer);
-        Error.catch_exceptions callback result
+        Error.catch_exceptions callback (Error.to_result () result)
       end;
 
       let immediate_result =
@@ -528,7 +532,7 @@ struct
 
       if immediate_result < Error.success then begin
         Request.release request;
-        callback immediate_result
+        callback (Error immediate_result)
       end
   end
 
@@ -545,6 +549,7 @@ struct
         (Unsigned.Size_t.of_int (Bigstring.size buffer))
         Unsigned.UInt.zero
         null_callback
+      |> Error.to_result ()
   end
 end
 

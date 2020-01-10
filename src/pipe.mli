@@ -18,19 +18,19 @@ end
 (* DOC Document that the pipe is not yet usable at this point. *)
 val init :
   ?loop:Loop.t -> ?for_handle_passing:bool -> unit -> (t, Error.t) Result.result
-val open_ : t -> File.t -> Error.t
-val bind : t -> string -> Error.t
-val connect : t -> string -> (Error.t -> unit) -> unit
+val open_ : t -> File.t -> (unit, Error.t) Result.result
+val bind : t -> string -> (unit, Error.t) Result.result
+val connect : t -> string -> ((unit, Error.t) Result.result -> unit) -> unit
 val getsockname : t -> (string, Error.t) Result.result
 val getpeername : t -> (string, Error.t) Result.result
 val pending_instances : t -> int -> unit
-val chmod : t -> Mode.t -> Error.t
+val chmod : t -> Mode.t -> (unit, Error.t) Result.result
 
 (* DOC This absolutely requires documentation to be usable. *)
 val receive_handle :
   t -> [
-    | `TCP of TCP.t -> Error.t
-    | `Pipe of t -> Error.t
+    | `TCP of (TCP.t -> (unit, Error.t) Result.result)
+    | `Pipe of (t -> (unit, Error.t) Result.result)
     | `None
   ]
 

@@ -15,30 +15,35 @@ let shutdown_trampoline =
   C.Functions.Stream.Shutdown_request.get_trampoline ()
 
 let shutdown stream callback =
-  let callback = Error.catch_exceptions callback in
+  let wrapped_callback result =
+    Error.catch_exceptions callback (Error.to_result () result)
+  in
   let request = Request.allocate C.Types.Stream.Shutdown_request.t in
-  Request.set_callback request callback;
+  Request.set_callback request wrapped_callback;
   let immediate_result =
     C.Functions.Stream.shutdown request (coerce stream) shutdown_trampoline in
   if immediate_result < Error.success then begin
     Request.release request;
-    callback immediate_result
+    callback (Result.Error immediate_result)
   end
 
 let connection_trampoline =
   C.Functions.Stream.get_connection_trampoline ()
 
 let listen ?(backlog = C.Types.Stream.somaxconn) server callback =
-  let callback = Error.catch_exceptions callback in
+  let wrapped_callback result =
+    Error.catch_exceptions callback (Error.to_result () result)
+  in
   Handle.set_reference
-    ~index:C.Types.Stream.connection_callback_index server callback;
+    ~index:C.Types.Stream.connection_callback_index server wrapped_callback;
   let immediate_result =
     C.Functions.Stream.listen (coerce server) backlog connection_trampoline in
   if immediate_result < Error.success then
-    callback immediate_result
+    callback (Error immediate_result)
 
 let accept ~server ~client =
   C.Functions.Stream.accept (coerce server) (coerce client)
+  |> Error.to_result ()
 
 let alloc_trampoline =
   C.Functions.Handle.get_alloc_trampoline ()
@@ -50,7 +55,7 @@ let read_trampoline =
 let read_start ?(allocate = Bigstring.create) stream callback =
   let last_allocated_buffer = ref None in
 
-  let callback = Error.catch_exceptions callback in
+  let wrapped_callback = Error.catch_exceptions callback in
   Handle.set_reference stream begin fun (nread_or_error : Error.t) ->
     let result =
       if (nread_or_error :> int) > 0 then begin
@@ -68,7 +73,7 @@ let read_start ?(allocate = Bigstring.create) stream callback =
         Result.Error nread_or_error
       end
     in
-    callback result
+    wrapped_callback result
   end;
 
   Handle.set_reference stream ~index:C.Types.Stream.allocate_callback_index
@@ -88,6 +93,7 @@ let read_start ?(allocate = Bigstring.create) stream callback =
 
 let read_stop stream =
   C.Functions.Stream.read_stop (coerce stream)
+  |> Error.to_result ()
 
 let write_trampoline =
   C.Functions.Stream.Write_request.get_trampoline ()
@@ -108,7 +114,7 @@ let write ?send_handle stream buffers callback =
       C.Functions.Stream.get_write_queue_size (coerce stream)
       |> Unsigned.Size_t.to_int
     in
-    callback result (bytes - bytes_unwritten)
+    callback (Error.to_result () result) (bytes - bytes_unwritten)
   in
   let wrapped_callback = Error.catch_exceptions wrapped_callback in
   Request.set_callback request wrapped_callback;
@@ -131,7 +137,7 @@ let write ?send_handle stream buffers callback =
 
   if immediate_result < Error.success then begin
     Request.release request;
-    Error.catch_exceptions (fun () -> callback immediate_result 0) ()
+    callback (Result.Error immediate_result) 0
   end
 
 let try_write stream buffers =
@@ -159,6 +165,7 @@ let is_writable stream =
 
 let set_blocking stream blocking =
   C.Functions.Stream.set_blocking (coerce stream) blocking
+  |> Error.to_result ()
 
 module Connect_request =
 struct

@@ -243,7 +243,6 @@ end
 
 module Returns =
 struct
-  let id e = e
   let construct_error e = Result.Error e
 
   type 'a t = {
@@ -253,8 +252,9 @@ struct
   }
 
   let returns_error = {
-    from_request = Request_.result;
-    immediate_error = id;
+    from_request = (fun request ->
+      Request_.result request |> Error.to_result ());
+    immediate_error = Error.to_result ();
     clean_up_request_on_success = true;
   }
 

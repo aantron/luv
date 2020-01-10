@@ -16,13 +16,16 @@ let trampoline =
 let start signal signum callback =
   Handle.set_reference signal (Error.catch_exceptions callback);
   C.Functions.Signal.start signal trampoline signum
+  |> Error.to_result ()
 
 let start_oneshot signal signum callback =
   Handle.set_reference signal (Error.catch_exceptions callback);
   C.Functions.Signal.start_oneshot signal trampoline signum
+  |> Error.to_result ()
 
-let stop =
-  C.Functions.Signal.stop
+let stop signal =
+  C.Functions.Signal.stop signal
+  |> Error.to_result ()
 
 let get_signum signal =
   Ctypes.getf (Ctypes.(!@) signal) C.Types.Signal.signum

@@ -19,9 +19,11 @@ val send_buffer_size :
 val recv_buffer_size :
   [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> (int, Error.t) Result.result
 val set_send_buffer_size :
-  [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> int -> Error.t
+  [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> int ->
+    (unit, Error.t) Result.result
 val set_recv_buffer_size :
-  [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> int -> Error.t
+  [< `Stream of [< `TCP | `Pipe ] | `UDP ] t -> int ->
+    (unit, Error.t) Result.result
 
 val fileno :
   [< `Stream of [< `TCP | `Pipe | `TTY ] | `UDP | `Poll ] t ->

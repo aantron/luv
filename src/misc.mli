@@ -80,7 +80,7 @@ sig
   val total_memory : unit -> Unsigned.uint64
   val constrained_memory : unit -> Unsigned.uint64 option
   val getpriority : int -> (int, Error.t) Result.result
-  val setpriority : int -> int -> Error.t
+  val setpriority : int -> int -> (unit, Error.t) Result.result
   val resident_set_memory_size :
     unit -> (Unsigned.size_t, Error.t) Result.result
 
@@ -148,7 +148,7 @@ module Path :
 sig
   val exepath : unit -> (string, Error.t) Result.result
   val cwd : unit -> (string, Error.t) Result.result
-  val chdir : string -> Error.t
+  val chdir : string -> (unit, Error.t) Result.result
   val homedir : unit -> (string, Error.t) Result.result
   val tmpdir : unit -> (string, Error.t) Result.result
 end
@@ -174,8 +174,8 @@ end
 module Env :
 sig
   val getenv : string -> (string, Error.t) Result.result
-  val setenv : string -> string -> Error.t
-  val unsetenv : string -> Error.t
+  val setenv : string -> string -> (unit, Error.t) Result.result
+  val unsetenv : string -> (unit, Error.t) Result.result
   val environ : unit -> ((string * string) list, Error.t) Result.result
 end
 
@@ -205,12 +205,13 @@ module Random :
 sig
   module Async :
   sig
-    val random : ?loop:Loop.t -> Bigstring.t -> (Error.t -> unit) -> unit
+    val random :
+      ?loop:Loop.t -> Bigstring.t -> ((unit, Error.t) Result.result -> unit) -> unit
   end
 
   module Sync :
   sig
-    val random : Bigstring.t -> Error.t
+    val random : Bigstring.t -> (unit, Error.t) Result.result
   end
 end
 

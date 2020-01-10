@@ -15,5 +15,6 @@ let init ?loop callback =
   C.Functions.Async.init (Loop.or_default loop) async trampoline
   |> Error.to_result async
 
-let send =
-  C.Functions.Async.send
+let send async =
+  C.Functions.Async.send async
+  |> Error.to_result ()

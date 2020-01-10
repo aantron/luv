@@ -29,9 +29,9 @@ let tests = [
       with_signal begin fun signal ->
         let called = ref false in
 
-        check_success "start" @@
+        check_success_result "start" @@
         Luv.Signal.(start signal sighup) begin fun () ->
-          Luv.Signal.stop signal |> check_success "stop";
+          Luv.Signal.stop signal |> check_success_result "stop";
           called := true
         end;
         send_signal ();
@@ -45,7 +45,7 @@ let tests = [
     "start_oneshot", `Quick, begin fun () ->
       with_signal begin fun signal ->
         Luv.Signal.(start_oneshot signal sighup) ignore
-        |> check_success "start";
+        |> check_success_result "start";
 
         send_signal ();
         run ()
@@ -55,7 +55,7 @@ let tests = [
     "get_signum", `Quick, begin fun () ->
       with_signal begin fun signal ->
         Luv.Signal.(start signal sighup) ignore
-        |> check_success "start";
+        |> check_success_result "start";
 
         Luv.Signal.get_signum signal
         |> Alcotest.(check int) "signum" Luv.Signal.sighup
@@ -65,9 +65,9 @@ let tests = [
     "start: exception", `Quick, begin fun () ->
       with_signal begin fun signal ->
         check_exception Exit begin fun () ->
-          check_success "start" @@
+          check_success_result "start" @@
           Luv.Signal.(start signal sighup) begin fun () ->
-            Luv.Signal.stop signal |> check_success "stop";
+            Luv.Signal.stop signal |> check_success_result "stop";
             raise Exit
           end;
           send_signal ();
@@ -81,7 +81,7 @@ let tests = [
       with_signal begin fun signal ->
         check_exception Exit begin fun () ->
           Luv.Signal.(start_oneshot signal sighup) (fun () -> raise Exit)
-          |> check_success "start";
+          |> check_success_result "start_oneshot";
 
           send_signal ();
           run ()

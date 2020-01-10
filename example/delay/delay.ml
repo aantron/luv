@@ -21,8 +21,10 @@ let () =
       print_endline " done!"
     end;
   in
-  if result <> Luv.Error.success then begin
-    Printf.eprintf "Could not start timer: %s\n" (Luv.Error.strerror result);
+  begin match result with
+  | Result.Ok () -> ()
+  | Result.Error error ->
+    Printf.eprintf "Could not start timer: %s\n" (Luv.Error.strerror error);
     exit 1
   end;
 

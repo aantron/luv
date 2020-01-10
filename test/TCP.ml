@@ -22,17 +22,17 @@ let with_server_and_client ~server_logic ~client_logic =
   let address = fresh_address () in
 
   let server = Luv.TCP.init () |> check_success_result "server init" in
-  Luv.TCP.bind server address |> check_success "bind";
+  Luv.TCP.bind server address |> check_success_result "bind";
   Luv.Stream.listen server begin fun result ->
-    check_success "listen" result;
+    check_success_result "listen" result;
     let client = Luv.TCP.init () |> check_success_result "remote client init" in
-    Luv.Stream.accept ~server ~client |> check_success "accept";
+    Luv.Stream.accept ~server ~client |> check_success_result "accept";
     server_logic server client
   end;
 
   let client = Luv.TCP.init () |> check_success_result "client init" in
   Luv.TCP.connect client address begin fun result ->
-    check_success "connect" result;
+    check_success_result "connect" result;
     client_logic client address
   end;
 
@@ -47,21 +47,21 @@ let tests = [
     "nodelay", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         Luv.TCP.nodelay tcp true
-        |> check_success "nodelay"
+        |> check_success_result "nodelay"
       end
     end;
 
     "keepalive", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         Luv.TCP.keepalive tcp None
-        |> check_success "keepalive"
+        |> check_success_result "keepalive"
       end
     end;
 
     "simultaneous_accepts", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         Luv.TCP.simultaneous_accepts tcp true
-        |> check_success "simultaneous_accepts"
+        |> check_success_result "simultaneous_accepts"
       end
     end;
 
@@ -70,7 +70,7 @@ let tests = [
         let address = fresh_address () in
 
         Luv.TCP.bind tcp address
-        |> check_success "bind";
+        |> check_success_result "bind";
 
         Luv.TCP.getsockname tcp
         |> check_success_result "getsockname result"
@@ -86,7 +86,7 @@ let tests = [
         let address = fresh_address () in
 
         Luv.TCP.connect tcp address begin fun result ->
-          check_error_code "connect" Luv.Error.econnrefused result;
+          check_error_result "connect" Luv.Error.econnrefused result;
           finished := true
         end;
 
@@ -126,7 +126,7 @@ let tests = [
 
     "connect, synchronous error", `Quick, begin fun () ->
       let address = fresh_address () in
-      let result = ref Luv.Error.success in
+      let result = ref (Result.Ok ()) in
 
       with_tcp begin fun tcp ->
         Luv.TCP.connect tcp address ignore;
@@ -134,7 +134,7 @@ let tests = [
           result := result'
         end;
 
-        check_error_code "connect" Luv.Error.ealready !result;
+        check_error_result "connect" Luv.Error.ealready !result;
         run ()
       end
     end;
@@ -155,7 +155,7 @@ let tests = [
       with_tcp begin fun tcp ->
         let address = fresh_address () in
         Luv.TCP.connect tcp address begin fun result ->
-          check_error_code "connect" Luv.Error.ecanceled result
+          check_error_result "connect" Luv.Error.ecanceled result
         end
       end
     end;
@@ -215,18 +215,6 @@ let tests = [
       end
     end;
 
-    "connect, sync exception", `Quick, begin fun () ->
-      let address = fresh_address () in
-
-      check_exception Exit begin fun () ->
-        with_tcp begin fun tcp ->
-          Luv.TCP.connect tcp address ignore;
-          Luv.TCP.connect tcp address (fun _result -> raise Exit);
-          run ()
-        end
-      end
-    end;
-
     "read, write", `Quick, begin fun () ->
       let write_finished = ref false in
       let read_finished = ref false in
@@ -260,7 +248,7 @@ let tests = [
 
             Luv.Stream.write client [buffer1; buffer3] begin fun result count ->
               Luv.Handle.close client ignore;
-              check_success "write" result;
+              check_success_result "write" result;
               Alcotest.(check int) "count" 3 count;
               write_finished := true
             end;
@@ -286,7 +274,7 @@ let tests = [
         let called = ref false in
 
         Luv.Stream.write tcp [] begin fun result count ->
-          check_error_code "write" Luv.Error.ebadf result;
+          check_error_result "write" Luv.Error.ebadf result;
           Alcotest.(check int) "count" 0 count;
           called := true
         end;
@@ -319,19 +307,11 @@ let tests = [
             begin fun client _address ->
               let buffer = Luv.Bigstring.from_string "f" in
               Luv.Stream.write client [buffer] begin fun result count ->
-                check_success "write" result;
+                check_success_result "write" result;
                 Alcotest.(check int) "count" 1 count;
                 Luv.Handle.close client ignore
               end
             end
-      end
-    end;
-
-    "read: sync exception", `Quick, begin fun () ->
-      check_exception Exit begin fun () ->
-        with_tcp begin fun tcp ->
-          Luv.Stream.read_start tcp (fun _result -> raise Exit)
-        end
       end
     end;
 
@@ -350,22 +330,11 @@ let tests = [
             begin fun client _address ->
               let buffer = Luv.Bigstring.from_string "f" in
               Luv.Stream.write client [buffer] begin fun result ->
-                check_success "write" result;
+                check_success_result "write" result;
                 Luv.Handle.close client ignore;
                 raise Exit
               end
             end
-      end
-    end;
-
-    "write: sync exception", `Quick, begin fun () ->
-      check_exception Exit begin fun () ->
-        with_tcp begin fun tcp ->
-          Luv.Stream.write tcp [] begin fun result ->
-            check_error_code "write" Luv.Error.ebadf result;
-            raise Exit
-          end
-        end
       end
     end;
 
@@ -415,7 +384,7 @@ let tests = [
         ~server_logic:
           begin fun server client ->
             Luv.Stream.shutdown client begin fun result ->
-              check_success "server shutdown" result;
+              check_success_result "server shutdown" result;
               Luv.Handle.close client ignore;
               Luv.Handle.close server ignore;
               server_finished := true
@@ -424,7 +393,7 @@ let tests = [
         ~client_logic:
           begin fun client _address ->
             Luv.Stream.shutdown client begin fun result ->
-              check_success "client shutdown" result;
+              check_success_result "client shutdown" result;
               Luv.Handle.close client ignore;
               client_finished := true
             end
@@ -439,7 +408,7 @@ let tests = [
         let called = ref false in
 
         Luv.Stream.shutdown tcp begin fun result ->
-          check_error_code "shutdown" Luv.Error.enotconn result;
+          check_error_result "shutdown" Luv.Error.enotconn result;
           called := true
         end;
 
@@ -470,20 +439,12 @@ let tests = [
       end
     end;
 
-    "shutdown: sync exception", `Quick, begin fun () ->
-      check_exception Exit begin fun () ->
-        with_tcp begin fun tcp ->
-          Luv.Stream.shutdown tcp (fun _result -> raise Exit)
-        end
-      end
-    end;
-
     "close_reset: sync error", `Quick, begin fun () ->
       let called = ref false in
 
       with_tcp begin fun tcp ->
         Luv.TCP.close_reset tcp begin fun result ->
-          check_error_code "close_reset" Luv.Error.ebadf result;
+          check_error_result "close_reset" Luv.Error.ebadf result;
           called := true
         end
       end;
@@ -496,14 +457,14 @@ let tests = [
       let address = fresh_address () in
 
       let server = Luv.TCP.init () |> check_success_result "server init" in
-      Luv.TCP.bind server address |> check_success "bind";
+      Luv.TCP.bind server address |> check_success_result "bind";
       Luv.Stream.listen server begin fun result ->
-        check_success "listen" result;
+        check_success_result "listen" result;
         let client =
           Luv.TCP.init () |> check_success_result "remote client init" in
-        Luv.Stream.accept ~server ~client |> check_success "accept";
+        Luv.Stream.accept ~server ~client |> check_success_result "accept";
         Luv.TCP.close_reset client begin fun result ->
-          check_success "close_reset" result;
+          check_success_result "close_reset" result;
           Luv.Handle.close server ignore;
           called := true
         end

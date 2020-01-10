@@ -34,12 +34,14 @@ struct
     (* If [Handle.is_active handle], then [uv_*_start] will not overwrite the
        handle's callback. We need to emulate this behavior in the wrapper. *)
     if Handle.is_active handle then
-      Error.success
+      Result.Ok ()
     else begin
       Handle.set_reference handle (Error.catch_exceptions callback);
       Kind.start handle trampoline
+      |> Error.to_result ()
     end
 
-  let stop =
-    Kind.stop
+  let stop handle =
+    Kind.stop handle
+    |> Error.to_result ()
 end

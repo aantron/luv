@@ -25,14 +25,14 @@ let with_server_and_client ?for_handle_passing () ~server_logic ~client_logic =
     Luv.Pipe.init ?for_handle_passing ()
     |> check_success_result "server init"
   in
-  Luv.Pipe.bind server filename |> check_success "bind";
+  Luv.Pipe.bind server filename |> check_success_result "bind";
   Luv.Stream.listen server begin fun result ->
-    check_success "listen" result;
+    check_success_result "listen" result;
     let client =
       Luv.Pipe.init ?for_handle_passing ()
       |> check_success_result "remote client init"
     in
-    Luv.Stream.accept ~server ~client |> check_success "accept";
+    Luv.Stream.accept ~server ~client |> check_success_result "accept";
     server_logic server client
   end;
 
@@ -41,7 +41,7 @@ let with_server_and_client ?for_handle_passing () ~server_logic ~client_logic =
     |> check_success_result "client init"
   in
   Luv.Pipe.connect client filename begin fun result ->
-    check_success "connect" result;
+    check_success_result "connect" result;
     client_logic client
   end;
 
@@ -65,7 +65,7 @@ let tests = [
     "bind", `Quick, begin fun () ->
       with_pipe begin fun pipe ->
         Luv.Pipe.bind pipe filename
-        |> check_success "bind";
+        |> check_success_result "bind";
 
         Alcotest.(check bool) "created" true (Sys.file_exists filename)
       end
@@ -148,7 +148,7 @@ let tests = [
             let buffer2 = Luv.Bigstring.from_string "o" in
 
             Luv.Stream.write client [buffer1; buffer2] begin fun result count ->
-              check_success "write" result;
+              check_success_result "write" result;
               Alcotest.(check int) "count" 3 count;
               Luv.Handle.close client ignore;
               write_finished := true
@@ -163,7 +163,8 @@ let tests = [
       let wrap ~for_handle_passing fd =
         let pipe =
           Luv.Pipe.init ~for_handle_passing () |> check_success_result "init" in
-        Luv.Pipe.open_ pipe (unix_fd_to_file fd) |> check_success "open_";
+        Luv.Pipe.open_ pipe (unix_fd_to_file fd)
+        |> check_success_result "open_";
         pipe
       in
 
@@ -176,7 +177,7 @@ let tests = [
       let passed_2 = wrap ~for_handle_passing:false passed_2 in
 
       Luv.Stream.read_start ipc_1 begin fun result ->
-        Luv.Stream.read_stop ipc_1 |> check_success "read_stop";
+        Luv.Stream.read_stop ipc_1 |> check_success_result "read_stop";
 
         check_success_result "read_start" result
         |> Luv.Bigstring.size
@@ -186,7 +187,7 @@ let tests = [
         | `Pipe accept ->
           let received =
             Luv.Pipe.init () |> check_success_result "init received" in
-          accept received |> check_success "handle accept";
+          accept received |> check_success_result "handle accept";
           let buffer = Luv.Bigstring.from_string "x" in
           Luv.Stream.try_write received [buffer]
           |> check_success_result "try_write"
@@ -203,14 +204,14 @@ let tests = [
       Luv.Stream.write ipc_2 [buffer] ~send_handle:passed_1
           begin fun result count ->
 
-        check_success "write2" result;
+        check_success_result "write2" result;
         Alcotest.(check int) "count" 1 count;
       end;
 
       let did_read = ref false in
 
       Luv.Stream.read_start passed_2 begin fun result ->
-        Luv.Stream.read_stop passed_2 |> check_success "read_stop";
+        Luv.Stream.read_stop passed_2 |> check_success_result "read_stop";
         check_success_result "read_start" result
         |> Luv.Bigstring.to_string
         |> Alcotest.(check string) "data" "x";
@@ -234,17 +235,17 @@ let tests = [
     "chmod, unbound", `Quick, begin fun () ->
       with_pipe begin fun pipe ->
         Luv.Pipe.(chmod pipe Mode.readable)
-        |> check_error_code "chmod" Luv.Error.ebadf
+        |> check_error_result "chmod" Luv.Error.ebadf
       end
     end;
 
     "chmod", `Quick, begin fun () ->
       with_pipe begin fun pipe ->
         Luv.Pipe.bind pipe filename
-        |> check_success "bind";
+        |> check_success_result "bind";
 
         Luv.Pipe.(chmod pipe Mode.readable)
-        |> check_success "chmod"
+        |> check_success_result "chmod"
       end
     end;
 

@@ -36,12 +36,12 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
       with_watcher begin fun watcher ->
         let calls = ref 0 in
 
-        check_success "start" @@
+        check_success_result "start" @@
         start watcher begin fun () ->
           calls := !calls + 1;
           if !calls = 2 then
             stop watcher
-            |> check_success "stop"
+            |> check_success_result "stop"
         end;
 
         while Luv.Loop.(run ~mode:Run_mode.nowait ()) do
@@ -58,9 +58,9 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
         let second_called = ref false in
 
         start watcher (fun () -> first_called := true)
-        |> check_success "first start";
+        |> check_success_result "first start";
         start watcher (fun () -> second_called := true)
-        |> check_success "second start";
+        |> check_success_result "second start";
 
         Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
 
@@ -73,7 +73,7 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
       with_watcher begin fun watcher ->
         check_exception Exit begin fun () ->
           start watcher (fun () -> raise Exit)
-          |> check_success "start";
+          |> check_success_result "start";
 
           Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore
         end

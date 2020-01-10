@@ -15,7 +15,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     (unit -> unit) ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   (* DOC The C function should have signature void (*)(void*); *)
@@ -25,7 +25,7 @@ sig
     ?request:Request.t ->
     ?argument:nativeint ->
     nativeint ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   (* DOC This must be called as early as possible, and there are hard limits on
@@ -45,7 +45,7 @@ val create_c :
   nativeint ->
     (t, Error.t) Result.result
 
-val join : t -> Error.t
+val join : t -> (unit, Error.t) Result.result
 (* DOC Document that concurrent join is undefined? Sequenced joins return ESRCH.
    Basically, each thread can be joined once. *)
 
@@ -77,7 +77,7 @@ sig
   val init : ?recursive:bool -> unit -> (t, Error.t) Result.result
   val destroy : t -> unit
   val lock : t -> unit
-  val trylock : t -> Error.t
+  val trylock : t -> (unit, Error.t) Result.result
   val unlock : t -> unit
 end
 
@@ -88,10 +88,10 @@ sig
   val init : unit -> (t, Error.t) Result.result
   val destroy : t -> unit
   val rdlock : t -> unit
-  val tryrdlock : t -> Error.t
+  val tryrdlock : t -> (unit, Error.t) Result.result
   val rdunlock : t -> unit
   val wrlock : t -> unit
-  val trywrlock : t -> Error.t
+  val trywrlock : t -> (unit, Error.t) Result.result
   val wrunlock : t -> unit
 end
 
@@ -103,7 +103,7 @@ sig
   val destroy : t -> unit
   val post : t -> unit
   val wait : t -> unit
-  val trywait : t -> Error.t
+  val trywait : t -> (unit, Error.t) Result.result
 end
 
 (* DOC Time units for timedwait? nanoseconds, so the type might need to be
@@ -117,7 +117,7 @@ sig
   val signal : t -> unit
   val broadcast : t -> unit
   val wait : t -> Mutex.t -> unit
-  val timedwait : t -> Mutex.t -> int -> Error.t
+  val timedwait : t -> Mutex.t -> int -> (unit, Error.t) Result.result
 end
 
 module Barrier :

@@ -46,7 +46,7 @@ let tests = [
       let content = String.make 16 'a' in
       let buffer = Luv.Bigstring.from_string content in
       Luv.Random.Async.random buffer begin fun result ->
-        check_success "random" result;
+        check_success_result "random" result;
         if Luv.Bigstring.to_string buffer = content then
           Alcotest.fail "buffer contents"
       end;
@@ -57,7 +57,7 @@ let tests = [
       let content = String.make 16 'a' in
       let buffer = Luv.Bigstring.from_string content in
       Luv.Random.Sync.random buffer
-      |> check_success "random";
+      |> check_success_result "random";
       if Luv.Bigstring.to_string buffer = content then
         Alcotest.fail "buffer contents"
     end;

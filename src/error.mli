@@ -7,8 +7,6 @@
 (* DOC Document how to convert private int to int. *)
 type t = C.Types.Error.t
 
-val success : t
-
 val e2big : t
 val eacces : t
 val eaddrinuse : t
@@ -92,6 +90,8 @@ val translate_sys_error : int -> t
 val on_unhandled_exception : (exn -> unit) -> unit
 
 (**/**)
+
+val success : t
 
 val to_result : 'a -> t -> ('a, t) Result.result
 val to_result_lazy : (unit -> 'a) -> t -> ('a, t) Result.result

@@ -58,6 +58,6 @@ val spawn :
     (t, Error.t) Result.result
 
 val disable_stdio_inheritance : unit -> unit
-val kill : t -> int -> Error.t
-val kill_pid : pid:int -> int -> Error.t
+val kill : t -> int -> (unit, Error.t) Result.result
+val kill_pid : pid:int -> int -> (unit, Error.t) Result.result
 val pid : t -> int

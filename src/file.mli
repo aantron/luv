@@ -221,7 +221,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val read :
@@ -246,7 +246,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     string ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val mkdir :
@@ -254,7 +254,7 @@ sig
     ?request:Request.t ->
     ?mode:Mode.t ->
     string ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val mkdtemp :
@@ -275,7 +275,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     string ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val opendir :
@@ -289,7 +289,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     Dir.t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val readdir :
@@ -340,21 +340,21 @@ sig
     ?request:Request.t ->
     from:string ->
     to_:string ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val fsync :
     ?loop:Loop.t ->
     ?request:Request.t ->
     t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val fdatasync :
     ?loop:Loop.t ->
     ?request:Request.t ->
     t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val ftruncate :
@@ -362,7 +362,7 @@ sig
     ?request:Request.t ->
     t ->
     int64 ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val copyfile :
@@ -371,7 +371,7 @@ sig
     from:string ->
     to_:string ->
     Copy_flag.t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val sendfile :
@@ -389,7 +389,7 @@ sig
     ?request:Request.t ->
     string ->
     Access_flag.t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val chmod :
@@ -397,7 +397,7 @@ sig
     ?request:Request.t ->
     string ->
     Mode.t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val fchmod :
@@ -405,7 +405,7 @@ sig
     ?request:Request.t ->
     t ->
     Mode.t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val utime :
@@ -414,7 +414,7 @@ sig
     string ->
     atime:float ->
     mtime:float ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val futime :
@@ -423,7 +423,7 @@ sig
     t ->
     atime:float ->
     mtime:float ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val link :
@@ -431,7 +431,7 @@ sig
     ?request:Request.t ->
     target:string ->
     link:string ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val symlink :
@@ -440,7 +440,7 @@ sig
     target:string ->
     link:string ->
     Symlink_flag.t ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val readlink :
@@ -463,7 +463,7 @@ sig
     string ->
     uid:int ->
     gid:int ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val fchown :
@@ -472,7 +472,7 @@ sig
     t ->
     uid:int ->
     gid:int ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 
   val lchown :
@@ -481,7 +481,7 @@ sig
     string ->
     uid:int ->
     gid:int ->
-    (Error.t -> unit) ->
+    ((unit, Error.t) Result.result -> unit) ->
       unit
 end
 
@@ -493,7 +493,7 @@ sig
 
   val close :
     t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val read :
     ?offset:int64 -> t -> Bigstring.t list ->
@@ -505,11 +505,11 @@ sig
 
   val unlink :
     string ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val mkdir :
     ?mode:Mode.t -> string ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val mkdtemp :
     string ->
@@ -521,7 +521,7 @@ sig
 
   val rmdir :
     string ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val opendir :
     string ->
@@ -529,7 +529,7 @@ sig
 
   val closedir :
     Dir.t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val readdir :
     ?number_of_entries:int -> Dir.t ->
@@ -557,23 +557,23 @@ sig
 
   val rename :
     from:string -> to_:string ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val fsync :
     t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val fdatasync :
     t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val ftruncate :
     t -> int64 ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val copyfile :
     from:string -> to_:string -> Copy_flag.t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   (* DOC The offset should be optional, but current libuv doesn't seem to
      support that. *)
@@ -583,31 +583,31 @@ sig
 
   val access :
     string -> Access_flag.t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val chmod :
     string -> Mode.t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val fchmod :
     t -> Mode.t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val utime :
     string -> atime:float -> mtime:float ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val futime :
     t -> atime:float -> mtime:float ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val link :
     target:string -> link:string ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val symlink :
     target:string -> link:string -> Symlink_flag.t ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val readlink :
     string ->
@@ -619,15 +619,15 @@ sig
 
   val chown :
     string -> uid:int -> gid:int ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val fchown :
     t -> uid:int -> gid:int ->
-      Error.t
+      (unit, Error.t) Result.result
 
   val lchown :
     string -> uid:int -> gid:int ->
-      Error.t
+      (unit, Error.t) Result.result
 end
 
 val get_osfhandle : t -> (Misc.Os_fd.t, Error.t) Result.result

@@ -16,11 +16,13 @@ let init ?loop file =
   C.Functions.TTY.init (Loop.or_default loop) tty (File.to_int file) 0
   |> Error.to_result tty
 
-let set_mode =
-  C.Functions.TTY.set_mode
+let set_mode tty mode =
+  C.Functions.TTY.set_mode tty mode
+  |> Error.to_result ()
 
-let reset_mode =
-  C.Functions.TTY.reset_mode
+let reset_mode () =
+  C.Functions.TTY.reset_mode ()
+  |> Error.to_result ()
 
 let get_winsize tty =
   let width = Ctypes.(allocate int) 0 in

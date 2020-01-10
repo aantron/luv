@@ -29,4 +29,4 @@ val start :
   string ->
   ((string * Event.t, Error.t) Result.result -> unit) ->
     unit
-val stop : t -> Error.t
+val stop : t -> (unit, Error.t) Result.result

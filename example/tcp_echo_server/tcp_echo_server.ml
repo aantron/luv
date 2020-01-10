@@ -30,9 +30,11 @@ let () =
   in
 
   let result = Luv.TCP.bind server sockaddr in
-  if result <> Luv.Error.success then begin
+  begin match result with
+  | Result.Ok () -> ()
+  | Result.Error error ->
     Printf.eprintf
-      "Could not bind to %s:%i: %s" interface port (Luv.Error.strerror result);
+      "Could not bind to %s:%i: %s" interface port (Luv.Error.strerror error);
     exit 1
   end;
 
@@ -41,8 +43,10 @@ let () =
      connection. *)
 
   Luv.Stream.listen server begin fun result ->
-    if result <> Luv.Error.success then begin
-      Printf.eprintf "Error while listening: %s" (Luv.Error.strerror result);
+    begin match result with
+    | Result.Ok () -> ()
+    | Result.Error error ->
+      Printf.eprintf "Error while listening: %s" (Luv.Error.strerror error);
       exit 1
     end;
 
@@ -56,8 +60,10 @@ let () =
     in
 
     let result = Luv.Stream.accept ~server ~client in
-    if result <> Luv.Error.success then begin
-      Printf.eprintf "Error accepting client: %s" (Luv.Error.strerror result);
+    begin match result with
+    | Result.Ok () -> ()
+    | Result.Error error ->
+      Printf.eprintf "Error accepting client: %s" (Luv.Error.strerror error);
       exit 1
     end;
 
@@ -72,8 +78,10 @@ let () =
 
       | Ok data ->
         Luv.Stream.write client [data] begin fun result _ ->
-          if result <> Luv.Error.success then begin
-            Printf.eprintf "Error writing: %s" (Luv.Error.strerror result);
+          begin match result with
+          | Result.Ok () -> ()
+          | Result.Error error ->
+            Printf.eprintf "Error writing: %s" (Luv.Error.strerror error);
             exit 1
           end
         end

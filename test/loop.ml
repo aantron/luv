@@ -14,7 +14,7 @@ let with_loop f =
   f loop;
 
   Luv.Loop.close loop
-  |> check_success "close"
+  |> check_success_result "close"
 
 let tests = [
   "loop", [
@@ -42,14 +42,14 @@ let tests = [
       with_loop begin fun loop ->
         Luv.Loop.configure
           loop Luv.Loop.Option.block_signal Luv.Loop.Option.sigprof
-        |> check_success "configure"
+        |> check_success_result "configure"
       end
     end;
 
     "configure, invalid", `Quick, begin fun () ->
       with_loop begin fun loop ->
         Luv.Loop.configure loop Luv.Loop.Option.block_signal 0
-        |> check_error_code "configure" Luv.Error.einval
+        |> check_error_result "configure" Luv.Error.einval
       end
     end;
 

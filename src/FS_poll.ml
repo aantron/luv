@@ -35,5 +35,6 @@ let start ?(interval = 2000) poll path callback =
   if immediate_result < Error.success then
     callback (Result.Error immediate_result)
 
-let stop =
-  C.Functions.FS_poll.stop
+let stop poll =
+  C.Functions.FS_poll.stop poll
+  |> Error.to_result ()
