@@ -1,0 +1,25 @@
+{
+  "name": "luv-promise",
+  "version": "1.0.0",
+  "authors": ["Anton Bachin <antonbachin@yahoo.com>"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aantron/luv.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aantron/luv/issues"
+  },
+  "homepage": "https://github.com/aantron/luv#readme",
+  "esy": {
+    "build": ["dune build -p ${self.name}"]
+  },
+  "dependencies": {
+    "@opam/luv": "*",
+    "@opam/promise": "*"
+  },
+  "devDependencies": {},
+  "resolutions": {
+    "@opam/luv": "link:./luv.opam",
+    "@opam/promise": "aantron/promise:promise.opam#3627b1b"
+  }
+}
