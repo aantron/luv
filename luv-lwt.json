@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@opam/dune": "*",
-    "@opam/ocaml": "*",
     "@opam/luv": "*",
-    "@opam/lwt": ">= 2.4.0"
+    "@opam/lwt": ">= 2.4.0",
+    "ocaml": "*"
   },
   "devDependencies": {},
   "resolutions": {

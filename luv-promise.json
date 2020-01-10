@@ -14,11 +14,14 @@
     "build": ["dune build -p luv_promise"]
   },
   "dependencies": {
+    "@opam/dune": "*",
     "@opam/luv": "*",
-    "reason-promise": "aantron/promise"
+    "@opam/promise": "*",
+    "ocaml": "*"
   },
   "devDependencies": {},
   "resolutions": {
-    "@opam/luv": "link:./luv.opam"
+    "@opam/luv": "link:./luv.opam",
+    "@opam/promise": "aantron/promise:promise.opam#3627b1b"
   }
 }
