@@ -1,0 +1,4 @@
+(library
+ (name syntax)
+ (public_name luv.syntax)
+ (preprocess (future_syntax)))

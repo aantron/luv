@@ -15,8 +15,9 @@ depends: [
   "base-unix"
   "conf-python-2-7" {build}
   "ctypes" {>= "0.13.0"}
-  "dune"
+  "dune" {>= "1.8.0"}
   "ocaml" {>= "4.02.0"}
+  ("ocaml" {>= "4.08.0"} | "ocaml-syntax-shims")
   "result"
 
   "alcotest" {dev & >= "0.8.1"}

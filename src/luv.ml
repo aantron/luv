@@ -70,6 +70,8 @@ module Time = Misc.Time
 module Random = Misc.Random
 module Sleep = Misc.Sleep
 
+module Syntax = Syntax
+
 module Promisify = Promisify
 module Integration = Integration
 

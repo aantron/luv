@@ -1,5 +1,5 @@
 (library
  (name luv)
  (public_name luv)
- (libraries luv.c result)
+ (libraries luv.c luv.syntax result)
  (flags (:standard -w -49)))
