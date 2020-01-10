@@ -15,11 +15,10 @@
   },
   "dependencies": {
     "@opam/luv": "*",
-    "@opam/promise": "*"
+    "reason-promise": "aantron/promise"
   },
   "devDependencies": {},
   "resolutions": {
-    "@opam/luv": "link:./luv.opam",
-    "@opam/promise": "aantron/promise:promise.opam#3627b1b"
+    "@opam/luv": "link:./luv.opam"
   }
 }
