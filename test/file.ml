@@ -797,7 +797,7 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.Async.rename ~from:path ~to_ (check_success_result "rename");
+        Luv.File.Async.rename path ~to_ (check_success_result "rename");
         run ();
 
         Alcotest.(check bool) "original at end" false (Sys.file_exists path);
@@ -814,7 +814,7 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.Sync.rename ~from:path ~to_
+        Luv.File.Sync.rename path ~to_
         |> check_success_result "rename";
 
         Alcotest.(check bool) "original at end" false (Sys.file_exists path);
@@ -827,9 +827,7 @@ let tests = [
     "rename failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.rename ~from:"non_existent_file" ~to_:"foo"
-          begin fun result ->
-
+      Luv.File.Async.rename "non_existent_file" ~to_:"foo" begin fun result ->
         check_error_result "rename" `ENOENT result;
         finished := true
       end;
@@ -839,7 +837,7 @@ let tests = [
     end;
 
     "rename failure: sync", `Quick, begin fun () ->
-      Luv.File.Sync.rename ~from:"non_existent_file" ~to_:"foo"
+      Luv.File.Sync.rename "non_existent_file" ~to_:"foo"
       |> check_error_result "rename" `ENOENT
     end;
 
@@ -947,7 +945,7 @@ let tests = [
       with_file_for_reading begin fun from ->
         with_file_for_writing begin fun to_ ->
           Luv.File.Async.sendfile
-              ~to_ ~from ~offset:0L (Unsigned.Size_t.of_int 3)
+              ~to_ from ~offset:0L (Unsigned.Size_t.of_int 3)
               begin fun result ->
 
             check_success_result "sendfile" result
@@ -964,7 +962,7 @@ let tests = [
       with_file_for_reading begin fun from ->
         with_file_for_writing begin fun to_ ->
           Luv.File.Sync.sendfile
-            ~to_ ~from ~offset:0L (Unsigned.Size_t.of_int 3)
+            ~to_ from ~offset:0L (Unsigned.Size_t.of_int 3)
           |> check_success_result "sendfile"
           |> Unsigned.Size_t.to_int
           |> Alcotest.(check int) "byte count" 3

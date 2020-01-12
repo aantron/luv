@@ -109,6 +109,7 @@ let getaddrinfo
     ?flags
     ?node
     ?service
+    ()
     callback =
 
   let loop = Loop.or_default loop in

@@ -20,7 +20,7 @@ let () =
 
   (* Do a DNS lookup on the URL we are asked to retrieve. *)
 
-  Luv.DNS.getaddrinfo ~family:`INET ~node:url ~service:"80"
+  Luv.DNS.getaddrinfo ~family:`INET ~node:url ~service:"80" ()
       begin fun addr_infos ->
     let addr_info =
       match addr_infos with

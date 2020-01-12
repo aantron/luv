@@ -64,6 +64,7 @@ val getaddrinfo :
   ?flags:Addr_info.Flag.t list ->
   ?node:string ->
   ?service:string ->
+  unit ->
   ((Addr_info.t list, Error.t) Result.result -> unit) ->
     unit
 

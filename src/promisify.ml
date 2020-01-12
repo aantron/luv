@@ -79,7 +79,7 @@ struct
 
       from_cps
         (DNS.getaddrinfo
-          ?loop ?request ?family ?socktype ?protocol ?flags ?node ?service)
+          ?loop ?request ?family ?socktype ?protocol ?flags ?node ?service ())
 
     let getnameinfo ?loop ?request ?flags address =
       from_cps (DNS.getnameinfo ?loop ?request ?flags address)

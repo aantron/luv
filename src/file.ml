@@ -586,7 +586,7 @@ struct
     async_or_sync
       C.Blocking.File.rename
       returns_error
-      (fun run ~from ~to_ -> run (!from @@ !to_) no_cleanup)
+      (fun run from ~to_ -> run (!from @@ !to_) no_cleanup)
 
   let generic_fsync c_function =
     async_or_sync
@@ -626,7 +626,7 @@ struct
     async_or_sync
       C.Blocking.File.sendfile
       returns_byte_count
-      (fun run ~to_ ~from ~offset length ->
+      (fun run ~to_ from ~offset length ->
         run (!to_ @@ !from @@ !offset @@ !length) no_cleanup)
 
   let access =
@@ -662,7 +662,7 @@ struct
     async_or_sync
       C.Blocking.File.link
       returns_error
-      (fun run ~target ~link -> run (!target @@ !link) no_cleanup)
+      (fun run target ~link -> run (!target @@ !link) no_cleanup)
 
   let symlink =
     async_or_sync

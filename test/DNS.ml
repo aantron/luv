@@ -10,7 +10,7 @@ let tests = [
     "getaddrinfo", `Quick, begin fun () ->
       let resolved = ref false in
 
-      Luv.DNS.getaddrinfo ~family:`INET ~node:"localhost" begin fun result ->
+      Luv.DNS.getaddrinfo ~family:`INET ~node:"localhost" () begin fun result ->
         match check_success_result "getaddrinfo" result with
         | [] -> Alcotest.fail "none"
         | first::_ ->

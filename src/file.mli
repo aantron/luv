@@ -304,7 +304,7 @@ sig
   val rename :
     ?loop:Loop.t ->
     ?request:Request.t ->
-    from:string ->
+    string ->
     to_:string ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
@@ -346,7 +346,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     to_:t ->
-    from:t ->
+    t ->
     offset:int64 ->
     Unsigned.Size_t.t ->
     ((Unsigned.Size_t.t, Error.t) Result.result -> unit)  ->
@@ -397,7 +397,7 @@ sig
   val link :
     ?loop:Loop.t ->
     ?request:Request.t ->
-    target:string ->
+    string ->
     link:string ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
@@ -525,7 +525,7 @@ sig
       (Statfs.t, Error.t) Result.result
 
   val rename :
-    from:string -> to_:string ->
+    string -> to_:string ->
       (unit, Error.t) Result.result
 
   val fsync :
@@ -551,7 +551,7 @@ sig
   (* DOC The offset should be optional, but current libuv doesn't seem to
      support that. *)
   val sendfile :
-    to_:t -> from:t -> offset:int64 -> Unsigned.Size_t.t ->
+    to_:t -> t -> offset:int64 -> Unsigned.Size_t.t ->
       (Unsigned.Size_t.t, Error.t) Result.result
 
   val access :
@@ -575,7 +575,7 @@ sig
       (unit, Error.t) Result.result
 
   val link :
-    target:string -> link:string ->
+    string -> link:string ->
       (unit, Error.t) Result.result
 
   val symlink :
