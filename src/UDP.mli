@@ -42,12 +42,19 @@ val send :
 val try_send :
   t -> Bigstring.t list -> Misc.Sockaddr.t -> (unit, Error.t) Result.result
 
-(* DOC The boolean is a flag for whether the read was partial. *)
+module Recv_flag :
+sig
+  type t = [
+    | `PARTIAL
+  ]
+end
+
 val recv_start :
   ?allocate:(int -> Bigstring.t) ->
   ?buffer_not_used:(unit -> unit) ->
   t ->
-  ((Bigstring.t * Misc.Sockaddr.t * bool, Error.t) Result.result -> unit) ->
+  ((Bigstring.t * Misc.Sockaddr.t * Recv_flag.t list, Error.t) Result.result ->
+    unit) ->
     unit
 
 val recv_stop : t -> (unit, Error.t) Result.result

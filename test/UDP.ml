@@ -37,12 +37,13 @@ let expect ?(buffer_not_used = false) receiver expected_data k =
   Luv.UDP.recv_start
       ~buffer_not_used:buffer_not_used_callback receiver begin fun result ->
 
-    let buffer, _peer_address, truncated =
+    let buffer, _peer_address, flags =
       check_success_result "recv_start" result in
     if buffer_not_used then
       Alcotest.fail "expected no data"
     else begin
-      Alcotest.(check bool) "truncated" false truncated;
+      if flags <> [] then
+        Alcotest.fail "unexpected partial recv";
       Alcotest.(check int) "length"
         (String.length expected_data) (Luv.Bigstring.size buffer);
       Alcotest.(check string) "data"

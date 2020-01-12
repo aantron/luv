@@ -133,6 +133,13 @@ let try_send_general udp buffers address =
 let try_send udp buffers address =
   try_send_general udp buffers (Misc.Sockaddr.as_sockaddr address)
 
+module Recv_flag =
+struct
+  type t = [
+    | `PARTIAL
+  ]
+end
+
 let alloc_trampoline =
   C.Functions.Handle.get_alloc_trampoline ()
 
@@ -155,7 +162,7 @@ let recv_start
       buffer_not_used ()
 
     else begin
-      let length = (nread_or_error :> int) [@ocaml.warning "-18"] in
+      let length = nread_or_error in
       let buffer =
         match maybe_buffer with
         | Some buffer -> buffer
@@ -168,8 +175,13 @@ let recv_start
         |> Ctypes.from_voidp C.Types.Sockaddr.storage
         |> Misc.Sockaddr.copy_storage
       in
-      let truncated = (flags = C.Types.UDP.Flag.partial) in
-      Error.catch_exceptions callback (Result.Ok (buffer, sockaddr, truncated))
+      let flags =
+        if flags land C.Types.UDP.Flag.partial = 0 then
+          []
+        else
+          [`PARTIAL]
+      in
+      Error.catch_exceptions callback (Result.Ok (buffer, sockaddr, flags))
     end
   end;
 
