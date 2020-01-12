@@ -156,10 +156,10 @@ struct
   type numeric = int
 
   let list_to_c =
-    Helpers.Bit_flag.list_to_c to_c
+    Helpers.Bit_field.list_to_c to_c
 
   let test =
-    Helpers.Bit_flag.test' to_c
+    Helpers.Bit_field.test to_c
 end
 
 module Dirent =
@@ -474,7 +474,7 @@ struct
       returns_file
       (fun run ?(mode = Mode.file_default) path flags ->
         let mode = Mode.list_to_c mode in
-        let flags = Helpers.Bit_flag.list_to_c Open_flag.to_c flags in
+        let flags = Helpers.Bit_field.list_to_c Open_flag.to_c flags in
         run (!path @@ !flags @@ !mode) no_cleanup)
 
   let close =
@@ -614,7 +614,7 @@ struct
           from
           ~to_ ->
         let flags =
-          let accumulate = Helpers.Bit_flag.accumulate in
+          let accumulate = Helpers.Bit_field.accumulate in
           0
           |> accumulate C.Types.File.Copy_flag.excl excl
           |> accumulate C.Types.File.Copy_flag.ficlone ficlone
@@ -634,7 +634,7 @@ struct
       C.Blocking.File.access
       returns_error
       (fun run path mode ->
-        let mode = Helpers.Bit_flag.list_to_c Access_flag.to_c mode in
+        let mode = Helpers.Bit_field.list_to_c Access_flag.to_c mode in
         run (!path @@ !mode) no_cleanup)
 
   let generic_chmod c_function =
@@ -670,7 +670,7 @@ struct
       returns_error
       (fun run ?(dir = false) ?(junction = false) target ~link ->
         let flags =
-          let accumulate = Helpers.Bit_flag.accumulate in
+          let accumulate = Helpers.Bit_field.accumulate in
           0
           |> accumulate C.Types.File.Symlink_flag.dir dir
           |> accumulate C.Types.File.Symlink_flag.junction junction

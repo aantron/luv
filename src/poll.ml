@@ -43,9 +43,9 @@ let trampoline =
 
 let start poll events callback =
   Handle.set_reference poll (fun status events ->
-    let events = Helpers.Bit_flag.c_to_list Event.to_c Event.all events in
+    let events = Helpers.Bit_field.c_to_list Event.to_c Event.all events in
     Error.catch_exceptions callback (Error.to_result events status));
-  let events = Helpers.Bit_flag.list_to_c Event.to_c events in
+  let events = Helpers.Bit_field.list_to_c Event.to_c events in
   let immediate_result = C.Functions.Poll.start poll events trampoline in
   if immediate_result < 0 then begin
     callback (Error.result_from_c immediate_result)

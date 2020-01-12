@@ -31,14 +31,10 @@ sig
     Bigstring.t list -> int -> C.Types.Buf.t Ctypes.carray
 end
 
-module Bit_flag :
+module Bit_field :
 sig
-  type t = int
-  val (lor) : t -> t -> t
-  val list : t list -> t
-  val test : t -> t -> bool
   val list_to_c : ('a -> int) -> 'a list -> int
   val c_to_list : ('a -> int) -> 'a list -> int -> 'a list
-  val test' : ('a -> int) -> 'a -> int -> bool
+  val test : ('a -> int) -> 'a -> int -> bool
   val accumulate : int -> bool -> int -> int
 end

@@ -29,7 +29,7 @@ let open_ udp socket =
 
 let bind ?(ipv6only = false) ?(reuseaddr = false) udp address =
   let flags =
-    let accumulate = Helpers.Bit_flag.accumulate in
+    let accumulate = Helpers.Bit_field.accumulate in
     0
     |> accumulate C.Types.UDP.Flag.ipv6only ipv6only
     |> accumulate C.Types.UDP.Flag.reuseaddr reuseaddr

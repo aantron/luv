@@ -83,6 +83,6 @@ let receive_handle pipe =
       `None
 
 let chmod pipe mode =
-  let mode = Helpers.Bit_flag.list_to_c Mode.to_c mode in
+  let mode = Helpers.Bit_field.list_to_c Mode.to_c mode in
   C.Functions.Pipe.chmod pipe mode
   |> Error.to_result ()

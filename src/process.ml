@@ -23,7 +23,7 @@ let to_new_pipe
 
   let redirection = Ctypes.make Redirection.t in
   let flags =
-    let accumulate = Helpers.Bit_flag.accumulate in
+    let accumulate = Helpers.Bit_field.accumulate in
     Redirection.create_pipe
     |> accumulate Redirection.readable_pipe readable_in_child
     |> accumulate Redirection.writable_pipe writable_in_child

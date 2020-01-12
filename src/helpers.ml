@@ -56,21 +56,11 @@ struct
     iovecs
 end
 
-module Bit_flag =
+module Bit_field =
 struct
-  type t = int
-
-  let (lor) =
-    (lor)
-
-  let list flags =
-    List.fold_left (lor) 0 flags
-
-  let test flags flag =
-    (flags land flag) <> 0
-
   let list_to_c to_c flags =
-    list (List.map to_c flags)
+    List.map to_c flags
+    |> List.fold_left (lor) 0
 
   let c_to_list to_c all field =
     let rec loop acc = function
@@ -84,7 +74,7 @@ struct
     in
     loop [] all
 
-  let test' to_c flag field =
+  let test to_c flag field =
     (to_c flag land field) <> 0
 
   let accumulate flag condition acc =

@@ -139,7 +139,7 @@ let getaddrinfo
       end;
       begin match flags with
       | Some flags ->
-        let flags = Helpers.Bit_flag.list_to_c Addr_info.Flag.to_c flags in
+        let flags = Helpers.Bit_field.list_to_c Addr_info.Flag.to_c flags in
         Ctypes.setf hints AI.flags flags
       | None -> ()
       end;
@@ -203,7 +203,7 @@ let getnameinfo
     |> callback
   end;
 
-  let flags = Helpers.Bit_flag.list_to_c Name_info.Flag.to_c flags in
+  let flags = Helpers.Bit_field.list_to_c Name_info.Flag.to_c flags in
 
   let immediate_result =
     C.Functions.DNS.Getnameinfo.getnameinfo

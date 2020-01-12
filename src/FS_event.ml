@@ -39,7 +39,7 @@ let start
     callback =
 
   let flags =
-    let accumulate = Helpers.Bit_flag.accumulate in
+    let accumulate = Helpers.Bit_field.accumulate in
     0
     |> accumulate C.Types.FS_event.Flag.watch_entry watch_entry
     |> accumulate C.Types.FS_event.Flag.stat stat
@@ -48,7 +48,7 @@ let start
   Handle.set_reference event begin fun filename events result ->
     let result =
       Error.to_result_lazy (fun () ->
-        filename, Helpers.Bit_flag.c_to_list Event.to_c Event.all events)
+        filename, Helpers.Bit_field.c_to_list Event.to_c Event.all events)
         result
     in
     Error.catch_exceptions callback result
