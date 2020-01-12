@@ -55,6 +55,8 @@ end
 
 (* DOC Examples absolutely necessary. *)
 
+module Async :
+sig
 val getaddrinfo :
   ?loop:Loop.t ->
   ?request:Addr_info.Request.t ->
@@ -75,3 +77,4 @@ val getnameinfo :
   Misc.Sockaddr.t ->
   ((string * string, Error.t) Result.result -> unit) ->
     unit
+end

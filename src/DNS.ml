@@ -97,6 +97,8 @@ let rec addrinfo_list_to_ocaml addrinfo =
     ocaml_addrinfo::(addrinfo_list_to_ocaml next)
   end
 
+module Async =
+struct
 let getaddrinfo_trampoline =
   C.Functions.DNS.Getaddrinfo.get_trampoline ()
 
@@ -219,3 +221,4 @@ let getnameinfo
     Request.release request;
     callback (Error.result_from_c immediate_result)
   end
+end
