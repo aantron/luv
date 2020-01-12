@@ -33,9 +33,9 @@ struct
         (Loop.or_default loop) request work_trampoline after_work_trampoline
     in
 
-    if immediate_result < Error.success then begin
+    if immediate_result < 0 then begin
       Request.release request;
-      callback (Result.Error immediate_result)
+      callback (Error.result_from_c immediate_result)
     end
 
   let c_work_trampoline =
@@ -60,7 +60,7 @@ struct
       C.Functions.Work.add_c_function_and_argument request f argument in
     if not result then begin
       Request.release request;
-      callback (Result.Error Error.enomem)
+      callback (Result.Error `ENOMEM)
     end
 
     else begin
@@ -72,9 +72,9 @@ struct
           after_c_work_trampoline
       in
 
-      if immediate_result < Error.success then begin
+      if immediate_result < 0 then begin
         Request.release request;
-        callback (Result.Error immediate_result)
+        callback (Error.result_from_c immediate_result)
       end
     end
 
@@ -125,9 +125,9 @@ let create ?stack_size f =
       thread_trampoline
       f_gc_root
   in
-  if result < Error.success then begin
+  if result < 0 then begin
     Ctypes.Root.release f_gc_root;
-    Result.Error result
+    Error.result_from_c result
   end
   else
     Result.Ok thread

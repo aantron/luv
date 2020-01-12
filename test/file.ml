@@ -133,19 +133,19 @@ let tests = [
     end;
 
     "open: nonexistent, async", `Quick, begin fun () ->
-      let result = ref (Result.Error Luv.Error.success) in
+      let result = ref (Result.Error `UNKNOWN) in
 
       Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun result' ->
         result := result'
       end;
 
       run ();
-      check_error_result "result" Luv.Error.enoent !result
+      check_error_result "result" `ENOENT !result
     end;
 
     "open: nonexistent, sync", `Quick, begin fun () ->
       Luv.File.Sync.open_ "non_existent_file" [`RDONLY]
-      |> check_error_result "open_" Luv.Error.enoent
+      |> check_error_result "open_" `ENOENT
     end;
 
     "open, close: memory leak, async", `Quick, begin fun () ->
@@ -179,7 +179,7 @@ let tests = [
     "open: failure leak, async", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun result ->
-          check_error_result "result" Luv.Error.enoent result
+          check_error_result "result" `ENOENT result
         end;
 
         run ()
@@ -189,7 +189,7 @@ let tests = [
     "open: failure leak, sync", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         Luv.File.Sync.open_ "non_existent_file" [`RDONLY]
-        |> check_error_result "open_" Luv.Error.enoent;
+        |> check_error_result "open_" `ENOENT;
       end
     end;
 
@@ -222,7 +222,7 @@ let tests = [
         let buffer = Luv.Bigstring.create 1 in
 
         Luv.File.Async.read file [buffer] begin fun result ->
-          check_error_result "byte_count" Luv.Error.ebadf result
+          check_error_result "byte_count" `EBADF result
         end;
 
         run ()
@@ -234,7 +234,7 @@ let tests = [
         let buffer = Luv.Bigstring.create 1 in
 
         Luv.File.Sync.read file [buffer]
-        |> check_error_result "read" Luv.Error.ebadf
+        |> check_error_result "read" `EBADF
       end
     end;
 
@@ -353,7 +353,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.unlink "non_existent_file" begin fun result ->
-        check_error_result "result" Luv.Error.enoent result;
+        check_error_result "result" `ENOENT result;
         finished := true
       end;
 
@@ -363,7 +363,7 @@ let tests = [
 
     "unlink failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.unlink "non_existent_file"
-      |> check_error_result "unlink" Luv.Error.enoent
+      |> check_error_result "unlink" `ENOENT
     end;
 
     "mkdir, rmdir: async", `Quick, begin fun () ->
@@ -406,7 +406,7 @@ let tests = [
         let finished = ref false in
 
         Luv.File.Async.mkdir path begin fun result ->
-          check_error_result "mkdir result" Luv.Error.eexist result;
+          check_error_result "mkdir result" `EEXIST result;
           finished := true
         end;
 
@@ -418,7 +418,7 @@ let tests = [
     "mkdir failure: sync", `Quick, begin fun () ->
       with_dummy_file begin fun path ->
         Luv.File.Sync.mkdir path
-        |> check_error_result "mkdir" Luv.Error.eexist
+        |> check_error_result "mkdir" `EEXIST
       end
     end;
 
@@ -426,7 +426,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.rmdir "non_existent_file" begin fun result ->
-        check_error_result "rmdir result" Luv.Error.enoent result;
+        check_error_result "rmdir result" `ENOENT result;
         finished := true
       end;
 
@@ -436,7 +436,7 @@ let tests = [
 
     "rmdir failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.rmdir "non_existent_file"
-      |> check_error_result "rmdir" Luv.Error.enoent
+      |> check_error_result "rmdir" `ENOENT
     end;
 
     "mkdtemp: async", `Quick, begin fun () ->
@@ -469,7 +469,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.mkdtemp "non-existent/fooXXXXXX" begin fun result ->
-        check_error_result "mkdtemp result" Luv.Error.enoent result;
+        check_error_result "mkdtemp result" `ENOENT result;
         finished := true
       end;
 
@@ -479,7 +479,7 @@ let tests = [
 
     "mkdtemp failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.mkdtemp "non-existent/fooXXXXXX"
-      |> check_error_result "mkdtemp result" Luv.Error.enoent
+      |> check_error_result "mkdtemp result" `ENOENT
     end;
 
     "mkstemp: async", `Quick, begin fun () ->
@@ -519,7 +519,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.mkstemp "non-existent/fooXXXXXX" begin fun result ->
-        check_error_result "mkstemp result" Luv.Error.enoent result;
+        check_error_result "mkstemp result" `ENOENT result;
         finished := true
       end;
 
@@ -529,7 +529,7 @@ let tests = [
 
     "mkstemp failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.mkstemp "non-existent/fooXXXXXX"
-      |> check_error_result "mkstemp result" Luv.Error.enoent
+      |> check_error_result "mkstemp result" `ENOENT
     end;
 
     "opendir, closedir: async", `Quick, begin fun () ->
@@ -646,7 +646,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.scandir "non_existent_directory" begin fun result ->
-        check_error_result "scandir" Luv.Error.enoent result;
+        check_error_result "scandir" `ENOENT result;
         finished := true
       end;
 
@@ -656,7 +656,7 @@ let tests = [
 
     "scandir failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.scandir "non_existent_directory"
-      |> check_error_result "scandir" Luv.Error.enoent
+      |> check_error_result "scandir" `ENOENT
     end;
 
     "stat: async", `Quick, begin fun () ->
@@ -683,7 +683,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.stat "non_existent_file" begin fun result ->
-        check_error_result "stat" Luv.Error.enoent result;
+        check_error_result "stat" `ENOENT result;
         finished := true
       end;
 
@@ -693,7 +693,7 @@ let tests = [
 
     "stat failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.stat "non_existent_file"
-      |> check_error_result "stat" Luv.Error.enoent
+      |> check_error_result "stat" `ENOENT
     end;
 
     "lstat: async", `Quick, begin fun () ->
@@ -720,7 +720,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.lstat "non_existent_file" begin fun result ->
-        check_error_result "lstat" Luv.Error.enoent result;
+        check_error_result "lstat" `ENOENT result;
         finished := true
       end;
 
@@ -730,7 +730,7 @@ let tests = [
 
     "lstat failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.lstat "non_existent_file"
-      |> check_error_result "lstat" Luv.Error.enoent
+      |> check_error_result "lstat" `ENOENT
     end;
 
     "fstat: async", `Quick, begin fun () ->
@@ -777,7 +777,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.statfs "non_existent_file" begin fun result ->
-        check_error_result "stat" Luv.Error.enoent result;
+        check_error_result "stat" `ENOENT result;
         finished := true
       end;
 
@@ -787,7 +787,7 @@ let tests = [
 
     "statfs failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.statfs "non_existent_file"
-      |> check_error_result "stat" Luv.Error.enoent
+      |> check_error_result "stat" `ENOENT
     end;
 
     "rename: async", `Quick, begin fun () ->
@@ -830,7 +830,7 @@ let tests = [
       Luv.File.Async.rename ~from:"non_existent_file" ~to_:"foo"
           begin fun result ->
 
-        check_error_result "rename" Luv.Error.enoent result;
+        check_error_result "rename" `ENOENT result;
         finished := true
       end;
 
@@ -840,7 +840,7 @@ let tests = [
 
     "rename failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.rename ~from:"non_existent_file" ~to_:"foo"
-      |> check_error_result "rename" Luv.Error.enoent
+      |> check_error_result "rename" `ENOENT
     end;
 
     "ftruncate: async", `Quick, begin fun () ->
@@ -876,7 +876,7 @@ let tests = [
         let finished = ref false in
 
         Luv.File.Async.ftruncate file 0L begin fun result ->
-          check_error_result "ftruncate" Luv.Error.einval result;
+          check_error_result "ftruncate" `EINVAL result;
           finished := true
         end;
 
@@ -888,7 +888,7 @@ let tests = [
     "ftruncate failure: sync", `Quick, begin fun () ->
       with_file_for_reading begin fun file ->
         Luv.File.Sync.ftruncate file 0L
-        |> check_error_result "ftruncate" Luv.Error.einval
+        |> check_error_result "ftruncate" `EINVAL
       end
     end;
 
@@ -933,7 +933,7 @@ let tests = [
       Luv.File.Async.copyfile
           ~from:"non_existent_file" ~to_:"foo" [] begin fun result ->
 
-        check_error_result "copyfile" Luv.Error.enoent result;
+        check_error_result "copyfile" `ENOENT result;
         finished := true
       end;
 
@@ -943,7 +943,7 @@ let tests = [
 
     "copyfile failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.copyfile ~from:"non_existent_file" ~to_:"foo" []
-      |> check_error_result "copyfile" Luv.Error.enoent
+      |> check_error_result "copyfile" `ENOENT
     end;
 
     "sendfile: async", `Quick, begin fun () ->
@@ -996,7 +996,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.Async.access "non_existent_file" [`R_OK] begin fun result ->
-        check_error_result "access" Luv.Error.enoent result;
+        check_error_result "access" `ENOENT result;
         finished := true
       end;
 
@@ -1006,7 +1006,7 @@ let tests = [
 
     "access failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.access "non_existent_file" [`R_OK]
-      |> check_error_result "access" Luv.Error.enoent
+      |> check_error_result "access" `ENOENT
     end;
   ]
 ]

@@ -164,9 +164,9 @@ let getaddrinfo
       loop request getaddrinfo_trampoline node service hints
   in
 
-  if immediate_result < Error.success then begin
+  if immediate_result < 0 then begin
     Request.release request;
-    callback (Result.Error immediate_result)
+    callback (Error.result_from_c immediate_result)
   end
 
 let load_string request field' field_length =
@@ -214,7 +214,7 @@ let getnameinfo
       flags
   in
 
-  if immediate_result < Error.success then begin
+  if immediate_result < 0 then begin
     Request.release request;
-    callback (Result.Error immediate_result)
+    callback (Error.result_from_c immediate_result)
   end

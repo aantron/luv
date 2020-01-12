@@ -15,7 +15,7 @@ struct
     let storage = Ctypes.(raw_address_of_ptr (to_voidp (addr os_fd))) in
     from_unix_helper unix_fd storage;
     if C.Functions.Os_fd.is_invalid_handle_value os_fd then
-      Result.Error Error.ebadf
+      Result.Error `EBADF
     else
       Result.Ok os_fd
 
@@ -38,7 +38,7 @@ struct
     let storage = Ctypes.(raw_address_of_ptr (to_voidp (addr os_socket))) in
     from_unix_helper unix_fd storage;
     if C.Functions.Os_socket.is_invalid_socket_value os_socket then
-      Result.Error Error.ebadf
+      Result.Error `EBADF
     else
       Result.Ok os_socket
 
@@ -565,9 +565,9 @@ struct
           trampoline
       in
 
-      if immediate_result < Error.success then begin
+      if immediate_result < 0 then begin
         Request.release request;
-        callback (Error immediate_result)
+        callback (Error.result_from_c immediate_result)
       end
   end
 

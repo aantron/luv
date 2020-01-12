@@ -58,7 +58,7 @@ let tests = [
 
         Luv.FS_poll.start poll ~interval:100 filename begin fun result ->
           match result with
-          | Result.Error e when e = Luv.Error.enoent -> ()
+          | Result.Error e when e = `ENOENT -> ()
           | _ ->
             Luv.FS_poll.stop poll |> check_success_result "stop";
             check_success_result "start" result |> ignore;

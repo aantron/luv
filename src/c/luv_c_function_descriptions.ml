@@ -23,9 +23,10 @@ module Types = Luv_c_types
    Instead, we group the lock-releasing bindings in this module [Blocking]. *)
 module Blocking (F : Ctypes.FOREIGN) =
 struct
-  let error_code = Types.Error.t
   open Ctypes
   open F
+
+  let error_code = int
 
   module Loop =
   struct
@@ -399,9 +400,10 @@ end
 
 module Descriptions (F : Ctypes.FOREIGN) =
 struct
-  let error_code = Types.Error.t
   open Ctypes
   open F
+
+  let error_code = int
 
   module Error =
   struct

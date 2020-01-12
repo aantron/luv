@@ -86,7 +86,7 @@ let tests = [
         let address = fresh_address () in
 
         Luv.TCP.connect tcp address begin fun result ->
-          check_error_result "connect" Luv.Error.econnrefused result;
+          check_error_result "connect" `ECONNREFUSED result;
           finished := true
         end;
 
@@ -134,7 +134,7 @@ let tests = [
           result := result'
         end;
 
-        check_error_result "connect" Luv.Error.ealready !result;
+        check_error_result "connect" `EALREADY !result;
         run ()
       end
     end;
@@ -155,7 +155,7 @@ let tests = [
       with_tcp begin fun tcp ->
         let address = fresh_address () in
         Luv.TCP.connect tcp address begin fun result ->
-          check_error_result "connect" Luv.Error.ecanceled result
+          check_error_result "connect" `ECANCELED result
         end
       end
     end;
@@ -274,7 +274,7 @@ let tests = [
         let called = ref false in
 
         Luv.Stream.write tcp [] begin fun result count ->
-          check_error_result "write" Luv.Error.ebadf result;
+          check_error_result "write" `EBADF result;
           Alcotest.(check int) "count" 0 count;
           called := true
         end;
@@ -372,7 +372,7 @@ let tests = [
     "try_write: error", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         Luv.Stream.try_write tcp []
-        |> check_error_result "try_write" Luv.Error.ebadf
+        |> check_error_result "try_write" `EBADF
       end
     end;
 
@@ -408,7 +408,7 @@ let tests = [
         let called = ref false in
 
         Luv.Stream.shutdown tcp begin fun result ->
-          check_error_result "shutdown" Luv.Error.enotconn result;
+          check_error_result "shutdown" `ENOTCONN result;
           called := true
         end;
 
@@ -444,7 +444,7 @@ let tests = [
 
       with_tcp begin fun tcp ->
         Luv.TCP.close_reset tcp begin fun result ->
-          check_error_result "close_reset" Luv.Error.ebadf result;
+          check_error_result "close_reset" `EBADF result;
           called := true
         end
       end;

@@ -72,7 +72,7 @@ sig
   val null : C.Types.Sockaddr.t Ctypes.ptr
 
   val wrap_c_getter :
-    ('handle -> C.Types.Sockaddr.t Ctypes.ptr -> int Ctypes.ptr -> Error.t) ->
+    ('handle -> C.Types.Sockaddr.t Ctypes.ptr -> int Ctypes.ptr -> int) ->
     ('handle -> (t, Error.t) Result.result)
 end
 

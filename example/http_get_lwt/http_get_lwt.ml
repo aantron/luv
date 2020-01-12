@@ -90,14 +90,12 @@ let () =
       match result with
       | Result.Ok buffer ->
         print_string (Luv.Bigstring.to_string buffer)
+      | Result.Error `EOF ->
+        Luv.Handle.close socket ignore
       | Result.Error error ->
-        if error = Luv.Error.eof then
-          Luv.Handle.close socket ignore
-        else begin
-          Printf.eprintf
-            "Could not read from socket: %s" (Luv.Error.strerror error);
-          exit 1
-        end
+        Printf.eprintf
+          "Could not read from socket: %s" (Luv.Error.strerror error);
+        exit 1
     end;
 
 

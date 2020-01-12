@@ -41,7 +41,7 @@ sig
   type t = [ `Connect ] Request.t
   val make : unit -> t
   val trampoline :
-    (C.Types.Stream.Connect_request.t Ctypes.ptr -> Error.t -> unit)
+    (C.Types.Stream.Connect_request.t Ctypes.ptr -> int -> unit)
       Ctypes.static_funptr
 end
 

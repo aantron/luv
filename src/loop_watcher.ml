@@ -7,15 +7,15 @@ module type KIND =
 sig
   type kind
   val t : kind C.Types.Handle.t Ctypes.typ
-  val init : Loop.t -> kind C.Types.Handle.t Ctypes.ptr -> Error.t
+  val init : Loop.t -> kind C.Types.Handle.t Ctypes.ptr -> int
   val get_trampoline :
     unit ->
       (kind C.Types.Handle.t Ctypes.ptr -> unit) Ctypes.static_funptr
   val start :
     kind C.Types.Handle.t Ctypes.ptr ->
     (kind C.Types.Handle.t Ctypes.ptr -> unit) Ctypes.static_funptr ->
-      Error.t
-  val stop : kind C.Types.Handle.t Ctypes.ptr -> Error.t
+      int
+  val stop : kind C.Types.Handle.t Ctypes.ptr -> int
 end
 
 module Watcher (Kind : KIND) =

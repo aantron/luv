@@ -92,15 +92,12 @@ let () = {
         switch (result) {
         | Result.Ok(buffer) =>
           print_string(Luv.Bigstring.to_string(buffer))
+        | Result.Error(`EOF) =>
+          Luv.Handle.close(socket, ignore)
         | Result.Error(error) =>
-          if (error == Luv.Error.eof) {
-            Luv.Handle.close(socket, ignore);
-          }
-          else {
-            Printf.eprintf(
-              "Could not read from socket: %s", Luv.Error.strerror(error));
-            exit(1)
-          }
+          Printf.eprintf(
+            "Could not read from socket: %s", Luv.Error.strerror(error));
+          exit(1);
         });
     });
   });

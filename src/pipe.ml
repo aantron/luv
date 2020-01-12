@@ -48,16 +48,19 @@ let rec generic_getname ?(buffer_size = 128) c_function pipe =
   let buffer = Bytes.create buffer_size in
   let result = c_function pipe (Ctypes.ocaml_bytes_start buffer) length_cell in
   let final_length = Unsigned.Size_t.to_int (Ctypes.(!@) length_cell) in
-  if result >= Error.success then
+  if result >= 0 then
     Result.Ok (Bytes.sub_string buffer 0 final_length)
   else
-    if result = Error.enobufs then
+    if result = C.Types.Error.enobufs then
       generic_getname ~buffer_size:final_length c_function pipe
     else
-      Result.Error result
+      Error.result_from_c result
 
-let getsockname = generic_getname C.Functions.Pipe.getsockname
-let getpeername = generic_getname C.Functions.Pipe.getpeername
+let getsockname =
+  generic_getname C.Functions.Pipe.getsockname
+
+let getpeername =
+  generic_getname C.Functions.Pipe.getpeername
 
 let pending_instances =
   C.Functions.Pipe.pending_instances

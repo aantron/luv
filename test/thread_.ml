@@ -154,7 +154,7 @@ let tests = [
       Luv.Thread.join child
       |> check_success_result "join";
       Luv.Thread.join child
-      |> check_error_result "second join" Luv.Error.esrch
+      |> check_error_result "second join" `ESRCH
     end;
 
     "function leak", `Quick, begin fun () ->
@@ -221,7 +221,7 @@ let tests = [
       let mutex = Luv.Mutex.init () |> check_success_result "init" in
 
       Luv.Mutex.trylock mutex |> check_success_result "trylock 1";
-      Luv.Mutex.trylock mutex |> check_error_result "trylock 2" Luv.Error.ebusy;
+      Luv.Mutex.trylock mutex |> check_error_result "trylock 2" `EBUSY;
 
       let child_trylock_result = ref (Result.Ok ()) in
       let child_tried_to_lock = Event.create () in
@@ -235,12 +235,12 @@ let tests = [
       in
 
       Event.wait child_tried_to_lock;
-      check_error_result "child trylock" Luv.Error.ebusy !child_trylock_result;
+      check_error_result "child trylock" `EBUSY !child_trylock_result;
 
       Luv.Mutex.unlock mutex;
       Luv.Thread.join child |> check_success_result "join";
 
-      Luv.Mutex.trylock mutex |> check_error_result "trylock 3" Luv.Error.ebusy;
+      Luv.Mutex.trylock mutex |> check_error_result "trylock 3" `EBUSY;
       Luv.Mutex.unlock mutex;
 
       Luv.Mutex.destroy mutex
@@ -278,8 +278,8 @@ let tests = [
       |> check_success_result "thread create"
       |> Luv.Thread.join
       |> check_success_result "join";
-      check_error_result "tryrdlock" Luv.Error.ebusy !child_tryrdlock_result;
-      check_error_result "trywrlock" Luv.Error.ebusy !child_trywrlock_result;
+      check_error_result "tryrdlock" `EBUSY !child_tryrdlock_result;
+      check_error_result "trywrlock" `EBUSY !child_trywrlock_result;
 
       Luv.Rwlock.wrunlock rwlock;
 
@@ -292,7 +292,7 @@ let tests = [
       Luv.Semaphore.trywait semaphore |> check_success_result "trywait 1";
       Luv.Semaphore.wait semaphore;
       Luv.Semaphore.trywait semaphore
-      |> check_error_result "trywait 2" Luv.Error.eagain;
+      |> check_error_result "trywait 2" `EAGAIN;
       Luv.Semaphore.post semaphore;
       Luv.Semaphore.trywait semaphore |> check_success_result "trywait 3";
 
@@ -325,7 +325,7 @@ let tests = [
 
       (* 100ms. *)
       Luv.Condition.timedwait condition mutex 100000000
-      |> check_error_result "timedwait" Luv.Error.etimedout;
+      |> check_error_result "timedwait" `ETIMEDOUT;
 
       Luv.Mutex.unlock mutex;
 

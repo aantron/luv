@@ -248,7 +248,7 @@ let tests = [
         Luv.UDP.bind udp (fresh_address ()) |> check_success_result "bind";
 
         Luv.UDP.Connected.getpeername udp
-        |> check_error_result "getpeername, initial" Luv.Error.enotconn;
+        |> check_error_result "getpeername, initial" `ENOTCONN;
 
         let remote = fresh_address () in
 
@@ -261,7 +261,7 @@ let tests = [
         Luv.UDP.Connected.disconnect udp |> check_success_result "disconnect";
 
         Luv.UDP.Connected.getpeername udp
-        |> check_error_result "getpeername, disconnected" Luv.Error.enotconn
+        |> check_error_result "getpeername, disconnected" `ENOTCONN
       end
     end;
 
@@ -273,7 +273,7 @@ let tests = [
         Luv.UDP.Connected.connect udp remote
         |> check_success_result "first connect";
         Luv.UDP.Connected.connect udp remote
-        |> check_error_result "second connect" Luv.Error.eisconn;
+        |> check_error_result "second connect" `EISCONN;
       end
     end;
 
@@ -281,7 +281,7 @@ let tests = [
       with_udp begin fun udp ->
         Luv.UDP.bind udp (fresh_address ()) |> check_success_result "bind";
         Luv.UDP.Connected.disconnect udp
-        |> check_error_result "disconnect" Luv.Error.enotconn
+        |> check_error_result "disconnect" `ENOTCONN
       end
     end;
 

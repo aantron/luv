@@ -215,7 +215,7 @@ let tests = [
 
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end ignore;
-        check_error_result "read" Luv.Error.eof result;
+        check_error_result "read" `EOF result;
         finished := true
       end;
 
@@ -284,13 +284,13 @@ let tests = [
 
     "failure", `Quick, begin fun () ->
       Luv.Process.spawn "./nonexistent" ["nonexistent"]
-      |> check_error_result "spawn" Luv.Error.enoent
+      |> check_error_result "spawn" `ENOENT
     end;
 
     "failure handle leak", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         Luv.Process.spawn "./nonexistent" ["nonexistent"]
-        |> check_error_result "spawn" Luv.Error.enoent;
+        |> check_error_result "spawn" `ENOENT;
 
         run ()
       end
@@ -305,7 +305,7 @@ let tests = [
 
           called := true
         end
-        |> check_error_result "spawn" Luv.Error.enoent;
+        |> check_error_result "spawn" `ENOENT;
 
         run ()
       end;

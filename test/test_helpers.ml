@@ -4,15 +4,11 @@
 
 
 let pp_error_code formatter error_code =
-  if error_code = Luv.Error.success then
-    Format.pp_print_string formatter "success (0)"
-  else
-    Format.fprintf
-      formatter
-      "%s (%s, %i)"
-      (Luv.Error.strerror error_code)
-      (Luv.Error.err_name error_code)
-      (error_code :> int) [@ocaml.warning "-18"]
+  Format.fprintf
+    formatter
+    "%s (%s)"
+    (Luv.Error.strerror error_code)
+    (Luv.Error.err_name error_code)
 
 let error_code_testable =
   Alcotest.of_pp pp_error_code

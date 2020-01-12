@@ -47,8 +47,8 @@ let start poll events callback =
     Error.catch_exceptions callback (Error.to_result events status));
   let events = Helpers.Bit_flag.list_to_c Event.to_c events in
   let immediate_result = C.Functions.Poll.start poll events trampoline in
-  if immediate_result < Error.success then begin
-    callback (Result.Error immediate_result)
+  if immediate_result < 0 then begin
+    callback (Error.result_from_c immediate_result)
   end
 
 let stop poll =

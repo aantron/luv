@@ -37,7 +37,8 @@ let bind ?(ipv6only = false) ?(reuseaddr = false) udp address =
   C.Functions.UDP.bind udp (Misc.Sockaddr.as_sockaddr address) flags
   |> Error.to_result ()
 
-let getsockname = Misc.Sockaddr.wrap_c_getter C.Functions.UDP.getsockname
+let getsockname =
+  Misc.Sockaddr.wrap_c_getter C.Functions.UDP.getsockname
 
 let set_membership udp ~group ~interface membership =
   C.Functions.UDP.set_membership
@@ -99,9 +100,9 @@ let send_general udp buffers address callback =
       send_trampoline
   in
 
-  if immediate_result < Error.success then begin
+  if immediate_result < 0 then begin
     Request.release request;
-    callback (Result.Error immediate_result)
+    callback (Error.result_from_c immediate_result)
   end
 
 let send udp buffers address callback =
@@ -139,14 +140,12 @@ let recv_start
 
   let last_allocated_buffer = ref None in
 
-  Handle.set_reference udp
-      begin fun (nread_or_error : Error.t) sockaddr flags ->
-
+  Handle.set_reference udp begin fun nread_or_error sockaddr flags ->
     let maybe_buffer = !last_allocated_buffer in
     last_allocated_buffer := None;
 
-    if (nread_or_error :> int) < 0 then
-      callback (Result.Error nread_or_error)
+    if nread_or_error < 0 then
+      callback (Error.result_from_c nread_or_error)
 
     else if sockaddr = Nativeint.zero then
       buffer_not_used ()
@@ -180,8 +179,8 @@ let recv_start
 
   let immediate_result =
     C.Functions.UDP.recv_start udp alloc_trampoline recv_trampoline in
-  if immediate_result < Error.success then
-    callback (Result.Error immediate_result)
+  if immediate_result < 0 then
+    callback (Error.result_from_c immediate_result)
 
 let recv_stop udp =
   C.Functions.UDP.recv_stop udp

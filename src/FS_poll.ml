@@ -32,8 +32,8 @@ let start ?(interval = 2000) poll path callback =
     C.Functions.FS_poll.start
       poll trampoline (Ctypes.ocaml_string_start path) interval
   in
-  if immediate_result < Error.success then
-    callback (Result.Error immediate_result)
+  if immediate_result < 0 then
+    callback (Error.result_from_c immediate_result)
 
 let stop poll =
   C.Functions.FS_poll.stop poll

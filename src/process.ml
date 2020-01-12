@@ -173,7 +173,7 @@ let spawn
       gid
   in
 
-  if result < Error.success then begin
+  if result < 0 then begin
     Handle.close process ignore
   end;
 

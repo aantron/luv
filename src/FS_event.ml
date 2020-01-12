@@ -58,8 +58,8 @@ let start ?(flags = []) event path callback =
     C.Functions.FS_event.start
       event trampoline (Ctypes.ocaml_string_start path) flags
   in
-  if immediate_result < Error.success then
-    callback (Result.Error immediate_result)
+  if immediate_result < 0 then
+    callback (Error.result_from_c immediate_result)
 
 let stop event =
   C.Functions.FS_event.stop event

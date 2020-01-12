@@ -44,8 +44,11 @@ let bind ?(ipv6only = false) tcp address =
   C.Functions.TCP.bind tcp (Misc.Sockaddr.as_sockaddr address) flags
   |> Error.to_result ()
 
-let getsockname = Misc.Sockaddr.wrap_c_getter C.Functions.TCP.getsockname
-let getpeername = Misc.Sockaddr.wrap_c_getter C.Functions.TCP.getpeername
+let getsockname =
+  Misc.Sockaddr.wrap_c_getter C.Functions.TCP.getsockname
+
+let getpeername =
+  Misc.Sockaddr.wrap_c_getter C.Functions.TCP.getpeername
 
 let connect tcp address callback =
   let request = Stream.Connect_request.make () in
@@ -60,9 +63,9 @@ let connect tcp address callback =
       (Misc.Sockaddr.as_sockaddr address)
       Stream.Connect_request.trampoline
   in
-  if immediate_result < Error.success then begin
+  if immediate_result < 0 then begin
     Request.release request;
-    callback (Result.Error immediate_result)
+    callback (Error.result_from_c immediate_result)
   end
 
 (* This code closely follows the implementation of close in handle.ml. *)
@@ -80,6 +83,6 @@ let close_reset tcp callback =
         Handle.release tcp;
         Error.catch_exceptions callback (Result.Ok ()));
     let immediate_result = C.Functions.TCP.close_reset tcp close_trampoline in
-    if immediate_result < Error.success then
-      callback (Result.Error immediate_result)
+    if immediate_result < 0 then
+      callback (Error.result_from_c immediate_result)
   end

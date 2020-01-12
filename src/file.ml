@@ -27,12 +27,11 @@ struct
 
   let result request =
     int_result request
-    |> Error.coerce
     |> Error.clamp
 
   let file request =
     let file_or_error = int_result request in
-    Error.to_result file_or_error (Error.coerce file_or_error)
+    Error.to_result file_or_error file_or_error
 
   let byte_count request =
     let count_or_error = C.Blocking.File.get_result request in
@@ -44,8 +43,7 @@ struct
     else
       count_or_error
       |> PosixTypes.Ssize.to_int
-      |> Error.coerce
-      |> fun n -> Result.Error n
+      |> fun n -> Error.result_from_c n
 
   let path =
     C.Blocking.File.get_path
@@ -202,7 +200,7 @@ struct
   let next scan =
     let result =
       C.Blocking.File.scandir_next scan.request (Ctypes.addr scan.dirent) in
-    if result <> Error.success then begin
+    if result < 0 then begin
       stop scan;
       None
     end
@@ -355,11 +353,9 @@ end
 
 module Returns =
 struct
-  let construct_error e = Result.Error e
-
   type 'a t = {
     from_request : Request_.t -> 'a;
-    immediate_error : Error.t -> 'a;
+    immediate_error : int -> 'a;
     clean_up_request_on_success : bool;
   }
 
@@ -372,13 +368,13 @@ struct
 
   let returns_file = {
     from_request = Request_.file;
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
   }
 
   let returns_byte_count = {
     from_request = Request_.byte_count;
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
   }
 
@@ -386,7 +382,7 @@ struct
     from_request = (fun request ->
       Error.to_result_lazy
         (fun () -> Request_.path request) (Request_.result request));
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
   }
 
@@ -395,7 +391,7 @@ struct
       Error.to_result_lazy
         (fun () -> Request_.path request, (Request_.int_result request))
         (Request_.result request));
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
   }
 
@@ -404,7 +400,7 @@ struct
       Error.to_result_lazy
         (fun () -> Dir.from_request request)
         (Request_.result request));
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
   }
 
@@ -422,7 +418,7 @@ struct
             (fun index ->
               Dirent.from_c Ctypes.(!@ (dirents +@ index))))
         (Request_.result request));
-      immediate_error = construct_error;
+      immediate_error = Error.result_from_c;
       clean_up_request_on_success = true;
   }
 
@@ -430,7 +426,7 @@ struct
     from_request = (fun request ->
       Error.to_result_lazy
         (fun () -> Directory_scan.start request) (Request_.result request));
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = false;
   }
 
@@ -438,7 +434,7 @@ struct
     from_request = (fun request ->
       Error.to_result_lazy
         (fun () -> Stat.from_request request) (Request_.result request));
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
   }
 
@@ -446,7 +442,7 @@ struct
     from_request = (fun request ->
       Error.to_result_lazy
         (fun () -> Statfs.from_request request) (Request_.result request));
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
   }
 
@@ -455,7 +451,7 @@ struct
       Error.to_result_lazy
         (fun () -> C.Blocking.File.get_ptr_as_string request)
         (Request_.result request));
-    immediate_error = construct_error;
+    immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
   }
 end
@@ -483,7 +479,7 @@ sig
   val async_or_sync :
     (Loop.t -> Request_.t -> 'c_signature) ->
     'result Returns.t ->
-    ((('c_signature -> C.Blocking.File.trampoline -> Error.t) ->
+    ((('c_signature -> C.Blocking.File.trampoline -> int) ->
       (unit -> unit) ->
         'result cps_or_normal_return) ->
        'ocaml_signature) ->
@@ -726,7 +722,7 @@ struct
         Request.set_callback request begin fun () ->
           let result = Returns.(returns.from_request request) in
           if Returns.(returns.clean_up_request_on_success)
-            || Request_.result request < Error.success then begin
+            || Request_.result request < 0 then begin
             Request_.cleanup request
           end;
           cleanup ();
@@ -736,7 +732,7 @@ struct
         let immediate_result =
           ((c_function loop request) |> args) trampoline in
 
-        if immediate_result < Error.success then begin
+        if immediate_result < 0 then begin
           Request.release request;
           Request_.cleanup request;
           cleanup ();
@@ -769,13 +765,13 @@ struct
 
       cleanup ();
       let result =
-        if immediate_result < Error.success then
+        if immediate_result < 0 then
           Returns.(returns.immediate_error) immediate_result
         else
           Returns.(returns.from_request) request
       in
       if Returns.(returns.clean_up_request_on_success)
-        || immediate_result < Error.success then begin
+        || immediate_result < 0 then begin
         Request_.cleanup request;
       end;
       result
@@ -794,14 +790,14 @@ module Request = Request_
 let get_osfhandle file =
   let handle = C.Functions.Os_fd.get_osfhandle file in
   if C.Functions.Os_fd.is_invalid_handle_value handle then
-    Result.Error Error.ebadf
+    Result.Error `EBADF
   else
     Result.Ok handle
 
 let open_osfhandle handle =
   let file = C.Functions.Os_fd.open_osfhandle handle in
   if file = -1 then
-    Result.Error Error.ebadf
+    Result.Error `EBADF
   else
     Result.Ok file
 

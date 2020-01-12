@@ -22,9 +22,9 @@ let shutdown stream callback =
   Request.set_callback request wrapped_callback;
   let immediate_result =
     C.Functions.Stream.shutdown request (coerce stream) shutdown_trampoline in
-  if immediate_result < Error.success then begin
+  if immediate_result < 0 then begin
     Request.release request;
-    callback (Result.Error immediate_result)
+    callback (Error.result_from_c immediate_result)
   end
 
 let connection_trampoline =
@@ -38,8 +38,8 @@ let listen ?(backlog = C.Types.Stream.somaxconn) server callback =
     ~index:C.Types.Stream.connection_callback_index server wrapped_callback;
   let immediate_result =
     C.Functions.Stream.listen (coerce server) backlog connection_trampoline in
-  if immediate_result < Error.success then
-    callback (Error immediate_result)
+  if immediate_result < 0 then
+    callback (Error.result_from_c immediate_result)
 
 let accept ~server ~client =
   C.Functions.Stream.accept (coerce server) (coerce client)
@@ -56,10 +56,10 @@ let read_start ?(allocate = Bigstring.create) stream callback =
   let last_allocated_buffer = ref None in
 
   let wrapped_callback = Error.catch_exceptions callback in
-  Handle.set_reference stream begin fun (nread_or_error : Error.t) ->
+  Handle.set_reference stream begin fun nread_or_error ->
     let result =
-      if (nread_or_error :> int) > 0 then begin
-        let length = (nread_or_error :> int) [@ocaml.warning "-18"] in
+      if nread_or_error > 0 then begin
+        let length = nread_or_error in
         let buffer =
           match !last_allocated_buffer with
           | Some buffer -> buffer
@@ -70,7 +70,7 @@ let read_start ?(allocate = Bigstring.create) stream callback =
       end
       else begin
         last_allocated_buffer := None;
-        Result.Error nread_or_error
+        Error.result_from_c nread_or_error
       end
     in
     wrapped_callback result
@@ -88,8 +88,8 @@ let read_start ?(allocate = Bigstring.create) stream callback =
     C.Functions.Stream.read_start
       (coerce stream) alloc_trampoline read_trampoline
   in
-  if immediate_result < Error.success then
-    callback (Error immediate_result)
+  if immediate_result < 0 then
+    callback (Error.result_from_c immediate_result)
 
 let read_stop stream =
   C.Functions.Stream.read_stop (coerce stream)
@@ -135,9 +135,9 @@ let write ?send_handle stream buffers callback =
       write_trampoline
   in
 
-  if immediate_result < Error.success then begin
+  if immediate_result < 0 then begin
     Request.release request;
-    callback (Result.Error immediate_result) 0
+    callback (Error.result_from_c immediate_result) 0
   end
 
 let try_write stream buffers =
@@ -155,7 +155,7 @@ let try_write stream buffers =
   ignore (Sys.opaque_identity buffers);
   ignore (Sys.opaque_identity iovecs);
 
-  Error.to_result (result :> int) result
+  Error.to_result result result
 
 let is_readable stream =
   C.Functions.Stream.is_readable (coerce stream)

@@ -235,7 +235,7 @@ let tests = [
     "chmod, unbound", `Quick, begin fun () ->
       with_pipe begin fun pipe ->
         Luv.Pipe.chmod pipe [`READABLE]
-        |> check_error_result "chmod" Luv.Error.ebadf
+        |> check_error_result "chmod" `EBADF
       end
     end;
 
