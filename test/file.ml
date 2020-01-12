@@ -3,9 +3,9 @@ open Test_helpers
 let with_file_for_reading ?(to_fail = false) f =
   let flags =
     if not to_fail then
-      Luv.File.Open_flag.rdonly
+      [`RDONLY]
     else
-      Luv.File.Open_flag.wronly
+      [`WRONLY]
   in
 
   let file =
@@ -22,7 +22,7 @@ let with_file_for_writing f =
   let filename = "write_test_output" in
 
   let file =
-    Luv.File.(Sync.open_ filename Open_flag.(list [wronly; creat; trunc]))
+    Luv.File.(Sync.open_ filename [`WRONLY; `CREAT; `TRUNC])
     |> check_success_result "open_";
   in
 
@@ -78,9 +78,7 @@ let tests = [
     "open, read, close: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.(Async.open_ "read_test_input" Open_flag.rdonly)
-          begin fun result ->
-
+      Luv.File.Async.open_ "read_test_input" [`RDONLY] begin fun result ->
         let file = check_success_result "file" result in
 
         let buffer = Luv.Bigstring.create 4 in
@@ -111,7 +109,7 @@ let tests = [
 
     "open, read, close: sync", `Quick, begin fun () ->
       let file =
-        Luv.File.(Sync.open_ "read_test_input" Open_flag.rdonly)
+        Luv.File.Sync.open_ "read_test_input" [`RDONLY]
         |> check_success_result "open_"
       in
 
@@ -137,9 +135,7 @@ let tests = [
     "open: nonexistent, async", `Quick, begin fun () ->
       let result = ref (Result.Error Luv.Error.success) in
 
-      Luv.File.(Async.open_
-          "non_existent_file" Open_flag.rdonly) begin fun result' ->
-
+      Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun result' ->
         result := result'
       end;
 
@@ -148,7 +144,7 @@ let tests = [
     end;
 
     "open: nonexistent, sync", `Quick, begin fun () ->
-      Luv.File.(Sync.open_ "non_existent_file" Open_flag.rdonly)
+      Luv.File.Sync.open_ "non_existent_file" [`RDONLY]
       |> check_error_result "open_" Luv.Error.enoent
     end;
 
@@ -156,7 +152,7 @@ let tests = [
       no_memory_leak begin fun _ ->
         let finished = ref false in
 
-        Luv.File.(Async.open_ "file.ml" Open_flag.rdonly) begin fun result ->
+        Luv.File.Async.open_ "file.ml" [`RDONLY] begin fun result ->
           let file = check_success_result "file" result in
           Luv.File.Async.close file begin fun _ ->
             finished := true
@@ -171,7 +167,7 @@ let tests = [
     "open, close: memory leak, sync", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
         let file =
-          Luv.File.(Sync.open_ "file.ml" Open_flag.rdonly)
+          Luv.File.Sync.open_ "file.ml" [`RDONLY]
           |> check_success_result "open_"
         in
 
@@ -182,9 +178,7 @@ let tests = [
 
     "open: failure leak, async", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
-        Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly)
-            begin fun result ->
-
+        Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun result ->
           check_error_result "result" Luv.Error.enoent result
         end;
 
@@ -194,7 +188,7 @@ let tests = [
 
     "open: failure leak, sync", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
-        Luv.File.(Sync.open_ "non_existent_file" Open_flag.rdonly)
+        Luv.File.Sync.open_ "non_existent_file" [`RDONLY]
         |> check_error_result "open_" Luv.Error.enoent;
       end
     end;
@@ -204,9 +198,7 @@ let tests = [
 
       let called = ref false in
 
-      Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly)
-          begin fun _result ->
-
+      Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun _result ->
         called := true
       end;
 
@@ -218,9 +210,7 @@ let tests = [
 
     "open: exception", `Quick, begin fun () ->
       check_exception Exit begin fun () ->
-        Luv.File.(Async.open_ "non_existent_file" Open_flag.rdonly)
-            begin fun _result ->
-
+        Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun _result ->
           raise Exit
         end;
         run ()
@@ -909,8 +899,8 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.(Async.copyfile
-          ~from:path ~to_ Copy_flag.none) (check_success_result "copyfile");
+        Luv.File.Async.copyfile
+          ~from:path ~to_ [] (check_success_result "copyfile");
         run ();
 
         Alcotest.(check bool) "original at end" true (Sys.file_exists path);
@@ -927,7 +917,7 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.(Sync.copyfile ~from:path ~to_ Copy_flag.none)
+        Luv.File.Sync.copyfile ~from:path ~to_ []
         |> check_success_result "copyfile";
 
         Alcotest.(check bool) "original at end" true (Sys.file_exists path);
@@ -940,9 +930,8 @@ let tests = [
     "copyfile failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.(Async.copyfile
-          ~from:"non_existent_file" ~to_:"foo" Copy_flag.none)
-          begin fun result ->
+      Luv.File.Async.copyfile
+          ~from:"non_existent_file" ~to_:"foo" [] begin fun result ->
 
         check_error_result "copyfile" Luv.Error.enoent result;
         finished := true
@@ -953,8 +942,7 @@ let tests = [
     end;
 
     "copyfile failure: sync", `Quick, begin fun () ->
-      Luv.File.(Sync.copyfile
-        ~from:"non_existent_file" ~to_:"foo" Copy_flag.none)
+      Luv.File.Sync.copyfile ~from:"non_existent_file" ~to_:"foo" []
       |> check_error_result "copyfile" Luv.Error.enoent
     end;
 
@@ -990,7 +978,7 @@ let tests = [
     "access: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.(Async.access "file.ml" Access_flag.r) begin fun result ->
+      Luv.File.Async.access "file.ml" [`R_OK] begin fun result ->
         check_success_result "access" result;
         finished := true
       end;
@@ -1000,16 +988,14 @@ let tests = [
     end;
 
     "access: sync", `Quick, begin fun () ->
-      Luv.File.(Sync.access "file.ml" Access_flag.r)
+      Luv.File.Sync.access "file.ml" [`R_OK]
       |> check_success_result "access"
     end;
 
     "access failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.(Async.access "non_existent_file" Access_flag.r)
-          begin fun result ->
-
+      Luv.File.Async.access "non_existent_file" [`R_OK] begin fun result ->
         check_error_result "access" Luv.Error.enoent result;
         finished := true
       end;
@@ -1019,7 +1005,7 @@ let tests = [
     end;
 
     "access failure: sync", `Quick, begin fun () ->
-      Luv.File.(Sync.access "non_existent_file" Access_flag.r)
+      Luv.File.Sync.access "non_existent_file" [`R_OK]
       |> check_error_result "access" Luv.Error.enoent
     end;
   ]

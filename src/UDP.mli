@@ -5,23 +5,12 @@
 
 type t = [ `UDP ] Handle.t
 
-module Bind_flag :
-sig
-  type t
-
-  val ipv6only : t
-  val reuseaddr : t
-
-  val list : t list -> t
-  val (lor) : t -> t -> t
-end
-
 module Membership :
 sig
-  type t
-
-  val join_group : t
-  val leave_group : t
+  type t = [
+    | `LEAVE_GROUP
+    | `JOIN_GROUP
+  ]
 end
 
 val init :
@@ -29,7 +18,8 @@ val init :
     (t, Error.t) Result.result
 val open_ : t -> Misc.Os_socket.t -> (unit, Error.t) Result.result
 val bind :
-  ?flags:Bind_flag.t -> t -> Misc.Sockaddr.t -> (unit, Error.t) Result.result
+  ?ipv6only:bool -> ?reuseaddr:bool -> t -> Misc.Sockaddr.t ->
+    (unit, Error.t) Result.result
 val getsockname : t -> (Misc.Sockaddr.t, Error.t) Result.result
 val set_membership :
   t -> group:string -> interface:string -> Membership.t ->

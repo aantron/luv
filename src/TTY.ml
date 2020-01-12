@@ -3,11 +3,7 @@
 
 
 
-module Mode =
-struct
-  include C.Types.TTY.Mode
-  type t = int
-end
+module Mode = C.Types.TTY.Mode
 
 type t = [ `TTY ] Stream.t
 
@@ -30,16 +26,12 @@ let get_winsize tty =
   C.Functions.TTY.get_winsize tty width height
   |> Error.to_result_lazy (fun () -> Ctypes.(!@ width, !@ height))
 
-module Vterm_state =
-struct
-  include C.Types.TTY.Vterm_state
-  type t = int
-end
+module Vterm_state = C.Types.TTY.Vterm_state
 
 let set_vterm_state =
   C.Functions.TTY.set_vterm_state
 
 let get_vterm_state () =
-  let state = Ctypes.(allocate_n int) ~count:1 in
+  let state = Ctypes.allocate_n C.Types.TTY.Vterm_state.t ~count:1 in
   C.Functions.TTY.get_vterm_state state
   |> Error.to_result_lazy (fun () -> Ctypes.(!@) state)

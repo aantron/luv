@@ -55,10 +55,8 @@ let tests = [
           Luv.FS_event.stop event |> check_success_result "stop";
           let filename', events = check_success_result "start" result in
           Alcotest.(check string) "filename" filename filename';
-          Alcotest.(check bool) "rename"
-            true (Luv.FS_event.Event.(test events rename));
-          Alcotest.(check bool) "change"
-            false (Luv.FS_event.Event.(test events change));
+          Alcotest.(check bool) "rename" true (List.mem `RENAME events);
+          Alcotest.(check bool) "change" false (List.mem `CHANGE events);
           occurred := true
         end;
 

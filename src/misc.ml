@@ -51,16 +51,45 @@ end
 
 module Address_family =
 struct
-  include C.Types.Address_family
-  type t = int
-  let custom i = i
+  type t = [
+    | `UNSPEC
+    | `INET
+    | `INET6
+    | `OTHER of int
+  ]
+
+  let to_c = let open C.Types.Address_family in function
+    | `UNSPEC -> unspec
+    | `INET -> inet
+    | `INET6 -> inet6
+    | `OTHER i -> i
+
+  let from_c = let open C.Types.Address_family in function
+    | family when family = unspec -> `UNSPEC
+    | family when family = inet -> `INET
+    | family when family = inet6 -> `INET6
+    | family -> `OTHER family
 end
 
 module Socket_type =
 struct
-  include C.Types.Socket_type
-  type t = int
-  let custom i = i
+  type t = [
+    | `STREAM
+    | `DGRAM
+    | `RAW
+  ]
+
+  let to_c = let open C.Types.Socket_type in function
+    | `STREAM -> stream
+    | `DGRAM -> dgram
+    | `RAW -> raw
+
+  let from_c = let open C.Types.Socket_type in function
+    | socket_type when socket_type = stream -> `STREAM
+    | socket_type when socket_type = dgram -> `DGRAM
+    | socket_type when socket_type = raw -> `RAW
+    | socket_type ->
+      Printf.ksprintf failwith "Luv.Misc.Socket_type.from_c: %i" socket_type
 end
 
 module Sockaddr =
@@ -105,20 +134,26 @@ struct
     Bytes.sub_string buffer 0 length
 
   let to_string storage =
-    let family = Ctypes.getf storage C.Types.Sockaddr.family in
-    if family = Address_family.inet then
+    let family =
+      Ctypes.getf storage C.Types.Sockaddr.family
+      |> Address_family.from_c
+    in
+    if family = `INET then
       finish_to_string C.Functions.Sockaddr.ip4_name as_in storage
-    else if family = Address_family.inet6 then
+    else if family = `INET6 then
       finish_to_string C.Functions.Sockaddr.ip6_name as_in6 storage
     else
       ""
 
   let port storage =
-    let family = Ctypes.getf storage C.Types.Sockaddr.family in
+    let family =
+      Ctypes.getf storage C.Types.Sockaddr.family
+      |> Address_family.from_c
+    in
     let network_order_port =
-      if family = Address_family.inet then
+      if family = `INET then
         Ctypes.(getf (!@ (as_in storage)) C.Types.Sockaddr.sin_port)
-      else if family = Address_family.inet6 then
+      else if family = `INET6 then
         Ctypes.(getf (!@ (as_in6 storage)) C.Types.Sockaddr.sin6_port)
       else
         0

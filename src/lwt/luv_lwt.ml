@@ -15,9 +15,9 @@ include Luv.Integration.Start_and_stop
 
 let before_io () =
   if Lwt.paused_count () = 0 then
-    Luv.Loop.Run_mode.once
+    `ONCE
   else
-    Luv.Loop.Run_mode.nowait
+    `NOWAIT
 
 let after_io ~more_io =
   if Lwt.paused_count () = 0 then begin

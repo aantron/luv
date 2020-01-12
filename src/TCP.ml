@@ -5,12 +5,6 @@
 
 type t = [ `TCP ] Stream.t
 
-module Bind_flag =
-struct
-  type t = int
-  let ipv6only = C.Types.TCP.ipv6only
-end
-
 let init ?loop ?(domain : Misc.Address_family.t option) () =
   let tcp = Stream.allocate C.Types.TCP.t in
   let loop = Loop.or_default loop in
@@ -19,7 +13,8 @@ let init ?loop ?(domain : Misc.Address_family.t option) () =
     | None ->
       C.Functions.TCP.init loop tcp
     | Some domain ->
-      C.Functions.TCP.init_ex loop tcp (Unsigned.UInt.of_int (domain :> int))
+      let domain = Misc.Address_family.to_c domain in
+      C.Functions.TCP.init_ex loop tcp (Unsigned.UInt.of_int domain)
   in
   Error.to_result tcp result
 
@@ -44,7 +39,8 @@ let simultaneous_accepts tcp enable =
   C.Functions.TCP.simultaneous_accepts tcp enable
   |> Error.to_result ()
 
-let bind ?(flags = 0) tcp address =
+let bind ?(ipv6only = false) tcp address =
+  let flags = if ipv6only then C.Types.TCP.ipv6only else 0 in
   C.Functions.TCP.bind tcp (Misc.Sockaddr.as_sockaddr address) flags
   |> Error.to_result ()
 

@@ -38,9 +38,9 @@ let tests = [
       with_poll begin fun poll ->
         let called = ref false in
 
-        Luv.Poll.(start poll Event.writable) begin fun result ->
+        Luv.Poll.start poll [`WRITABLE] begin fun result ->
           check_success_result "result" result
-          |> Luv.Poll.Event.(test writable)
+          |> List.mem `WRITABLE
           |> Alcotest.(check bool) "writable" true;
 
           Luv.Poll.stop poll
@@ -58,7 +58,7 @@ let tests = [
     "exception", `Quick, begin fun () ->
       with_poll begin fun poll ->
         check_exception Exit begin fun () ->
-          Luv.Poll.(start poll Event.writable) begin fun _ ->
+          Luv.Poll.start poll [`WRITABLE] begin fun _ ->
             Luv.Poll.stop poll |> ignore;
             raise Exit
           end;

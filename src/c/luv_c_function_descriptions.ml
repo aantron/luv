@@ -31,7 +31,7 @@ struct
   struct
     let run =
       foreign "uv_run"
-        (ptr Types.Loop.t @-> int @-> returning bool)
+        (ptr Types.Loop.t @-> Types.Loop.Run_mode.t @-> returning bool)
   end
 
   (* See https://github.com/ocsigen/lwt/issues/230. *)
@@ -992,7 +992,7 @@ struct
 
     let set_mode =
       foreign "uv_tty_set_mode"
-        (ptr t @-> int @-> returning error_code)
+        (ptr t @-> Types.TTY.Mode.t @-> returning error_code)
 
     let reset_mode =
       foreign "uv_tty_reset_mode"
@@ -1004,11 +1004,11 @@ struct
 
     let set_vterm_state =
       foreign "uv_tty_set_vterm_state"
-        (int @-> returning void)
+        (Types.TTY.Vterm_state.t @-> returning void)
 
     let get_vterm_state =
-      foreign "luv_tty_get_vterm_state"
-        (ptr int @-> returning error_code)
+      foreign "uv_tty_get_vterm_state"
+        (ptr Types.TTY.Vterm_state.t @-> returning error_code)
   end
 
   module UDP =
@@ -1045,12 +1045,16 @@ struct
 
     let set_membership =
       foreign "uv_udp_set_membership"
-        (ptr t @-> ocaml_string @-> ocaml_string @-> int @->
+        (ptr t @-> ocaml_string @-> ocaml_string @-> Types.UDP.Membership.t @->
           returning error_code)
 
     let set_source_membership =
       foreign "uv_udp_set_source_membership"
-        (ptr t @-> ocaml_string @-> ocaml_string @-> ocaml_string @-> int @->
+        (ptr t @->
+         ocaml_string @->
+         ocaml_string @->
+         ocaml_string @->
+         Types.UDP.Membership.t @->
           returning error_code)
 
     let set_multicast_loop =

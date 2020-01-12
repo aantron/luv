@@ -15,8 +15,24 @@ struct
 
   module Flag =
   struct
-    include C.Types.DNS.Getaddrinfo.Flag
-    include Helpers.Bit_flag
+    type t = [
+      | `PASSIVE
+      | `CANONNAME
+      | `NUMERICHOST
+      | `NUMERICSERV
+      | `V4MAPPED
+      | `ALL
+      | `ADDRCONFIG
+    ]
+
+    let to_c = let open C.Types.DNS.Getaddrinfo.Flag in function
+      | `PASSIVE -> passive
+      | `CANONNAME -> canonname
+      | `NUMERICHOST -> numerichost
+      | `NUMERICSERV -> numericserv
+      | `V4MAPPED -> v4mapped
+      | `ALL -> all
+      | `ADDRCONFIG -> addrconfig
   end
 
   type t = {
@@ -40,8 +56,20 @@ struct
 
   module Flag =
   struct
-    include C.Types.DNS.Getnameinfo.Flag
-    include Helpers.Bit_flag
+    type t = [
+      | `NAMEREQD
+      | `DGRAM
+      | `NOFQDN
+      | `NUMERICHOST
+      | `NUMERICSERV
+    ]
+
+    let to_c = let open C.Types.DNS.Getnameinfo.Flag in function
+      | `NAMEREQD -> namereqd
+      | `DGRAM -> dgram
+      | `NOFQDN -> nofqdn
+      | `NUMERICHOST -> numerichost
+      | `NUMERICSERV -> numericserv
   end
 end
 
@@ -51,8 +79,8 @@ let rec addrinfo_list_to_ocaml addrinfo =
   else begin
     let module AI = C.Types.DNS.Addrinfo in
     let addrinfo = Ctypes.(!@) addrinfo in
-    let family = Misc.Address_family.custom (Ctypes.getf addrinfo AI.family) in
-    let socktype = Misc.Socket_type.custom (Ctypes.getf addrinfo AI.socktype) in
+    let family = Misc.Address_family.from_c (Ctypes.getf addrinfo AI.family) in
+    let socktype = Misc.Socket_type.from_c (Ctypes.getf addrinfo AI.socktype) in
     let addr =
       Misc.Sockaddr.copy_sockaddr
         (Ctypes.getf addrinfo AI.addr) (Ctypes.getf addrinfo AI.addrlen)
@@ -95,11 +123,14 @@ let getaddrinfo
       let family =
         match family with
         | Some family -> family
-        | None -> Misc.Address_family.unspec
+        | None -> `UNSPEC
       in
-      Ctypes.setf hints AI.family (family :> int) [@ocaml.warning "-18"];
+      let family = Misc.Address_family.to_c family in
+      Ctypes.setf hints AI.family family;
       begin match socktype with
-      | Some socktype -> Ctypes.setf hints AI.socktype (socktype :> int)
+      | Some socktype ->
+        let socktype = Misc.Socket_type.to_c socktype in
+        Ctypes.setf hints AI.socktype socktype
       | None -> ()
       end;
       begin match protocol with
@@ -107,7 +138,9 @@ let getaddrinfo
       | None -> ()
       end;
       begin match flags with
-      | Some flags -> Ctypes.setf hints AI.flags flags
+      | Some flags ->
+        let flags = Helpers.Bit_flag.list_to_c Addr_info.Flag.to_c flags in
+        Ctypes.setf hints AI.flags flags
       | None -> ()
       end;
       Ctypes.addr hints
@@ -152,7 +185,11 @@ let getnameinfo_trampoline =
   C.Functions.DNS.Getnameinfo.get_trampoline ()
 
 let getnameinfo
-    ?loop ?(request = Name_info.Request.make ()) ?(flags = 0) address callback =
+    ?loop
+    ?(request = Name_info.Request.make ())
+    ?(flags = [])
+    address
+    callback =
 
   let callback = Error.catch_exceptions callback in
   Request.set_callback request begin fun result ->
@@ -165,6 +202,8 @@ let getnameinfo
     end
     |> callback
   end;
+
+  let flags = Helpers.Bit_flag.list_to_c Name_info.Flag.to_c flags in
 
   let immediate_result =
     C.Functions.DNS.Getnameinfo.getnameinfo

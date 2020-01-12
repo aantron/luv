@@ -5,17 +5,7 @@
 
 type t = [ `UDP ] Handle.t
 
-module Bind_flag =
-struct
-  include C.Types.UDP.Flag
-  include Helpers.Bit_flag
-end
-
-module Membership =
-struct
-  include C.Types.UDP.Membership
-  type t = int
-end
+module Membership = C.Types.UDP.Membership
 
 let init ?loop ?(domain : Misc.Address_family.t option) () =
   let udp =
@@ -28,7 +18,8 @@ let init ?loop ?(domain : Misc.Address_family.t option) () =
     | None ->
       C.Functions.UDP.init loop udp
     | Some domain ->
-      C.Functions.UDP.init_ex loop udp (Unsigned.UInt.of_int (domain :> int))
+      let domain = Misc.Address_family.to_c domain in
+      C.Functions.UDP.init_ex loop udp (Unsigned.UInt.of_int domain)
   in
   Error.to_result udp result
 
@@ -36,7 +27,13 @@ let open_ udp socket =
   C.Functions.UDP.open_ udp socket
   |> Error.to_result ()
 
-let bind ?(flags = 0) udp address =
+let bind ?(ipv6only = false) ?(reuseaddr = false) udp address =
+  let flags =
+    let accumulate = Helpers.Bit_flag.accumulate in
+    0
+    |> accumulate C.Types.UDP.Flag.ipv6only ipv6only
+    |> accumulate C.Types.UDP.Flag.reuseaddr reuseaddr
+  in
   C.Functions.UDP.bind udp (Misc.Sockaddr.as_sockaddr address) flags
   |> Error.to_result ()
 

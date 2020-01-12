@@ -59,15 +59,14 @@ let pp_directory_entry formatter entry =
   let kind =
     let open Luv.File.Dirent in
     match entry.kind with
-    | _ when entry.kind = Kind.file -> "file"
-    | _ when entry.kind = Kind.dir -> "dir"
-    | _ when entry.kind = Kind.link -> "link"
-    | _ when entry.kind = Kind.fifo -> "fifo"
-    | _ when entry.kind = Kind.socket -> "socket"
-    | _ when entry.kind = Kind.char -> "char"
-    | _ when entry.kind = Kind.block -> "block"
-    | _ when entry.kind = Kind.unknown -> "unknown"
-    | _ -> "unknown"
+    | `FILE -> "file"
+    | `DIR -> "dir"
+    | `LINK -> "link"
+    | `FIFO -> "fifo"
+    | `SOCKET -> "socket"
+    | `CHAR -> "char"
+    | `BLOCK -> "block"
+    | `UNKNOWN -> "unknown"
   in
   Format.fprintf formatter "%s %s" kind Luv.File.Dirent.(entry.name)
 
@@ -77,7 +76,7 @@ let directory_entry_testable =
 let check_directory_entries name expected actual =
   let expected =
     expected
-    |> List.map (fun name -> Luv.File.Dirent.{kind = Kind.file; name})
+    |> List.map (fun name -> Luv.File.Dirent.{kind = `FILE; name})
     |> List.sort compare
   in
   let actual = List.sort compare actual in
@@ -139,7 +138,7 @@ let run ?(with_timeout = false) () =
     let rec run () =
       if !stop then ()
       else
-        if Luv.Loop.(run ~mode:Run_mode.once ()) then run ()
+        if Luv.Loop.run ~mode:`ONCE () then run ()
         else ()
     in
     run ()

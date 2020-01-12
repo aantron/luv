@@ -595,16 +595,6 @@ int luv_os_uname(char *buffer)
     return uv_os_uname((uv_utsname_t*)buffer);
 }
 
-int luv_tty_get_vterm_state(int *state)
-{
-    uv_tty_vtermstate_t uv_state;
-    int result = uv_tty_get_vterm_state(&uv_state);
-    if (result != 0)
-        return result;
-    *state = uv_state;
-    return 0;
-}
-
 
 
 // File descriptor helpers.

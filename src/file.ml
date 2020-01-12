@@ -53,30 +53,120 @@ end
 
 module Open_flag =
 struct
-  include C.Types.File.Open_flag
-  include Helpers.Bit_flag
-  let custom i = i
+  type t = [
+    | `RDONLY
+    | `WRONLY
+    | `RDWR
+
+    | `CREAT
+    | `EXCL
+    | `EXLOCK
+    | `NOCTTY
+    | `NOFOLLOW
+    | `TEMPORARY
+    | `TRUNC
+
+    | `APPEND
+    | `DIRECT
+    | `DSYNC
+    | `FILEMAP
+    | `NOATIME
+    | `NONBLOCK
+    | `RANDOM
+    | `SEQUENTIAL
+    | `SHORT_LIVED
+    | `SYMLINK
+    | `SYNC
+  ]
+
+  let to_c = let open C.Types.File.Open_flag in function
+    | `RDONLY -> rdonly
+    | `WRONLY -> wronly
+    | `RDWR -> rdwr
+
+    | `CREAT -> creat
+    | `EXCL -> excl
+    | `EXLOCK -> exlock
+    | `NOCTTY -> noctty
+    | `NOFOLLOW -> nofollow
+    | `TEMPORARY -> temporary
+    | `TRUNC -> trunc
+
+    | `APPEND -> append
+    | `DIRECT -> direct
+    | `DSYNC -> dsync
+    | `FILEMAP -> filemap
+    | `NOATIME -> noatime
+    | `NONBLOCK -> nonblock
+    | `RANDOM -> random
+    | `SEQUENTIAL -> sequential
+    | `SHORT_LIVED -> short_lived
+    | `SYMLINK -> symlink
+    | `SYNC -> sync
 end
 
 module Mode =
 struct
-  include C.Types.File.Mode
-  include Helpers.Bit_flag
+  type t = [
+    | `IRWXU
+    | `IRUSR
+    | `IWUSR
+    | `IXUSR
 
-  let none = 0
-  let octal i = i
+    | `IRWXG
+    | `IRGRP
+    | `IWGRP
+    | `IXGRP
 
-  let file_default = octal 0o644
-  let directory_default = octal 0o755
+    | `IRWXO
+    | `IROTH
+    | `IWOTH
+    | `IXOTH
+
+    | `ISUID
+    | `ISGID
+    | `ISVTX
+
+    | `NUMERIC of int
+  ]
+
+  let to_c = let open C.Types.File.Mode in function
+    | `IRWXU -> irwxu
+    | `IRUSR -> irusr
+    | `IWUSR -> iwusr
+    | `IXUSR -> ixusr
+
+    | `IRWXG -> irwxg
+    | `IRGRP -> irgrp
+    | `IWGRP -> iwgrp
+    | `IXGRP -> ixgrp
+
+    | `IRWXO -> irwxo
+    | `IROTH -> iroth
+    | `IWOTH -> iwoth
+    | `IXOTH -> ixoth
+
+    | `ISUID -> isuid
+    | `ISGID -> isgid
+    | `ISVTX -> isvtx
+
+    | `NUMERIC i -> i
+
+  let file_default = [`NUMERIC 0o644]
+  let directory_default = [`NUMERIC 0o755]
+
+  type numeric = int
+
+  let list_to_c =
+    Helpers.Bit_flag.list_to_c to_c
+
+  let test =
+    Helpers.Bit_flag.test' to_c
 end
 
 module Dirent =
 struct
-  module Kind =
-  struct
-    include C.Types.File.Dirent.Kind
-    type t = int
-  end
+  module Kind = C.Types.File.Dirent.Kind
 
   type t = {
     kind : Kind.t;
@@ -133,7 +223,7 @@ struct
 
   type t = {
     dev : Unsigned.UInt64.t;
-    mode : Mode.t;
+    mode : Mode.numeric;
     nlink : Unsigned.UInt64.t;
     uid : Unsigned.UInt64.t;
     gid : Unsigned.UInt64.t;
@@ -223,22 +313,44 @@ end
 
 module Copy_flag =
 struct
-  include C.Types.File.Copy_flag
-  include Helpers.Bit_flag
-  let none = 0
+  type t = [
+    | `EXCL
+    | `FICLONE
+    | `FICLONE_FORCE
+  ]
+
+  let to_c = let open C.Types.File.Copy_flag in function
+    | `EXCL -> excl
+    | `FICLONE -> ficlone
+    | `FICLONE_FORCE -> ficlone_force
 end
 
 module Access_flag =
 struct
-  include C.Types.File.Access_flag
-  include Helpers.Bit_flag
+  type t = [
+    | `F_OK
+    | `R_OK
+    | `W_OK
+    | `X_OK
+  ]
+
+  let to_c = let open C.Types.File.Access_flag in function
+    | `F_OK -> f
+    | `R_OK -> r
+    | `W_OK -> w
+    | `X_OK -> x
 end
 
 module Symlink_flag =
 struct
-  include C.Types.File.Symlink_flag
-  include Helpers.Bit_flag
-  let none = 0
+  type t = [
+    | `DIR
+    | `JUNCTION
+  ]
+
+  let to_c = let open C.Types.File.Symlink_flag in function
+    | `DIR -> dir
+    | `JUNCTION -> junction
 end
 
 module Returns =
@@ -391,6 +503,8 @@ struct
       C.Blocking.File.open_
       returns_file
       (fun run ?(mode = Mode.file_default) path flags ->
+        let mode = Mode.list_to_c mode in
+        let flags = Helpers.Bit_flag.list_to_c Open_flag.to_c flags in
         run (!path @@ !flags @@ !mode) no_cleanup)
 
   let close =
@@ -427,6 +541,7 @@ struct
       C.Blocking.File.mkdir
       returns_error
       (fun run ?(mode = Mode.directory_default) path ->
+        let mode = Mode.list_to_c mode in
         run (!path @@ !mode) no_cleanup)
 
   let mkdtemp =
@@ -522,7 +637,9 @@ struct
     async_or_sync
       C.Blocking.File.copyfile
       returns_error
-      (fun run ~from ~to_ flags -> run (!from @@ !to_ @@ !flags) no_cleanup)
+      (fun run ~from ~to_ flags ->
+        let flags = Helpers.Bit_flag.list_to_c Copy_flag.to_c flags in
+        run (!from @@ !to_ @@ !flags) no_cleanup)
 
   let sendfile =
     async_or_sync
@@ -535,13 +652,17 @@ struct
     async_or_sync
       C.Blocking.File.access
       returns_error
-      (fun run path mode -> run (!path @@ !mode) no_cleanup)
+      (fun run path mode ->
+        let mode = Helpers.Bit_flag.list_to_c Access_flag.to_c mode in
+        run (!path @@ !mode) no_cleanup)
 
   let generic_chmod c_function =
     async_or_sync
       c_function
       returns_error
-      (fun run argument mode -> run (!argument @@ !mode) no_cleanup)
+      (fun run argument mode ->
+        let mode = Mode.list_to_c mode in
+        run (!argument @@ !mode) no_cleanup)
 
   let chmod = generic_chmod C.Blocking.File.chmod
   let fchmod = generic_chmod C.Blocking.File.fchmod
@@ -567,6 +688,7 @@ struct
       C.Blocking.File.symlink
       returns_error
       (fun run ~target ~link flags ->
+        let flags = Helpers.Bit_flag.list_to_c Symlink_flag.to_c flags in
         run (!target @@ !link @@ !flags) no_cleanup)
 
   let generic_readpath c_function =

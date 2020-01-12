@@ -119,9 +119,21 @@ struct
   struct
     module Run_mode =
     struct
-      let default = constant "UV_RUN_DEFAULT" int
-      let once = constant "UV_RUN_ONCE" int
-      let nowait = constant "UV_RUN_NOWAIT" int
+      let default = constant "UV_RUN_DEFAULT" int64_t
+      let once = constant "UV_RUN_ONCE" int64_t
+      let nowait = constant "UV_RUN_NOWAIT" int64_t
+
+      type t = [
+        | `DEFAULT
+        | `ONCE
+        | `NOWAIT
+      ]
+
+      let t : t typ = enum "uv_run_mode" ~typedef:true [
+        `DEFAULT, default;
+        `ONCE, once;
+        `NOWAIT, nowait;
+      ]
     end
 
     module Option =
@@ -329,6 +341,7 @@ struct
   struct
     let stream = constant "SOCK_STREAM" int
     let dgram = constant "SOCK_DGRAM" int
+    let raw = constant "SOCK_RAW" int
   end
 
   module TCP =
@@ -407,20 +420,44 @@ struct
     struct
       module Kind =
       struct
-        let unknown = constant "UV_DIRENT_UNKNOWN" int
-        let file = constant "UV_DIRENT_FILE" int
-        let dir = constant "UV_DIRENT_DIR" int
-        let link = constant "UV_DIRENT_LINK" int
-        let fifo = constant "UV_DIRENT_FIFO" int
-        let socket = constant "UV_DIRENT_SOCKET" int
-        let char = constant "UV_DIRENT_CHAR" int
-        let block = constant "UV_DIRENT_BLOCK" int
+        let unknown = constant "UV_DIRENT_UNKNOWN" int64_t
+        let file = constant "UV_DIRENT_FILE" int64_t
+        let dir = constant "UV_DIRENT_DIR" int64_t
+        let link = constant "UV_DIRENT_LINK" int64_t
+        let fifo = constant "UV_DIRENT_FIFO" int64_t
+        let socket = constant "UV_DIRENT_SOCKET" int64_t
+        let char = constant "UV_DIRENT_CHAR" int64_t
+        let block = constant "UV_DIRENT_BLOCK" int64_t
+
+        type t = [
+          | `UNKNOWN
+          | `FILE
+          | `DIR
+          | `LINK
+          | `FIFO
+          | `SOCKET
+          | `CHAR
+          | `BLOCK
+        ]
+
+        let t : t typ =
+          enum
+            "uv_dirent_type_t" ~typedef:true ~unexpected:(fun _ -> `UNKNOWN) [
+              `UNKNOWN, unknown;
+              `FILE, file;
+              `DIR, dir;
+              `LINK, link;
+              `FIFO, fifo;
+              `SOCKET, socket;
+              `CHAR, char;
+              `BLOCK, block;
+            ]
       end
 
       type t = [ `Dirent ] structure
       let t : t typ = typedef (structure "`Dirent") "uv_dirent_t"
       let name = field t "name" string
-      let type_ = field t "type" int
+      let type_ = field t "type" Kind.t
       let () = seal t
     end
 
@@ -518,15 +555,39 @@ struct
   struct
     module Mode =
     struct
-      let normal = constant "UV_TTY_MODE_NORMAL" int
-      let raw = constant "UV_TTY_MODE_RAW" int
-      let io = constant "UV_TTY_MODE_IO" int
+      let normal = constant "UV_TTY_MODE_NORMAL" int64_t
+      let raw = constant "UV_TTY_MODE_RAW" int64_t
+      let io = constant "UV_TTY_MODE_IO" int64_t
+
+      type t = [
+        | `NORMAL
+        | `RAW
+        | `IO
+      ]
+
+      let t : t typ =
+        enum "uv_tty_mode_t" ~typedef:true [
+          `NORMAL, normal;
+          `RAW, raw;
+          `IO, io;
+        ]
     end
 
     module Vterm_state =
     struct
-      let supported = constant "UV_TTY_SUPPORTED" int
-      let unsupported = constant "UV_TTY_UNSUPPORTED" int
+      let supported = constant "UV_TTY_SUPPORTED" int64_t
+      let unsupported = constant "UV_TTY_UNSUPPORTED" int64_t
+
+      type t = [
+        | `SUPPORTED
+        | `UNSUPPORTED
+      ]
+
+      let t : t typ =
+        enum "uv_tty_vtermstate_t" ~typedef:true [
+          `SUPPORTED, supported;
+          `UNSUPPORTED, unsupported;
+        ]
     end
 
     let t : ([ `TTY ] Stream.t) typ = typedef (structure "`TTY") "uv_tty_t"
@@ -557,8 +618,19 @@ struct
 
     module Membership =
     struct
-      let leave_group = constant "UV_LEAVE_GROUP" int
-      let join_group = constant "UV_JOIN_GROUP" int
+      let leave_group = constant "UV_LEAVE_GROUP" int64_t
+      let join_group = constant "UV_JOIN_GROUP" int64_t
+
+      type t = [
+        | `LEAVE_GROUP
+        | `JOIN_GROUP
+      ]
+
+      let t : t typ =
+        enum "uv_membership" ~typedef:true [
+          `LEAVE_GROUP, leave_group;
+          `JOIN_GROUP, join_group;
+        ]
     end
   end
 

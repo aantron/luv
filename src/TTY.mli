@@ -5,11 +5,11 @@
 
 module Mode :
 sig
-  type t
-
-  val normal : t
-  val raw : t
-  val io : t
+  type t = [
+    | `NORMAL
+    | `RAW
+    | `IO
+  ]
 end
 
 type t = [ `TTY ] Stream.t
@@ -21,10 +21,10 @@ val get_winsize : t -> (int * int, Error.t) Result.result
 
 module Vterm_state :
 sig
-  type t
-
-  val supported : t
-  val unsupported : t
+  type t = [
+    | `SUPPORTED
+    | `UNSUPPORTED
+  ]
 end
 
 val set_vterm_state : Vterm_state.t -> unit

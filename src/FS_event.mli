@@ -7,26 +7,27 @@ type t = [ `FS_event ] Handle.t
 
 module Event :
 sig
-  type t
-
-  val rename : t
-  val change : t
-
-  val test : t -> t -> bool
+  type t = [
+    | `RENAME
+    | `CHANGE
+  ]
 end
 
 module Flag :
 sig
-  type t
-
-  val recursive : t
+  type t = [
+    | `WATCH_ENTRY
+    | `STAT
+    | `RECURSIVE
+  ]
 end
 
 val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result
+(* DOC Note this function calls the callback multiple times. *)
 val start :
-  ?flags:Flag.t ->
+  ?flags:Flag.t list ->
   t ->
   string ->
-  ((string * Event.t, Error.t) Result.result -> unit) ->
+  ((string * (Event.t list), Error.t) Result.result -> unit) ->
     unit
 val stop : t -> (unit, Error.t) Result.result

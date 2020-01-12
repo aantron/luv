@@ -25,11 +25,7 @@ let or_default maybe_loop =
   | Some loop -> loop
   | None -> C.Functions.Loop.default ()
 
-module Run_mode =
-struct
-  include C.Types.Loop.Run_mode
-  type t = int
-end
+module Run_mode = C.Types.Loop.Run_mode
 
 module Option =
 struct
@@ -41,7 +37,7 @@ end
    Run_mode.nowait. This is because calling run can trigger callbacks, and
    callbacks expect to be able to take the lock (eventually). If the lock is
    *not* released by run and a callback is called, there will be a deadlock. *)
-let run ?loop ?(mode = Run_mode.default) () =
+let run ?loop ?(mode = `DEFAULT) () =
   let loop = or_default loop in
   C.Blocking.Loop.run loop mode
 

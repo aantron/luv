@@ -7,12 +7,10 @@ type t = [ `Pipe ] Stream.t
 
 module Mode :
 sig
-  type t
-
-  val readable : t
-  val writable : t
-
-  val (lor) : t -> t -> t
+  type t = [
+    | `READABLE
+    | `WRITABLE
+  ]
 end
 
 (* DOC Document that the pipe is not yet usable at this point. *)
@@ -24,7 +22,7 @@ val connect : t -> string -> ((unit, Error.t) Result.result -> unit) -> unit
 val getsockname : t -> (string, Error.t) Result.result
 val getpeername : t -> (string, Error.t) Result.result
 val pending_instances : t -> int -> unit
-val chmod : t -> Mode.t -> (unit, Error.t) Result.result
+val chmod : t -> Mode.t list -> (unit, Error.t) Result.result
 
 (* DOC This absolutely requires documentation to be usable. *)
 val receive_handle :

@@ -24,8 +24,7 @@ let () = {
 
   /* Do a DNS lookup on the URL we are asked to retrieve. */
 
-  Luv.Promise.DNS.getaddrinfo(
-    ~family=Luv.Address_family.inet, ~node=url, ~service="80", ())
+  Luv.Promise.DNS.getaddrinfo(~family=`INET, ~node=url, ~service="80", ())
   ->Promise.tapError(error => {
     Printf.eprintf(
       "Could not resolve %s: %s\n", url, Luv.Error.strerror(error));

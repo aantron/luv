@@ -7,11 +7,25 @@ type t = [ `Poll ] Handle.t
 
 module Event =
 struct
-  include C.Types.Poll.Event
-  type t = int
-  let (lor) = (lor)
-  let list events = List.fold_left (lor) 0 events
-  let test events mask = (events land mask) <> 0
+  type t = [
+    | `READABLE
+    | `WRITABLE
+    | `DISCONNECT
+    | `PRIORITIZED
+  ]
+
+  let to_c = let open C.Types.Poll.Event in function
+    | `READABLE -> readable
+    | `WRITABLE -> writable
+    | `DISCONNECT -> disconnect
+    | `PRIORITIZED -> prioritized
+
+  let all = [
+    `READABLE;
+    `WRITABLE;
+    `DISCONNECT;
+    `PRIORITIZED;
+  ]
 end
 
 let init ?loop fd =
@@ -29,7 +43,9 @@ let trampoline =
 
 let start poll events callback =
   Handle.set_reference poll (fun status events ->
+    let events = Helpers.Bit_flag.c_to_list Event.to_c Event.all events in
     Error.catch_exceptions callback (Error.to_result events status));
+  let events = Helpers.Bit_flag.list_to_c Event.to_c events in
   let immediate_result = C.Functions.Poll.start poll events trampoline in
   if immediate_result < Error.success then begin
     callback (Result.Error immediate_result)

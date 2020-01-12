@@ -7,19 +7,9 @@ type t = [ `Process ] Handle.t
 
 type redirection
 
-(* DOC This is different from Pipe.Mode.t... minor libuv design flaw. *)
-module Pipe_mode :
-sig
-  type t
-
-  val readable : t
-  val writable : t
-
-  val (lor) : t -> t -> t
-end
-
 val to_new_pipe :
-  ?mode_in_child:Pipe_mode.t ->
+  ?readable_in_child:bool ->
+  ?writable_in_child:bool ->
   ?overlapped:bool ->
   fd:int ->
   to_parent_pipe:Pipe.t ->

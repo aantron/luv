@@ -205,8 +205,8 @@ let tests = [
         with_sender_and_receiver
           ~receiver_logic:
             begin fun receiver ->
-              Luv.UDP.(set_membership
-                receiver ~group ~interface:"127.0.0.1" Membership.join_group)
+              Luv.UDP.set_membership
+                receiver ~group ~interface:"127.0.0.1" `JOIN_GROUP
               |> check_success_result "set_membership 1";
 
               expect receiver "foo" begin fun () ->

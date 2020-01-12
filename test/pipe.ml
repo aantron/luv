@@ -234,7 +234,7 @@ let tests = [
 
     "chmod, unbound", `Quick, begin fun () ->
       with_pipe begin fun pipe ->
-        Luv.Pipe.(chmod pipe Mode.readable)
+        Luv.Pipe.chmod pipe [`READABLE]
         |> check_error_result "chmod" Luv.Error.ebadf
       end
     end;
@@ -244,7 +244,7 @@ let tests = [
         Luv.Pipe.bind pipe filename
         |> check_success_result "bind";
 
-        Luv.Pipe.(chmod pipe Mode.readable)
+        Luv.Pipe.chmod pipe [`READABLE]
         |> check_success_result "chmod"
       end
     end;

@@ -10,14 +10,12 @@ let tests = [
     "getaddrinfo", `Quick, begin fun () ->
       let resolved = ref false in
 
-      Luv.DNS.getaddrinfo
-          ~family:Luv.Address_family.inet ~node:"localhost" begin fun result ->
-
+      Luv.DNS.getaddrinfo ~family:`INET ~node:"localhost" begin fun result ->
         match check_success_result "getaddrinfo" result with
         | [] -> Alcotest.fail "none"
         | first::_ ->
-          Alcotest.(check int) "family"
-            (Luv.Address_family.inet :> int) (first.family :> int);
+          if first.family <> `INET then
+            Alcotest.fail "expected family `INET";
           Alcotest.(check (option string)) "canonname" None first.canonname;
           Alcotest.(check string) "address"
             "127.0.0.1" (Luv.Sockaddr.to_string first.addr);

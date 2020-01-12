@@ -5,84 +5,80 @@
 
 module Open_flag :
 sig
-  type t
+  type t = [
+    (* Access mode. *)
+    | `RDONLY
+    | `WRONLY
+    | `RDWR
 
-  (* Access mode. *)
-  val rdonly : t
-  val wronly : t
-  val rdwr : t
+    (* Creation flags. *)
+    | `CREAT
+    | `EXCL
+    | `EXLOCK
+    | `NOCTTY
+    | `NOFOLLOW
+    | `TEMPORARY
+    | `TRUNC
 
-  (* Creation flags. *)
-  val creat : t
-  val excl : t
-  val exlock : t
-  val noctty : t
-  val nofollow : t
-  val temporary : t
-  val trunc : t
-
-  (* Status flags. *)
-  val append : t
-  val direct : t
-  val dsync : t
-  val filemap: t
-  val noatime : t
-  val nonblock : t
-  val random : t
-  val sequential : t
-  val short_lived : t
-  val symlink : t
-  val sync : t
-
-  val list : t list -> t
-  val custom : int -> t
-  val (lor) : t -> t -> t
+    (* Status flags. *)
+    | `APPEND
+    | `DIRECT
+    | `DSYNC
+    | `FILEMAP
+    | `NOATIME
+    | `NONBLOCK
+    | `RANDOM
+    | `SEQUENTIAL
+    | `SHORT_LIVED
+    | `SYMLINK
+    | `SYNC
+  ]
 end
 
 module Mode :
 sig
-  type t = private int
+  type t = [
+    | `IRWXU
+    | `IRUSR
+    | `IWUSR
+    | `IXUSR
 
-  val none : t
+    | `IRWXG
+    | `IRGRP
+    | `IWGRP
+    | `IXGRP
 
-  val irwxu : t
-  val irusr : t
-  val iwusr : t
-  val ixusr : t
+    | `IRWXO
+    | `IROTH
+    | `IWOTH
+    | `IXOTH
 
-  val irwxg : t
-  val irgrp : t
-  val iwgrp : t
-  val ixgrp : t
+    | `ISUID
+    | `ISGID
+    | `ISVTX
 
-  val irwxo : t
-  val iroth : t
-  val iwoth : t
-  val ixoth : t
+    | `NUMERIC of int
+  ]
 
-  val isuid : t
-  val isgid : t
-  val isvtx : t
+  type numeric
 
-  val list : t list -> t
-  val octal : int -> t
-  val (lor) : t -> t -> t
+  val test : t -> numeric -> bool
 end
 
 module Dirent :
 sig
   module Kind :
   sig
-    type t
-
-    val unknown : t
-    val file : t
-    val dir : t
-    val link : t
-    val fifo : t
-    val socket : t
-    val char : t
-    val block : t
+    type t = [
+      | `UNKNOWN
+      | `FILE
+      | `DIR
+      | `LINK
+      | `FIFO
+      | `SOCKET
+      | `CHAR
+      | `BLOCK
+    ]
   end
 
   type t = {
@@ -114,7 +110,7 @@ sig
 
   type t = {
     dev : Unsigned.UInt64.t;
-    mode : Mode.t;
+    mode : Mode.numeric;
     nlink : Unsigned.UInt64.t;
     uid : Unsigned.UInt64.t;
     gid : Unsigned.UInt64.t;
@@ -156,42 +152,29 @@ end
 
 module Copy_flag :
 sig
-  type t
-
-  val none : t
-
-  val excl : t
-  val ficlone : t
-  val ficlone_force : t
-
-  val list : t list -> t
-  val (lor) : t -> t -> t
+  type t = [
+    | `EXCL
+    | `FICLONE
+    | `FICLONE_FORCE
+  ]
 end
 
 module Access_flag :
 sig
-  type t
-
-  val f : t
-  val r : t
-  val w : t
-  val x : t
-
-  val list : t list -> t
-  val (lor) : t -> t -> t
+  type t = [
+    | `F_OK
+    | `R_OK
+    | `W_OK
+    | `X_OK
+  ]
 end
 
 module Symlink_flag :
 sig
-  type t
-
-  val none : t
-
-  val dir : t
-  val junction : t
-
-  val list : t list -> t
-  val (lor) : t -> t -> t
+  type t = [
+    | `DIR
+    | `JUNCTION
+  ]
 end
 
 module Request :
@@ -211,9 +194,9 @@ sig
   val open_ :
     ?loop:Loop.t ->
     ?request:Request.t ->
-    ?mode:Mode.t ->
+    ?mode:Mode.t list ->
     string ->
-    Open_flag.t ->
+    Open_flag.t list ->
     ((t, Error.t) Result.result -> unit) ->
       unit
 
@@ -252,7 +235,7 @@ sig
   val mkdir :
     ?loop:Loop.t ->
     ?request:Request.t ->
-    ?mode:Mode.t ->
+    ?mode:Mode.t list ->
     string ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
@@ -370,7 +353,7 @@ sig
     ?request:Request.t ->
     from:string ->
     to_:string ->
-    Copy_flag.t ->
+    Copy_flag.t list ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
 
@@ -388,7 +371,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     string ->
-    Access_flag.t ->
+    Access_flag.t list ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
 
@@ -396,7 +379,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     string ->
-    Mode.t ->
+    Mode.t list ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
 
@@ -404,7 +387,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     t ->
-    Mode.t ->
+    Mode.t list ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
 
@@ -439,7 +422,7 @@ sig
     ?request:Request.t ->
     target:string ->
     link:string ->
-    Symlink_flag.t ->
+    Symlink_flag.t list ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
 
@@ -488,7 +471,7 @@ end
 module Sync :
 sig
   val open_ :
-    ?mode:Mode.t -> string -> Open_flag.t ->
+    ?mode:Mode.t list -> string -> Open_flag.t list ->
       (t, Error.t) Result.result
 
   val close :
@@ -508,7 +491,7 @@ sig
       (unit, Error.t) Result.result
 
   val mkdir :
-    ?mode:Mode.t -> string ->
+    ?mode:Mode.t list -> string ->
       (unit, Error.t) Result.result
 
   val mkdtemp :
@@ -572,7 +555,7 @@ sig
       (unit, Error.t) Result.result
 
   val copyfile :
-    from:string -> to_:string -> Copy_flag.t ->
+    from:string -> to_:string -> Copy_flag.t list ->
       (unit, Error.t) Result.result
 
   (* DOC The offset should be optional, but current libuv doesn't seem to
@@ -582,15 +565,15 @@ sig
       (Unsigned.Size_t.t, Error.t) Result.result
 
   val access :
-    string -> Access_flag.t ->
+    string -> Access_flag.t list ->
       (unit, Error.t) Result.result
 
   val chmod :
-    string -> Mode.t ->
+    string -> Mode.t list ->
       (unit, Error.t) Result.result
 
   val fchmod :
-    t -> Mode.t ->
+    t -> Mode.t list ->
       (unit, Error.t) Result.result
 
   val utime :
@@ -606,7 +589,7 @@ sig
       (unit, Error.t) Result.result
 
   val symlink :
-    target:string -> link:string -> Symlink_flag.t ->
+    target:string -> link:string -> Symlink_flag.t list ->
       (unit, Error.t) Result.result
 
   val readlink :

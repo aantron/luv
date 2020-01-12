@@ -26,27 +26,31 @@ end
 
 module Address_family :
 sig
-  type t = private int
-
-  val unspec : t
-  val inet : t
-  val inet6 : t
+  type t = [
+    | `UNSPEC
+    | `INET
+    | `INET6
+    | `OTHER of int
+  ]
 
   (**/**)
 
-  val custom : int -> t
+  val to_c : t -> int
+  val from_c : int -> t
 end
 
 module Socket_type :
 sig
-  type t = private int
-
-  val stream : t
-  val dgram : t
+  type t = [
+    | `STREAM
+    | `DGRAM
+    | `RAW
+  ]
 
   (**/**)
 
-  val custom : int -> t
+  val to_c : t -> int
+  val from_c : int -> t
 end
 
 module Sockaddr :

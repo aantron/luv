@@ -59,7 +59,37 @@ end
 module Bit_flag =
 struct
   type t = int
-  let (lor) = (lor)
-  let list flags = List.fold_left (lor) 0 flags
-  let test flags flag = (flags land flag) <> 0
+
+  let (lor) =
+    (lor)
+
+  let list flags =
+    List.fold_left (lor) 0 flags
+
+  let test flags flag =
+    (flags land flag) <> 0
+
+  let list_to_c to_c flags =
+    list (List.map to_c flags)
+
+  let c_to_list to_c all field =
+    let rec loop acc = function
+      | [] ->
+        acc
+      | flag::rest ->
+        if (field land to_c flag) <> 0 then
+          loop (flag::acc) rest
+        else
+          loop acc rest
+    in
+    loop [] all
+
+  let test' to_c flag field =
+    (to_c flag land field) <> 0
+
+  let accumulate flag condition acc =
+    if condition then
+      acc lor flag
+    else
+      acc
 end

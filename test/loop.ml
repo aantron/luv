@@ -62,21 +62,21 @@ let tests = [
        requests at this point in the test runner. *)
     "run, default", `Quick, begin fun () ->
       with_loop begin fun loop ->
-        Luv.Loop.(run ~loop ~mode:Run_mode.default ())
+        Luv.Loop.run ~loop ~mode:`DEFAULT ()
         |> Alcotest.(check bool) "run" false
       end
     end;
 
     "run, once", `Quick, begin fun () ->
       with_loop begin fun loop ->
-        Luv.Loop.(run ~loop ~mode:Run_mode.once ())
+        Luv.Loop.run ~loop ~mode:`ONCE ()
         |> Alcotest.(check bool) "run" false
       end
     end;
 
     "run, nowait", `Quick, begin fun () ->
       with_loop begin fun loop ->
-        Luv.Loop.(run ~loop ~mode:Run_mode.nowait ())
+        Luv.Loop.run ~loop ~mode:`NOWAIT ()
         |> Alcotest.(check bool) "run" false
       end
     end;

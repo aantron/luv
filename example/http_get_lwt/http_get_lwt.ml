@@ -30,9 +30,7 @@ let () =
     (* Do a DNS lookup on the URL we are asked to retrieve. *)
 
     let%lwt addr_infos =
-      Luv.Lwt.DNS.getaddrinfo
-        ~family:Luv.Address_family.inet ~node:url ~service:"80" ()
-    in
+      Luv.Lwt.DNS.getaddrinfo ~family:`INET ~node:url ~service:"80" () in
     let addr_info =
       match addr_infos with
       | Result.Ok (first::_) -> first

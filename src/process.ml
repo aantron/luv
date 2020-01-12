@@ -10,29 +10,24 @@ type t = [ `Process ] Handle.t
 
 type redirection = int * Redirection.t
 
-module Pipe_mode =
-struct
-  type t = int
-  let readable = Redirection.readable_pipe
-  let writable = Redirection.writable_pipe
-  let (lor) = (lor)
-end
-
 let no_redirection =
   let redirection = Ctypes.make Redirection.t in
   Ctypes.setf redirection Redirection.flags Redirection.ignore;
   redirection
 
 let to_new_pipe
-    ?(mode_in_child = Pipe_mode.(readable lor writable))
+    ?(readable_in_child = true)
+    ?(writable_in_child = true)
     ?(overlapped = false)
     ~fd ~to_parent_pipe () =
 
   let redirection = Ctypes.make Redirection.t in
-  let flags = Redirection.create_pipe lor mode_in_child in
   let flags =
-    if overlapped then flags lor Redirection.overlapped_pipe
-    else flags
+    let accumulate = Helpers.Bit_flag.accumulate in
+    Redirection.create_pipe
+    |> accumulate Redirection.readable_pipe readable_in_child
+    |> accumulate Redirection.writable_pipe writable_in_child
+    |> accumulate Redirection.overlapped_pipe overlapped
   in
   Ctypes.setf redirection Redirection.flags flags;
   Ctypes.setf redirection Redirection.stream Handle.(coerce to_parent_pipe);

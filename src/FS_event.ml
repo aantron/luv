@@ -7,14 +7,33 @@ type t = [ `FS_event ] Handle.t
 
 module Event =
 struct
-  include C.Types.FS_event.Event
-  include Helpers.Bit_flag
+  type t = [
+    | `RENAME
+    | `CHANGE
+  ]
+
+  let to_c = let open C.Types.FS_event.Event in function
+    | `RENAME -> rename
+    | `CHANGE -> change
+
+  let all = [
+    `RENAME;
+    `CHANGE;
+  ]
 end
 
 module Flag =
 struct
-  include C.Types.FS_event.Flag
-  include Helpers.Bit_flag
+  type t = [
+    | `WATCH_ENTRY
+    | `STAT
+    | `RECURSIVE
+  ]
+
+  let to_c = let open C.Types.FS_event.Flag in function
+    | `WATCH_ENTRY -> watch_entry
+    | `STAT -> stat
+    | `RECURSIVE -> recursive
 end
 
 let init ?loop () =
@@ -25,10 +44,16 @@ let init ?loop () =
 let trampoline =
   C.Functions.FS_event.get_trampoline ()
 
-let start ?(flags = 0) event path callback =
-  let callback = Error.catch_exceptions callback in
-  Handle.set_reference event (fun filename events result ->
-    callback (Error.to_result (filename, events) result));
+let start ?(flags = []) event path callback =
+  let flags = Helpers.Bit_flag.list_to_c Flag.to_c flags in
+  Handle.set_reference event begin fun filename events result ->
+    let result =
+      Error.to_result_lazy (fun () ->
+        filename, Helpers.Bit_flag.c_to_list Event.to_c Event.all events)
+        result
+    in
+    Error.catch_exceptions callback result
+  end;
   let immediate_result =
     C.Functions.FS_event.start
       event trampoline (Ctypes.ocaml_string_start path) flags

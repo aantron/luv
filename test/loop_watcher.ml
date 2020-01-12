@@ -44,7 +44,7 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
             |> check_success_result "stop"
         end;
 
-        while Luv.Loop.(run ~mode:Run_mode.nowait ()) do
+        while Luv.Loop.run ~mode:`NOWAIT () do
           ()
         done;
 
@@ -62,7 +62,7 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
         start watcher (fun () -> second_called := true)
         |> check_success_result "second start";
 
-        Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore;
+        Luv.Loop.run ~mode:`NOWAIT () |> ignore;
 
         Alcotest.(check bool) "first called" true !first_called;
         Alcotest.(check bool) "second called" false !second_called
@@ -75,7 +75,7 @@ let for_watcher_kind init (start : _ -> (_ -> unit) -> _) stop =
           start watcher (fun () -> raise Exit)
           |> check_success_result "start";
 
-          Luv.Loop.(run ~mode:Run_mode.nowait ()) |> ignore
+          Luv.Loop.run ~mode:`NOWAIT () |> ignore
         end
       end
     end;

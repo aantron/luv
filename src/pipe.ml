@@ -7,9 +7,14 @@ type t = [ `Pipe ] Stream.t
 
 module Mode =
 struct
-  include C.Types.Pipe.Mode
-  type t = int
-  let (lor) = (lor)
+  type t = [
+    | `READABLE
+    | `WRITABLE
+  ]
+
+  let to_c = let open C.Types.Pipe.Mode in function
+    | `READABLE -> readable
+    | `WRITABLE -> writable
 end
 
 let init ?loop ?(for_handle_passing = false) () =
@@ -75,5 +80,6 @@ let receive_handle pipe =
       `None
 
 let chmod pipe mode =
+  let mode = Helpers.Bit_flag.list_to_c Mode.to_c mode in
   C.Functions.Pipe.chmod pipe mode
   |> Error.to_result ()

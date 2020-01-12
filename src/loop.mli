@@ -21,10 +21,11 @@ val default : unit -> t
 
 module Run_mode :
 sig
-  type t
-  val default : t
-  val once : t
-  val nowait : t
+  type t = [
+    | `DEFAULT
+    | `ONCE
+    | `NOWAIT
+  ]
 end
 
 val run : ?loop:t -> ?mode:Run_mode.t -> unit -> bool

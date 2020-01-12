@@ -15,9 +15,9 @@ module Callbacks = Promise.ReadyCallbacks
 
 let before_io () =
   if Callbacks.callbacksPending () then
-    Luv.Loop.Run_mode.nowait
+    `NOWAIT
   else
-    Luv.Loop.Run_mode.once
+    `ONCE
 
 let after_io ~more_io =
   if Callbacks.callbacksPending () then begin
