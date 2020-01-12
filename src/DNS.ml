@@ -99,126 +99,126 @@ let rec addrinfo_list_to_ocaml addrinfo =
 
 module Async =
 struct
-let getaddrinfo_trampoline =
-  C.Functions.DNS.Getaddrinfo.get_trampoline ()
+  let getaddrinfo_trampoline =
+    C.Functions.DNS.Getaddrinfo.get_trampoline ()
 
-let getaddrinfo
-    ?loop
-    ?(request = Addr_info.Request.make ())
-    ?family
-    ?(socktype : Misc.Socket_type.t option)
-    ?protocol
-    ?flags
-    ?node
-    ?service
-    ()
-    callback =
+  let getaddrinfo
+      ?loop
+      ?(request = Addr_info.Request.make ())
+      ?family
+      ?(socktype : Misc.Socket_type.t option)
+      ?protocol
+      ?flags
+      ?node
+      ?service
+      ()
+      callback =
 
-  let loop = Loop.or_default loop in
+    let loop = Loop.or_default loop in
 
-  let hints =
-    let module AI = C.Types.DNS.Addrinfo in
-    match family, socktype, protocol, flags with
-    | None, None, None, None ->
-      Ctypes.(from_voidp AI.t null)
-    | _ ->
-      let hints = Ctypes.make AI.t in
-      let family =
-        match family with
-        | Some family -> family
-        | None -> `UNSPEC
-      in
-      let family = Misc.Address_family.to_c family in
-      Ctypes.setf hints AI.family family;
-      begin match socktype with
-      | Some socktype ->
-        let socktype = Misc.Socket_type.to_c socktype in
-        Ctypes.setf hints AI.socktype socktype
-      | None -> ()
-      end;
-      begin match protocol with
-      | Some protocol -> Ctypes.setf hints AI.protocol protocol
-      | None -> ()
-      end;
-      begin match flags with
-      | Some flags ->
-        let flags = Helpers.Bit_field.list_to_c Addr_info.Flag.to_c flags in
-        Ctypes.setf hints AI.flags flags
-      | None -> ()
-      end;
-      Ctypes.addr hints
-  in
+    let hints =
+      let module AI = C.Types.DNS.Addrinfo in
+      match family, socktype, protocol, flags with
+      | None, None, None, None ->
+        Ctypes.(from_voidp AI.t null)
+      | _ ->
+        let hints = Ctypes.make AI.t in
+        let family =
+          match family with
+          | Some family -> family
+          | None -> `UNSPEC
+        in
+        let family = Misc.Address_family.to_c family in
+        Ctypes.setf hints AI.family family;
+        begin match socktype with
+        | Some socktype ->
+          let socktype = Misc.Socket_type.to_c socktype in
+          Ctypes.setf hints AI.socktype socktype
+        | None -> ()
+        end;
+        begin match protocol with
+        | Some protocol -> Ctypes.setf hints AI.protocol protocol
+        | None -> ()
+        end;
+        begin match flags with
+        | Some flags ->
+          let flags = Helpers.Bit_field.list_to_c Addr_info.Flag.to_c flags in
+          Ctypes.setf hints AI.flags flags
+        | None -> ()
+        end;
+        Ctypes.addr hints
+    in
 
-  let callback = Error.catch_exceptions callback in
-  Request.set_callback request begin fun result ->
-    result
-    |> Error.to_result_lazy begin fun () ->
-      let addrinfos =
-        Ctypes.(getf (!@ request)) C.Types.DNS.Getaddrinfo.addrinfo in
-      let result = addrinfo_list_to_ocaml addrinfos in
-      C.Functions.DNS.Getaddrinfo.free addrinfos;
+    let callback = Error.catch_exceptions callback in
+    Request.set_callback request begin fun result ->
       result
+      |> Error.to_result_lazy begin fun () ->
+        let addrinfos =
+          Ctypes.(getf (!@ request)) C.Types.DNS.Getaddrinfo.addrinfo in
+        let result = addrinfo_list_to_ocaml addrinfos in
+        C.Functions.DNS.Getaddrinfo.free addrinfos;
+        result
+      end
+      |> callback
+    end;
+
+    let immediate_result =
+      C.Functions.DNS.Getaddrinfo.getaddrinfo
+        loop request getaddrinfo_trampoline node service hints
+    in
+
+    if immediate_result < 0 then begin
+      Request.release request;
+      callback (Error.result_from_c immediate_result)
     end
-    |> callback
-  end;
 
-  let immediate_result =
-    C.Functions.DNS.Getaddrinfo.getaddrinfo
-      loop request getaddrinfo_trampoline node service hints
-  in
+  let load_string request field' field_length =
+    let bigstring =
+      Ctypes.(bigarray_of_ptr
+        array1 field_length Bigarray.Char (request |-> field'))
+    in
+    let rec find_terminator index =
+      if Bigstring.unsafe_get bigstring index = '\000' then index
+      else find_terminator (index + 1)
+    in
+    Bigstring.sub bigstring ~offset:0 ~length:(find_terminator 0)
+    |> Bigstring.to_string
 
-  if immediate_result < 0 then begin
-    Request.release request;
-    callback (Error.result_from_c immediate_result)
-  end
+  let getnameinfo_trampoline =
+    C.Functions.DNS.Getnameinfo.get_trampoline ()
 
-let load_string request field' field_length =
-  let bigstring =
-    Ctypes.(bigarray_of_ptr
-      array1 field_length Bigarray.Char (request |-> field'))
-  in
-  let rec find_terminator index =
-    if Bigstring.unsafe_get bigstring index = '\000' then index
-    else find_terminator (index + 1)
-  in
-  Bigstring.sub bigstring ~offset:0 ~length:(find_terminator 0)
-  |> Bigstring.to_string
+  let getnameinfo
+      ?loop
+      ?(request = Name_info.Request.make ())
+      ?(flags = [])
+      address
+      callback =
 
-let getnameinfo_trampoline =
-  C.Functions.DNS.Getnameinfo.get_trampoline ()
+    let callback = Error.catch_exceptions callback in
+    Request.set_callback request begin fun result ->
+      result
+      |> Error.to_result_lazy begin fun () ->
+        let module NI = C.Types.DNS.Getnameinfo in
+        let host = load_string request NI.host NI.maxhost in
+        let service = load_string request NI.service NI.maxserv in
+        (host, service)
+      end
+      |> callback
+    end;
 
-let getnameinfo
-    ?loop
-    ?(request = Name_info.Request.make ())
-    ?(flags = [])
-    address
-    callback =
+    let flags = Helpers.Bit_field.list_to_c Name_info.Flag.to_c flags in
 
-  let callback = Error.catch_exceptions callback in
-  Request.set_callback request begin fun result ->
-    result
-    |> Error.to_result_lazy begin fun () ->
-      let module NI = C.Types.DNS.Getnameinfo in
-      let host = load_string request NI.host NI.maxhost in
-      let service = load_string request NI.service NI.maxserv in
-      (host, service)
+    let immediate_result =
+      C.Functions.DNS.Getnameinfo.getnameinfo
+        (Loop.or_default loop)
+        request
+        getnameinfo_trampoline
+        (Misc.Sockaddr.as_sockaddr address)
+        flags
+    in
+
+    if immediate_result < 0 then begin
+      Request.release request;
+      callback (Error.result_from_c immediate_result)
     end
-    |> callback
-  end;
-
-  let flags = Helpers.Bit_field.list_to_c Name_info.Flag.to_c flags in
-
-  let immediate_result =
-    C.Functions.DNS.Getnameinfo.getnameinfo
-      (Loop.or_default loop)
-      request
-      getnameinfo_trampoline
-      (Misc.Sockaddr.as_sockaddr address)
-      flags
-  in
-
-  if immediate_result < 0 then begin
-    Request.release request;
-    callback (Error.result_from_c immediate_result)
-  end
 end
