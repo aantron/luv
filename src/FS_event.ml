@@ -22,20 +22,6 @@ struct
   ]
 end
 
-module Flag =
-struct
-  type t = [
-    | `WATCH_ENTRY
-    | `STAT
-    | `RECURSIVE
-  ]
-
-  let to_c = let open C.Types.FS_event.Flag in function
-    | `WATCH_ENTRY -> watch_entry
-    | `STAT -> stat
-    | `RECURSIVE -> recursive
-end
-
 let init ?loop () =
   let event = Handle.allocate C.Types.FS_event.t in
   C.Functions.FS_event.init (Loop.or_default loop) event
@@ -44,8 +30,21 @@ let init ?loop () =
 let trampoline =
   C.Functions.FS_event.get_trampoline ()
 
-let start ?(flags = []) event path callback =
-  let flags = Helpers.Bit_flag.list_to_c Flag.to_c flags in
+let start
+    ?(watch_entry = false)
+    ?(stat = false)
+    ?(recursive = false)
+    event
+    path
+    callback =
+
+  let flags =
+    let accumulate = Helpers.Bit_flag.accumulate in
+    0
+    |> accumulate C.Types.FS_event.Flag.watch_entry watch_entry
+    |> accumulate C.Types.FS_event.Flag.stat stat
+    |> accumulate C.Types.FS_event.Flag.recursive recursive
+  in
   Handle.set_reference event begin fun filename events result ->
     let result =
       Error.to_result_lazy (fun () ->

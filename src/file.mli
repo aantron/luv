@@ -150,15 +150,6 @@ sig
   }
 end
 
-module Copy_flag :
-sig
-  type t = [
-    | `EXCL
-    | `FICLONE
-    | `FICLONE_FORCE
-  ]
-end
-
 module Access_flag :
 sig
   type t = [
@@ -166,14 +157,6 @@ sig
     | `R_OK
     | `W_OK
     | `X_OK
-  ]
-end
-
-module Symlink_flag :
-sig
-  type t = [
-    | `DIR
-    | `JUNCTION
   ]
 end
 
@@ -351,9 +334,11 @@ sig
   val copyfile :
     ?loop:Loop.t ->
     ?request:Request.t ->
-    from:string ->
+    ?excl:bool ->
+    ?ficlone:bool ->
+    ?ficlone_force:bool ->
+    string ->
     to_:string ->
-    Copy_flag.t list ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
 
@@ -420,9 +405,10 @@ sig
   val symlink :
     ?loop:Loop.t ->
     ?request:Request.t ->
-    target:string ->
+    ?dir:bool ->
+    ?junction:bool ->
+    string ->
     link:string ->
-    Symlink_flag.t list ->
     ((unit, Error.t) Result.result -> unit) ->
       unit
 
@@ -555,7 +541,11 @@ sig
       (unit, Error.t) Result.result
 
   val copyfile :
-    from:string -> to_:string -> Copy_flag.t list ->
+    ?excl:bool ->
+    ?ficlone:bool ->
+    ?ficlone_force:bool ->
+    string ->
+    to_:string ->
       (unit, Error.t) Result.result
 
   (* DOC The offset should be optional, but current libuv doesn't seem to
@@ -589,7 +579,7 @@ sig
       (unit, Error.t) Result.result
 
   val symlink :
-    target:string -> link:string -> Symlink_flag.t list ->
+    ?dir:bool -> ?junction:bool -> string -> link:string ->
       (unit, Error.t) Result.result
 
   val readlink :

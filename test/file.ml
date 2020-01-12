@@ -899,8 +899,7 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.Async.copyfile
-          ~from:path ~to_ [] (check_success_result "copyfile");
+        Luv.File.Async.copyfile path ~to_ (check_success_result "copyfile");
         run ();
 
         Alcotest.(check bool) "original at end" true (Sys.file_exists path);
@@ -917,7 +916,7 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.Sync.copyfile ~from:path ~to_ []
+        Luv.File.Sync.copyfile path ~to_
         |> check_success_result "copyfile";
 
         Alcotest.(check bool) "original at end" true (Sys.file_exists path);
@@ -930,9 +929,7 @@ let tests = [
     "copyfile failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.copyfile
-          ~from:"non_existent_file" ~to_:"foo" [] begin fun result ->
-
+      Luv.File.Async.copyfile "non_existent_file" ~to_:"foo" begin fun result ->
         check_error_result "copyfile" `ENOENT result;
         finished := true
       end;
@@ -942,7 +939,7 @@ let tests = [
     end;
 
     "copyfile failure: sync", `Quick, begin fun () ->
-      Luv.File.Sync.copyfile ~from:"non_existent_file" ~to_:"foo" []
+      Luv.File.Sync.copyfile "non_existent_file" ~to_:"foo"
       |> check_error_result "copyfile" `ENOENT
     end;
 

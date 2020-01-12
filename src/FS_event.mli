@@ -13,19 +13,12 @@ sig
   ]
 end
 
-module Flag :
-sig
-  type t = [
-    | `WATCH_ENTRY
-    | `STAT
-    | `RECURSIVE
-  ]
-end
-
 val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result
 (* DOC Note this function calls the callback multiple times. *)
 val start :
-  ?flags:Flag.t list ->
+  ?watch_entry:bool ->
+  ?stat:bool ->
+  ?recursive:bool ->
   t ->
   string ->
   ((string * (Event.t list), Error.t) Result.result -> unit) ->

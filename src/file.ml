@@ -309,20 +309,6 @@ struct
     }
 end
 
-module Copy_flag =
-struct
-  type t = [
-    | `EXCL
-    | `FICLONE
-    | `FICLONE_FORCE
-  ]
-
-  let to_c = let open C.Types.File.Copy_flag in function
-    | `EXCL -> excl
-    | `FICLONE -> ficlone
-    | `FICLONE_FORCE -> ficlone_force
-end
-
 module Access_flag =
 struct
   type t = [
@@ -337,18 +323,6 @@ struct
     | `R_OK -> r
     | `W_OK -> w
     | `X_OK -> x
-end
-
-module Symlink_flag =
-struct
-  type t = [
-    | `DIR
-    | `JUNCTION
-  ]
-
-  let to_c = let open C.Types.File.Symlink_flag in function
-    | `DIR -> dir
-    | `JUNCTION -> junction
 end
 
 module Returns =
@@ -633,8 +607,19 @@ struct
     async_or_sync
       C.Blocking.File.copyfile
       returns_error
-      (fun run ~from ~to_ flags ->
-        let flags = Helpers.Bit_flag.list_to_c Copy_flag.to_c flags in
+      (fun run
+          ?(excl = false)
+          ?(ficlone = false)
+          ?(ficlone_force = false)
+          from
+          ~to_ ->
+        let flags =
+          let accumulate = Helpers.Bit_flag.accumulate in
+          0
+          |> accumulate C.Types.File.Copy_flag.excl excl
+          |> accumulate C.Types.File.Copy_flag.ficlone ficlone
+          |> accumulate C.Types.File.Copy_flag.ficlone_force ficlone_force
+        in
         run (!from @@ !to_ @@ !flags) no_cleanup)
 
   let sendfile =
@@ -683,8 +668,13 @@ struct
     async_or_sync
       C.Blocking.File.symlink
       returns_error
-      (fun run ~target ~link flags ->
-        let flags = Helpers.Bit_flag.list_to_c Symlink_flag.to_c flags in
+      (fun run ?(dir = false) ?(junction = false) target ~link ->
+        let flags =
+          let accumulate = Helpers.Bit_flag.accumulate in
+          0
+          |> accumulate C.Types.File.Symlink_flag.dir dir
+          |> accumulate C.Types.File.Symlink_flag.junction junction
+        in
         run (!target @@ !link @@ !flags) no_cleanup)
 
   let generic_readpath c_function =
