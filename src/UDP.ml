@@ -70,6 +70,10 @@ let set_multicast_interface udp interface =
     udp (Ctypes.ocaml_string_start interface)
   |> Error.to_result ()
 
+let set_broadcast udp on =
+  C.Functions.UDP.set_broadcast udp on
+  |> Error.to_result ()
+
 let set_ttl udp ttl =
   C.Functions.UDP.set_ttl udp ttl
   |> Error.to_result ()

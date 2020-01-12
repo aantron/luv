@@ -30,6 +30,7 @@ val set_source_membership :
 val set_multicast_loop : t -> bool -> (unit, Error.t) Result.result
 val set_multicast_ttl : t -> int -> (unit, Error.t) Result.result
 val set_multicast_interface : t -> string -> (unit, Error.t) Result.result
+val set_broadcast : t -> bool -> (unit, Error.t) Result.result
 val set_ttl : t -> int -> (unit, Error.t) Result.result
 (* DOC The write is always full. *)
 val send :
