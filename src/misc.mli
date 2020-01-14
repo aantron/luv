@@ -207,11 +207,9 @@ end
 
 module Random :
 sig
-  module Async :
-  sig
-    val random :
-      ?loop:Loop.t -> Bigstring.t -> ((unit, Error.t) Result.result -> unit) -> unit
-  end
+  val random :
+    ?loop:Loop.t -> Bigstring.t -> ((unit, Error.t) Result.result -> unit) ->
+      unit
 
   module Sync :
   sig

@@ -571,6 +571,8 @@ struct
       end
   end
 
+  include Async
+
   module Sync =
   struct
     let null_callback =

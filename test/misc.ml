@@ -45,7 +45,7 @@ let tests = [
     "async", `Quick, begin fun () ->
       let content = String.make 16 'a' in
       let buffer = Luv.Bigstring.from_string content in
-      Luv.Random.Async.random buffer begin fun result ->
+      Luv.Random.random buffer begin fun result ->
         check_success_result "random" result;
         if Luv.Bigstring.to_string buffer = content then
           Alcotest.fail "buffer contents"
