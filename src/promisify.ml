@@ -60,13 +60,13 @@ struct
   module File =
   struct
     let open_ ?loop ?request ?mode path flags =
-      from_cps (File.Async.open_ ?loop ?request ?mode path flags)
+      from_cps (File.open_ ?loop ?request ?mode path flags)
 
     let close ?loop ?request file =
-      from_cps (File.Async.close ?loop ?request file)
+      from_cps (File.close ?loop ?request file)
 
     let read ?loop ?request ?offset file buffers =
-      from_cps (File.Async.read ?loop ?request ?offset file buffers)
+      from_cps (File.read ?loop ?request ?offset file buffers)
   end
 
   module DNS =

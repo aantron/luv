@@ -9,7 +9,7 @@ let with_file_for_reading ?(to_fail = false) f =
   in
 
   let file =
-    Luv.File.(Sync.open_ "read_test_input" flags)
+    Luv.File.Sync.open_ "read_test_input" flags
     |> check_success_result "open_"
   in
 
@@ -22,7 +22,7 @@ let with_file_for_writing f =
   let filename = "write_test_output" in
 
   let file =
-    Luv.File.(Sync.open_ filename [`WRONLY; `CREAT; `TRUNC])
+    Luv.File.Sync.open_ filename [`WRONLY; `CREAT; `TRUNC]
     |> check_success_result "open_";
   in
 
@@ -78,13 +78,13 @@ let tests = [
     "open, read, close: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.open_ "read_test_input" [`RDONLY] begin fun result ->
+      Luv.File.open_ "read_test_input" [`RDONLY] begin fun result ->
         let file = check_success_result "file" result in
 
         let buffer = Luv.Bigstring.create 4 in
         Luv.Bigstring.fill buffer '\000';
 
-        Luv.File.Async.read file [buffer] begin fun result ->
+        Luv.File.read file [buffer] begin fun result ->
           let length =
             check_success_result "read result" result
             |> Unsigned.Size_t.to_int
@@ -95,7 +95,7 @@ let tests = [
           |> Luv.Bigstring.to_string
           |> Alcotest.(check string) "data" "open";
 
-          Luv.File.Async.close file begin fun result ->
+          Luv.File.close file begin fun result ->
             check_success_result "close result" result;
             finished := true
           end
@@ -135,7 +135,7 @@ let tests = [
     "open: nonexistent, async", `Quick, begin fun () ->
       let result = ref (Result.Error `UNKNOWN) in
 
-      Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun result' ->
+      Luv.File.open_ "non_existent_file" [`RDONLY] begin fun result' ->
         result := result'
       end;
 
@@ -152,9 +152,9 @@ let tests = [
       no_memory_leak begin fun _ ->
         let finished = ref false in
 
-        Luv.File.Async.open_ "file.ml" [`RDONLY] begin fun result ->
+        Luv.File.open_ "file.ml" [`RDONLY] begin fun result ->
           let file = check_success_result "file" result in
-          Luv.File.Async.close file begin fun _ ->
+          Luv.File.close file begin fun _ ->
             finished := true
           end
         end;
@@ -178,7 +178,7 @@ let tests = [
 
     "open: failure leak, async", `Quick, begin fun () ->
       no_memory_leak begin fun _ ->
-        Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun result ->
+        Luv.File.open_ "non_existent_file" [`RDONLY] begin fun result ->
           check_error_result "result" `ENOENT result
         end;
 
@@ -198,7 +198,7 @@ let tests = [
 
       let called = ref false in
 
-      Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun _result ->
+      Luv.File.open_ "non_existent_file" [`RDONLY] begin fun _result ->
         called := true
       end;
 
@@ -210,7 +210,7 @@ let tests = [
 
     "open: exception", `Quick, begin fun () ->
       check_exception Exit begin fun () ->
-        Luv.File.Async.open_ "non_existent_file" [`RDONLY] begin fun _result ->
+        Luv.File.open_ "non_existent_file" [`RDONLY] begin fun _result ->
           raise Exit
         end;
         run ()
@@ -221,7 +221,7 @@ let tests = [
       with_file_for_reading ~to_fail:true begin fun file ->
         let buffer = Luv.Bigstring.create 1 in
 
-        Luv.File.Async.read file [buffer] begin fun result ->
+        Luv.File.read file [buffer] begin fun result ->
           check_error_result "byte_count" `EBADF result
         end;
 
@@ -245,7 +245,7 @@ let tests = [
         no_memory_leak begin fun _ ->
           let finished = ref false in
 
-          Luv.File.Async.read file [buffer] begin fun _ ->
+          Luv.File.read file [buffer] begin fun _ ->
             finished := true
           end;
 
@@ -270,7 +270,7 @@ let tests = [
     "read sync failure leak", `Quick, begin fun () ->
       with_file_for_reading begin fun file ->
         no_memory_leak begin fun _ ->
-          Luv.File.Async.read file [] ignore;
+          Luv.File.read file [] ignore;
           run ()
         end
       end
@@ -286,7 +286,7 @@ let tests = [
         let finalized = ref false in
         Gc.finalise (fun _ -> finalized := true) buffer;
 
-        Luv.File.Async.read file [buffer] begin fun _ ->
+        Luv.File.read file [buffer] begin fun _ ->
           called := true
         end;
 
@@ -305,7 +305,7 @@ let tests = [
       with_file_for_writing begin fun file ->
         let buffer = Luv.Bigstring.from_string "ope" in
 
-        Luv.File.Async.write file [buffer] begin fun result ->
+        Luv.File.write file [buffer] begin fun result ->
           let byte_count = check_success_result "write result" result in
           Alcotest.(check int)
             "byte count" 3 (Unsigned.Size_t.to_int byte_count)
@@ -329,7 +329,7 @@ let tests = [
       with_dummy_file begin fun path ->
         Alcotest.(check bool) "exists" true (Sys.file_exists path);
 
-        Luv.File.Async.unlink path begin fun result ->
+        Luv.File.unlink path begin fun result ->
           check_success_result "result" result
         end;
 
@@ -352,7 +352,7 @@ let tests = [
     "unlink failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.unlink "non_existent_file" begin fun result ->
+      Luv.File.unlink "non_existent_file" begin fun result ->
         check_error_result "result" `ENOENT result;
         finished := true
       end;
@@ -370,11 +370,11 @@ let tests = [
       let finished = ref false in
       let directory = "dummy_directory" in
 
-      Luv.File.Async.mkdir directory begin fun result ->
+      Luv.File.mkdir directory begin fun result ->
         check_success_result "mkdir result" result;
         Alcotest.(check bool) "exists" true (Sys.file_exists directory);
 
-        Luv.File.Async.rmdir directory begin fun result ->
+        Luv.File.rmdir directory begin fun result ->
           check_success_result "rmdir result" result;
           Alcotest.(check bool)
             "does not exist" false (Sys.file_exists directory);
@@ -405,7 +405,7 @@ let tests = [
       with_dummy_file begin fun path ->
         let finished = ref false in
 
-        Luv.File.Async.mkdir path begin fun result ->
+        Luv.File.mkdir path begin fun result ->
           check_error_result "mkdir result" `EEXIST result;
           finished := true
         end;
@@ -425,7 +425,7 @@ let tests = [
     "rmdir failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.rmdir "non_existent_file" begin fun result ->
+      Luv.File.rmdir "non_existent_file" begin fun result ->
         check_error_result "rmdir result" `ENOENT result;
         finished := true
       end;
@@ -442,10 +442,10 @@ let tests = [
     "mkdtemp: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.mkdtemp "fooXXXXXX" begin fun result ->
+      Luv.File.mkdtemp "fooXXXXXX" begin fun result ->
         let path = check_success_result "mkdtemp result" result in
 
-        Luv.File.Async.rmdir path begin fun result ->
+        Luv.File.rmdir path begin fun result ->
           check_success_result "rmdir result" result;
           finished := true
         end
@@ -468,7 +468,7 @@ let tests = [
     "mkdtemp failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.mkdtemp "non-existent/fooXXXXXX" begin fun result ->
+      Luv.File.mkdtemp "non-existent/fooXXXXXX" begin fun result ->
         check_error_result "mkdtemp result" `ENOENT result;
         finished := true
       end;
@@ -485,13 +485,13 @@ let tests = [
     "mkstemp: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.mkstemp "fooXXXXXX" begin fun result ->
+      Luv.File.mkstemp "fooXXXXXX" begin fun result ->
         let path, file = check_success_result "mkstemp result" result in
 
-        Luv.File.Async.close file begin fun result ->
+        Luv.File.close file begin fun result ->
           check_success_result "close" result;
 
-          Luv.File.Async.unlink path begin fun result ->
+          Luv.File.unlink path begin fun result ->
             check_success_result "unlink" result;
             finished := true
           end
@@ -518,7 +518,7 @@ let tests = [
     "mkstemp failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.mkstemp "non-existent/fooXXXXXX" begin fun result ->
+      Luv.File.mkstemp "non-existent/fooXXXXXX" begin fun result ->
         check_error_result "mkstemp result" `ENOENT result;
         finished := true
       end;
@@ -534,9 +534,9 @@ let tests = [
 
     "opendir, closedir: async", `Quick, begin fun () ->
       with_directory begin fun directory ->
-        Luv.File.Async.opendir directory begin fun result ->
+        Luv.File.opendir directory begin fun result ->
           let dir = check_success_result "opendir" result in
-          Luv.File.Async.closedir dir (check_success_result "closedir")
+          Luv.File.closedir dir (check_success_result "closedir")
         end;
 
         run ()
@@ -554,15 +554,15 @@ let tests = [
 
     "readdir: async", `Quick, begin fun () ->
       with_directory begin fun directory ->
-        Luv.File.Async.opendir directory begin fun result ->
+        Luv.File.opendir directory begin fun result ->
           let dir = check_success_result "opendir" result in
 
-          Luv.File.Async.readdir dir begin fun result ->
+          Luv.File.readdir dir begin fun result ->
             check_success_result "readdir" result
             |> Array.to_list
             |> check_directory_entries "entries" ["foo"; "bar"];
 
-            Luv.File.Async.closedir dir (check_success_result "closedir")
+            Luv.File.closedir dir (check_success_result "closedir")
           end
         end;
 
@@ -600,15 +600,15 @@ let tests = [
 
     "readdir: gc", `Quick, begin fun () ->
       with_directory begin fun directory ->
-        Luv.File.Async.opendir directory begin fun result ->
+        Luv.File.opendir directory begin fun result ->
           let dir = check_success_result "opendir" result in
 
-          Luv.File.Async.readdir dir begin fun result ->
+          Luv.File.readdir dir begin fun result ->
             check_success_result "readdir" result
             |> Array.to_list
             |> check_directory_entries "entries" ["foo"; "bar"];
 
-            Luv.File.Async.closedir dir (check_success_result "closedir")
+            Luv.File.closedir dir (check_success_result "closedir")
           end;
 
           Gc.full_major ();
@@ -622,7 +622,7 @@ let tests = [
       with_directory begin fun directory ->
         let entries = ref [] in
 
-        Luv.File.Async.scandir directory begin fun result ->
+        Luv.File.scandir directory begin fun result ->
           entries :=
             check_success_result "scandir" result
             |> call_scandir_next_repeatedly
@@ -645,7 +645,7 @@ let tests = [
     "scandir failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.scandir "non_existent_directory" begin fun result ->
+      Luv.File.scandir "non_existent_directory" begin fun result ->
         check_error_result "scandir" `ENOENT result;
         finished := true
       end;
@@ -662,7 +662,7 @@ let tests = [
     "stat: async", `Quick, begin fun () ->
       let size = ref 0 in
 
-      Luv.File.Async.stat "file.ml" begin fun result ->
+      Luv.File.stat "file.ml" begin fun result ->
         check_success_result "stat" result
         |> fun stat -> size := Unsigned.UInt64.to_int Luv.File.Stat.(stat.size)
       end;
@@ -682,7 +682,7 @@ let tests = [
     "stat failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.stat "non_existent_file" begin fun result ->
+      Luv.File.stat "non_existent_file" begin fun result ->
         check_error_result "stat" `ENOENT result;
         finished := true
       end;
@@ -699,7 +699,7 @@ let tests = [
     "lstat: async", `Quick, begin fun () ->
       let size = ref 0 in
 
-      Luv.File.Async.lstat "file.ml" begin fun result ->
+      Luv.File.lstat "file.ml" begin fun result ->
         check_success_result "lstat" result
         |> fun stat -> size := Unsigned.UInt64.to_int Luv.File.Stat.(stat.size)
       end;
@@ -719,7 +719,7 @@ let tests = [
     "lstat failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.lstat "non_existent_file" begin fun result ->
+      Luv.File.lstat "non_existent_file" begin fun result ->
         check_error_result "lstat" `ENOENT result;
         finished := true
       end;
@@ -737,7 +737,7 @@ let tests = [
       let size = ref 0 in
 
       with_file_for_reading begin fun file ->
-        Luv.File.Async.fstat file begin fun result ->
+        Luv.File.fstat file begin fun result ->
           check_success_result "fstat" result
           |> fun stat ->
             size := Unsigned.UInt64.to_int Luv.File.Stat.(stat.size)
@@ -760,7 +760,7 @@ let tests = [
     end;
 
     "statfs: async", `Quick, begin fun () ->
-      Luv.File.Async.statfs "file.ml" begin fun result ->
+      Luv.File.statfs "file.ml" begin fun result ->
         check_success_result "stat" result |> ignore
       end;
 
@@ -776,7 +776,7 @@ let tests = [
     "statfs failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.statfs "non_existent_file" begin fun result ->
+      Luv.File.statfs "non_existent_file" begin fun result ->
         check_error_result "stat" `ENOENT result;
         finished := true
       end;
@@ -797,7 +797,7 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.Async.rename path ~to_ (check_success_result "rename");
+        Luv.File.rename path ~to_ (check_success_result "rename");
         run ();
 
         Alcotest.(check bool) "original at end" false (Sys.file_exists path);
@@ -827,7 +827,7 @@ let tests = [
     "rename failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.rename "non_existent_file" ~to_:"foo" begin fun result ->
+      Luv.File.rename "non_existent_file" ~to_:"foo" begin fun result ->
         check_error_result "rename" `ENOENT result;
         finished := true
       end;
@@ -850,7 +850,7 @@ let tests = [
         |> Unsigned.Size_t.to_int
         |> Alcotest.(check int) "bytes written" 4;
 
-        Luv.File.Async.ftruncate file 3L (check_success_result "ftruncate");
+        Luv.File.ftruncate file 3L (check_success_result "ftruncate");
         run ()
       end
     end;
@@ -873,7 +873,7 @@ let tests = [
       with_file_for_reading begin fun file ->
         let finished = ref false in
 
-        Luv.File.Async.ftruncate file 0L begin fun result ->
+        Luv.File.ftruncate file 0L begin fun result ->
           check_error_result "ftruncate" `EINVAL result;
           finished := true
         end;
@@ -897,7 +897,7 @@ let tests = [
         Alcotest.(check bool) "original at start" true (Sys.file_exists path);
         Alcotest.(check bool) "new at start" false (Sys.file_exists to_);
 
-        Luv.File.Async.copyfile path ~to_ (check_success_result "copyfile");
+        Luv.File.copyfile path ~to_ (check_success_result "copyfile");
         run ();
 
         Alcotest.(check bool) "original at end" true (Sys.file_exists path);
@@ -927,7 +927,7 @@ let tests = [
     "copyfile failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.copyfile "non_existent_file" ~to_:"foo" begin fun result ->
+      Luv.File.copyfile "non_existent_file" ~to_:"foo" begin fun result ->
         check_error_result "copyfile" `ENOENT result;
         finished := true
       end;
@@ -944,7 +944,7 @@ let tests = [
     "sendfile: async", `Quick, begin fun () ->
       with_file_for_reading begin fun from ->
         with_file_for_writing begin fun to_ ->
-          Luv.File.Async.sendfile
+          Luv.File.sendfile
               ~to_ from ~offset:0L (Unsigned.Size_t.of_int 3)
               begin fun result ->
 
@@ -973,7 +973,7 @@ let tests = [
     "access: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.access "file.ml" [`R_OK] begin fun result ->
+      Luv.File.access "file.ml" [`R_OK] begin fun result ->
         check_success_result "access" result;
         finished := true
       end;
@@ -990,7 +990,7 @@ let tests = [
     "access failure: async", `Quick, begin fun () ->
       let finished = ref false in
 
-      Luv.File.Async.access "non_existent_file" [`R_OK] begin fun result ->
+      Luv.File.access "non_existent_file" [`R_OK] begin fun result ->
         check_error_result "access" `ENOENT result;
         finished := true
       end;

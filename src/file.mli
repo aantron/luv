@@ -172,287 +172,284 @@ val stdin : t
 val stdout : t
 val stderr : t
 
-module Async :
-sig
-  val open_ :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    ?mode:Mode.t list ->
-    string ->
-    Open_flag.t list ->
-    ((t, Error.t) Result.result -> unit) ->
-      unit
+val open_ :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?mode:Mode.t list ->
+  string ->
+  Open_flag.t list ->
+  ((t, Error.t) Result.result -> unit) ->
+    unit
 
-  val close :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    t ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val close :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val read :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    ?offset:int64 ->
-    t ->
-    Bigstring.t list ->
-    ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
-      unit
+val read :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?offset:int64 ->
+  t ->
+  Bigstring.t list ->
+  ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
+    unit
 
-  val write :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    ?offset:int64 ->
-    t ->
-    Bigstring.t list ->
-    ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
-      unit
+val write :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?offset:int64 ->
+  t ->
+  Bigstring.t list ->
+  ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
+    unit
 
-  val unlink :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val unlink :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val mkdir :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    ?mode:Mode.t list ->
-    string ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val mkdir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?mode:Mode.t list ->
+  string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val mkdtemp :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((string, Error.t) Result.result -> unit) ->
-      unit
+val mkdtemp :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((string, Error.t) Result.result -> unit) ->
+    unit
 
-  val mkstemp :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((string * t, Error.t) Result.result -> unit) ->
-      unit
+val mkstemp :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((string * t, Error.t) Result.result -> unit) ->
+    unit
 
-  val rmdir :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val rmdir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val opendir :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((Dir.t, Error.t) Result.result -> unit) ->
-      unit
+val opendir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Dir.t, Error.t) Result.result -> unit) ->
+    unit
 
-  val closedir :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    Dir.t ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val closedir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  Dir.t ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val readdir :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    ?number_of_entries:int ->
-    Dir.t ->
-    ((Dirent.t array, Error.t) Result.result -> unit) ->
-      unit
+val readdir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?number_of_entries:int ->
+  Dir.t ->
+  ((Dirent.t array, Error.t) Result.result -> unit) ->
+    unit
 
-  val scandir :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((Directory_scan.t, Error.t) Result.result -> unit) ->
-      unit
+val scandir :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Directory_scan.t, Error.t) Result.result -> unit) ->
+    unit
 
-  val stat :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((Stat.t, Error.t) Result.result -> unit) ->
-      unit
+val stat :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Stat.t, Error.t) Result.result -> unit) ->
+    unit
 
-  val lstat :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((Stat.t, Error.t) Result.result -> unit) ->
-      unit
+val lstat :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Stat.t, Error.t) Result.result -> unit) ->
+    unit
 
-  val fstat :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    t ->
-    ((Stat.t, Error.t) Result.result -> unit) ->
-      unit
+val fstat :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  ((Stat.t, Error.t) Result.result -> unit) ->
+    unit
 
-  val statfs :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((Statfs.t, Error.t) Result.result -> unit) ->
-      unit
+val statfs :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((Statfs.t, Error.t) Result.result -> unit) ->
+    unit
 
-  val rename :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    to_:string ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val rename :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  to_:string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val fsync :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    t ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val fsync :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val fdatasync :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    t ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val fdatasync :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val ftruncate :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    t ->
-    int64 ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val ftruncate :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  int64 ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val copyfile :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    ?excl:bool ->
-    ?ficlone:bool ->
-    ?ficlone_force:bool ->
-    string ->
-    to_:string ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val copyfile :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?excl:bool ->
+  ?ficlone:bool ->
+  ?ficlone_force:bool ->
+  string ->
+  to_:string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val sendfile :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    to_:t ->
-    t ->
-    offset:int64 ->
-    Unsigned.Size_t.t ->
-    ((Unsigned.Size_t.t, Error.t) Result.result -> unit)  ->
-      unit
+val sendfile :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  to_:t ->
+  t ->
+  offset:int64 ->
+  Unsigned.Size_t.t ->
+  ((Unsigned.Size_t.t, Error.t) Result.result -> unit)  ->
+    unit
 
-  val access :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    Access_flag.t list ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val access :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  Access_flag.t list ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val chmod :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    Mode.t list ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val chmod :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  Mode.t list ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val fchmod :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    t ->
-    Mode.t list ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val fchmod :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  Mode.t list ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val utime :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    atime:float ->
-    mtime:float ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val utime :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  atime:float ->
+  mtime:float ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val futime :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    t ->
-    atime:float ->
-    mtime:float ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val futime :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  atime:float ->
+  mtime:float ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val link :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    link:string ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val link :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  link:string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val symlink :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    ?dir:bool ->
-    ?junction:bool ->
-    string ->
-    link:string ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val symlink :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  ?dir:bool ->
+  ?junction:bool ->
+  string ->
+  link:string ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val readlink :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((string, Error.t) Result.result -> unit) ->
-      unit
+val readlink :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((string, Error.t) Result.result -> unit) ->
+    unit
 
-  val realpath :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    ((string, Error.t) Result.result -> unit) ->
-      unit
+val realpath :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  ((string, Error.t) Result.result -> unit) ->
+    unit
 
-  val chown :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    uid:int ->
-    gid:int ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val chown :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  uid:int ->
+  gid:int ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val fchown :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    t ->
-    uid:int ->
-    gid:int ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
+val fchown :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  t ->
+  uid:int ->
+  gid:int ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
-  val lchown :
-    ?loop:Loop.t ->
-    ?request:Request.t ->
-    string ->
-    uid:int ->
-    gid:int ->
-    ((unit, Error.t) Result.result -> unit) ->
-      unit
-end
+val lchown :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  uid:int ->
+  gid:int ->
+  ((unit, Error.t) Result.result -> unit) ->
+    unit
 
 module Sync :
 sig
