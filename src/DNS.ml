@@ -222,3 +222,5 @@ struct
       callback (Error.result_from_c immediate_result)
     end
 end
+
+include Async

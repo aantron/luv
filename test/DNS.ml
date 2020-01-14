@@ -10,7 +10,7 @@ let tests = [
     "getaddrinfo", `Quick, begin fun () ->
       let resolved = ref false in
 
-      Luv.DNS.Async.getaddrinfo ~family:`INET ~node:"localhost" ()
+      Luv.DNS.getaddrinfo ~family:`INET ~node:"localhost" ()
           begin fun result ->
 
         match check_success_result "getaddrinfo" result with
@@ -34,7 +34,7 @@ let tests = [
         Luv.Sockaddr.ipv4 "127.0.0.1" 0 |> check_success_result "ipv4" in
       let resolved = ref false in
 
-      Luv.DNS.Async.getnameinfo address begin fun result ->
+      Luv.DNS.getnameinfo address begin fun result ->
         check_success_result "getnameinfo" result
         |> fst
         |> Alcotest.(check string) "host" "localhost";

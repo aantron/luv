@@ -78,10 +78,10 @@ struct
         ?loop ?request ?family ?socktype ?protocol ?flags ?node ?service () =
 
       from_cps
-        (DNS.Async.getaddrinfo
+        (DNS.getaddrinfo
           ?loop ?request ?family ?socktype ?protocol ?flags ?node ?service ())
 
     let getnameinfo ?loop ?request ?flags address =
-      from_cps (DNS.Async.getnameinfo ?loop ?request ?flags address)
+      from_cps (DNS.getnameinfo ?loop ?request ?flags address)
   end
 end

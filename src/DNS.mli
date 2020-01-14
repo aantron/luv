@@ -55,26 +55,23 @@ end
 
 (* DOC Examples absolutely necessary. *)
 
-module Async :
-sig
-  val getaddrinfo :
-    ?loop:Loop.t ->
-    ?request:Addr_info.Request.t ->
-    ?family:Misc.Address_family.t ->
-    ?socktype:Misc.Socket_type.t ->
-    ?protocol:int ->
-    ?flags:Addr_info.Flag.t list ->
-    ?node:string ->
-    ?service:string ->
-    unit ->
-    ((Addr_info.t list, Error.t) Result.result -> unit) ->
-      unit
+val getaddrinfo :
+  ?loop:Loop.t ->
+  ?request:Addr_info.Request.t ->
+  ?family:Misc.Address_family.t ->
+  ?socktype:Misc.Socket_type.t ->
+  ?protocol:int ->
+  ?flags:Addr_info.Flag.t list ->
+  ?node:string ->
+  ?service:string ->
+  unit ->
+  ((Addr_info.t list, Error.t) Result.result -> unit) ->
+    unit
 
-  val getnameinfo :
-    ?loop:Loop.t ->
-    ?request:Name_info.Request.t ->
-    ?flags:Name_info.Flag.t list ->
-    Misc.Sockaddr.t ->
-    ((string * string, Error.t) Result.result -> unit) ->
-      unit
-end
+val getnameinfo :
+  ?loop:Loop.t ->
+  ?request:Name_info.Request.t ->
+  ?flags:Name_info.Flag.t list ->
+  Misc.Sockaddr.t ->
+  ((string * string, Error.t) Result.result -> unit) ->
+    unit
