@@ -75,7 +75,7 @@ struct
     loop [] all
 
   let test to_c mask field =
-    let mask = to_c mask in
+    let mask = list_to_c to_c mask in
     (mask land field) = mask
 
   let accumulate flag condition acc =

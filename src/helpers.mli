@@ -35,6 +35,6 @@ module Bit_field :
 sig
   val list_to_c : ('a -> int) -> 'a list -> int
   val c_to_list : ('a -> int) -> 'a list -> int -> 'a list
-  val test : ('a -> int) -> 'a -> int -> bool
+  val test : ('a -> int) -> 'a list -> int -> bool
   val accumulate : int -> bool -> int -> int
 end

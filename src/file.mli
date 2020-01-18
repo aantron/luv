@@ -189,10 +189,10 @@ sig
       multiple bits may be set. These bit fields are returned by operations such
       as {!Luv.File.stat}. *)
 
-  val test : t -> numeric -> bool
+  val test : t list -> numeric -> bool
   (** [Luv.File.Mode.test mask bits] checks whether all the bits in [mask] are
       set in [bits]. For example, if [bits] contains [0o644],
-      [Luv.File.Mode.test `IRUSR bits] evaluates to [true]. *)
+      [Luv.File.Mode.test [`IRUSR] bits] evaluates to [true]. *)
 end
 
 val open_ :

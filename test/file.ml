@@ -760,17 +760,17 @@ let tests = [
     end;
 
     "bit test: one bit", `Quick, begin fun () ->
-      Luv__Helpers.Bit_field.test (fun i -> i) 0b0001 0b0111
+      Luv__Helpers.Bit_field.test (fun i -> i) [0b0001] 0b0111
       |> Alcotest.(check bool) "test" true
     end;
 
     "bit test: multiple bits", `Quick, begin fun () ->
-      Luv__Helpers.Bit_field.test (fun i -> i) 0b0011 0b0111
+      Luv__Helpers.Bit_field.test (fun i -> i) [0b0001; 0b0010] 0b0111
       |> Alcotest.(check bool) "test" true
     end;
 
     "bit test: partial", `Quick, begin fun () ->
-      Luv__Helpers.Bit_field.test (fun i -> i) 0b1100 0b0111
+      Luv__Helpers.Bit_field.test (fun i -> i) [0b0100; 0b1000] 0b0111
       |> Alcotest.(check bool) "test" false
     end;
 
