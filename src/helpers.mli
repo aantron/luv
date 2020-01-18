@@ -27,8 +27,7 @@ end
 
 module Buf :
 sig
-  val bigstrings_to_iovecs :
-    Bigstring.t list -> int -> C.Types.Buf.t Ctypes.carray
+  val bigstrings_to_iovecs : Buffer.t list -> int -> C.Types.Buf.t Ctypes.carray
 end
 
 module Bit_field :

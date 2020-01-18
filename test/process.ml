@@ -70,7 +70,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end ignore;
         check_success_result "read" result
-        |> Luv.Bigstring.size
+        |> Luv.Buffer.size
         |> Alcotest.(check int) "byte count" 3;
         finished := true
       end;
@@ -104,7 +104,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end ignore;
         check_success_result "read" result
-        |> Luv.Bigstring.size
+        |> Luv.Buffer.size
         |> Alcotest.(check int) "byte count" 3;
         finished := true
       end;
@@ -128,7 +128,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end ignore;
         check_success_result "read" result
-        |> Luv.Bigstring.size
+        |> Luv.Buffer.size
         |> Alcotest.(check int) "byte count" 3;
         finished := true
       end;
@@ -153,7 +153,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end ignore;
         check_success_result "read" result
-        |> Luv.Bigstring.size
+        |> Luv.Buffer.size
         |> Alcotest.(check int) "byte count" 7;
         finished := true
       end;
@@ -180,7 +180,7 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end ignore;
         check_success_result "read" result
-        |> Luv.Bigstring.size
+        |> Luv.Buffer.size
         |> Alcotest.(check int) "byte count" 7;
         finished := true
       end;
@@ -244,8 +244,8 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end ignore;
         let data = check_success_result "read" result in
-        Luv.Bigstring.sub data ~offset:0 ~length:(Luv.Bigstring.size data - 1)
-        |> Luv.Bigstring.to_string
+        Luv.Buffer.sub data ~offset:0 ~length:(Luv.Buffer.size data - 1)
+        |> Luv.Buffer.to_string
         |> Alcotest.(check string) "data" child_working_directory;
         finished := true
       end;
@@ -271,8 +271,8 @@ let tests = [
       Luv.Stream.read_start parent_end begin fun result ->
         Luv.Handle.close parent_end ignore;
         let data = check_success_result "read" result in
-        Luv.Bigstring.sub data ~offset:0 ~length:(Luv.Bigstring.size data - 1)
-        |> Luv.Bigstring.to_string
+        Luv.Buffer.sub data ~offset:0 ~length:(Luv.Buffer.size data - 1)
+        |> Luv.Buffer.to_string
         |> Alcotest.(check string) "data" parent_working_directory;
         finished := true
       end;

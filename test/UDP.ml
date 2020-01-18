@@ -45,9 +45,8 @@ let expect ?(buffer_not_used = false) receiver expected_data k =
       if flags <> [] then
         Alcotest.fail "unexpected partial recv";
       Alcotest.(check int) "length"
-        (String.length expected_data) (Luv.Bigstring.size buffer);
-      Alcotest.(check string) "data"
-        expected_data Luv.Bigstring.(to_string buffer)
+        (String.length expected_data) (Luv.Buffer.size buffer);
+      Alcotest.(check string) "data" expected_data Luv.Buffer.(to_string buffer)
     end;
     Luv.UDP.recv_stop receiver |> check_success_result "recv_stop";
     k ()
@@ -85,7 +84,7 @@ let tests = [
           end
         ~sender_logic:
           begin fun sender address ->
-            let buffer = Luv.Bigstring.from_string "foo" in
+            let buffer = Luv.Buffer.from_string "foo" in
             Luv.UDP.send sender [buffer] address begin fun result ->
               check_success_result "send" result;
               Luv.Handle.close sender ignore;
@@ -111,7 +110,7 @@ let tests = [
           end
         ~sender_logic:
           begin fun sender address ->
-            Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
+            Luv.UDP.try_send sender [Luv.Buffer.from_string "foo"] address
             |> check_success_result "try_send";
             Luv.Handle.close sender ignore;
             sender_finished := true
@@ -130,7 +129,7 @@ let tests = [
             end
           ~sender_logic:
             begin fun sender address ->
-              let buffer = Luv.Bigstring.from_string "foo" in
+              let buffer = Luv.Buffer.from_string "foo" in
               Luv.UDP.send sender [buffer] address begin fun result ->
                 check_success_result "send" result;
                 Luv.Handle.close sender ignore;
@@ -152,7 +151,7 @@ let tests = [
             end
           ~sender_logic:
             begin fun sender address ->
-              Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
+              Luv.UDP.try_send sender [Luv.Buffer.from_string "foo"] address
               |> check_success_result "try_send";
               Luv.Handle.close sender ignore
             end
@@ -169,7 +168,7 @@ let tests = [
           end
         ~sender_logic:
           begin fun sender address ->
-            Luv.UDP.try_send sender [Luv.Bigstring.from_string ""] address
+            Luv.UDP.try_send sender [Luv.Buffer.from_string ""] address
             |> check_success_result "try_send";
             Luv.Handle.close sender ignore
           end
@@ -187,7 +186,7 @@ let tests = [
           end
         ~sender_logic:
           begin fun sender address ->
-            Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
+            Luv.UDP.try_send sender [Luv.Buffer.from_string "foo"] address
             |> check_success_result "try_send";
             Luv.Handle.close sender ignore
           end
@@ -221,7 +220,7 @@ let tests = [
                 Luv.Sockaddr.(ipv4 group (port address))
                 |> check_success_result "group address"
               in
-              Luv.UDP.try_send sender [Luv.Bigstring.from_string "foo"] address
+              Luv.UDP.try_send sender [Luv.Buffer.from_string "foo"] address
               |> check_success_result "try_send";
               Luv.Handle.close sender ignore;
               sender_finished := true
@@ -302,7 +301,7 @@ let tests = [
           begin fun sender address ->
             Luv.UDP.Connected.connect sender address
             |> check_success_result "connect";
-            Luv.UDP.Connected.send sender [Luv.Bigstring.from_string "foo"]
+            Luv.UDP.Connected.send sender [Luv.Buffer.from_string "foo"]
                 begin fun result ->
               check_success_result "send" result;
               Luv.Handle.close sender ignore;
@@ -330,7 +329,7 @@ let tests = [
           begin fun sender address ->
             Luv.UDP.Connected.connect sender address
             |> check_success_result "connect";
-            Luv.UDP.Connected.try_send sender [Luv.Bigstring.from_string "foo"]
+            Luv.UDP.Connected.try_send sender [Luv.Buffer.from_string "foo"]
             |> check_success_result "try_send";
             Luv.Handle.close sender ignore;
             sender_finished := true

@@ -133,7 +133,7 @@ let tests = [
           begin fun server client ->
             Luv.Stream.read_start client begin fun result ->
               check_success_result "read_start" result
-              |> Luv.Bigstring.to_string
+              |> Luv.Buffer.to_string
               |> Alcotest.(check string) "data" "foo";
 
               Luv.Handle.close client ignore;
@@ -144,8 +144,8 @@ let tests = [
           end
         ~client_logic:
           begin fun client ->
-            let buffer1 = Luv.Bigstring.from_string "fo" in
-            let buffer2 = Luv.Bigstring.from_string "o" in
+            let buffer1 = Luv.Buffer.from_string "fo" in
+            let buffer2 = Luv.Buffer.from_string "o" in
 
             Luv.Stream.write client [buffer1; buffer2] begin fun result count ->
               check_success_result "write" result;
@@ -180,7 +180,7 @@ let tests = [
         Luv.Stream.read_stop ipc_1 |> check_success_result "read_stop";
 
         check_success_result "read_start" result
-        |> Luv.Bigstring.size
+        |> Luv.Buffer.size
         |> Alcotest.(check int) "read byte count" 1;
 
         begin match Luv.Pipe.receive_handle ipc_1 with
@@ -188,7 +188,7 @@ let tests = [
           let received =
             Luv.Pipe.init () |> check_success_result "init received" in
           accept received |> check_success_result "handle accept";
-          let buffer = Luv.Bigstring.from_string "x" in
+          let buffer = Luv.Buffer.from_string "x" in
           Luv.Stream.try_write received [buffer]
           |> check_success_result "try_write"
           |> Alcotest.(check int) "write byte count" 1;
@@ -200,7 +200,7 @@ let tests = [
         end
       end;
 
-      let buffer = Luv.Bigstring.create 1 in
+      let buffer = Luv.Buffer.create 1 in
       Luv.Stream.write ipc_2 [buffer] ~send_handle:passed_1
           begin fun result count ->
 
@@ -213,7 +213,7 @@ let tests = [
       Luv.Stream.read_start passed_2 begin fun result ->
         Luv.Stream.read_stop passed_2 |> check_success_result "read_stop";
         check_success_result "read_start" result
-        |> Luv.Bigstring.to_string
+        |> Luv.Buffer.to_string
         |> Alcotest.(check string) "data" "x";
         did_read := true
       end;

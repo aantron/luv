@@ -35,12 +35,12 @@ val set_ttl : t -> int -> (unit, Error.t) Result.result
 (* DOC The write is always full. *)
 val send :
   t ->
-  Bigstring.t list ->
+  Buffer.t list ->
   Misc.Sockaddr.t ->
   ((unit, Error.t) Result.result -> unit) ->
     unit
 val try_send :
-  t -> Bigstring.t list -> Misc.Sockaddr.t -> (unit, Error.t) Result.result
+  t -> Buffer.t list -> Misc.Sockaddr.t -> (unit, Error.t) Result.result
 
 module Recv_flag :
 sig
@@ -50,10 +50,10 @@ sig
 end
 
 val recv_start :
-  ?allocate:(int -> Bigstring.t) ->
+  ?allocate:(int -> Buffer.t) ->
   ?buffer_not_used:(unit -> unit) ->
   t ->
-  ((Bigstring.t * Misc.Sockaddr.t * Recv_flag.t list, Error.t) Result.result ->
+  ((Buffer.t * Misc.Sockaddr.t * Recv_flag.t list, Error.t) Result.result ->
     unit) ->
     unit
 
@@ -67,6 +67,6 @@ sig
   val disconnect : t -> (unit, Error.t) Result.result
   val getpeername : t -> (Misc.Sockaddr.t, Error.t) Result.result
   val send :
-    t -> Bigstring.t list -> ((unit, Error.t) Result.result -> unit) -> unit
-  val try_send : t -> Bigstring.t list -> (unit, Error.t) Result.result
+    t -> Buffer.t list -> ((unit, Error.t) Result.result -> unit) -> unit
+  val try_send : t -> Buffer.t list -> (unit, Error.t) Result.result
 end

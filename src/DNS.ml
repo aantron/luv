@@ -178,11 +178,11 @@ struct
         array1 field_length Bigarray.Char (request |-> field'))
     in
     let rec find_terminator index =
-      if Bigstring.unsafe_get bigstring index = '\000' then index
+      if Buffer.unsafe_get bigstring index = '\000' then index
       else find_terminator (index + 1)
     in
-    Bigstring.sub bigstring ~offset:0 ~length:(find_terminator 0)
-    |> Bigstring.to_string
+    Buffer.sub bigstring ~offset:0 ~length:(find_terminator 0)
+    |> Buffer.to_string
 
   let getnameinfo_trampoline =
     C.Functions.DNS.Getnameinfo.get_trampoline ()

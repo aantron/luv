@@ -228,7 +228,7 @@ val read :
   ?request:Request.t ->
   ?offset:int64 ->
   t ->
-  Bigstring.t list ->
+  Buffer.t list ->
   ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
     unit
 (** Reads from the given file.
@@ -244,8 +244,8 @@ val read :
     If you have a buffer a ready, but would like to read less bytes than the
     length of the buffer, use
     {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Bigarray.Array1.html#VALsub}
-    [Bigarray.Array1.sub]} or {!Luv.Bigstring.sub} to create a shorter view of
-    the buffer.
+    [Bigarray.Array1.sub]} or {!Luv.Buffer.sub} to create a shorter view of the
+    buffer.
 
     If the [?offset] argument is not specified, the read is done at the current
     offset into the file, and the file offset is updated. Otherwise, a
@@ -258,7 +258,7 @@ val write :
   ?request:Request.t ->
   ?offset:int64 ->
   t ->
-  Bigstring.t list ->
+  Buffer.t list ->
   ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
     unit
 (** Writes to the given file.
@@ -849,12 +849,12 @@ sig
   (** Synchronous version of {!Luv.File.close}. *)
 
   val read :
-    ?offset:int64 -> t -> Bigstring.t list ->
+    ?offset:int64 -> t -> Buffer.t list ->
       (Unsigned.Size_t.t, Error.t) Result.result
   (** Synchronous version of {!Luv.File.read}. *)
 
   val write :
-    ?offset:int64 -> t -> Bigstring.t list ->
+    ?offset:int64 -> t -> Buffer.t list ->
       (Unsigned.Size_t.t, Error.t) Result.result
   (** Synchronous version of {!Luv.File.write}. *)
 

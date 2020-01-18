@@ -70,7 +70,7 @@ let () =
     let request =
       Printf.sprintf "GET %s HTTP/1.1\r\nConnection: close\r\n\r\n" path in
     let%lwt result, written =
-      Luv.Lwt.Stream.write socket [Luv.Bigstring.from_string request] in
+      Luv.Lwt.Stream.write socket [Luv.Buffer.from_string request] in
     begin match result with
     | Result.Ok () -> ()
     | Result.Error error ->
@@ -89,7 +89,7 @@ let () =
     Luv.Stream.read_start socket begin fun result ->
       match result with
       | Result.Ok buffer ->
-        print_string (Luv.Bigstring.to_string buffer)
+        print_string (Luv.Buffer.to_string buffer)
       | Result.Error `EOF ->
         Luv.Handle.close socket ignore
       | Result.Error error ->

@@ -70,7 +70,7 @@ let () = {
 
       /* Write the GET request. */
 
-      Luv.Promise.Stream.write(socket, [Luv.Bigstring.from_string(request)])
+      Luv.Promise.Stream.write(socket, [Luv.Buffer.from_string(request)])
     })
     ->Promise.get(((result, written)) => {
       switch (result) {
@@ -91,7 +91,7 @@ let () = {
       Luv.Stream.read_start(socket, result =>
         switch (result) {
         | Result.Ok(buffer) =>
-          print_string(Luv.Bigstring.to_string(buffer))
+          print_string(Luv.Buffer.to_string(buffer))
         | Result.Error(`EOF) =>
           Luv.Handle.close(socket, ignore)
         | Result.Error(error) =>

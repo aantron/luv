@@ -147,7 +147,7 @@ let recv_trampoline =
   C.Functions.UDP.get_recv_trampoline ()
 
 let recv_start
-    ?(allocate = Bigstring.create) ?(buffer_not_used = ignore) udp callback =
+    ?(allocate = Buffer.create) ?(buffer_not_used = ignore) udp callback =
 
   let last_allocated_buffer = ref None in
 
@@ -168,7 +168,7 @@ let recv_start
         | Some buffer -> buffer
         | None -> assert false
       in
-      let buffer = Bigstring.sub buffer ~offset:0 ~length in
+      let buffer = Buffer.sub buffer ~offset:0 ~length in
       let sockaddr =
         sockaddr
         |> Ctypes.ptr_of_raw_address

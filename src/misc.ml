@@ -560,7 +560,7 @@ struct
           (Loop.or_default loop)
           request
           Ctypes.(bigarray_start array1 buffer)
-          (Unsigned.Size_t.of_int (Bigstring.size buffer))
+          (Unsigned.Size_t.of_int (Buffer.size buffer))
           Unsigned.UInt.zero
           trampoline
       in
@@ -583,7 +583,7 @@ struct
         Ctypes.(from_voidp C.Types.Loop.t null)
         Ctypes.(from_voidp C.Types.Random.Request.t null)
         Ctypes.(bigarray_start array1 buffer)
-        (Unsigned.Size_t.of_int (Bigstring.size buffer))
+        (Unsigned.Size_t.of_int (Buffer.size buffer))
         Unsigned.UInt.zero
         null_callback
       |> Error.to_result ()

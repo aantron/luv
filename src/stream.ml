@@ -52,7 +52,7 @@ let read_trampoline =
   C.Functions.Stream.get_read_trampoline ()
 
 (* DOC Document memory management of this function. *)
-let read_start ?(allocate = Bigstring.create) stream callback =
+let read_start ?(allocate = Buffer.create) stream callback =
   let last_allocated_buffer = ref None in
 
   let wrapped_callback = Error.catch_exceptions callback in
@@ -66,7 +66,7 @@ let read_start ?(allocate = Bigstring.create) stream callback =
           | None -> assert false
         in
         last_allocated_buffer := None;
-        Result.Ok (Bigstring.sub buffer ~offset:0 ~length)
+        Result.Ok (Buffer.sub buffer ~offset:0 ~length)
       end
       else begin
         last_allocated_buffer := None;
@@ -101,7 +101,7 @@ let write_trampoline =
 (* DOC send_handle must remain open during the operation. *)
 let write ?send_handle stream buffers callback =
   let count = List.length buffers in
-  let bytes = Bigstring.List.total_size buffers in
+  let bytes = Buffer.List.total_size buffers in
   let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
 
   let request = Request.allocate C.Types.Stream.Write_request.t in

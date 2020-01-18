@@ -31,14 +31,14 @@ sig
         ((unit, Error.t) Result.result) promise
 
     val read :
-      ?allocate:(int -> Bigstring.t) ->
+      ?allocate:(int -> Buffer.t) ->
       _ t ->
-        (Bigstring.t, Error.t) Result.result promise
+        (Buffer.t, Error.t) Result.result promise
 
     val write :
       ?send_handle:[< `TCP | `Pipe ] t ->
       _ t ->
-      Bigstring.t list ->
+      Buffer.t list ->
         ((unit, Error.t) Result.result * int) promise
   end
 
@@ -73,7 +73,7 @@ sig
       ?request:Request.t ->
       ?offset:int64 ->
       t ->
-      Bigstring.t list ->
+      Buffer.t list ->
         ((Unsigned.Size_t.t, Error.t) Result.result) promise
   end
 

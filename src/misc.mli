@@ -208,12 +208,11 @@ end
 module Random :
 sig
   val random :
-    ?loop:Loop.t -> Bigstring.t -> ((unit, Error.t) Result.result -> unit) ->
-      unit
+    ?loop:Loop.t -> Buffer.t -> ((unit, Error.t) Result.result -> unit) -> unit
 
   module Sync :
   sig
-    val random : Bigstring.t -> (unit, Error.t) Result.result
+    val random : Buffer.t -> (unit, Error.t) Result.result
   end
 end
 

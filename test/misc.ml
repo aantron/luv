@@ -44,10 +44,10 @@ let tests = [
   "random", [
     "async", `Quick, begin fun () ->
       let content = String.make 16 'a' in
-      let buffer = Luv.Bigstring.from_string content in
+      let buffer = Luv.Buffer.from_string content in
       Luv.Random.random buffer begin fun result ->
         check_success_result "random" result;
-        if Luv.Bigstring.to_string buffer = content then
+        if Luv.Buffer.to_string buffer = content then
           Alcotest.fail "buffer contents"
       end;
       run ()
@@ -55,10 +55,10 @@ let tests = [
 
     "sync", `Quick, begin fun () ->
       let content = String.make 16 'a' in
-      let buffer = Luv.Bigstring.from_string content in
+      let buffer = Luv.Buffer.from_string content in
       Luv.Random.Sync.random buffer
       |> check_success_result "random";
-      if Luv.Bigstring.to_string buffer = content then
+      if Luv.Buffer.to_string buffer = content then
         Alcotest.fail "buffer contents"
     end;
   ];

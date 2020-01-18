@@ -227,7 +227,7 @@ let tests = [
           begin fun server client ->
             Luv.Stream.read_start client begin fun result ->
               check_success_result "read_start" result
-              |> Luv.Bigstring.to_string
+              |> Luv.Buffer.to_string
               |> Alcotest.(check string) "data" "foo";
 
               Luv.Handle.close client ignore;
@@ -238,9 +238,9 @@ let tests = [
           end
         ~client_logic:
           begin fun client _address ->
-            let buffer1 = Luv.Bigstring.from_string "fo" in
-            let buffer2 = Luv.Bigstring.from_string "xoy" in
-            let buffer3 = Luv.Bigstring.sub buffer2 ~offset:1 ~length:1 in
+            let buffer1 = Luv.Buffer.from_string "fo" in
+            let buffer2 = Luv.Buffer.from_string "xoy" in
+            let buffer3 = Luv.Buffer.sub buffer2 ~offset:1 ~length:1 in
 
             Gc.finalise (fun _ -> buffer1_finalized := true) buffer1;
             Gc.finalise (fun _ -> buffer2_finalized := true) buffer2;
@@ -305,7 +305,7 @@ let tests = [
             end
           ~client_logic:
             begin fun client _address ->
-              let buffer = Luv.Bigstring.from_string "f" in
+              let buffer = Luv.Buffer.from_string "f" in
               Luv.Stream.write client [buffer] begin fun result count ->
                 check_success_result "write" result;
                 Alcotest.(check int) "count" 1 count;
@@ -328,7 +328,7 @@ let tests = [
             end
           ~client_logic:
             begin fun client _address ->
-              let buffer = Luv.Bigstring.from_string "f" in
+              let buffer = Luv.Buffer.from_string "f" in
               Luv.Stream.write client [buffer] begin fun result ->
                 check_success_result "write" result;
                 Luv.Handle.close client ignore;
@@ -354,8 +354,8 @@ let tests = [
           end
         ~client_logic:
           begin fun client _address ->
-            let buffer1 = Luv.Bigstring.from_string "fo" in
-            let buffer2 = Luv.Bigstring.from_string "o" in
+            let buffer1 = Luv.Buffer.from_string "fo" in
+            let buffer2 = Luv.Buffer.from_string "o" in
 
             Luv.Stream.try_write client [buffer1; buffer2]
             |> check_success_result "try_write"

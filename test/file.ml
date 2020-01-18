@@ -81,8 +81,8 @@ let tests = [
       Luv.File.open_ "read_test_input" [`RDONLY] begin fun result ->
         let file = check_success_result "file" result in
 
-        let buffer = Luv.Bigstring.create 4 in
-        Luv.Bigstring.fill buffer '\000';
+        let buffer = Luv.Buffer.create 4 in
+        Luv.Buffer.fill buffer '\000';
 
         Luv.File.read file [buffer] begin fun result ->
           let length =
@@ -91,8 +91,8 @@ let tests = [
           in
           Alcotest.(check int) "byte count" 4 length;
 
-          Luv.Bigstring.sub buffer ~offset:0 ~length
-          |> Luv.Bigstring.to_string
+          Luv.Buffer.sub buffer ~offset:0 ~length
+          |> Luv.Buffer.to_string
           |> Alcotest.(check string) "data" "open";
 
           Luv.File.close file begin fun result ->
@@ -113,8 +113,8 @@ let tests = [
         |> check_success_result "open_"
       in
 
-      let buffer = Luv.Bigstring.create 4 in
-      Luv.Bigstring.fill buffer '\000';
+      let buffer = Luv.Buffer.create 4 in
+      Luv.Buffer.fill buffer '\000';
 
       let length =
         Luv.File.Sync.read file [buffer]
@@ -124,8 +124,8 @@ let tests = [
 
       Alcotest.(check int) "byte count" 4 length;
 
-      Luv.Bigstring.sub buffer ~offset:0 ~length
-      |> Luv.Bigstring.to_string
+      Luv.Buffer.sub buffer ~offset:0 ~length
+      |> Luv.Buffer.to_string
       |> Alcotest.(check string) "data" "open";
 
       Luv.File.Sync.close file
@@ -219,7 +219,7 @@ let tests = [
 
     "read failure: async", `Quick, begin fun () ->
       with_file_for_reading ~to_fail:true begin fun file ->
-        let buffer = Luv.Bigstring.create 1 in
+        let buffer = Luv.Buffer.create 1 in
 
         Luv.File.read file [buffer] begin fun result ->
           check_error_result "byte_count" `EBADF result
@@ -231,7 +231,7 @@ let tests = [
 
     "read failure: sync", `Quick, begin fun () ->
       with_file_for_reading ~to_fail:true begin fun file ->
-        let buffer = Luv.Bigstring.create 1 in
+        let buffer = Luv.Buffer.create 1 in
 
         Luv.File.Sync.read file [buffer]
         |> check_error_result "read" `EBADF
@@ -240,7 +240,7 @@ let tests = [
 
     "read leak: async", `Quick, begin fun () ->
       with_file_for_reading begin fun file ->
-        let buffer = Luv.Bigstring.create 1 in
+        let buffer = Luv.Buffer.create 1 in
 
         no_memory_leak begin fun _ ->
           let finished = ref false in
@@ -257,7 +257,7 @@ let tests = [
 
     "read leak: sync", `Quick, begin fun () ->
       with_file_for_reading begin fun file ->
-        let buffer = Luv.Bigstring.create 1 in
+        let buffer = Luv.Buffer.create 1 in
 
         no_memory_leak begin fun _ ->
           Luv.File.Sync.read file [buffer]
@@ -281,7 +281,7 @@ let tests = [
         Gc.full_major ();
 
         let called = ref false in
-        let buffer = Luv.Bigstring.from_string "\000" in
+        let buffer = Luv.Buffer.from_string "\000" in
 
         let finalized = ref false in
         Gc.finalise (fun _ -> finalized := true) buffer;
@@ -303,7 +303,7 @@ let tests = [
 
     "write: async", `Quick, begin fun () ->
       with_file_for_writing begin fun file ->
-        let buffer = Luv.Bigstring.from_string "ope" in
+        let buffer = Luv.Buffer.from_string "ope" in
 
         Luv.File.write file [buffer] begin fun result ->
           let byte_count = check_success_result "write result" result in
@@ -317,7 +317,7 @@ let tests = [
 
     "write: sync", `Quick, begin fun () ->
       with_file_for_writing begin fun file ->
-        let buffer = Luv.Bigstring.from_string "ope" in
+        let buffer = Luv.Buffer.from_string "ope" in
 
         Luv.File.Sync.write file [buffer]
         |> check_success_result "write"
@@ -857,7 +857,7 @@ let tests = [
     end;
 
     "ftruncate: async", `Quick, begin fun () ->
-      let buffer = Luv.Bigstring.from_string "open" in
+      let buffer = Luv.Buffer.from_string "open" in
 
       with_file_for_writing begin fun file ->
         Luv.File.Sync.write file [buffer]
@@ -871,7 +871,7 @@ let tests = [
     end;
 
     "ftruncate: sync", `Quick, begin fun () ->
-      let buffer = Luv.Bigstring.from_string "open" in
+      let buffer = Luv.Buffer.from_string "open" in
 
       with_file_for_writing begin fun file ->
         Luv.File.Sync.write file [buffer]

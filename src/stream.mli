@@ -14,9 +14,9 @@ val accept : server:'kind t -> client:'kind t -> (unit, Error.t) Result.result
 (* DOC Document how to use allocate and read_stop together for in-place
    reading into a single buffer. *)
 val read_start :
-  ?allocate:(int -> Bigstring.t) ->
+  ?allocate:(int -> Buffer.t) ->
   _ t ->
-  ((Bigstring.t, Error.t) Result.result -> unit) ->
+  ((Buffer.t, Error.t) Result.result -> unit) ->
     unit
 val read_stop : _ t -> (unit, Error.t) Result.result
 
@@ -25,11 +25,11 @@ val read_stop : _ t -> (unit, Error.t) Result.result
 val write :
   ?send_handle:[< `TCP | `Pipe ] t ->
   _ t ->
-  Bigstring.t list ->
+  Buffer.t list ->
   ((unit, Error.t) Result.result -> int -> unit) ->
     unit
 
-val try_write : _ t -> Bigstring.t list -> (int, Error.t) Result.result
+val try_write : _ t -> Buffer.t list -> (int, Error.t) Result.result
 val is_readable : _ t -> bool
 val is_writable : _ t -> bool
 val set_blocking : _ t -> bool -> (unit, Error.t) Result.result
