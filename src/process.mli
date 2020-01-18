@@ -45,9 +45,9 @@ val spawn :
   ?windows_hide_gui:bool ->
   string ->
   string list ->
-    (t, Error.t) Result.result
+    (t, Error.t) result
 
 val disable_stdio_inheritance : unit -> unit
-val kill : t -> int -> (unit, Error.t) Result.result
-val kill_pid : pid:int -> int -> (unit, Error.t) Result.result
+val kill : t -> int -> (unit, Error.t) result
+val kill_pid : pid:int -> int -> (unit, Error.t) result
 val pid : t -> int

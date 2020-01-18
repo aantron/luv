@@ -15,8 +15,8 @@ sig
   ]
 end
 
-val init : ?loop:Loop.t -> int -> (t, Error.t) Result.result
-val init_socket : ?loop:Loop.t -> Misc.Os_socket.t -> (t, Error.t) Result.result
+val init : ?loop:Loop.t -> int -> (t, Error.t) result
+val init_socket : ?loop:Loop.t -> Misc.Os_socket.t -> (t, Error.t) result
 val start :
-  t -> Event.t list -> ((Event.t list, Error.t) Result.result -> unit) -> unit
-val stop : t -> (unit, Error.t) Result.result
+  t -> Event.t list -> ((Event.t list, Error.t) result -> unit) -> unit
+val stop : t -> (unit, Error.t) result

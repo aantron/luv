@@ -19,7 +19,7 @@ sig
       ?loop:Loop.t ->
       ?call_update_time:bool ->
       int ->
-        ((unit, Error.t) Result.result) promise
+        ((unit, Error.t) result) promise
   end
 
   module Stream :
@@ -28,18 +28,18 @@ sig
 
     val shutdown :
       _ t ->
-        ((unit, Error.t) Result.result) promise
+        ((unit, Error.t) result) promise
 
     val read :
       ?allocate:(int -> Buffer.t) ->
       _ t ->
-        (Buffer.t, Error.t) Result.result promise
+        (Buffer.t, Error.t) result promise
 
     val write :
       ?send_handle:[< `TCP | `Pipe ] t ->
       _ t ->
       Buffer.t list ->
-        ((unit, Error.t) Result.result * int) promise
+        ((unit, Error.t) result * int) promise
   end
 
   module TCP :
@@ -47,7 +47,7 @@ sig
     val connect :
       TCP.t ->
       Misc.Sockaddr.t ->
-        ((unit, Error.t) Result.result) promise
+        ((unit, Error.t) result) promise
   end
 
   module File :
@@ -60,13 +60,13 @@ sig
       ?mode:Mode.t list ->
       string ->
       Open_flag.t list ->
-        ((t, Error.t) Result.result) promise
+        ((t, Error.t) result) promise
 
     val close :
       ?loop:Loop.t ->
       ?request:Request.t ->
       t ->
-        ((unit, Error.t) Result.result) promise
+        ((unit, Error.t) result) promise
 
     val read :
       ?loop:Loop.t ->
@@ -74,7 +74,7 @@ sig
       ?offset:int64 ->
       t ->
       Buffer.t list ->
-        ((Unsigned.Size_t.t, Error.t) Result.result) promise
+        ((Unsigned.Size_t.t, Error.t) result) promise
   end
 
   module DNS :
@@ -91,13 +91,13 @@ sig
       ?node:string ->
       ?service:string ->
       unit ->
-        ((Addr_info.t list, Error.t) Result.result) promise
+        ((Addr_info.t list, Error.t) result) promise
 
     val getnameinfo :
       ?loop:Loop.t ->
       ?request:Name_info.Request.t ->
       ?flags:Name_info.Flag.t list ->
       Misc.Sockaddr.t ->
-        ((string * string, Error.t) Result.result) promise
+        ((string * string, Error.t) result) promise
   end
 end

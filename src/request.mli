@@ -7,8 +7,7 @@ type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
 
 (* TODO Test with a concrete type. *)
 val cancel :
-  [< `File | `Getaddrinfo | `Getnameinfo | `Work ] t ->
-    (unit, Error.t) Result.result
+  [< `File | `Getaddrinfo | `Getnameinfo | `Work ] t -> (unit, Error.t) result
 
 (**/**)
 

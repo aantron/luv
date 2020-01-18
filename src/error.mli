@@ -189,9 +189,9 @@ val set_on_unhandled_exception : (exn -> unit) -> unit
 (**/**)
 
 val from_c : int -> t
-val result_from_c : int -> (_, t) Result.result
-val to_result : 'a -> int -> ('a, t) Result.result
-val to_result_lazy : (unit -> 'a) -> int -> ('a, t) Result.result
+val result_from_c : int -> (_, t) result
+val to_result : 'a -> int -> ('a, t) result
+val to_result_lazy : (unit -> 'a) -> int -> ('a, t) result
 val clamp : int -> int
 
 (* TODO Don't catch exceptions in synchronous callbacks. *)

@@ -201,7 +201,7 @@ val open_ :
   ?mode:Mode.t list ->
   string ->
   Open_flag.t list ->
-  ((t, Error.t) Result.result -> unit) ->
+  ((t, Error.t) result -> unit) ->
     unit
 (** Opens the file at the given path.
 
@@ -215,7 +215,7 @@ val close :
   ?loop:Loop.t ->
   ?request:Request.t ->
   t ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Closes the given file.
 
@@ -229,7 +229,7 @@ val read :
   ?offset:int64 ->
   t ->
   Buffer.t list ->
-  ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
+  ((Unsigned.Size_t.t, Error.t) result -> unit) ->
     unit
 (** Reads from the given file.
 
@@ -259,7 +259,7 @@ val write :
   ?offset:int64 ->
   t ->
   Buffer.t list ->
-  ((Unsigned.Size_t.t, Error.t) Result.result -> unit) ->
+  ((Unsigned.Size_t.t, Error.t) result -> unit) ->
     unit
 (** Writes to the given file.
 
@@ -278,7 +278,7 @@ val unlink :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Deletes the file at the given path.
 
@@ -291,7 +291,7 @@ val rename :
   ?request:Request.t ->
   string ->
   to_:string ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Moves the file at the given path to the path given by [~to_].
 
@@ -307,7 +307,7 @@ val mkstemp :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((string * t, Error.t) Result.result -> unit) ->
+  ((string * t, Error.t) result -> unit) ->
     unit
 (** Creates a temporary file with name based on the given pattern.
 
@@ -320,7 +320,7 @@ val mkdtemp :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((string, Error.t) Result.result -> unit) ->
+  ((string, Error.t) result -> unit) ->
     unit
 (** Creates a temporary directory with name based on the given pattern.
 
@@ -338,7 +338,7 @@ val mkdir :
   ?request:Request.t ->
   ?mode:Mode.t list ->
   string ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Creates a directory.
 
@@ -352,7 +352,7 @@ val rmdir :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Deletes a directory.
 
@@ -395,7 +395,7 @@ val opendir :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((Dir.t, Error.t) Result.result -> unit) ->
+  ((Dir.t, Error.t) result -> unit) ->
     unit
 (** Opens the directory at the given path for listing.
 
@@ -410,7 +410,7 @@ val closedir :
   ?loop:Loop.t ->
   ?request:Request.t ->
   Dir.t ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Closes the given directory.
 
@@ -424,7 +424,7 @@ val readdir :
   ?request:Request.t ->
   ?number_of_entries:int ->
   Dir.t ->
-  ((Dirent.t array, Error.t) Result.result -> unit) ->
+  ((Dirent.t array, Error.t) result -> unit) ->
     unit
 (** Retrieves a directory entry.
 
@@ -443,7 +443,7 @@ val scandir :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((Directory_scan.t, Error.t) Result.result -> unit) ->
+  ((Directory_scan.t, Error.t) result -> unit) ->
     unit
 (** Begins directory listing.
 
@@ -508,7 +508,7 @@ val stat :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((Stat.t, Error.t) Result.result -> unit) ->
+  ((Stat.t, Error.t) result -> unit) ->
     unit
 (** Retrieves status information for the file at the given path.
 
@@ -520,7 +520,7 @@ val lstat :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((Stat.t, Error.t) Result.result -> unit) ->
+  ((Stat.t, Error.t) result -> unit) ->
     unit
 (** Like {!Luv.File.stat}, but does not dereference symlinks.
 
@@ -532,7 +532,7 @@ val fstat :
   ?loop:Loop.t ->
   ?request:Request.t ->
   t ->
-  ((Stat.t, Error.t) Result.result -> unit) ->
+  ((Stat.t, Error.t) result -> unit) ->
     unit
 (** Like {!Luv.File.stat}, but takes a file instead of a path.
 
@@ -564,7 +564,7 @@ val statfs :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((Statfs.t, Error.t) Result.result -> unit) ->
+  ((Statfs.t, Error.t) result -> unit) ->
     unit
 (** Retrieves status information for the file system containing the given path.
 
@@ -580,7 +580,7 @@ val fsync :
   ?loop:Loop.t ->
   ?request:Request.t ->
   t ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Flushes file changes to storage.
 
@@ -592,7 +592,7 @@ val fdatasync :
   ?loop:Loop.t ->
   ?request:Request.t ->
   t ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Like {!Luv.File.fsync}, but may omit some metadata.
 
@@ -610,7 +610,7 @@ val ftruncate :
   ?request:Request.t ->
   t ->
   int64 ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Truncates the given file to the given length.
 
@@ -627,7 +627,7 @@ val copyfile :
   ?ficlone_force:bool ->
   string ->
   to_:string ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Copies the file at the given path to the path given by [~to_].
 
@@ -641,7 +641,7 @@ val sendfile :
   to_:t ->
   offset:int64 ->
   Unsigned.Size_t.t ->
-  ((Unsigned.Size_t.t, Error.t) Result.result -> unit)  ->
+  ((Unsigned.Size_t.t, Error.t) result -> unit)  ->
     unit
 (** Transfers data between file descriptors.
 
@@ -671,7 +671,7 @@ val access :
   ?request:Request.t ->
   string ->
   Access_flag.t list ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Checks whether the calling process can access the file at the given path.
 
@@ -685,7 +685,7 @@ val chmod :
   ?request:Request.t ->
   string ->
   Mode.t list ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Changes permissions of the file at the given path.
 
@@ -699,7 +699,7 @@ val fchmod :
   ?request:Request.t ->
   t ->
   Mode.t list ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Like {!Luv.File.chmod}, but takes a file instead of a path.
 
@@ -718,7 +718,7 @@ val utime :
   string ->
   atime:float ->
   mtime:float ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Sets timestamps of the file at the given path.
 
@@ -732,7 +732,7 @@ val futime :
   t ->
   atime:float ->
   mtime:float ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Like {!Luv.File.utime}, but takes a file instead of a path.
 
@@ -749,7 +749,7 @@ val link :
   ?request:Request.t ->
   string ->
   link:string ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Hardlinks a file at the location given by [~link].
 
@@ -764,7 +764,7 @@ val symlink :
   ?junction:bool ->
   string ->
   link:string ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Symlinks a file at the location given by [~link].
 
@@ -780,7 +780,7 @@ val readlink :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((string, Error.t) Result.result -> unit) ->
+  ((string, Error.t) result -> unit) ->
     unit
 (** Reads the target path of a symlink.
 
@@ -793,7 +793,7 @@ val realpath :
   ?loop:Loop.t ->
   ?request:Request.t ->
   string ->
-  ((string, Error.t) Result.result -> unit) ->
+  ((string, Error.t) result -> unit) ->
     unit
 (** Resolves a real absolute path to the given file.
 
@@ -812,7 +812,7 @@ val chown :
   string ->
   uid:int ->
   gid:int ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Changes owneship of the file at the given path.
 
@@ -827,7 +827,7 @@ val lchown :
   string ->
   uid:int ->
   gid:int ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Like {!Luv.File.chown}, but does not dereference symlinks.
 
@@ -842,7 +842,7 @@ val fchown :
   t ->
   uid:int ->
   gid:int ->
-  ((unit, Error.t) Result.result -> unit) ->
+  ((unit, Error.t) result -> unit) ->
     unit
 (** Like {!Luv.File.chown}, but takes a file instead of a path.
 
@@ -859,107 +859,107 @@ module Sync :
 sig
   val open_ :
     ?mode:Mode.t list -> string -> Open_flag.t list ->
-      (t, Error.t) Result.result
+      (t, Error.t) result
   (** Synchronous version of {!Luv.File.open_}. *)
 
   val close :
     t ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.close}. *)
 
   val read :
     ?offset:int64 -> t -> Buffer.t list ->
-      (Unsigned.Size_t.t, Error.t) Result.result
+      (Unsigned.Size_t.t, Error.t) result
   (** Synchronous version of {!Luv.File.read}. *)
 
   val write :
     ?offset:int64 -> t -> Buffer.t list ->
-      (Unsigned.Size_t.t, Error.t) Result.result
+      (Unsigned.Size_t.t, Error.t) result
   (** Synchronous version of {!Luv.File.write}. *)
 
   val unlink :
     string ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.unlink}. *)
 
   val rename :
     string -> to_:string ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.rename}. *)
 
   val mkstemp :
     string ->
-      (string * t, Error.t) Result.result
+      (string * t, Error.t) result
   (** Synchronous version of {!Luv.File.mkstemp}. *)
 
   val mkdtemp :
     string ->
-      (string, Error.t) Result.result
+      (string, Error.t) result
   (** Synchronous version of {!Luv.File.mkdtemp}. *)
 
   val mkdir :
     ?mode:Mode.t list -> string ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.mkdir}. *)
 
   val rmdir :
     string ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.rmdir}. *)
 
   val opendir :
     string ->
-      (Dir.t, Error.t) Result.result
+      (Dir.t, Error.t) result
   (** Synchronous version of {!Luv.File.opendir}. *)
 
   val closedir :
     Dir.t ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.closedir}. *)
 
   val readdir :
     ?number_of_entries:int -> Dir.t ->
-      (Dirent.t array, Error.t) Result.result
+      (Dirent.t array, Error.t) result
   (** Synchronous version of {!Luv.File.readdir}. *)
 
   val scandir :
     string ->
-      (Directory_scan.t, Error.t) Result.result
+      (Directory_scan.t, Error.t) result
   (** Synchronous version of {!Luv.File.scandir}. *)
 
   val stat :
     string ->
-      (Stat.t, Error.t) Result.result
+      (Stat.t, Error.t) result
   (** Synchronous version of {!Luv.File.stat}. *)
 
   val lstat :
     string ->
-      (Stat.t, Error.t) Result.result
+      (Stat.t, Error.t) result
   (** Synchronous version of {!Luv.File.lstat}. *)
 
   val fstat :
     t ->
-      (Stat.t, Error.t) Result.result
+      (Stat.t, Error.t) result
   (** Synchronous version of {!Luv.File.fstat}. *)
 
   val statfs :
     string ->
-      (Statfs.t, Error.t) Result.result
+      (Statfs.t, Error.t) result
   (** Synchronous version of {!Luv.File.statfs}. *)
 
   val fsync :
     t ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.fsync}. *)
 
   val fdatasync :
     t ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.fdatasync}. *)
 
   val ftruncate :
     t -> int64 ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.ftruncate}. *)
 
   val copyfile :
@@ -968,72 +968,72 @@ sig
     ?ficlone_force:bool ->
     string ->
     to_:string ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.copyfile}. *)
 
   val sendfile :
     t -> to_:t -> offset:int64 -> Unsigned.Size_t.t ->
-      (Unsigned.Size_t.t, Error.t) Result.result
+      (Unsigned.Size_t.t, Error.t) result
   (** Synchronous version of {!Luv.File.sendfile}. *)
 
   val access :
     string -> Access_flag.t list ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.access}. *)
 
   val chmod :
     string -> Mode.t list ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.chmod}. *)
 
   val fchmod :
     t -> Mode.t list ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.fchmod}. *)
 
   val utime :
     string -> atime:float -> mtime:float ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.utime}. *)
 
   val futime :
     t -> atime:float -> mtime:float ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.futime}. *)
 
   val link :
     string -> link:string ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.link}. *)
 
   val symlink :
     ?dir:bool -> ?junction:bool -> string -> link:string ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.symlink}. *)
 
   val readlink :
     string ->
-      (string, Error.t) Result.result
+      (string, Error.t) result
   (** Synchronous version of {!Luv.File.readlink}. *)
 
   val realpath :
     string ->
-      (string, Error.t) Result.result
+      (string, Error.t) result
   (** Synchronous version of {!Luv.File.realpath}. *)
 
   val chown :
     string -> uid:int -> gid:int ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.chown}. *)
 
   val lchown :
     string -> uid:int -> gid:int ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.lchown}. *)
 
   val fchown :
     t -> uid:int -> gid:int ->
-      (unit, Error.t) Result.result
+      (unit, Error.t) result
   (** Synchronous version of {!Luv.File.fchown}. *)
 end
 
@@ -1041,8 +1041,8 @@ end
 
 (** {1 Conversions} *)
 
-val get_osfhandle : t -> (Misc.Os_fd.t, Error.t) Result.result
-val open_osfhandle : Misc.Os_fd.t -> (t, Error.t) Result.result
+val get_osfhandle : t -> (Misc.Os_fd.t, Error.t) result
+val open_osfhandle : Misc.Os_fd.t -> (t, Error.t) result
 
 val to_int : t -> int
 (* DOC This is here largely because the Process module is defined by libuv to

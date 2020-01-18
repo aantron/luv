@@ -13,7 +13,7 @@ sig
   ]
 end
 
-val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result
+val init : ?loop:Loop.t -> unit -> (t, Error.t) result
 (* DOC Note this function calls the callback multiple times. *)
 val start :
   ?watch_entry:bool ->
@@ -21,6 +21,6 @@ val start :
   ?recursive:bool ->
   t ->
   string ->
-  ((string * (Event.t list), Error.t) Result.result -> unit) ->
+  ((string * (Event.t list), Error.t) result -> unit) ->
     unit
-val stop : t -> (unit, Error.t) Result.result
+val stop : t -> (unit, Error.t) result

@@ -62,12 +62,12 @@ val default : unit -> t
     {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_default_loop}
     [uv_default_loop]}. *)
 
-val init : unit -> (t, Error.t) Result.result
+val init : unit -> (t, Error.t) result
 (** Creates a new event loop. See
     {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_init}
     [uv_loop_init]}. *)
 
-val close : t -> (unit, Error.t) Result.result
+val close : t -> (unit, Error.t) result
 (** Releases resources associated with an event loop. See
     {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_close}
     [uv_loop_close]}. *)
@@ -89,7 +89,7 @@ sig
 end
 (* TODO Make the signum type abstract. *)
 
-val configure : t -> 'value Option.t -> 'value -> (unit, Error.t) Result.result
+val configure : t -> 'value Option.t -> 'value -> (unit, Error.t) result
 
 val alive : t -> bool
 val stop : t -> unit
@@ -97,7 +97,7 @@ val size : unit -> Unsigned.size_t
 val backend_fd : t -> int
 val backend_timeout : t -> int
 
-val fork : t -> (unit, Error.t) Result.result
+val fork : t -> (unit, Error.t) result
 
 (**/**)
 

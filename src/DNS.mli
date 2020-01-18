@@ -65,7 +65,7 @@ val getaddrinfo :
   ?node:string ->
   ?service:string ->
   unit ->
-  ((Addr_info.t list, Error.t) Result.result -> unit) ->
+  ((Addr_info.t list, Error.t) result -> unit) ->
     unit
 
 val getnameinfo :
@@ -73,5 +73,5 @@ val getnameinfo :
   ?request:Name_info.Request.t ->
   ?flags:Name_info.Flag.t list ->
   Misc.Sockaddr.t ->
-  ((string * string, Error.t) Result.result -> unit) ->
+  ((string * string, Error.t) result -> unit) ->
     unit

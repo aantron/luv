@@ -5,10 +5,10 @@
 
 type t = [ `Signal ] Handle.t
 
-val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result
-val start : t -> int -> (unit -> unit) -> (unit, Error.t) Result.result
-val start_oneshot : t -> int -> (unit -> unit) -> (unit, Error.t) Result.result
-val stop : t -> (unit, Error.t) Result.result
+val init : ?loop:Loop.t -> unit -> (t, Error.t) result
+val start : t -> int -> (unit -> unit) -> (unit, Error.t) result
+val start_oneshot : t -> int -> (unit -> unit) -> (unit, Error.t) result
+val stop : t -> (unit, Error.t) result
 val get_signum : t -> int
 
 (* DOC Explain why these signals are bound specifically: there is emulation on

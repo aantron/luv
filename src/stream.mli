@@ -5,20 +5,20 @@
 
 type 'kind t = [ `Stream of 'kind ] Handle.t
 
-val shutdown : _ t -> ((unit, Error.t) Result.result -> unit) -> unit
+val shutdown : _ t -> ((unit, Error.t) result -> unit) -> unit
 (* DOC If backlog not provided, SOMAXCONN specified *)
 val listen :
-  ?backlog:int -> _ t -> ((unit, Error.t) Result.result -> unit) -> unit
-val accept : server:'kind t -> client:'kind t -> (unit, Error.t) Result.result
+  ?backlog:int -> _ t -> ((unit, Error.t) result -> unit) -> unit
+val accept : server:'kind t -> client:'kind t -> (unit, Error.t) result
 
 (* DOC Document how to use allocate and read_stop together for in-place
    reading into a single buffer. *)
 val read_start :
   ?allocate:(int -> Buffer.t) ->
   _ t ->
-  ((Buffer.t, Error.t) Result.result -> unit) ->
+  ((Buffer.t, Error.t) result -> unit) ->
     unit
-val read_stop : _ t -> (unit, Error.t) Result.result
+val read_stop : _ t -> (unit, Error.t) result
 
 (* DOC how to use Array1.sub to create views into the arrays. *)
 (* DOC What is the int returned in case of error? *)
@@ -26,13 +26,13 @@ val write :
   ?send_handle:[< `TCP | `Pipe ] t ->
   _ t ->
   Buffer.t list ->
-  ((unit, Error.t) Result.result -> int -> unit) ->
+  ((unit, Error.t) result -> int -> unit) ->
     unit
 
-val try_write : _ t -> Buffer.t list -> (int, Error.t) Result.result
+val try_write : _ t -> Buffer.t list -> (int, Error.t) result
 val is_readable : _ t -> bool
 val is_writable : _ t -> bool
-val set_blocking : _ t -> bool -> (unit, Error.t) Result.result
+val set_blocking : _ t -> bool -> (unit, Error.t) result
 
 (**/**)
 

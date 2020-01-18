@@ -9,7 +9,7 @@ module Os_fd :
 sig
   type t = C.Types.Os_fd.t
   (* DOC This fails on Windows sockets. *)
-  val from_unix : Unix.file_descr -> (t, Error.t) Result.result
+  val from_unix : Unix.file_descr -> (t, Error.t) result
   val to_unix : t -> Unix.file_descr
 end
 
@@ -18,7 +18,7 @@ sig
   type t = C.Types.Os_socket.t
   (* DOC This fails on Windows HANDLEs, probably a complement of
      Os_fd.from_unix. *)
-  val from_unix : Unix.file_descr -> (t, Error.t) Result.result
+  val from_unix : Unix.file_descr -> (t, Error.t) result
   val to_unix : t -> Unix.file_descr
 end
 
@@ -57,8 +57,8 @@ module Sockaddr :
 sig
   type t
 
-  val ipv4 : string -> int -> (t, Error.t) Result.result
-  val ipv6 : string -> int -> (t, Error.t) Result.result
+  val ipv4 : string -> int -> (t, Error.t) result
+  val ipv6 : string -> int -> (t, Error.t) result
 
   val to_string : t -> string
   val port : t -> int
@@ -73,20 +73,20 @@ sig
 
   val wrap_c_getter :
     ('handle -> C.Types.Sockaddr.t Ctypes.ptr -> int Ctypes.ptr -> int) ->
-    ('handle -> (t, Error.t) Result.result)
+    ('handle -> (t, Error.t) result)
 end
 
 module Resource :
 sig
-  val uptime : unit -> (float, Error.t) Result.result
+  val uptime : unit -> (float, Error.t) result
   val loadavg : unit -> float * float * float
   val free_memory : unit -> Unsigned.uint64
   val total_memory : unit -> Unsigned.uint64
   val constrained_memory : unit -> Unsigned.uint64 option
-  val getpriority : int -> (int, Error.t) Result.result
-  val setpriority : int -> int -> (unit, Error.t) Result.result
+  val getpriority : int -> (int, Error.t) result
+  val setpriority : int -> int -> (unit, Error.t) result
   val resident_set_memory_size :
-    unit -> (Unsigned.size_t, Error.t) Result.result
+    unit -> (Unsigned.size_t, Error.t) result
 
   type timeval = {
     sec : Signed.Long.t;
@@ -112,7 +112,7 @@ sig
     nivcsw : Unsigned.uint64;
   }
 
-  val rusage : unit -> (rusage, Error.t) Result.result
+  val rusage : unit -> (rusage, Error.t) result
 end
 
 (* TODO Support OS pids. *)
@@ -138,23 +138,23 @@ sig
     times : times;
   }
 
-  val get : unit -> (t list, Error.t) Result.result
+  val get : unit -> (t list, Error.t) result
 end
 
 module Network :
 sig
-  val if_indextoname : int -> (string, Error.t) Result.result
-  val if_indextoiid : int -> (string, Error.t) Result.result
-  val gethostname : unit -> (string, Error.t) Result.result
+  val if_indextoname : int -> (string, Error.t) result
+  val if_indextoiid : int -> (string, Error.t) result
+  val gethostname : unit -> (string, Error.t) result
 end
 
 module Path :
 sig
-  val exepath : unit -> (string, Error.t) Result.result
-  val cwd : unit -> (string, Error.t) Result.result
-  val chdir : string -> (unit, Error.t) Result.result
-  val homedir : unit -> (string, Error.t) Result.result
-  val tmpdir : unit -> (string, Error.t) Result.result
+  val exepath : unit -> (string, Error.t) result
+  val cwd : unit -> (string, Error.t) result
+  val chdir : string -> (unit, Error.t) result
+  val homedir : unit -> (string, Error.t) result
+  val tmpdir : unit -> (string, Error.t) result
 end
 
 module Passwd :
@@ -167,7 +167,7 @@ sig
     homedir : string;
   }
 
-  val get : unit -> (t, Error.t) Result.result
+  val get : unit -> (t, Error.t) result
 end
 
 module Hrtime :
@@ -177,10 +177,10 @@ end
 
 module Env :
 sig
-  val getenv : string -> (string, Error.t) Result.result
-  val setenv : string -> string -> (unit, Error.t) Result.result
-  val unsetenv : string -> (unit, Error.t) Result.result
-  val environ : unit -> ((string * string) list, Error.t) Result.result
+  val getenv : string -> (string, Error.t) result
+  val setenv : string -> string -> (unit, Error.t) result
+  val unsetenv : string -> (unit, Error.t) result
+  val environ : unit -> ((string * string) list, Error.t) result
 end
 
 module System_name :
@@ -192,7 +192,7 @@ sig
     machine : string;
   }
 
-  val uname : unit -> (t, Error.t) Result.result
+  val uname : unit -> (t, Error.t) result
 end
 
 module Time :
@@ -202,17 +202,17 @@ sig
     tv_usec : int32;
   }
 
-  val gettimeofday : unit -> (t, Error.t) Result.result
+  val gettimeofday : unit -> (t, Error.t) result
 end
 
 module Random :
 sig
   val random :
-    ?loop:Loop.t -> Buffer.t -> ((unit, Error.t) Result.result -> unit) -> unit
+    ?loop:Loop.t -> Buffer.t -> ((unit, Error.t) result -> unit) -> unit
 
   module Sync :
   sig
-    val random : Buffer.t -> (unit, Error.t) Result.result
+    val random : Buffer.t -> (unit, Error.t) result
   end
 end
 

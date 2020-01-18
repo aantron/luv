@@ -5,6 +5,6 @@
 
 type t = [ `Check ] Handle.t
 
-val init : ?loop:Loop.t -> unit -> (t, Error.t) Result.result
-val start : t -> (unit -> unit) -> (unit, Error.t) Result.result
-val stop : t -> (unit, Error.t) Result.result
+val init : ?loop:Loop.t -> unit -> (t, Error.t) result
+val start : t -> (unit -> unit) -> (unit, Error.t) result
+val stop : t -> (unit, Error.t) result

@@ -15,7 +15,7 @@ sig
     ?loop:Loop.t ->
     ?request:Request.t ->
     (unit -> unit) ->
-    ((unit, Error.t) Result.result -> unit) ->
+    ((unit, Error.t) result -> unit) ->
       unit
 
   (* DOC The C function should have signature void (*)(void*); *)
@@ -25,7 +25,7 @@ sig
     ?request:Request.t ->
     ?argument:nativeint ->
     nativeint ->
-    ((unit, Error.t) Result.result -> unit) ->
+    ((unit, Error.t) result -> unit) ->
       unit
 
   (* DOC This must be called as early as possible, and there are hard limits on
@@ -38,14 +38,14 @@ type t
 val self : unit -> t
 val equal : t -> t -> bool
 
-val create : ?stack_size:int -> (unit -> unit) -> (t, Error.t) Result.result
+val create : ?stack_size:int -> (unit -> unit) -> (t, Error.t) result
 val create_c :
   ?stack_size:int ->
   ?argument:nativeint ->
   nativeint ->
-    (t, Error.t) Result.result
+    (t, Error.t) result
 
-val join : t -> (unit, Error.t) Result.result
+val join : t -> (unit, Error.t) result
 (* DOC Document that concurrent join is undefined? Sequenced joins return ESRCH.
    Basically, each thread can be joined once. *)
 
@@ -53,7 +53,7 @@ module TLS :
 sig
   type t
 
-  val create : unit -> (t, Error.t) Result.result
+  val create : unit -> (t, Error.t) result
   val delete : t -> unit
   val get : t -> nativeint
   val set : t -> nativeint -> unit
@@ -63,7 +63,7 @@ module Once :
 sig
   type t
 
-  val init : unit -> (t, Error.t) Result.result
+  val init : unit -> (t, Error.t) result
   val once : t -> (unit -> unit) -> unit
   val once_c : t -> nativeint -> unit
 end
@@ -74,10 +74,10 @@ module Mutex :
 sig
   type t
 
-  val init : ?recursive:bool -> unit -> (t, Error.t) Result.result
+  val init : ?recursive:bool -> unit -> (t, Error.t) result
   val destroy : t -> unit
   val lock : t -> unit
-  val trylock : t -> (unit, Error.t) Result.result
+  val trylock : t -> (unit, Error.t) result
   val unlock : t -> unit
 end
 
@@ -85,13 +85,13 @@ module Rwlock :
 sig
   type t
 
-  val init : unit -> (t, Error.t) Result.result
+  val init : unit -> (t, Error.t) result
   val destroy : t -> unit
   val rdlock : t -> unit
-  val tryrdlock : t -> (unit, Error.t) Result.result
+  val tryrdlock : t -> (unit, Error.t) result
   val rdunlock : t -> unit
   val wrlock : t -> unit
-  val trywrlock : t -> (unit, Error.t) Result.result
+  val trywrlock : t -> (unit, Error.t) result
   val wrunlock : t -> unit
 end
 
@@ -99,11 +99,11 @@ module Semaphore :
 sig
   type t
 
-  val init : int -> (t, Error.t) Result.result
+  val init : int -> (t, Error.t) result
   val destroy : t -> unit
   val post : t -> unit
   val wait : t -> unit
-  val trywait : t -> (unit, Error.t) Result.result
+  val trywait : t -> (unit, Error.t) result
 end
 
 (* DOC Time units for timedwait? nanoseconds, so the type might need to be
@@ -112,19 +112,19 @@ module Condition :
 sig
   type t
 
-  val init : unit -> (t, Error.t) Result.result
+  val init : unit -> (t, Error.t) result
   val destroy : t -> unit
   val signal : t -> unit
   val broadcast : t -> unit
   val wait : t -> Mutex.t -> unit
-  val timedwait : t -> Mutex.t -> int -> (unit, Error.t) Result.result
+  val timedwait : t -> Mutex.t -> int -> (unit, Error.t) result
 end
 
 module Barrier :
 sig
   type t
 
-  val init : int -> (t, Error.t) Result.result
+  val init : int -> (t, Error.t) result
   val destroy : t -> unit
   val wait : t -> bool
 end
