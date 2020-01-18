@@ -212,6 +212,12 @@ struct
     {request; dirent}
 end
 
+let scandir_next =
+  Directory_scan.next
+
+let scandir_end =
+  Directory_scan.stop
+
 module Stat =
 struct
   type timespec = {

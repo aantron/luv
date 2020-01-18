@@ -433,13 +433,10 @@ val readdir :
     {{:http://man7.org/linux/man-pages/man3/readdir.3p.html} [readdir(3p)]}. The
     synchronous version is {!Luv.File.Sync.readdir}. *)
 
-(* DOC This requires some memory management on the user's part. *)
+(** Abstract type of of directory scans. See {!Luv.File.scandir}. *)
 module Directory_scan :
 sig
   type t
-
-  val next : t -> Dirent.t option
-  val stop : t -> unit
 end
 
 val scandir :
@@ -448,6 +445,28 @@ val scandir :
   string ->
   ((Directory_scan.t, Error.t) Result.result -> unit) ->
     unit
+(** Begins directory listing.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_scandir}
+    [uv_fs_scandir]}. See
+    {{:http://man7.org/linux/man-pages/man3/scandir.3p.html} [scandir(3p)]}. The
+    synchronous version is {!Luv.File.Sync.scandir}.
+
+    The resulting value of type [Directory_scan.t] must be cleaned up by calling
+    {!Luv.File.scandir_end}. *)
+
+val scandir_next :
+  Directory_scan.t ->
+    Dirent.t option
+(** Retrieves the next directory entry.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_scandir_next}
+    [uv_fs_scandir_next]}. *)
+
+val scandir_end :
+  Directory_scan.t ->
+    unit
+(** Cleans up after a directory scan. *)
 
 
 

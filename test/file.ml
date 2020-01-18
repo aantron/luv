@@ -64,11 +64,11 @@ let with_directory f =
 
 let call_scandir_next_repeatedly scan =
   let rec repeat entry_accumulator =
-    match Luv.File.Directory_scan.next scan with
+    match Luv.File.scandir_next scan with
     | Some entry ->
       repeat (entry::entry_accumulator)
     | None ->
-      Luv.File.Directory_scan.stop scan;
+      Luv.File.scandir_end scan;
       entry_accumulator
   in
   repeat []
