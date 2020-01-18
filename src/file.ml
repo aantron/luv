@@ -626,7 +626,7 @@ struct
     async_or_sync
       C.Blocking.File.sendfile
       returns_byte_count
-      (fun run ~to_ from ~offset length ->
+      (fun run from ~to_ ~offset length ->
         run (!to_ @@ !from @@ !offset @@ !length) no_cleanup)
 
   let access =

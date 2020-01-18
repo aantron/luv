@@ -618,8 +618,8 @@ val copyfile :
 val sendfile :
   ?loop:Loop.t ->
   ?request:Request.t ->
-  to_:t ->
   t ->
+  to_:t ->
   offset:int64 ->
   Unsigned.Size_t.t ->
   ((Unsigned.Size_t.t, Error.t) Result.result -> unit)  ->
@@ -953,7 +953,7 @@ sig
   (** Synchronous version of {!Luv.File.copyfile}. *)
 
   val sendfile :
-    to_:t -> t -> offset:int64 -> Unsigned.Size_t.t ->
+    t -> to_:t -> offset:int64 -> Unsigned.Size_t.t ->
       (Unsigned.Size_t.t, Error.t) Result.result
   (** Synchronous version of {!Luv.File.sendfile}. *)
 
