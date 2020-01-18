@@ -65,17 +65,17 @@ let from_bytes bytes =
 let from_string string =
   from_bytes (Bytes.unsafe_of_string string)
 
-  let total_size bigstrings =
-    List.fold_left (fun total bigstring -> total + size bigstring) 0 bigstrings
+let total_size bigstrings =
+  List.fold_left (fun total bigstring -> total + size bigstring) 0 bigstrings
 
-  let rec drop bigstrings count =
-    if count <= 0 then bigstrings
-    else
-      match bigstrings with
-      | [] -> bigstrings
-      | first::rest ->
-        let size = size first in
-        if count < size then
-          (sub first ~offset:count ~length:(size - count))::rest
-        else
-          drop rest (count - size)
+let rec drop bigstrings count =
+  if count <= 0 then bigstrings
+  else
+    match bigstrings with
+    | [] -> bigstrings
+    | first::rest ->
+      let size = size first in
+      if count < size then
+        (sub first ~offset:count ~length:(size - count))::rest
+      else
+        drop rest (count - size)
