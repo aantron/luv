@@ -65,15 +65,10 @@ let from_bytes bytes =
 let from_string string =
   from_bytes (Bytes.unsafe_of_string string)
 
-module List =
-struct
   let total_size bigstrings =
     List.fold_left (fun total bigstring -> total + size bigstring) 0 bigstrings
 
-  let count =
-    List.length
-
-  let rec advance bigstrings count =
+  let rec drop bigstrings count =
     if count <= 0 then bigstrings
     else
       match bigstrings with
@@ -83,5 +78,4 @@ struct
         if count < size then
           (sub first ~offset:count ~length:(size - count))::rest
         else
-          advance rest (count - size)
-end
+          drop rest (count - size)

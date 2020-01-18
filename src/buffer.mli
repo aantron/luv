@@ -97,11 +97,18 @@ val blit_from_string : t -> string -> source_offset:int -> unit
 
 
 
-(** {1 Lists of buffers} *)
+(** {1 Lists of buffers}
 
-module List :
-sig
-  val total_size : t list -> int
-  val count : t list -> int
-  val advance : t list -> int -> t list
-end
+    Many Luv functions, such as {!Luv.File.write}, work with lists of buffers
+    (i.e., they do scatter-gather I/O). These are helpers for working with
+    buffer lists. *)
+
+val total_size : t list -> int
+(** Evaluates to the sum of the sizes of the buffers in the list. *)
+
+val drop : t list -> int -> t list
+(** [drop buffers count] drops the first [count] bytes from [buffers].
+
+    For example, if [buffers] contains two buffers of size 16, [drop buffers
+    18] will evaluate to a list that has lost the reference to the first buffer,
+    and contains only a view into the second buffer of size 14. *)
