@@ -3,33 +3,17 @@
 
 
 
-(** Event loops. See {{:http://docs.libuv.org/en/v1.x/loop.html} [uv_loop_t]} in
-    the libuv documentation.
+(** Event loops.
 
-    libuv event loops process I/O and call callbacks. A typical Luv application
-    uses one loop:
-
-    {[
-      let () =
-        print_endline "Running forever. Press Ctrl+C to exit.";
-        Luv.Loop.run ()
-    ]}
-
-    Once {!Luv.Loop.run} is called, the process runs forever, until
-    {!Luv.Loop.stop} is called, or the process terminates in some other way,
-    such as by calling
-    {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Stdlib.html#VALexit}
-    [exit]}.
-
-    See the example in module {!Luv.Timer} for an example that actually calls an
-    interesting callback. *)
-(* TODO Fix the example. *)
+    See {{:http://docs.libuv.org/en/v1.x/loop.html} [uv_loop_t] - {i Event
+    loop}}. *)
 
 type t = C.Types.Loop.t Ctypes.ptr
-(** Event loops. Binding to
-    {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_t} [uv_loop_t]}. *)
-(* TODO DOC Make the type abstract in the rendered docs. *)
+(** Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_t}
+    [uv_loop_t]}. *)
 
+(** Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_run_mode}
+    [uv_run_mode]}. *)
 module Run_mode :
 sig
   type t = [
@@ -38,61 +22,77 @@ sig
     | `NOWAIT
   ]
 end
-(* TODO Inline Run_mode body. *)
-
-(* TODO Sections? *)
 
 val run : ?loop:t -> ?mode:Run_mode.t -> unit -> bool
-(** Runs an event loop. See {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_run}
-    [uv_run]}.
+(** Runs an event loop.
 
-    If [~loop] is specified, the given loop will be run. If not, this function
-    will run [Luv.Loop.default ()], which is suitable for most cases.
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_run} [uv_run]}.
+
+    If [?loop] is specified, the given loop will be run. If not, this function
+    will run {!Luv.Loop.default}, which is suitable for most cases.
 
     See {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_run} [uv_run]} for the
-    meaning of the constants that can be specified with [~mode]. If not
-    specified, it is equivalent to [~mode:Luv.Loop.Run_mode.default], which runs
-    the loop indefinitely, until {!Luv.Loop.stop} is called.
+    meaning of the constants that can be specified with [?mode]. The default
+    value is [`DEFAULT].
 
     This function typically should not be called by a library based on Luv.
     Rather, it should be called by applications. *)
 
+val stop : t -> unit
+(** Stops an event loop.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_stop} [uv_stop]}. *)
+
 val default : unit -> t
-(** Returns the default event loop. See
-    {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_default_loop}
+(** Returns the default event loop.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_default_loop}
     [uv_default_loop]}. *)
 
 val init : unit -> (t, Error.t) result
-(** Creates a new event loop. See
-    {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_init}
+(** Allocates and initializes a new event loop.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_init}
     [uv_loop_init]}. *)
 
 val close : t -> (unit, Error.t) result
-(** Releases resources associated with an event loop. See
-    {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_close}
+(** Releases resources associated with an event loop.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_close}
     [uv_loop_close]}. *)
 
 val now : t -> Unsigned.UInt64.t
-(** Returns the cached loop timestamp. See
-    {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_now} [uv_now]}. *)
+(** Returns the cached loop timestamp.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_now} [uv_now]}. *)
 
 val update_time : t -> unit
-(** Update the cached loop timestamp. See
-    {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_update_time}
+(** Updates the cached loop timestamp.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_update_time}
     [uv_update_time]}. *)
 
+(** Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_configure}
+    [uv_loop_option]}. *)
 module Option :
 sig
   type 'value t
   val block_signal : int t
   val sigprof : int
 end
-(* TODO Make the signum type abstract. *)
 
 val configure : t -> 'value Option.t -> 'value -> (unit, Error.t) result
+(** Sets a loop option.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_configure}
+    [uv_loop_configure]}. *)
 
 val alive : t -> bool
-val stop : t -> unit
+(** Indicates whether the loop is monitoring any activity.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_alive}
+    [uv_loop_alive]}. *)
+
 val size : unit -> Unsigned.size_t
 val backend_fd : t -> int
 val backend_timeout : t -> int
