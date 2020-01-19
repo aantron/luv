@@ -94,9 +94,22 @@ val alive : t -> bool
     [uv_loop_alive]}. *)
 
 val backend_fd : t -> int option
+(** Returns the file descriptor used for I/O polling.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_backend_fd}
+    [uv_backend_fd]}. *)
+
 val backend_timeout : t -> int option
+(** Returns the timeout used with I/O polling.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_backend_timeout}
+    [uv_backend_timeout]}. *)
 
 val fork : t -> (unit, Error.t) result
+(** Reinitializes libuv after a call to [fork(2)].
+
+    Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_fork}
+    [uv_loop_fork]}. *)
 
 (**/**)
 

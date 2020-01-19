@@ -3,27 +3,47 @@
 
 
 
-(* DOC About the libuv mess w.r.t. fd types. *)
-(* DOC Link to where the various helpers working on these can be found. *)
 module Os_fd :
 sig
   type t = C.Types.Os_fd.t
-  (* DOC This fails on Windows sockets. *)
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_fd_t}}. *)
+
   val from_unix : Unix.file_descr -> (t, Error.t) result
+  (** Attempts to convert from a
+      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
+      [Unix.file_descr]} to a libuv [uv_os_fd_t].
+
+      Fails on Windows if the descriptor is a [SOCKET] rather than a
+      [HANDLE]. *)
+
   val to_unix : t -> Unix.file_descr
+  (** Converts a [uv_os_fd_t] to a
+      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
+      [Unix.file_descr]}. *)
 end
 
 module Os_socket :
 sig
   type t = C.Types.Os_socket.t
-  (* DOC This fails on Windows HANDLEs, probably a complement of
-     Os_fd.from_unix. *)
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_sock_t}}. *)
+
   val from_unix : Unix.file_descr -> (t, Error.t) result
+  (** Attempts to convert from a
+      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
+      [Unix.file_descr]} to a libuv [uv_os_sock_t].
+
+      Fails on Windows if the descriptor is a [HANDLE] rather than a
+      [SOCKET]. *)
+
   val to_unix : t -> Unix.file_descr
+  (** Converts a [uv_os_sock_t] to a
+      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
+      [Unix.file_descr]}. *)
 end
 
-(* TODO Check pid_t, uid_t, gid_t, ... *)
-
+(** Network address families. See
+    {{:http://man7.org/linux/man-pages/man2/socket.2.html#DESCRIPTION}
+    [socket(2)]}. *)
 module Address_family :
 sig
   type t = [
@@ -39,6 +59,9 @@ sig
   val from_c : int -> t
 end
 
+(** Socket types. See
+    {{:http://man7.org/linux/man-pages/man2/socket.2.html#DESCRIPTION}
+    [socket(2)]}. *)
 module Socket_type :
 sig
   type t = [
@@ -56,11 +79,23 @@ end
 module Sockaddr :
 sig
   type t
+  (** Binds {{:http://man7.org/linux/man-pages/man7/ip.7.html#DESCRIPTION}
+      [struct sockaddr]}. *)
 
   val ipv4 : string -> int -> (t, Error.t) result
+  (** Converts a string and port number to an IPv4 [struct sockaddr].
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip4_addr}
+      [uv_ip4_addr]}. *)
+
   val ipv6 : string -> int -> (t, Error.t) result
+  (** Converts a string and port number to an IPv6 [struct sockaddr].
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip6_addr}
+      [uv_ip4_addr]}. *)
 
   val to_string : t -> string
+
   val port : t -> int
 
   (**/**)
