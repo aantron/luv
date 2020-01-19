@@ -93,8 +93,8 @@ val alive : t -> bool
     Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_alive}
     [uv_loop_alive]}. *)
 
-val backend_fd : t -> int
-val backend_timeout : t -> int
+val backend_fd : t -> int option
+val backend_timeout : t -> int option
 
 val fork : t -> (unit, Error.t) result
 

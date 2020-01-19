@@ -41,6 +41,20 @@ let run ?loop ?(mode = `DEFAULT) () =
   let loop = or_default loop in
   C.Blocking.Loop.run loop mode
 
+let backend_fd loop =
+  let result = C.Functions.Loop.backend_fd loop in
+  if result >= 0 then
+    Some result
+  else
+    None
+
+let backend_timeout loop =
+  let result = C.Functions.Loop.backend_timeout loop in
+  if result >= 0 then
+    Some result
+  else
+    None
+
 let fork loop =
   C.Functions.Loop.fork loop
   |> Error.to_result ()

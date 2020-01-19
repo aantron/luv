@@ -103,7 +103,7 @@ let tests = [
     "backend_timeout", `Quick, begin fun () ->
       with_loop begin fun loop ->
         Luv.Loop.backend_timeout loop
-        |> Alcotest.(check int) "backend_timeout" 0
+        |> Alcotest.(check (option int)) "backend_timeout" (Some 0)
       end
     end;
 
