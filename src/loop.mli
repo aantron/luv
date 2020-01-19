@@ -93,7 +93,6 @@ val alive : t -> bool
     Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_alive}
     [uv_loop_alive]}. *)
 
-val size : unit -> Unsigned.size_t
 val backend_fd : t -> int
 val backend_timeout : t -> int
 

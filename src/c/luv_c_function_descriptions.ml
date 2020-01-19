@@ -463,10 +463,6 @@ struct
       foreign "uv_stop"
         (ptr t @-> returning void)
 
-    let size =
-      foreign "uv_loop_size"
-        (void @-> returning size_t)
-
     let backend_fd =
       foreign "uv_backend_fd"
         (ptr t @-> returning int)
