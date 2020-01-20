@@ -93,8 +93,8 @@ dune exec example/http_get_lwt/http_get_lwt.exe -- www.google.com
 Or, for the [Repromise][repromise] version:
 
 ```
-opam install --unset-root repromise
-dune exec example/http_get_repromise/http_get_repromise.exe -- www.google.com
+opam install --unset-root promise
+dune exec example/http_get_promise/http_get_promise.exe -- www.google.com
 ```
 
 Luv probably doesn't work on Windows at the moment. The code is actually highly
