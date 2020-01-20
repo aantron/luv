@@ -94,9 +94,9 @@ sig
       Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip6_addr}
       [uv_ip4_addr]}. *)
 
-  val to_string : t -> string
+  val to_string : t -> string option
 
-  val port : t -> int
+  val port : t -> int option
 
   (**/**)
 

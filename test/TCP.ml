@@ -75,7 +75,7 @@ let tests = [
         Luv.TCP.getsockname tcp
         |> check_success_result "getsockname result"
         |> Luv.Sockaddr.to_string
-        |> Alcotest.(check string) "getsockname address"
+        |> Alcotest.(check (option string)) "getsockname address"
           (Luv.Sockaddr.to_string address)
       end
     end;
@@ -176,7 +176,7 @@ let tests = [
             Luv.TCP.getpeername client
             |> check_success_result "getpeername result"
             |> Luv.Sockaddr.to_string
-            |> Alcotest.(check string) "getpeername address"
+            |> Alcotest.(check (option string)) "getpeername address"
               (Luv.Sockaddr.to_string address);
             connected := true;
             Luv.Handle.close client ignore

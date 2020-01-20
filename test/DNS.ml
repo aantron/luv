@@ -19,8 +19,8 @@ let tests = [
           if first.family <> `INET then
             Alcotest.fail "expected family `INET";
           Alcotest.(check (option string)) "canonname" None first.canonname;
-          Alcotest.(check string) "address"
-            "127.0.0.1" (Luv.Sockaddr.to_string first.addr);
+          Alcotest.(check (option string)) "address"
+            (Some "127.0.0.1") (Luv.Sockaddr.to_string first.addr);
           resolved := true
       end;
 

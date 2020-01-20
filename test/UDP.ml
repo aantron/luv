@@ -66,7 +66,8 @@ let tests = [
         Luv.UDP.getsockname udp
         |> check_success_result "getsockname"
         |> Luv.Sockaddr.to_string
-        |> Alcotest.(check string) "address" (Luv.Sockaddr.to_string address)
+        |> Alcotest.(check (option string)) "address"
+          (Luv.Sockaddr.to_string address)
       end
     end;
 
@@ -216,8 +217,13 @@ let tests = [
             end
           ~sender_logic:
             begin fun sender address ->
+              let port =
+                match Luv.Sockaddr.port address with
+                | Some port -> port
+                | None -> Alcotest.fail "port"
+              in
               let address =
-                Luv.Sockaddr.(ipv4 group (port address))
+                Luv.Sockaddr.ipv4 group port
                 |> check_success_result "group address"
               in
               Luv.UDP.try_send sender [Luv.Buffer.from_string "foo"] address
@@ -256,7 +262,8 @@ let tests = [
         Luv.UDP.Connected.getpeername udp
         |> check_success_result "getpeername, connected"
         |> Luv.Sockaddr.to_string
-        |> Alcotest.(check string) "address" (Luv.Sockaddr.to_string remote);
+        |> Alcotest.(check (option string)) "address"
+          (Luv.Sockaddr.to_string remote);
 
         Luv.UDP.Connected.disconnect udp |> check_success_result "disconnect";
 

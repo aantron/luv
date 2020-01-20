@@ -131,7 +131,7 @@ struct
       (Unsigned.Size_t.of_int buffer_size)
     |> ignore;
     let length = Bytes.index buffer '\000' in
-    Bytes.sub_string buffer 0 length
+    Some (Bytes.sub_string buffer 0 length)
 
   let to_string storage =
     let family =
@@ -143,22 +143,24 @@ struct
     else if family = `INET6 then
       finish_to_string C.Functions.Sockaddr.ip6_name as_in6 storage
     else
-      ""
+      None
+
+  let finish_to_port network_order_port =
+    Some (C.Functions.Sockaddr.ntohs network_order_port)
 
   let port storage =
     let family =
       Ctypes.getf storage C.Types.Sockaddr.family
       |> Address_family.from_c
     in
-    let network_order_port =
-      if family = `INET then
-        Ctypes.(getf (!@ (as_in storage)) C.Types.Sockaddr.sin_port)
-      else if family = `INET6 then
-        Ctypes.(getf (!@ (as_in6 storage)) C.Types.Sockaddr.sin6_port)
-      else
-        0
-    in
-    C.Functions.Sockaddr.ntohs network_order_port
+    if family = `INET then
+      finish_to_port
+        (Ctypes.(getf (!@ (as_in storage)) C.Types.Sockaddr.sin_port))
+    else if family = `INET6 then
+      finish_to_port
+        (Ctypes.(getf (!@ (as_in6 storage)) C.Types.Sockaddr.sin6_port))
+    else
+      None
 
   let copy_storage address =
     let storage = make () in
