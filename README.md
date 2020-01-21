@@ -90,7 +90,7 @@ opam install --unset-root lwt lwt_ppx
 dune exec example/http_get_lwt/http_get_lwt.exe -- www.google.com
 ```
 
-Or, for the [Repromise][repromise] version:
+Or, for the [reason-promise][reason-promise] version:
 
 ```
 opam install --unset-root promise
@@ -141,4 +141,4 @@ luv currently uses libuv 1.34.0.
 [libuv-api]: http://docs.libuv.org/en/v1.x/api.html
 [libuv-docs]: http://docs.libuv.org/en/v1.x/
 [lwt]: https://github.com/ocsigen/lwt#readme
-[repromise]: https://github.com/aantron/repromise#readme
+[reason-promise]: https://github.com/aantron/promise#readme
