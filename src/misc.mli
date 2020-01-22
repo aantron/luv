@@ -80,7 +80,10 @@ module Sockaddr :
 sig
   type t
   (** Binds {{:http://man7.org/linux/man-pages/man7/ip.7.html#DESCRIPTION}
-      [struct sockaddr]}. *)
+      [struct sockaddr]}.
+
+      The functions in this module automatically take care of converting between
+      network and host byte order. *)
 
   val ipv4 : string -> int -> (t, Error.t) result
   (** Converts a string and port number to an IPv4 [struct sockaddr].
@@ -95,6 +98,7 @@ sig
       [uv_ip4_addr]}. *)
 
   val to_string : t -> string option
+  (**  *)
 
   val port : t -> int option
 
