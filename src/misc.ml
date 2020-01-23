@@ -183,7 +183,7 @@ end
 
 module Resource =
 struct
-  let resident_set_memory_size () =
+  let resident_set_memory () =
     let size = Ctypes.(allocate size_t Unsigned.Size_t.zero) in
     C.Functions.Resource.resident_set_memory size
     |> Error.to_result (Ctypes.(!@) size)

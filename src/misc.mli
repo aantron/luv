@@ -163,8 +163,7 @@ sig
       Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_setpriority}
       [uv_os_setpriority]}. *)
 
-  val resident_set_memory_size :
-    unit -> (Unsigned.size_t, Error.t) result
+  val resident_set_memory : unit -> (Unsigned.size_t, Error.t) result
   (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_resident_set_memory}
       [uv_resident_set_memory]}. *)
 
