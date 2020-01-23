@@ -21,15 +21,6 @@ depends: [
   "result"
 
   "alcotest" {dev & >= "0.8.1"}
-  "lwt" {dev & >= "2.4.0"}
-  "lwt_ppx" {dev}
-  "odoc" {dev & = "1.4.2"}
-  "reason" {dev}
-  "promise" {dev & >= "1.0.0"}
-]
-
-pin-depends: [
-  ["promise.git" "git+https://github.com/aantron/promise.git"]
 ]
 
 build: [

@@ -42,8 +42,14 @@ before_script:
   - cc --version || true
   - gcc --version || true
   - clang --version || true
-  - '[ -d _cache/_build ] || opam pin add -y --dev-repo bisect_ppx'
-  - '[ -d _cache/_build ] || opam install -y --deps-only ./luv.opam'
+  - |
+    if [ ! -d _cache/_build ]
+    then
+      opam pin add -y --dev-repo bisect_ppx
+      opam pin add -y promise git+https://github.com/aantron/promise.git
+      opam install -y --deps-only ./luv.opam
+      opam install -y --unset-root lwt lwt_ppx reason
+    fi
 
 script:
   - '[ ! -d _cache/_build ] || cp -r _cache/_build .'
