@@ -14,7 +14,24 @@
 
     Correspondingly, this module, {!Luv.Handle}, offers functions that work on
     all handles, [_ Luv.Handle.t]. Other modules define specific handle types,
-    such as {!Luv.UDP.t}, which is defined as [[`UDP] Luv.Handle.t]. *)
+    such as {!Luv.UDP.t}, which is defined as [[`UDP] Luv.Handle.t].
+
+    The full list of concrete handle types:
+
+    - {!Luv.Async.t}
+    - {!Luv.Check.t}
+    - {!Luv.FS_event.t}
+    - {!Luv.FS_poll.t}
+    - {!Luv.Idle.t}
+    - {!Luv.Pipe.t}
+    - {!Luv.Poll.t}
+    - {!Luv.Prepare.t}
+    - {!Luv.Process.t}
+    - {!Luv.Signal.t}
+    - {!Luv.TCP.t}
+    - {!Luv.Timer.t}
+    - {!Luv.TTY.t}
+    - {!Luv.UDP.t} *)
 
 
 

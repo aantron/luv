@@ -40,22 +40,16 @@ foo bar
 
 {!modules:
   Luv.Os_fd
-  Luv.Os_socket
-  Luv.Address_family
-  Luv.Socket_type
   Luv.Sockaddr
   Luv.Resource
   Luv.Pid
-  Luv.CPU_info
+  Luv.System_info
   Luv.Network
   Luv.Path
   Luv.Passwd
-  Luv.Hrtime
   Luv.Env
-  Luv.System_name
   Luv.Time
   Luv.Random
-  Luv.Sleep
 }
 
 {!modules:

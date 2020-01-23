@@ -251,6 +251,8 @@ sig
   (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info}
       [uv_cpu_info]}. *)
 
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_utsname_t}
+      [uv_utsname_t]}. *)
   module Uname :
   sig
     type t = {
@@ -262,6 +264,10 @@ sig
   end
 
   val uname : unit -> (Uname.t, Error.t) result
+  (** Retrieves operating system name and version information.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_uname}
+      [uv_os_uname]}. *)
 end
 
 module Network :
@@ -328,16 +334,43 @@ sig
     shell : string option;
     homedir : string;
   }
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_passwd_t}
+      [uv_passwd_t]}. *)
 
   val get_passwd : unit -> (t, Error.t) result
+  (** Gets passwd entry for the current user.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_get_passwd}
+      [uv_os_get_passwd]}. See
+      {{:http://man7.org/linux/man-pages/man3/getpwuid_r.3p.html}
+      [getpwuid_r(3p)]}. *)
 end
 
 module Env :
 sig
   val getenv : string -> (string, Error.t) result
-  val setenv : string -> string -> (unit, Error.t) result
+  (** Retrieves the value of an environment variable.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_getenv}
+      [uv_os_getenv]}. *)
+
+  val setenv : string -> value:string -> (unit, Error.t) result
+  (** Sets an environment variable.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_setenv}
+      [uv_os_setenv]}. *)
+
   val unsetenv : string -> (unit, Error.t) result
+  (** Unsets an environment variable.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_unsetenv}
+      [uv_os_unsetenv]}. *)
+
   val environ : unit -> ((string * string) list, Error.t) result
+  (** Retrieves all environment variables.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_environ}
+      [uv_os_environ]}. *)
 end
 
 module Time :
@@ -346,19 +379,40 @@ sig
     tv_sec : int64;
     tv_usec : int32;
   }
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_timeval64_t}
+      [uv_timeval64_t]}. *)
 
   val gettimeofday : unit -> (t, Error.t) result
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_gettimeofday}
+      [uv_gettimeofday]}. See
+      {{:http://man7.org/linux/man-pages/man3/gettimeofday.3p.html}
+      [gettimeofday(3p)]}. *)
+
   val hrtime : unit -> Unsigned.uint64
+  (** Samples the high-resolution timer.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_hrtime}
+      [uv_hrtime]}. *)
+
   val sleep : int -> unit
+  (** Suspends the calling thread for at least the given number of milliseconds.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_sleep}
+      [uv_sleep]}. *)
 end
 
 module Random :
 sig
   val random :
     ?loop:Loop.t -> Buffer.t -> ((unit, Error.t) result -> unit) -> unit
+  (** Fills the given buffer with bits from the system entropy source.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_random}
+      [uv_random]}. *)
 
   module Sync :
   sig
     val random : Buffer.t -> (unit, Error.t) result
+    (** Synchronous version of {!Luv.Random.random}. *)
   end
 end

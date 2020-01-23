@@ -3,11 +3,38 @@
 
 
 
-type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
+(** Requests.
 
-(* TODO Test with a concrete type. *)
+    See {{:http://docs.libuv.org/en/v1.x/request.html} [uv_req_t] - {i Base
+    request}}.
+
+    Requests are objects libuv uses to track asynchronous operations, and
+    sometimes to communicate their results. For the most part Luv handles
+    requests automatically.
+
+    Some request kinds support cancelation, and Luv provides a common function
+    {!Luv.Request.cancel} for them.
+
+    Apart from that, this module would be only an internal convenience for the
+    implementation of Luv.
+
+    The full list of exposed concrete request types:
+
+    - {!Luv.File.Request.t}
+    - {!Luv.DNS.Addr_info.Request.t}
+    - {!Luv.DNS.Name_info.Request.t}
+    - {!Luv.Thread.Pool.Request.t} *)
+
+type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
+(** Binds {{:http://docs.libuv.org/en/v1.x/request.html#c.uv_req_t}
+    [uv_req_t]}. *)
+
 val cancel :
   [< `File | `Getaddrinfo | `Getnameinfo | `Work ] t -> (unit, Error.t) result
+(** Tries to cancel a pending request.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/request.html#c.uv_cancel}
+    [uv_cancel]}. *)
 
 (**/**)
 

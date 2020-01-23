@@ -497,7 +497,7 @@ struct
       Bytes.sub_string buffer 0 length
     end
 
-  let setenv variable value =
+  let setenv variable ~value =
     C.Functions.Env.setenv
       (Ctypes.ocaml_string_start variable) (Ctypes.ocaml_string_start value)
     |> Error.to_result ()
