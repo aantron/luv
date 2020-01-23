@@ -5,79 +5,82 @@
 
 module Os_fd :
 sig
-  type t = C.Types.Os_fd.t
-  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_fd_t}}. *)
+  module Fd :
+  sig
+    type t = C.Types.Os_fd.t
+    (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_fd_t}}. *)
 
-  val from_unix : Unix.file_descr -> (t, Error.t) result
-  (** Attempts to convert from a
-      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
-      [Unix.file_descr]} to a libuv [uv_os_fd_t].
+    val from_unix : Unix.file_descr -> (t, Error.t) result
+    (** Attempts to convert from a
+        {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
+        [Unix.file_descr]} to a libuv [uv_os_fd_t].
 
-      Fails on Windows if the descriptor is a [SOCKET] rather than a
-      [HANDLE]. *)
+        Fails on Windows if the descriptor is a [SOCKET] rather than a
+        [HANDLE]. *)
 
-  val to_unix : t -> Unix.file_descr
-  (** Converts a [uv_os_fd_t] to a
-      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
-      [Unix.file_descr]}. *)
-end
+    val to_unix : t -> Unix.file_descr
+    (** Converts a [uv_os_fd_t] to a
+        {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
+        [Unix.file_descr]}. *)
+  end
 
-module Os_socket :
-sig
-  type t = C.Types.Os_socket.t
-  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_sock_t}}. *)
+  module Socket :
+  sig
+    type t = C.Types.Os_socket.t
+    (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_sock_t}}. *)
 
-  val from_unix : Unix.file_descr -> (t, Error.t) result
-  (** Attempts to convert from a
-      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
-      [Unix.file_descr]} to a libuv [uv_os_sock_t].
+    val from_unix : Unix.file_descr -> (t, Error.t) result
+    (** Attempts to convert from a
+        {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
+        [Unix.file_descr]} to a libuv [uv_os_sock_t].
 
-      Fails on Windows if the descriptor is a [HANDLE] rather than a
-      [SOCKET]. *)
+        Fails on Windows if the descriptor is a [HANDLE] rather than a
+        [SOCKET]. *)
 
-  val to_unix : t -> Unix.file_descr
-  (** Converts a [uv_os_sock_t] to a
-      {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
-      [Unix.file_descr]}. *)
-end
-
-(** Network address families. See
-    {{:http://man7.org/linux/man-pages/man2/socket.2.html#DESCRIPTION}
-    [socket(2)]}. *)
-module Address_family :
-sig
-  type t = [
-    | `UNSPEC
-    | `INET
-    | `INET6
-    | `OTHER of int
-  ]
-
-  (**/**)
-
-  val to_c : t -> int
-  val from_c : int -> t
-end
-
-(** Socket types. See
-    {{:http://man7.org/linux/man-pages/man2/socket.2.html#DESCRIPTION}
-    [socket(2)]}. *)
-module Socket_type :
-sig
-  type t = [
-    | `STREAM
-    | `DGRAM
-    | `RAW
-  ]
-
-  (**/**)
-
-  val to_c : t -> int
-  val from_c : int -> t
+    val to_unix : t -> Unix.file_descr
+    (** Converts a [uv_os_sock_t] to a
+        {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html#TYPEfile_descr}
+        [Unix.file_descr]}. *)
+  end
 end
 
 module Sockaddr :
 sig
+  (** Network address families. See
+      {{:http://man7.org/linux/man-pages/man2/socket.2.html#DESCRIPTION}
+      [socket(2)]}. *)
+  module Address_family :
+  sig
+    type t = [
+      | `UNSPEC
+      | `INET
+      | `INET6
+      | `OTHER of int
+    ]
+
+    (**/**)
+
+    val to_c : t -> int
+    val from_c : int -> t
+  end
+
+  (** Socket types. See
+      {{:http://man7.org/linux/man-pages/man2/socket.2.html#DESCRIPTION}
+      [socket(2)]}. *)
+  module Socket_type :
+  sig
+    type t = [
+      | `STREAM
+      | `DGRAM
+      | `RAW
+    ]
+
+    (**/**)
+
+    val to_c : t -> int
+    val from_c : int -> t
+  end
+
   type t
   (** Binds {{:http://man7.org/linux/man-pages/man7/ip.7.html#DESCRIPTION}
       [struct sockaddr]}.
@@ -208,7 +211,6 @@ sig
       [getrusage(2)]}. *)
 end
 
-(* TODO Support OS pids. *)
 module Pid :
 sig
   val getpid : unit -> int
@@ -224,43 +226,97 @@ sig
       [uv_os_getppid]}. *)
 end
 
-module CPU_info :
+module System_info :
 sig
-  type times = {
-    user : Unsigned.uint64;
-    nice : Unsigned.uint64;
-    sys : Unsigned.uint64;
-    idle : Unsigned.uint64;
-    irq : Unsigned.uint64;
-  }
-
-  type t = {
-    model : string;
-    speed : int;
-    times : times;
-  }
   (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info_t}
       [uv_cpu_info_t]}. *)
+  module CPU_info :
+  sig
+    type times = {
+      user : Unsigned.uint64;
+      nice : Unsigned.uint64;
+      sys : Unsigned.uint64;
+      idle : Unsigned.uint64;
+      irq : Unsigned.uint64;
+    }
 
-  val cpu_info : unit -> (t list, Error.t) result
+    type t = {
+      model : string;
+      speed : int;
+      times : times;
+    }
+  end
+
+  val cpu_info : unit -> (CPU_info.t list, Error.t) result
   (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info}
       [uv_cpu_info]}. *)
+
+  module Uname :
+  sig
+    type t = {
+      sysname : string;
+      release : string;
+      version : string;
+      machine : string;
+    }
+  end
+
+  val uname : unit -> (Uname.t, Error.t) result
 end
 
 module Network :
 sig
   val if_indextoname : int -> (string, Error.t) result
+  (** Retrieves a network interface name.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_if_indextoname}
+      [uv_if_indextoname]}. See
+      {{:http://man7.org/linux/man-pages/man3/if_indextoname.3p.html}
+      [if_indextoname(3p)]}. *)
+
   val if_indextoiid : int -> (string, Error.t) result
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_if_indextoiid}
+      [uv_if_indextoiid]}. *)
+
   val gethostname : unit -> (string, Error.t) result
+  (** Evaluates to the system's hostname.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_gethostname}
+      [uv_os_gethostname]}. See
+      {{:http://man7.org/linux/man-pages/man3/gethostname.3p.html}
+      [gethostname(3p)]}. *)
 end
 
 module Path :
 sig
   val exepath : unit -> (string, Error.t) result
+  (** Evaluates to the executable's path.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_exepath}
+      [uv_exepath]}. *)
+
   val cwd : unit -> (string, Error.t) result
+  (** Evaluates to the current working directory.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cwd} [uv_cwd]}. *)
+
   val chdir : string -> (unit, Error.t) result
+  (** Changes the current working directory.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_chdir}
+      [uv_chdir]}. *)
+
   val homedir : unit -> (string, Error.t) result
+  (** Evaluates to the path of the home directory.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_homedir}
+      [uv_os_homedir]}. *)
+
   val tmpdir : unit -> (string, Error.t) result
+  (** Evaluates to the path of the temporary directory.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_tmpdir}
+      [uv_os_tmpdir]}. *)
 end
 
 module Passwd :
@@ -273,12 +329,7 @@ sig
     homedir : string;
   }
 
-  val get : unit -> (t, Error.t) result
-end
-
-module Hrtime :
-sig
-  val now : unit -> Unsigned.uint64
+  val get_passwd : unit -> (t, Error.t) result
 end
 
 module Env :
@@ -289,18 +340,6 @@ sig
   val environ : unit -> ((string * string) list, Error.t) result
 end
 
-module System_name :
-sig
-  type t = {
-    sysname : string;
-    release : string;
-    version : string;
-    machine : string;
-  }
-
-  val uname : unit -> (t, Error.t) result
-end
-
 module Time :
 sig
   type t = {
@@ -309,6 +348,8 @@ sig
   }
 
   val gettimeofday : unit -> (t, Error.t) result
+  val hrtime : unit -> Unsigned.uint64
+  val sleep : int -> unit
 end
 
 module Random :
@@ -320,9 +361,4 @@ sig
   sig
     val random : Buffer.t -> (unit, Error.t) result
   end
-end
-
-module Sleep :
-sig
-  val sleep : int -> unit
 end

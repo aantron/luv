@@ -53,22 +53,16 @@ module Condition = Thread.Condition
 module Barrier = Thread.Barrier
 module Buffer = Buffer
 module Os_fd = Misc.Os_fd
-module Os_socket = Misc.Os_socket
-module Address_family = Misc.Address_family
-module Socket_type = Misc.Socket_type
 module Sockaddr = Misc.Sockaddr
 module Resource = Misc.Resource
 module Pid = Misc.Pid
-module CPU_info = Misc.CPU_info
+module System_info = Misc.System_info
 module Network = Misc.Network
 module Path = Misc.Path
 module Passwd = Misc.Passwd
-module Hrtime = Misc.Hrtime
 module Env = Misc.Env
-module System_name = Misc.System_name
 module Time = Misc.Time
 module Random = Misc.Random
-module Sleep = Misc.Sleep
 
 module Syntax = Syntax
 

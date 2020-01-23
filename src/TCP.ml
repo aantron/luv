@@ -5,7 +5,7 @@
 
 type t = [ `TCP ] Stream.t
 
-let init ?loop ?(domain : Misc.Address_family.t option) () =
+let init ?loop ?domain () =
   let tcp = Stream.allocate C.Types.TCP.t in
   let loop = Loop.or_default loop in
   let result =
@@ -13,7 +13,7 @@ let init ?loop ?(domain : Misc.Address_family.t option) () =
     | None ->
       C.Functions.TCP.init loop tcp
     | Some domain ->
-      let domain = Misc.Address_family.to_c domain in
+      let domain = Misc.Sockaddr.Address_family.to_c domain in
       C.Functions.TCP.init_ex loop tcp (Unsigned.UInt.of_int domain)
   in
   Error.to_result tcp result

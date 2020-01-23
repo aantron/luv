@@ -5,95 +5,98 @@
 
 module Os_fd =
 struct
-  type t = C.Types.Os_fd.t
+  module Fd =
+  struct
+    type t = C.Types.Os_fd.t
 
-  external from_unix_helper : Unix.file_descr -> nativeint -> unit =
-    "luv_unix_fd_to_os_fd"
+    external from_unix_helper : Unix.file_descr -> nativeint -> unit =
+      "luv_unix_fd_to_os_fd"
 
-  let from_unix unix_fd =
-    let os_fd = Ctypes.make C.Types.Os_fd.t in
-    let storage = Ctypes.(raw_address_of_ptr (to_voidp (addr os_fd))) in
-    from_unix_helper unix_fd storage;
-    if C.Functions.Os_fd.is_invalid_handle_value os_fd then
-      Result.Error `EBADF
-    else
-      Result.Ok os_fd
+    let from_unix unix_fd =
+      let os_fd = Ctypes.make C.Types.Os_fd.t in
+      let storage = Ctypes.(raw_address_of_ptr (to_voidp (addr os_fd))) in
+      from_unix_helper unix_fd storage;
+      if C.Functions.Os_fd.is_invalid_handle_value os_fd then
+        Result.Error `EBADF
+      else
+        Result.Ok os_fd
 
-  external to_unix_helper : nativeint -> Unix.file_descr =
-    "luv_os_fd_to_unix_fd"
+    external to_unix_helper : nativeint -> Unix.file_descr =
+      "luv_os_fd_to_unix_fd"
 
-  let to_unix os_fd =
-    to_unix_helper (Ctypes.(raw_address_of_ptr (to_voidp (addr os_fd))))
-end
+    let to_unix os_fd =
+      to_unix_helper (Ctypes.(raw_address_of_ptr (to_voidp (addr os_fd))))
+  end
 
-module Os_socket =
-struct
-  type t = C.Types.Os_socket.t
+  module Socket =
+  struct
+    type t = C.Types.Os_socket.t
 
-  external from_unix_helper : Unix.file_descr -> nativeint -> unit =
-    "luv_unix_fd_to_os_socket"
+    external from_unix_helper : Unix.file_descr -> nativeint -> unit =
+      "luv_unix_fd_to_os_socket"
 
-  let from_unix unix_fd =
-    let os_socket = Ctypes.make C.Types.Os_socket.t in
-    let storage = Ctypes.(raw_address_of_ptr (to_voidp (addr os_socket))) in
-    from_unix_helper unix_fd storage;
-    if C.Functions.Os_socket.is_invalid_socket_value os_socket then
-      Result.Error `EBADF
-    else
-      Result.Ok os_socket
+    let from_unix unix_fd =
+      let os_socket = Ctypes.make C.Types.Os_socket.t in
+      let storage = Ctypes.(raw_address_of_ptr (to_voidp (addr os_socket))) in
+      from_unix_helper unix_fd storage;
+      if C.Functions.Os_socket.is_invalid_socket_value os_socket then
+        Result.Error `EBADF
+      else
+        Result.Ok os_socket
 
-  external to_unix_helper : nativeint -> Unix.file_descr =
-    "luv_os_socket_to_unix_fd"
+    external to_unix_helper : nativeint -> Unix.file_descr =
+      "luv_os_socket_to_unix_fd"
 
-  let to_unix os_socket =
-    to_unix_helper (Ctypes.(raw_address_of_ptr (to_voidp (addr os_socket))))
-end
-
-module Address_family =
-struct
-  type t = [
-    | `UNSPEC
-    | `INET
-    | `INET6
-    | `OTHER of int
-  ]
-
-  let to_c = let open C.Types.Address_family in function
-    | `UNSPEC -> unspec
-    | `INET -> inet
-    | `INET6 -> inet6
-    | `OTHER i -> i
-
-  let from_c = let open C.Types.Address_family in function
-    | family when family = unspec -> `UNSPEC
-    | family when family = inet -> `INET
-    | family when family = inet6 -> `INET6
-    | family -> `OTHER family
-end
-
-module Socket_type =
-struct
-  type t = [
-    | `STREAM
-    | `DGRAM
-    | `RAW
-  ]
-
-  let to_c = let open C.Types.Socket_type in function
-    | `STREAM -> stream
-    | `DGRAM -> dgram
-    | `RAW -> raw
-
-  let from_c = let open C.Types.Socket_type in function
-    | socket_type when socket_type = stream -> `STREAM
-    | socket_type when socket_type = dgram -> `DGRAM
-    | socket_type when socket_type = raw -> `RAW
-    | socket_type ->
-      Printf.ksprintf failwith "Luv.Misc.Socket_type.from_c: %i" socket_type
+    let to_unix os_socket =
+      to_unix_helper (Ctypes.(raw_address_of_ptr (to_voidp (addr os_socket))))
+  end
 end
 
 module Sockaddr =
 struct
+  module Address_family =
+  struct
+    type t = [
+      | `UNSPEC
+      | `INET
+      | `INET6
+      | `OTHER of int
+    ]
+
+    let to_c = let open C.Types.Address_family in function
+      | `UNSPEC -> unspec
+      | `INET -> inet
+      | `INET6 -> inet6
+      | `OTHER i -> i
+
+    let from_c = let open C.Types.Address_family in function
+      | family when family = unspec -> `UNSPEC
+      | family when family = inet -> `INET
+      | family when family = inet6 -> `INET6
+      | family -> `OTHER family
+  end
+
+  module Socket_type =
+  struct
+    type t = [
+      | `STREAM
+      | `DGRAM
+      | `RAW
+    ]
+
+    let to_c = let open C.Types.Socket_type in function
+      | `STREAM -> stream
+      | `DGRAM -> dgram
+      | `RAW -> raw
+
+    let from_c = let open C.Types.Socket_type in function
+      | socket_type when socket_type = stream -> `STREAM
+      | socket_type when socket_type = dgram -> `DGRAM
+      | socket_type when socket_type = raw -> `RAW
+      | socket_type ->
+        Printf.ksprintf failwith "Luv.Misc.Socket_type.from_c: %i" socket_type
+  end
+
   type t = C.Types.Sockaddr.storage
 
   let make () =
@@ -280,21 +283,24 @@ end
 
 module Pid = C.Functions.Pid
 
-module CPU_info =
+module System_info =
 struct
-  type times = {
-    user : Unsigned.uint64;
-    nice : Unsigned.uint64;
-    sys : Unsigned.uint64;
-    idle : Unsigned.uint64;
-    irq : Unsigned.uint64;
-  }
+  module CPU_info =
+  struct
+    type times = {
+      user : Unsigned.uint64;
+      nice : Unsigned.uint64;
+      sys : Unsigned.uint64;
+      idle : Unsigned.uint64;
+      irq : Unsigned.uint64;
+    }
 
-  type t = {
-    model : string;
-    speed : int;
-    times : times;
-  }
+    type t = {
+      model : string;
+      speed : int;
+      times : times;
+    }
+  end
 
   let cpu_info () =
     let null = Ctypes.(from_voidp C.Types.CPU_info.t null) in
@@ -313,7 +319,7 @@ struct
           let module CI = C.Types.CPU_info in
           let c_cpu_info = Ctypes.(!@ (info +@ index)) in
           let c_times = Ctypes.getf c_cpu_info CI.times in
-          let cpu_info = {
+          let cpu_info = CPU_info.{
             model = Ctypes.getf c_cpu_info CI.model;
             speed = Ctypes.getf c_cpu_info CI.speed;
             times = {
@@ -332,6 +338,40 @@ struct
       C.Functions.CPU_info.free_cpu_info info count;
       cpu_times
     end
+
+  module Uname =
+  struct
+    type t = {
+      sysname : string;
+      release : string;
+      version : string;
+      machine : string;
+    }
+
+    let field_length = 256
+
+    let extract_field buffer index =
+      let offset = index * field_length in
+      let length =
+        match Bytes.index_from buffer offset '\000' with
+        | n when n < offset + field_length -> n - offset
+        | _ -> field_length
+        | exception Not_found -> field_length
+      in
+      Bytes.sub_string buffer offset length
+    end
+
+    let uname () =
+      let buffer = Bytes.create (Uname.field_length * 4) in
+      C.Functions.Uname.uname (Ctypes.ocaml_bytes_start buffer)
+      |> Error.to_result_lazy begin fun () ->
+        Uname.{
+          sysname = extract_field buffer 0;
+          release = extract_field buffer 1;
+          version = extract_field buffer 2;
+          machine = extract_field buffer 3;
+        }
+      end
 end
 
 module Network =
@@ -425,9 +465,9 @@ struct
     homedir : string;
   }
 
-  let get () =
+  let get_passwd () =
     let c_passwd = Ctypes.make C.Types.Passwd.t in
-    C.Functions.Passwd.get (Ctypes.addr c_passwd)
+    C.Functions.Passwd.get_passwd (Ctypes.addr c_passwd)
     |> Error.to_result_lazy begin fun () ->
       let module PW = C.Types.Passwd in
       let passwd = {
@@ -441,12 +481,6 @@ struct
       C.Functions.Passwd.free (Ctypes.addr c_passwd);
       passwd
     end
-end
-
-module Hrtime =
-struct
-  let now =
-    C.Functions.Hrtime.hrtime
 end
 
 module Env =
@@ -491,40 +525,6 @@ struct
     end
 end
 
-module System_name =
-struct
-  type t = {
-    sysname : string;
-    release : string;
-    version : string;
-    machine : string;
-  }
-
-  let field_length = 256
-
-  let extract_field buffer index =
-    let offset = index * field_length in
-    let length =
-      match Bytes.index_from buffer offset '\000' with
-      | n when n < offset + field_length -> n - offset
-      | _ -> field_length
-      | exception Not_found -> field_length
-    in
-    Bytes.sub_string buffer offset length
-
-  let uname () =
-    let buffer = Bytes.create (field_length * 4) in
-    C.Functions.System_name.uname (Ctypes.ocaml_bytes_start buffer)
-    |> Error.to_result_lazy begin fun () ->
-      {
-        sysname = extract_field buffer 0;
-        release = extract_field buffer 1;
-        version = extract_field buffer 2;
-        machine = extract_field buffer 3;
-      }
-    end
-end
-
 module Time =
 struct
   type t = {
@@ -541,6 +541,12 @@ struct
         tv_usec = Ctypes.getf timeval C.Types.Time.Timeval.usec;
       }
     end
+
+  let hrtime =
+    C.Functions.Time.hrtime
+
+  let sleep =
+    C.Functions.Time.sleep
 end
 
 module Random =
@@ -590,10 +596,4 @@ struct
         null_callback
       |> Error.to_result ()
   end
-end
-
-module Sleep =
-struct
-  let sleep =
-    C.Functions.Sleep.sleep
 end

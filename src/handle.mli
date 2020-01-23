@@ -93,7 +93,7 @@ val set_recv_buffer_size :
 
 val fileno :
   [< `Stream of [< `TCP | `Pipe | `TTY ] | `UDP | `Poll ] t ->
-    (Misc.Os_fd.t, Error.t) result
+    (Misc.Os_fd.Fd.t, Error.t) result
 (** Retrieves the file descriptor associated with the handle.
 
     Binds {{:http://docs.libuv.org/en/v1.x/handle.html#c.uv_fileno}

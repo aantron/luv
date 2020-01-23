@@ -14,8 +14,11 @@ sig
 end
 
 val init :
-  ?loop:Loop.t -> ?domain:Misc.Address_family.t -> unit -> (t, Error.t) result
-val open_ : t -> Misc.Os_socket.t -> (unit, Error.t) result
+  ?loop:Loop.t ->
+  ?domain:Misc.Sockaddr.Address_family.t ->
+  unit ->
+    (t, Error.t) result
+val open_ : t -> Misc.Os_fd.Socket.t -> (unit, Error.t) result
 val bind :
   ?ipv6only:bool -> ?reuseaddr:bool -> t -> Misc.Sockaddr.t ->
     (unit, Error.t) result

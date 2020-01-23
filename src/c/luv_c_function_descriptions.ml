@@ -1707,20 +1707,13 @@ struct
   struct
     let t = Types.Passwd.t
 
-    let get =
+    let get_passwd =
       foreign "uv_os_get_passwd"
         (ptr t @-> returning error_code)
 
     let free =
       foreign "uv_os_free_passwd"
         (ptr t @-> returning void)
-  end
-
-  module Hrtime =
-  struct
-    let hrtime =
-      foreign "uv_hrtime"
-        (void @-> returning uint64_t)
   end
 
   module Env =
@@ -1746,7 +1739,7 @@ struct
         (ptr Types.Env_item.t @-> int @-> returning void)
   end
 
-  module System_name =
+  module Uname =
   struct
     let uname =
       foreign "luv_os_uname"
@@ -1758,6 +1751,14 @@ struct
     let gettimeofday =
       foreign "uv_gettimeofday"
         (ptr Types.Time.Timeval.t @-> returning error_code)
+
+    let hrtime =
+      foreign "uv_hrtime"
+        (void @-> returning uint64_t)
+
+    let sleep =
+      foreign "uv_sleep"
+        (int @-> returning void)
   end
 
   module Random =
@@ -1786,12 +1787,5 @@ struct
          uint @->
          trampoline @->
           returning error_code)
-  end
-
-  module Sleep =
-  struct
-    let sleep =
-      foreign "uv_sleep"
-        (int @-> returning void)
   end
 end

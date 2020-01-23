@@ -9,8 +9,11 @@ type t = [ `TCP ] Stream.t
     See also the functions in {!Stream} and {!Handle}. *)
 
 val init :
-  ?loop:Loop.t -> ?domain:Misc.Address_family.t -> unit -> (t, Error.t) result
-val open_ : t -> Misc.Os_socket.t -> (unit, Error.t) result
+  ?loop:Loop.t ->
+  ?domain:Misc.Sockaddr.Address_family.t ->
+  unit ->
+    (t, Error.t) result
+val open_ : t -> Misc.Os_fd.Socket.t -> (unit, Error.t) result
 val nodelay : t -> bool -> (unit, Error.t) result
 val keepalive : t -> int option -> (unit, Error.t) result
 val simultaneous_accepts : t -> bool -> (unit, Error.t) result

@@ -51,7 +51,7 @@ let with_server_and_client ?for_handle_passing () ~server_logic ~client_logic =
 
 let unix_fd_to_file unix_fd =
   unix_fd
-  |> Luv.Os_fd.from_unix
+  |> Luv.Os_fd.Fd.from_unix
   |> check_success_result "from_unix"
   |> Luv.File.open_osfhandle
   |> check_success_result "get_osfhandle"

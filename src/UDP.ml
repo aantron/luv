@@ -7,7 +7,7 @@ type t = [ `UDP ] Handle.t
 
 module Membership = C.Types.UDP.Membership
 
-let init ?loop ?(domain : Misc.Address_family.t option) () =
+let init ?loop ?domain () =
   let udp =
     Handle.allocate
       C.Types.UDP.t ~reference_count:C.Types.UDP.reference_count
@@ -18,7 +18,7 @@ let init ?loop ?(domain : Misc.Address_family.t option) () =
     | None ->
       C.Functions.UDP.init loop udp
     | Some domain ->
-      let domain = Misc.Address_family.to_c domain in
+      let domain = Misc.Sockaddr.Address_family.to_c domain in
       C.Functions.UDP.init_ex loop udp (Unsigned.UInt.of_int domain)
   in
   Error.to_result udp result

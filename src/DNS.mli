@@ -38,8 +38,8 @@ sig
   end
 
   type t = {
-    family : Misc.Address_family.t;
-    socktype : Misc.Socket_type.t;
+    family : Misc.Sockaddr.Address_family.t;
+    socktype : Misc.Sockaddr.Socket_type.t;
     protocol : int;
     addr : Misc.Sockaddr.t;
     canonname : string option;
@@ -70,8 +70,8 @@ end
 val getaddrinfo :
   ?loop:Loop.t ->
   ?request:Addr_info.Request.t ->
-  ?family:Misc.Address_family.t ->
-  ?socktype:Misc.Socket_type.t ->
+  ?family:Misc.Sockaddr.Address_family.t ->
+  ?socktype:Misc.Sockaddr.Socket_type.t ->
   ?protocol:int ->
   ?flags:Addr_info.Flag.t list ->
   ?node:string ->
