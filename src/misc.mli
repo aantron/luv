@@ -98,9 +98,15 @@ sig
       [uv_ip4_addr]}. *)
 
   val to_string : t -> string option
-  (**  *)
+  (** Converts a network address to a string.
+
+      Binds either {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip4_name}
+      [uv_ip4_name]} and
+      {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip6_name}
+      [uv_ip6_name]}. *)
 
   val port : t -> int option
+  (** Extracts the port in a network address. *)
 
   (**/**)
 
@@ -118,14 +124,49 @@ end
 module Resource :
 sig
   val uptime : unit -> (float, Error.t) result
+  (** Evaluates to the current uptime.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_uptime}
+      [uv_uptime]}. *)
+
   val loadavg : unit -> float * float * float
+  (** Evaluates to the load average.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_loadavg}
+      [uv_loadavg]}. *)
+
   val free_memory : unit -> Unsigned.uint64
+  (** Evaluates to the amount of free memory, in bytes.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_free_memory}
+      [uv_get_free_memory]}. *)
+
   val total_memory : unit -> Unsigned.uint64
+  (** Evaluates to the total amount of memory, in bytes.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_total_memory}
+      [uv_get_total_memory]}. *)
+
   val constrained_memory : unit -> Unsigned.uint64 option
+  (** Binds
+      {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_constrained_memory}}. *)
+
   val getpriority : int -> (int, Error.t) result
+  (** Evaluates to the priority of the process with the given pid.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_getpriority}
+      [uv_os_getpriority]}. *)
+
   val setpriority : int -> int -> (unit, Error.t) result
+  (** Sets the priority of the process with the given pid.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_setpriority}
+      [uv_os_setpriority]}. *)
+
   val resident_set_memory_size :
     unit -> (Unsigned.size_t, Error.t) result
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_resident_set_memory}
+      [uv_resident_set_memory]}. *)
 
   type timeval = {
     sec : Signed.Long.t;
