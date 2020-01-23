@@ -201,13 +201,27 @@ sig
       [getrusage(2)]}. *)
 
   val getrusage : unit -> (rusage, Error.t) result
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_getrusage}
+      [uv_getrusage]}.
+
+      See {{:http://man7.org/linux/man-pages/man2/getrusage.2.html}
+      [getrusage(2)]}. *)
 end
 
 (* TODO Support OS pids. *)
 module Pid :
 sig
   val getpid : unit -> int
+  (** Evaluates to the pid of the current process.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_getpid}
+      [uv_os_getpid]}. *)
+
   val getppid : unit -> int
+  (** Evaluates to the pid of the parent process.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_getppid}
+      [uv_os_getppid]}. *)
 end
 
 module CPU_info :
@@ -225,8 +239,12 @@ sig
     speed : int;
     times : times;
   }
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info_t}
+      [uv_cpu_info_t]}. *)
 
   val get : unit -> (t list, Error.t) result
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info}
+      [uv_cpu_info]}. *)
 end
 
 module Network :
