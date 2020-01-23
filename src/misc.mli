@@ -164,13 +164,17 @@ sig
       [uv_os_setpriority]}. *)
 
   val resident_set_memory : unit -> (Unsigned.size_t, Error.t) result
-  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_resident_set_memory}
+  (** Evaluates to the resident set size for the current process.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_resident_set_memory}
       [uv_resident_set_memory]}. *)
 
   type timeval = {
     sec : Signed.Long.t;
     usec : Signed.Long.t;
   }
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_timeval_t}
+      [uv_timeval_t]}. *)
 
   type rusage = {
     utime : timeval;
@@ -190,6 +194,11 @@ sig
     nvcsw : Unsigned.uint64;
     nivcsw : Unsigned.uint64;
   }
+  (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_rusage_t}
+      [uv_rusage_t]}.
+
+      See {{:http://man7.org/linux/man-pages/man2/getrusage.2.html#DESCRIPTION}
+      [getrusage(2)]}. *)
 
   val rusage : unit -> (rusage, Error.t) result
 end
