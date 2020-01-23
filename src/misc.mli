@@ -242,7 +242,7 @@ sig
   (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info_t}
       [uv_cpu_info_t]}. *)
 
-  val get : unit -> (t list, Error.t) result
+  val cpu_info : unit -> (t list, Error.t) result
   (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info}
       [uv_cpu_info]}. *)
 end

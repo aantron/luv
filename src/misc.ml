@@ -296,7 +296,7 @@ struct
     times : times;
   }
 
-  let get () =
+  let cpu_info () =
     let null = Ctypes.(from_voidp C.Types.CPU_info.t null) in
     let info = Ctypes.(allocate (ptr C.Types.CPU_info.t)) null in
     let count = Ctypes.(allocate int) 0 in
