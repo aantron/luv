@@ -1636,7 +1636,7 @@ struct
       foreign "uv_os_setpriority"
         (int @-> int @-> returning error_code)
 
-    let rusage =
+    let getrusage =
       foreign "uv_getrusage"
         (ptr Types.Resource.Rusage.t @-> returning error_code)
   end

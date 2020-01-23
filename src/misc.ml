@@ -251,9 +251,9 @@ struct
       usec = Ctypes.getf c_timeval C.Types.Resource.Timeval.usec;
     }
 
-  let rusage () =
+  let getrusage () =
     let c_rusage = Ctypes.make C.Types.Resource.Rusage.t in
-    C.Functions.Resource.rusage (Ctypes.addr c_rusage)
+    C.Functions.Resource.getrusage (Ctypes.addr c_rusage)
     |> Error.to_result_lazy begin fun () ->
       let module RU = C.Types.Resource.Rusage in
       let field name = Ctypes.getf c_rusage name in

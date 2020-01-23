@@ -200,7 +200,7 @@ sig
       See {{:http://man7.org/linux/man-pages/man2/getrusage.2.html#DESCRIPTION}
       [getrusage(2)]}. *)
 
-  val rusage : unit -> (rusage, Error.t) result
+  val getrusage : unit -> (rusage, Error.t) result
 end
 
 (* TODO Support OS pids. *)
