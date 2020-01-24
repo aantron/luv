@@ -75,11 +75,7 @@ val read_stop : _ t -> (unit, Error.t) result
     [uv_read_stop]}. *)
 
 val write :
-  ?send_handle:[< `TCP | `Pipe ] t ->
-  _ t ->
-  Buffer.t list ->
-  ((unit, Error.t) result -> int -> unit) ->
-    unit
+  _ t -> Buffer.t list -> ((unit, Error.t) result -> int -> unit) -> unit
 (** Writes the given buffer to the stream.
 
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_write} [uv_write]}.
@@ -87,10 +83,19 @@ val write :
     To write only part of a buffer, use {!Luv.Buffer.sub} to create a view into
     the buffer, and pass the view to this function {!Luv.Stream.write}.
 
-    The second argument passed to the callback is the number of bytes written.
+    The second argument passed to the callback is the number of bytes
+    written. *)
 
-    [?send_handle] can be used to send file descriptors if the stream is a
-    {!Luv.Pipe.t}. See {!Luv.Pipe.receive_handle}. *)
+val write2 :
+  [< `Pipe ] t -> Buffer.t list -> send_handle:[< `TCP | `Pipe ] t ->
+    ((unit, Error.t) result -> int -> unit) -> unit
+(** Like {!Luv.Stream.write}, but allows sending a TCP socket or pipe over the
+    stream ([~send_handle]). The stream must be a pipe.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_write2}
+    [uv_write2]}.
+
+    See {!Luv.Pipe.receive_handle}. *)
 
 val try_write : _ t -> Buffer.t list -> (int, Error.t) result
 (** Like {!Luv.Stream.write}, but only attempts to perform the write operation

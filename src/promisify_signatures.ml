@@ -36,7 +36,6 @@ sig
         (Buffer.t, Error.t) result promise
 
     val write :
-      ?send_handle:[< `TCP | `Pipe ] t ->
       _ t ->
       Buffer.t list ->
         ((unit, Error.t) result * int) promise

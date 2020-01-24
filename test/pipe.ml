@@ -201,7 +201,7 @@ let tests = [
       end;
 
       let buffer = Luv.Buffer.create 1 in
-      Luv.Stream.write ipc_2 [buffer] ~send_handle:passed_1
+      Luv.Stream.write2 ipc_2 [buffer] ~send_handle:passed_1
           begin fun result count ->
 
         check_success_result "write2" result;

@@ -98,8 +98,7 @@ let read_stop stream =
 let write_trampoline =
   C.Functions.Stream.Write_request.get_trampoline ()
 
-(* DOC send_handle must remain open during the operation. *)
-let write ?send_handle stream buffers callback =
+let write_general ?send_handle stream buffers callback =
   let count = List.length buffers in
   let bytes = Buffer.total_size buffers in
   let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
@@ -139,6 +138,12 @@ let write ?send_handle stream buffers callback =
     Request.release request;
     callback (Error.result_from_c immediate_result) 0
   end
+
+let write stream buffers callback =
+  write_general ?send_handle:None stream buffers callback
+
+let write2 pipe buffers ~send_handle callback =
+  write_general ~send_handle pipe buffers callback
 
 let try_write stream buffers =
   let count = List.length buffers in

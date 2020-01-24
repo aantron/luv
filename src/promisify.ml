@@ -44,9 +44,9 @@ struct
       end;
       p
 
-    let write ?send_handle stream buffers =
+    let write stream buffers =
       let p, resolve = Promise.make () in
-      Stream.write ?send_handle stream buffers (fun error count ->
+      Stream.write stream buffers (fun error count ->
         resolve (error, count));
       p
   end
