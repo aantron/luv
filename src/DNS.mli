@@ -20,7 +20,7 @@ module Addr_info :
 sig
   module Request :
   sig
-    type t = [ `Getaddrinfo ] Request.t
+    type t = [ `Addr_info ] Request.t
     val make : unit -> t
   end
 
@@ -51,7 +51,7 @@ module Name_info :
 sig
   module Request :
   sig
-    type t = [ `Getnameinfo ] Request.t
+    type t = [ `Name_info ] Request.t
     val make : unit -> t
   end
 

@@ -688,7 +688,7 @@ struct
 
   module DNS =
   struct
-    module Addrinfo =
+    module Addr_info =
     struct
       let t : ([ `Addrinfo ] structure) typ = structure "addrinfo"
       let flags = field t "ai_flags" int
@@ -700,14 +700,15 @@ struct
       let canonname = field t "ai_canonname" string_opt
       let next = field t "ai_next" (ptr t)
       let () = seal t
-    end
 
-    module Getaddrinfo =
-    struct
-      let t : ([ `Getaddrinfo ] Request.t) typ =
-        typedef (structure "`Getaddrinfo") "uv_getaddrinfo_t"
-      let addrinfo = field t "addrinfo" (ptr Addrinfo.t)
-      let () = seal t
+      module Request =
+      struct
+        let underlying = t
+        let t : ([ `Addr_info ] Request.t) typ =
+          typedef (structure "`Addr_info") "uv_getaddrinfo_t"
+        let addrinfo = field t "addrinfo" (ptr underlying)
+        let () = seal t
+      end
 
       module Flag =
       struct
@@ -721,10 +722,10 @@ struct
       end
     end
 
-    module Getnameinfo =
+    module Name_info =
     struct
-      let t : ([ `Getnameinfo ] Request.t) typ =
-        typedef (structure "`Getnameinfo") "uv_getnameinfo_t"
+      let t : ([ `Name_info ] Request.t) typ =
+        typedef (structure "`Name_info") "uv_getnameinfo_t"
       let host = field t "host" char
       let service = field t "service" char
       let () = seal t

@@ -30,7 +30,7 @@ type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
     [uv_req_t]}. *)
 
 val cancel :
-  [< `File | `Getaddrinfo | `Getnameinfo | `Work ] t -> (unit, Error.t) result
+  [< `File | `Addr_info | `Name_info | `Work ] t -> (unit, Error.t) result
 (** Tries to cancel a pending request.
 
     Binds {{:http://docs.libuv.org/en/v1.x/request.html#c.uv_cancel}

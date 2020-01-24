@@ -7,10 +7,10 @@ module Addr_info =
 struct
   module Request =
   struct
-    type t = [ `Getaddrinfo ] Request.t
+    type t = [ `Addr_info ] Request.t
 
     let make () =
-      Request.allocate C.Types.DNS.Getaddrinfo.t
+      Request.allocate C.Types.DNS.Addr_info.Request.t
   end
 
   module Flag =
@@ -25,7 +25,7 @@ struct
       | `ADDRCONFIG
     ]
 
-    let to_c = let open C.Types.DNS.Getaddrinfo.Flag in function
+    let to_c = let open C.Types.DNS.Addr_info.Flag in function
       | `PASSIVE -> passive
       | `CANONNAME -> canonname
       | `NUMERICHOST -> numerichost
@@ -48,10 +48,10 @@ module Name_info =
 struct
   module Request =
   struct
-    type t = [ `Getnameinfo ] Request.t
+    type t = [ `Name_info ] Request.t
 
     let make () =
-      Request.allocate C.Types.DNS.Getnameinfo.t
+      Request.allocate C.Types.DNS.Name_info.t
   end
 
   module Flag =
@@ -64,7 +64,7 @@ struct
       | `NUMERICSERV
     ]
 
-    let to_c = let open C.Types.DNS.Getnameinfo.Flag in function
+    let to_c = let open C.Types.DNS.Name_info.Flag in function
       | `NAMEREQD -> namereqd
       | `DGRAM -> dgram
       | `NOFQDN -> nofqdn
@@ -77,7 +77,7 @@ let rec addrinfo_list_to_ocaml addrinfo =
   if Ctypes.is_null addrinfo then
     []
   else begin
-    let module AI = C.Types.DNS.Addrinfo in
+    let module AI = C.Types.DNS.Addr_info in
     let addrinfo = Ctypes.(!@) addrinfo in
     let family =
       Misc.Sockaddr.Address_family.from_c (Ctypes.getf addrinfo AI.family) in
@@ -102,7 +102,7 @@ let rec addrinfo_list_to_ocaml addrinfo =
 module Async =
 struct
   let getaddrinfo_trampoline =
-    C.Functions.DNS.Getaddrinfo.get_trampoline ()
+    C.Functions.DNS.Addr_info.get_trampoline ()
 
   let getaddrinfo
       ?loop
@@ -119,7 +119,7 @@ struct
     let loop = Loop.or_default loop in
 
     let hints =
-      let module AI = C.Types.DNS.Addrinfo in
+      let module AI = C.Types.DNS.Addr_info in
       match family, socktype, protocol, flags with
       | None, None, None, None ->
         Ctypes.(from_voidp AI.t null)
@@ -156,16 +156,16 @@ struct
       result
       |> Error.to_result_lazy begin fun () ->
         let addrinfos =
-          Ctypes.(getf (!@ request)) C.Types.DNS.Getaddrinfo.addrinfo in
+          Ctypes.(getf (!@ request)) C.Types.DNS.Addr_info.Request.addrinfo in
         let result = addrinfo_list_to_ocaml addrinfos in
-        C.Functions.DNS.Getaddrinfo.free addrinfos;
+        C.Functions.DNS.Addr_info.free addrinfos;
         result
       end
       |> callback
     end;
 
     let immediate_result =
-      C.Functions.DNS.Getaddrinfo.getaddrinfo
+      C.Functions.DNS.Addr_info.getaddrinfo
         loop request getaddrinfo_trampoline node service hints
     in
 
@@ -187,7 +187,7 @@ struct
     |> Buffer.to_string
 
   let getnameinfo_trampoline =
-    C.Functions.DNS.Getnameinfo.get_trampoline ()
+    C.Functions.DNS.Name_info.get_trampoline ()
 
   let getnameinfo
       ?loop
@@ -200,7 +200,7 @@ struct
     Request.set_callback request begin fun result ->
       result
       |> Error.to_result_lazy begin fun () ->
-        let module NI = C.Types.DNS.Getnameinfo in
+        let module NI = C.Types.DNS.Name_info in
         let host = load_string request NI.host NI.maxhost in
         let service = load_string request NI.service NI.maxserv in
         (host, service)
@@ -211,7 +211,7 @@ struct
     let flags = Helpers.Bit_field.list_to_c Name_info.Flag.to_c flags in
 
     let immediate_result =
-      C.Functions.DNS.Getnameinfo.getnameinfo
+      C.Functions.DNS.Name_info.getnameinfo
         (Loop.or_default loop)
         request
         getnameinfo_trampoline

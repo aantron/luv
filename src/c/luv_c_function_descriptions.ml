@@ -1244,10 +1244,10 @@ struct
 
   module DNS =
   struct
-    module Getaddrinfo =
+    module Addr_info =
     struct
-      let t = Types.DNS.Getaddrinfo.t
-      let addrinfo = Types.DNS.Addrinfo.t
+      let t = Types.DNS.Addr_info.Request.t
+      let addrinfo = Types.DNS.Addr_info.t
 
       let trampoline =
         static_funptr
@@ -1272,9 +1272,9 @@ struct
           (ptr addrinfo @-> returning void)
     end
 
-    module Getnameinfo =
+    module Name_info =
     struct
-      let t = Types.DNS.Getnameinfo.t
+      let t = Types.DNS.Name_info.t
 
       let trampoline =
         static_funptr
