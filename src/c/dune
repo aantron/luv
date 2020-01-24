@@ -27,9 +27,8 @@
  (libraries ctypes.stubs luv_c_type_descriptions))
 
 (rule
- (targets generate_types_step_2.c)
- (deps generate_types_start.exe)
- (action (with-stdout-to %{targets} (run %{deps}))))
+ (with-stdout-to generate_types_step_2.c
+  (run ./generate_types_start.exe)))
 
 ; Based partially on
 ;   https://github.com/avsm/ocaml-yaml/blob/master/types/stubgen/jbuild#L20
@@ -43,11 +42,8 @@
   -I ../vendor/libuv/include -o %{targets}")))
 
 (rule
- (targets luv_c_generated_types.ml)
- (deps generate_types_step_2.exe)
- (action (with-stdout-to %{targets} (run %{deps}))))
-
-
+ (with-stdout-to luv_c_generated_types.ml
+  (run ./generate_types_step_2.exe)))
 
 ; Function bindings.
 (library
@@ -69,11 +65,9 @@
  (libraries ctypes.stubs luv_c_function_descriptions))
 
 (rule
- (targets c_generated_functions.c)
- (deps generate_c_functions.exe)
- (action (with-stdout-to %{targets} (run %{deps} luv_stub))))
+ (with-stdout-to c_generated_functions.c
+  (run ./generate_c_functions.exe luv_stub)))
 
 (rule
- (targets luv_c_generated_functions.ml)
- (deps generate_ml_functions.exe)
- (action (with-stdout-to %{targets} (run %{deps} luv_stub))))
+ (with-stdout-to luv_c_generated_functions.ml
+  (run ./generate_ml_functions.exe luv_stub)))
