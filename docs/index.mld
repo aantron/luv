@@ -1,57 +1,76 @@
-foo bar
+{0 Luv}
 
-{!modules:
-  Luv.Error
-  Luv.Version
-  Luv.Loop
-  Luv.Handle
-  Luv.Request
-  Luv.Timer
-  Luv.Prepare
-  Luv.Check
-  Luv.Idle
-  Luv.Async
-  Luv.Poll
-  Luv.Signal
-  Luv.Process
-  Luv.Stream
-  Luv.TCP
-  Luv.Pipe
-  Luv.TTY
-  Luv.UDP
-  Luv.FS_event
-  Luv.FS_poll
-  Luv.File
-  Luv.Thread_pool
-  Luv.DNS
-  Luv.DLL
-  Luv.Thread
-}
+Luv is a binding to {{:https://libuv.org/} libuv}, the asynchronous I/O library
+inside Node.js.
 
-{!modules:
-  Luv.TLS
-  Luv.Once
-  Luv.Mutex
-  Luv.Rwlock
-  Luv.Semaphore
-  Luv.Condition
-  Luv.Barrier
-}
+Basic usage looks like this:
 
-{!modules:
-  Luv.Os_fd
-  Luv.Sockaddr
-  Luv.Resource
-  Luv.Pid
-  Luv.System_info
-  Luv.Network
-  Luv.Path
-  Luv.Passwd
-  Luv.Env
-  Luv.Time
-  Luv.Random
-}
+{[
+let _ =
+  (* Create a 1-second timer. *)
+  let Ok timer = Luv.Timer.init () in
+  Luv.Timer.start timer 1000 (fun () -> print_endline "Hello, world!");
 
-{!modules:
-  Luv.Buffer
-}
+  (* Run the main loop. *)
+  Luv.Loop.(run (default ()) Run_mode.default)
+
+(* ocamlfind opt -linkpkg -package luv foo.ml *)
+]}
+
+{1 API reference}
+
+{2 Basics}
+
+- {!Luv.Error} — error handling
+- {!Luv.Loop} — event loops
+- {!Luv.Buffer} — byte buffers
+- {!Luv.Handle} — persistent objects (sockets, etc.)
+- {!Luv.Stream} — base type for TCP sockets, pipes, TTY handles
+- {!Luv.Request} — contexts for asynchronous requests
+
+{2 Main interface}
+
+- {!Luv.Timer} — timers
+- {!Luv.Signal} — signals
+- {!Luv.Process} — subprocesses
+- {!Luv.TCP} — TCP sockets
+- {!Luv.UDP} — UDP sockets
+- {!Luv.DNS} — DNS
+- {!Luv.Pipe} — pipes
+- {!Luv.TTY} — consoles
+- {!Luv.File} — file operations
+- {!Luv.FS_event} — file system events
+
+{2 System threads}
+
+- {!Luv.Thread_pool} — libuv thread pool
+- {!Luv.Thread} — general system threads
+- {!Luv.TLS} — thread-local storage
+- {!Luv.Once} — once-only barriers
+- {!Luv.Mutex} — mutexes
+- {!Luv.Rwlock} — read-write locks
+- {!Luv.Semaphore} — semaphores
+- {!Luv.Condition} — condition variables
+- {!Luv.Barrier} — barriers
+
+{2 Miscellaneous}
+
+- {!Luv.Env} — environment variables
+- {!Luv.Time} — current time
+- {!Luv.Path} — relevant directories
+- {!Luv.Random} — system entropy source
+- {!Luv.Sockaddr} — network addresses
+- {!Luv.Network} — network interfaces and hostname
+- {!Luv.FS_poll} — file system polling
+- {!Luv.Poll} — file descriptor polling
+- {!Luv.Resource} — resource usage
+- {!Luv.System_info} — system information
+- {!Luv.Pid} — process ids
+- {!Luv.Os_fd} — system file descriptor interop
+- {!Luv.DLL} — dynamic linking
+- {!Luv.Passwd} — current user information
+- {!Luv.Async} — inter-loop communication
+- {!Luv.Prepare} — pre-I/O callbacks
+- {!Luv.Check} — post-I/O callbacks
+- {!Luv.Idle} — per-iteration callbacks
+- {!Luv.Version} — libuv version

@@ -3,7 +3,7 @@
 
 
 
-(** Inter-thread communication.
+(** Inter-loop communication.
 
     See {{:http://docs.libuv.org/en/v1.x/async.html} [uv_async_t] {i - Async
     handle}}. *)

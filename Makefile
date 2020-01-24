@@ -48,7 +48,7 @@ test-installation-ci :
 .PHONY : docs
 docs :
 	dune build @doc -p luv
-	# cp odoc.css _build/default/_doc/_html/
+	# cp docs/odoc.css _build/default/_doc/_html/
 
 .PHONY : watch-docs
 watch-docs : docs

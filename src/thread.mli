@@ -327,7 +327,7 @@ end
 
 
 
-(** Condition variable.
+(** Condition variables.
 
     See {{:http://docs.libuv.org/en/v1.x/threading.html#conditions}
     {i Conditions}}. *)
