@@ -58,19 +58,19 @@ val simultaneous_accepts : t -> bool -> (unit, Error.t) result
     [uv_tcp_simultaneous_accepts]}. *)
 
 val bind : ?ipv6only:bool -> t -> Misc.Sockaddr.t -> (unit, Error.t) result
-(** Assigns an address to the given stream.
+(** Assigns an address to the given TCP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_bind}
     [uv_tcp_bind]}. *)
 
 val getsockname : t -> (Misc.Sockaddr.t, Error.t) result
-(** Retrieves the address assigned to the given stream.
+(** Retrieves the address assigned to the given TCP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_getsockname}
     [uv_tcp_getsockname]}. *)
 
 val getpeername : t -> (Misc.Sockaddr.t, Error.t) result
-(** Retrieves the address of the given stream's peer.
+(** Retrieves the address of the given TCP socket's peer.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_getpeername}
     [uv_tcp_getpeername]}. *)

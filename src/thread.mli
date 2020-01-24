@@ -140,82 +140,270 @@ end
 
 
 
+(** Once-only initialization.
+
+    See
+    {{:http://docs.libuv.org/en/v1.x/threading.html#once-only-initialization}
+    {i Once-only initialization}}. *)
 module Once :
 sig
   type t
+  (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_once_t}
+      [uv_once_t]}. *)
 
   val init : unit -> (t, Error.t) result
+  (** Allocates and initializes a once-only barrier.
+
+      Binds
+      {{:http://docs.libuv.org/en/v1.x/threading.html#once-only-initialization}
+      [UV_ONCE_INIT]}. *)
+
   val once : t -> (unit -> unit) -> unit
+  (** Guards the given callback to be called only once.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_once}
+      [uv_once]}. *)
+
   val once_c : t -> nativeint -> unit
+  (** Like {!Luv.Once.once}, but takes a pointer to a C function. *)
 end
 
 
 
-(* DOC destroy can raise sigabrt if the mutex is still locked. This is a
-   "feature" of libuv. *)
+(** Mutexes.
+
+    See {{:http://docs.libuv.org/en/v1.x/threading.html#mutex-locks} {i Mutex
+    locks}}. *)
 module Mutex :
 sig
   type t
+  (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_t}
+      [uv_mutex_t]}. *)
 
   val init : ?recursive:bool -> unit -> (t, Error.t) result
+  (** Allocates and initializes a mutex.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_init}
+      [uv_mutex_init]}.
+
+      If [?recursive] is set to [true], calls
+      {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_init_recursive}
+      [uv_mutex_init_recursive]} instead. *)
+
   val destroy : t -> unit
+  (** Cleans up a mutex.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_destroy}
+      [uv_mutex_destroy]}. *)
+
   val lock : t -> unit
+  (** Takes a mutex.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_lock}
+      [uv_mutex_lock]}.
+
+      The calling thread is blocked until it obtains the mutex. *)
+
   val trylock : t -> (unit, Error.t) result
+  (** Tries to take the mutex without blocking.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_trylock}
+      [uv_mutex_trylock]}. *)
+
   val unlock : t -> unit
+  (** Releases the mutex.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_unlock}
+      [uv_mutex_unlock]}. *)
 end
 
 
 
+(** Read-write locks.
+
+    See {{:http://docs.libuv.org/en/v1.x/threading.html#read-write-locks}
+    {i Read-write locks}}. *)
 module Rwlock :
 sig
   type t
+  (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_t}
+      [uv_rwlock_t]}. *)
 
   val init : unit -> (t, Error.t) result
+  (** Allocates and initializes a read-write lock.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_init}
+      [uv_rwlock_init]}. *)
+
   val destroy : t -> unit
+  (** Cleans up a read-write lock.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_destroy}
+      [uv_rwlock_destroy]}. *)
+
   val rdlock : t -> unit
+  (** Takes a read-write lock for reading (shared access).
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_rdlock}
+      [uv_rwlock_rdlock]}. *)
+
   val tryrdlock : t -> (unit, Error.t) result
+  (** Tries to take a read-write lock for reading without blocking.
+
+      Binds
+      {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_tryrdlock}
+      [uv_rwlock_tryrdlock]}. *)
+
   val rdunlock : t -> unit
+  (** Releases a read-write lock after it was taken for reading.
+
+      Binds
+      {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_rdunlock}
+      [uv_rwlock_rdunlock]}. *)
+
   val wrlock : t -> unit
+  (** Takes a read-write lock for writing (exclusive access).
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_wrlock}
+      [uv_rwlock_wrlock]}. *)
+
   val trywrlock : t -> (unit, Error.t) result
+  (** Tries to take a read-write lock for writing without blocking.
+
+      Binds
+      {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_trywrlock}
+      [uv_rwlock_trywrlock]}. *)
+
   val wrunlock : t -> unit
+  (** Releases a read-write lock after it was taken for writing.
+
+      Binds
+      {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_wrunlock}
+      [uv_rwlock_wrunlock]}. *)
 end
 
 
 
+(** Semaphores.
+
+    See {{:http://docs.libuv.org/en/v1.x/threading.html#semaphores}
+    {i Semaphores}}. *)
 module Semaphore :
 sig
   type t
+  (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_sem_t}
+      [uv_sem_t]}. *)
 
   val init : int -> (t, Error.t) result
+  (** Allocates and initializes a semaphore.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_sem_init}
+      [uv_sem_init]}. *)
+
   val destroy : t -> unit
+  (** Cleans up a semaphore.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_sem_destroy}
+      [uv_sem_destroy]}. *)
+
   val post : t -> unit
+  (** Increments a semaphore.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_sem_post}
+      [uv_sem_post]}. *)
+
   val wait : t -> unit
+  (** Decrements a semaphore.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_sem_wait}
+      [uv_sem_wait]}. *)
+
   val trywait : t -> (unit, Error.t) result
+  (** Tries to decrement a semaphore without blocking.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_sem_trywait}
+      [uv_sem_trywait]}. *)
 end
 
 
 
-(* DOC Time units for timedwait? nanoseconds, so the type might need to be
-   int64, or the timeout should be scaled internally. *)
+(** Condition variable.
+
+    See {{:http://docs.libuv.org/en/v1.x/threading.html#conditions}
+    {i Conditions}}. *)
 module Condition :
 sig
   type t
+  (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_cond_t}
+      [uv_cond_t]}. *)
 
   val init : unit -> (t, Error.t) result
+  (** Allocates and initializes a condition variable.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_cond_init}
+      [uv_cond_init]}. *)
+
   val destroy : t -> unit
+  (** Cleans up a condition variable.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_cond_destroy}
+      [uv_cond_destroy]}. *)
+
   val signal : t -> unit
+  (** Signals a condition variable.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_cond_signal}
+      [uv_cond_signal]}. *)
+
   val broadcast : t -> unit
+  (** Signals a condition variable, waking all waiters.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_cond_broadcast}
+      [uv_cond_broadcast]}. *)
+
   val wait : t -> Mutex.t -> unit
+  (** Waits on a condition variable.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_cond_wait}
+      [uv_cond_wait]}. *)
+
   val timedwait : t -> Mutex.t -> int -> (unit, Error.t) result
+  (** Like {!Luv.Condition.wait}, but with a timeout.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_cond_timedwait}
+      [uv_cond_timedwait]}.
+
+      The timeout is given in nanoseconds. *)
 end
 
 
 
+(** Barriers.
+
+    See {{:http://docs.libuv.org/en/v1.x/threading.html#barriers}
+    {i Barriers}}. *)
 module Barrier :
 sig
   type t
+  (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_barrier_t}
+      [uv_barrier_t]}. *)
 
   val init : int -> (t, Error.t) result
+  (** Allocates and initializes a barrier.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_barrier_init}
+      [uv_barrier_init]}. *)
+
   val destroy : t -> unit
+  (** Cleans up a barrier.
+
+      Binds
+      {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_barrier_destroy}
+      [uv_barrier_destroy]}. *)
+
   val wait : t -> bool
+  (** Waits on a barrier.
+
+      Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_barrier_wait}
+      [uv_barrier_wait]}. *)
 end
