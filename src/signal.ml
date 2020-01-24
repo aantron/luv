@@ -27,7 +27,7 @@ let stop signal =
   C.Functions.Signal.stop signal
   |> Error.to_result ()
 
-let get_signum signal =
+let signum signal =
   Ctypes.getf (Ctypes.(!@) signal) C.Types.Signal.signum
 
 include C.Types.Signal.Signum

@@ -52,12 +52,12 @@ let tests = [
       end
     end;
 
-    "get_signum", `Quick, begin fun () ->
+    "signum", `Quick, begin fun () ->
       with_signal begin fun signal ->
         Luv.Signal.(start signal sighup) ignore
         |> check_success_result "start";
 
-        Luv.Signal.get_signum signal
+        Luv.Signal.signum signal
         |> Alcotest.(check int) "signum" Luv.Signal.sighup
       end
     end;

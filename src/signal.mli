@@ -48,7 +48,7 @@ val stop : t -> (unit, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/signal.html#c.uv_signal_stop}
     [uv_signal_stop]}. *)
 
-val get_signum : t -> int
+val signum : t -> int
 (** Evaluates to the signal number associated with the handle.
 
     Binds {{:http://docs.libuv.org/en/v1.x/signal.html#c.uv_signal_t.signum}
