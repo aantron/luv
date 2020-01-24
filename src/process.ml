@@ -33,13 +33,13 @@ let to_new_pipe
   Ctypes.setf redirection Redirection.stream Handle.(coerce to_parent_pipe);
   (fd, redirection)
 
-let inherit_fd ~fd ~from_parent_fd =
+let inherit_fd ~fd ~from_parent_fd () =
   let redirection = Ctypes.make Redirection.t in
   Ctypes.setf redirection Redirection.flags Redirection.inherit_fd;
   Ctypes.setf redirection Redirection.fd from_parent_fd;
   (fd, redirection)
 
-let inherit_stream ~fd ~from_parent_stream =
+let inherit_stream ~fd ~from_parent_stream () =
   let redirection = Ctypes.make Redirection.t in
   Ctypes.setf redirection Redirection.flags Redirection.inherit_stream;
   Ctypes.setf redirection Redirection.stream Handle.(coerce from_parent_stream);

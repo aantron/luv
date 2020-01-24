@@ -46,6 +46,7 @@ val to_new_pipe :
 val inherit_fd :
   fd:int ->
   from_parent_fd:int ->
+  unit ->
     redirection
 (** Causes [~fd] in the child to be connected to the same device or peer as
     [~from_parent_fd] in the parent.
@@ -56,6 +57,7 @@ val inherit_fd :
 val inherit_stream :
   fd:int ->
   from_parent_stream:_ Stream.t ->
+  unit ->
     redirection
 (** Same as {!Luv.Process.inherit_fd}, but takes a {!Luv.Stream.t} for the
     parent file descriptor.

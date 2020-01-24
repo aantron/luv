@@ -59,7 +59,7 @@ let tests = [
 
       Luv.Process.(spawn
         "echo" ["echo"; "-n"; "foo"]
-        ~redirect:[inherit_fd ~fd:stdout ~from_parent_fd:child_end_raw])
+        ~redirect:[inherit_fd ~fd:stdout ~from_parent_fd:child_end_raw ()])
       |> check_success_result "spawn"
       |> fun p -> Luv.Handle.close p ignore;
 
@@ -93,7 +93,7 @@ let tests = [
 
       Luv.Process.(spawn
         "echo" ["echo"; "-n"; "foo"]
-        ~redirect:[inherit_stream ~fd:stdout ~from_parent_stream:child_end])
+        ~redirect:[inherit_stream ~fd:stdout ~from_parent_stream:child_end ()])
       |> check_success_result "spawn"
       |> fun p -> Luv.Handle.close p ignore;
 
