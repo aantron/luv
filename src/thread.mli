@@ -21,7 +21,7 @@ sig
       [uv_work_t]}. *)
   module Request :
   sig
-    type t = [ `Work ] Request.t
+    type t = [ `Thread_pool ] Request.t
     val make : unit -> t
   end
 

@@ -753,7 +753,8 @@ struct
 
   module Work =
   struct
-    let t : ([ `Work ] Request.t) typ = typedef (structure "`Work") "uv_work_t"
+    let t : ([ `Thread_pool ] Request.t) typ =
+      typedef (structure "`Thread_pool") "uv_work_t"
     let () = seal t
 
     let reference_count = constant "LUV_WORK_REFERENCE_COUNT" int

@@ -7,7 +7,7 @@ module Pool =
 struct
   module Request_ =
   struct
-    type t = [ `Work ] Request.t
+    type t = [ `Thread_pool ] Request.t
 
     let make () =
       Request.allocate
