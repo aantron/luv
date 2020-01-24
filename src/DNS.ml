@@ -36,10 +36,10 @@ struct
   end
 
   type t = {
-    family : Misc.Sockaddr.Address_family.t;
-    socktype : Misc.Sockaddr.Socket_type.t;
+    family : Sockaddr.Address_family.t;
+    socktype : Sockaddr.Socket_type.t;
     protocol : int;
-    addr : Misc.Sockaddr.t;
+    addr : Sockaddr.t;
     canonname : string option;
   }
 end
@@ -80,11 +80,11 @@ let rec addrinfo_list_to_ocaml addrinfo =
     let module AI = C.Types.DNS.Addr_info in
     let addrinfo = Ctypes.(!@) addrinfo in
     let family =
-      Misc.Sockaddr.Address_family.from_c (Ctypes.getf addrinfo AI.family) in
+      Sockaddr.Address_family.from_c (Ctypes.getf addrinfo AI.family) in
     let socktype =
-      Misc.Sockaddr.Socket_type.from_c (Ctypes.getf addrinfo AI.socktype) in
+      Sockaddr.Socket_type.from_c (Ctypes.getf addrinfo AI.socktype) in
     let addr =
-      Misc.Sockaddr.copy_sockaddr
+      Sockaddr.copy_sockaddr
         (Ctypes.getf addrinfo AI.addr) (Ctypes.getf addrinfo AI.addrlen)
     in
     let ocaml_addrinfo = {
@@ -130,11 +130,11 @@ struct
           | Some family -> family
           | None -> `UNSPEC
         in
-        let family = Misc.Sockaddr.Address_family.to_c family in
+        let family = Sockaddr.Address_family.to_c family in
         Ctypes.setf hints AI.family family;
         begin match socktype with
         | Some socktype ->
-          let socktype = Misc.Sockaddr.Socket_type.to_c socktype in
+          let socktype = Sockaddr.Socket_type.to_c socktype in
           Ctypes.setf hints AI.socktype socktype
         | None -> ()
         end;
@@ -215,7 +215,7 @@ struct
         (Loop.or_default loop)
         request
         getnameinfo_trampoline
-        (Misc.Sockaddr.as_sockaddr address)
+        (Sockaddr.as_sockaddr address)
         flags
     in
 

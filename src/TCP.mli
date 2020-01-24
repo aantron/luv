@@ -20,9 +20,7 @@ type t = [ `TCP ] Stream.t
     {!Luv.Stream.read_start}, {!Luv.Stream.write}. *)
 
 val init :
-  ?loop:Loop.t ->
-  ?domain:Misc.Sockaddr.Address_family.t ->
-  unit ->
+  ?loop:Loop.t -> ?domain:Sockaddr.Address_family.t -> unit ->
     (t, Error.t) result
 (** Allocates and initializes a TCP stream.
 
@@ -32,7 +30,7 @@ val init :
     The stream is not yet connected or listening. See {!Luv.TCP.bind},
     {!Luv.Stream.listen}, and {!Luv.Stream.connect}. *)
 
-val open_ : t -> Misc.Os_fd.Socket.t -> (unit, Error.t) result
+val open_ : t -> Os_fd.Socket.t -> (unit, Error.t) result
 (** Wraps an existing socket in a libuv TCP stream.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_open}
@@ -57,25 +55,25 @@ val simultaneous_accepts : t -> bool -> (unit, Error.t) result
     {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_simultaneous_accepts}
     [uv_tcp_simultaneous_accepts]}. *)
 
-val bind : ?ipv6only:bool -> t -> Misc.Sockaddr.t -> (unit, Error.t) result
+val bind : ?ipv6only:bool -> t -> Sockaddr.t -> (unit, Error.t) result
 (** Assigns an address to the given TCP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_bind}
     [uv_tcp_bind]}. *)
 
-val getsockname : t -> (Misc.Sockaddr.t, Error.t) result
+val getsockname : t -> (Sockaddr.t, Error.t) result
 (** Retrieves the address assigned to the given TCP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_getsockname}
     [uv_tcp_getsockname]}. *)
 
-val getpeername : t -> (Misc.Sockaddr.t, Error.t) result
+val getpeername : t -> (Sockaddr.t, Error.t) result
 (** Retrieves the address of the given TCP socket's peer.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_getpeername}
     [uv_tcp_getpeername]}. *)
 
-val connect : t -> Misc.Sockaddr.t -> ((unit, Error.t) result -> unit) -> unit
+val connect : t -> Sockaddr.t -> ((unit, Error.t) result -> unit) -> unit
 (** Connects to a host.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_connect}

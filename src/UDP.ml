@@ -18,7 +18,7 @@ let init ?loop ?domain () =
     | None ->
       C.Functions.UDP.init loop udp
     | Some domain ->
-      let domain = Misc.Sockaddr.Address_family.to_c domain in
+      let domain = Sockaddr.Address_family.to_c domain in
       C.Functions.UDP.init_ex loop udp (Unsigned.UInt.of_int domain)
   in
   Error.to_result udp result
@@ -34,11 +34,11 @@ let bind ?(ipv6only = false) ?(reuseaddr = false) udp address =
     |> accumulate C.Types.UDP.Flag.ipv6only ipv6only
     |> accumulate C.Types.UDP.Flag.reuseaddr reuseaddr
   in
-  C.Functions.UDP.bind udp (Misc.Sockaddr.as_sockaddr address) flags
+  C.Functions.UDP.bind udp (Sockaddr.as_sockaddr address) flags
   |> Error.to_result ()
 
 let getsockname =
-  Misc.Sockaddr.wrap_c_getter C.Functions.UDP.getsockname
+  Sockaddr.wrap_c_getter C.Functions.UDP.getsockname
 
 let set_membership udp ~group ~interface membership =
   C.Functions.UDP.set_membership
@@ -110,7 +110,7 @@ let send_general udp buffers address callback =
   end
 
 let send udp buffers address callback =
-  send_general udp buffers (Misc.Sockaddr.as_sockaddr address) callback
+  send_general udp buffers (Sockaddr.as_sockaddr address) callback
 
 let try_send_general udp buffers address =
   let count = List.length buffers in
@@ -131,7 +131,7 @@ let try_send_general udp buffers address =
   Error.to_result () result
 
 let try_send udp buffers address =
-  try_send_general udp buffers (Misc.Sockaddr.as_sockaddr address)
+  try_send_general udp buffers (Sockaddr.as_sockaddr address)
 
 module Recv_flag =
 struct
@@ -173,7 +173,7 @@ let recv_start
         sockaddr
         |> Ctypes.ptr_of_raw_address
         |> Ctypes.from_voidp C.Types.Sockaddr.storage
-        |> Misc.Sockaddr.copy_storage
+        |> Sockaddr.copy_storage
       in
       let flags =
         if flags land C.Types.UDP.Flag.partial = 0 then
@@ -213,18 +213,18 @@ let get_send_queue_count udp =
 module Connected =
 struct
   let connect udp address =
-    C.Functions.UDP.connect udp (Misc.Sockaddr.as_sockaddr address)
+    C.Functions.UDP.connect udp (Sockaddr.as_sockaddr address)
     |> Error.to_result ()
 
   let disconnect udp =
-    C.Functions.UDP.connect udp Misc.Sockaddr.null
+    C.Functions.UDP.connect udp Sockaddr.null
     |> Error.to_result ()
 
-  let getpeername = Misc.Sockaddr.wrap_c_getter C.Functions.UDP.getpeername
+  let getpeername = Sockaddr.wrap_c_getter C.Functions.UDP.getpeername
 
   let send udp buffers callback =
-    send_general udp buffers Misc.Sockaddr.null callback
+    send_general udp buffers Sockaddr.null callback
 
   let try_send udp buffers =
-    try_send_general udp buffers Misc.Sockaddr.null
+    try_send_general udp buffers Sockaddr.null
 end

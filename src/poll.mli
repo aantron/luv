@@ -22,7 +22,7 @@ val init : ?loop:Loop.t -> int -> (t, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/poll.html#c.uv_poll_init}
     [uv_poll_init]}. *)
 
-val init_socket : ?loop:Loop.t -> Misc.Os_fd.Socket.t -> (t, Error.t) result
+val init_socket : ?loop:Loop.t -> Os_fd.Socket.t -> (t, Error.t) result
 (** Creates a polling handle for an existing socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/poll.html#c.uv_poll_init_socket}

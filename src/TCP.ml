@@ -13,7 +13,7 @@ let init ?loop ?domain () =
     | None ->
       C.Functions.TCP.init loop tcp
     | Some domain ->
-      let domain = Misc.Sockaddr.Address_family.to_c domain in
+      let domain = Sockaddr.Address_family.to_c domain in
       C.Functions.TCP.init_ex loop tcp (Unsigned.UInt.of_int domain)
   in
   Error.to_result tcp result
@@ -41,14 +41,14 @@ let simultaneous_accepts tcp enable =
 
 let bind ?(ipv6only = false) tcp address =
   let flags = if ipv6only then C.Types.TCP.ipv6only else 0 in
-  C.Functions.TCP.bind tcp (Misc.Sockaddr.as_sockaddr address) flags
+  C.Functions.TCP.bind tcp (Sockaddr.as_sockaddr address) flags
   |> Error.to_result ()
 
 let getsockname =
-  Misc.Sockaddr.wrap_c_getter C.Functions.TCP.getsockname
+  Sockaddr.wrap_c_getter C.Functions.TCP.getsockname
 
 let getpeername =
-  Misc.Sockaddr.wrap_c_getter C.Functions.TCP.getpeername
+  Sockaddr.wrap_c_getter C.Functions.TCP.getpeername
 
 let connect tcp address callback =
   let request = Stream.Connect_request.make () in
@@ -60,7 +60,7 @@ let connect tcp address callback =
     C.Functions.TCP.connect
       request
       tcp
-      (Misc.Sockaddr.as_sockaddr address)
+      (Sockaddr.as_sockaddr address)
       Stream.Connect_request.trampoline
   in
   if immediate_result < 0 then begin

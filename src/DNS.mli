@@ -38,10 +38,10 @@ sig
   end
 
   type t = {
-    family : Misc.Sockaddr.Address_family.t;
-    socktype : Misc.Sockaddr.Socket_type.t;
+    family : Sockaddr.Address_family.t;
+    socktype : Sockaddr.Socket_type.t;
     protocol : int;
-    addr : Misc.Sockaddr.t;
+    addr : Sockaddr.t;
     canonname : string option;
   }
 end
@@ -70,8 +70,8 @@ end
 val getaddrinfo :
   ?loop:Loop.t ->
   ?request:Addr_info.Request.t ->
-  ?family:Misc.Sockaddr.Address_family.t ->
-  ?socktype:Misc.Sockaddr.Socket_type.t ->
+  ?family:Sockaddr.Address_family.t ->
+  ?socktype:Sockaddr.Socket_type.t ->
   ?protocol:int ->
   ?flags:Addr_info.Flag.t list ->
   ?node:string ->
@@ -95,7 +95,7 @@ val getnameinfo :
   ?loop:Loop.t ->
   ?request:Name_info.Request.t ->
   ?flags:Name_info.Flag.t list ->
-  Misc.Sockaddr.t ->
+  Sockaddr.t ->
   ((string * string, Error.t) result -> unit) ->
     unit
 (** Retrieves host names.

@@ -1041,8 +1041,8 @@ end
 
 (** {1 Conversions} *)
 
-val get_osfhandle : t -> (Misc.Os_fd.Fd.t, Error.t) result
-val open_osfhandle : Misc.Os_fd.Fd.t -> (t, Error.t) result
+val get_osfhandle : t -> (Os_fd.Fd.t, Error.t) result
+val open_osfhandle : Os_fd.Fd.t -> (t, Error.t) result
 
 val to_int : t -> int
 (* DOC This is here largely because the Process module is defined by libuv to

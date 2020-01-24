@@ -16,30 +16,28 @@ type t = [ `UDP ] Handle.t
     {!Luv.Handle.close}. *)
 
 val init :
-  ?loop:Loop.t ->
-  ?domain:Misc.Sockaddr.Address_family.t ->
-  unit ->
+  ?loop:Loop.t -> ?domain:Sockaddr.Address_family.t -> unit ->
     (t, Error.t) result
 (** Allocates and initializes a UDP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_init_ex}
     [uv_udp_init_ex]}. *)
 
-val open_ : t -> Misc.Os_fd.Socket.t -> (unit, Error.t) result
+val open_ : t -> Os_fd.Socket.t -> (unit, Error.t) result
 (** Wraps an existing socket in a libuv UDP handle.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_open}
     [uv_udp_open]}. *)
 
 val bind :
-  ?ipv6only:bool -> ?reuseaddr:bool -> t -> Misc.Sockaddr.t ->
+  ?ipv6only:bool -> ?reuseaddr:bool -> t -> Sockaddr.t ->
     (unit, Error.t) result
 (** Assigns an address to the given UDP handle.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_bind}
     [uv_udp_bind]}. *)
 
-val getsockname : t -> (Misc.Sockaddr.t, Error.t) result
+val getsockname : t -> (Sockaddr.t, Error.t) result
 (** Retrieves the address assigned to the given UDP handle.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_getsockname}
@@ -107,7 +105,7 @@ val set_ttl : t -> int -> (unit, Error.t) result
 val send :
   t ->
   Buffer.t list ->
-  Misc.Sockaddr.t ->
+  Sockaddr.t ->
   ((unit, Error.t) result -> unit) ->
     unit
 (** Sends a datagram.
@@ -117,7 +115,7 @@ val send :
 
     For connected UDP sockets, see {!Luv.UDP.Connected.send}. *)
 
-val try_send : t -> Buffer.t list -> Misc.Sockaddr.t -> (unit, Error.t) result
+val try_send : t -> Buffer.t list -> Sockaddr.t -> (unit, Error.t) result
 (** Like {!Luv.UDP.send}, but only attempts to send the datagram immediately.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_try_send}
@@ -138,7 +136,7 @@ val recv_start :
   ?allocate:(int -> Buffer.t) ->
   ?buffer_not_used:(unit -> unit) ->
   t ->
-  ((Buffer.t * Misc.Sockaddr.t * Recv_flag.t list, Error.t) result -> unit) ->
+  ((Buffer.t * Sockaddr.t * Recv_flag.t list, Error.t) result -> unit) ->
     unit
 (** Starts calling its callback whenever a datagram is received on the UDP
     socket.
@@ -168,7 +166,7 @@ val get_send_queue_count : t -> int
 (** Connected UDP sockets. *)
 module Connected :
 sig
-  val connect : t -> Misc.Sockaddr.t -> (unit, Error.t) result
+  val connect : t -> Sockaddr.t -> (unit, Error.t) result
   (** Assigns a peer address to the given socket.
 
       Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_connect}
@@ -180,7 +178,7 @@ sig
       Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_connect}
       [uv_udp_connect]} with [NULL] argument. *)
 
-  val getpeername : t -> (Misc.Sockaddr.t, Error.t) result
+  val getpeername : t -> (Sockaddr.t, Error.t) result
   (** Retrieves the peer address assigned to the given socket.
 
       Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_getpeername}
