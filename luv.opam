@@ -15,7 +15,7 @@ depends: [
   "base-unix"
   "conf-python-2-7" {build}
   "ctypes" {>= "0.13.0"}
-  "dune" {>= "1.8.0"}
+  "dune" {>= "2.0.0"}
   "ocaml" {>= "4.02.0"}
   ("ocaml" {>= "4.08.0"} | "ocaml-syntax-shims")
   "result"
@@ -24,6 +24,5 @@ depends: [
 ]
 
 build: [
-  ["dune" "build" "src/vendor/libuv.a" "--root" "."]
   ["dune" "build" "-p" name "-j" jobs]
 ]

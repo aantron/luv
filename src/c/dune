@@ -4,14 +4,38 @@
  (public_name luv.c)
  (wrapped false)
  (modules Luv_c_generated_functions)
- (c_names c_generated_functions helpers)
  (libraries ctypes luv_c_function_descriptions threads)
- (c_flags (:standard "-I ../vendor/libuv/include"))
- (c_library_flags (:standard -Lsrc/vendor -luv -lpthread)))
+ (foreign_stubs
+  (language c)
+  (names c_generated_functions helpers)
+  (include_dirs vendor/libuv/include))
+ (foreign_archives uv))
 
 
 
-; Everything below is the bindings generator process using ctypes. It produces
+; The vendored libuv.
+
+(rule
+ (targets libuv.a dlluv.so)
+ (deps (source_tree vendor) link-gyp.ml copy-so.ml)
+ (action (progn
+  (run ocaml link-gyp.ml)
+  (chdir vendor/libuv (run ./gyp_uv.py -f make -Duv_library=static_library))
+  (setenv CFLAGS -fPIC
+   (setenv BUILDTYPE Release
+    (run make -C vendor/libuv/out libuv)))
+  (run cp vendor/libuv/out/Release/libuv.a libuv.a)
+  (chdir vendor/libuv (run ./gyp_uv.py -f make -Duv_library=shared_library))
+  (setenv CFLAGS -fPIC
+   (setenv BUILDTYPE Release
+    (run make -C vendor/libuv/out libuv)))
+  (run ocaml copy-so.ml))))
+
+(data_only_dirs vendor)
+
+
+
+; Everything below is the bindings generation process using ctypes. It produces
 ; two OCaml modules, Luv_c_generated_functions and Luv_c_generated_types.
 
 ; Type bindings (Luv_c_generated_types).
@@ -39,7 +63,7 @@
   %{cc} %{c} \
   -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` \
   -I %{ocaml_where} \
-  -I ../vendor/libuv/include -o %{targets}")))
+  -I vendor/libuv/include -o %{targets}")))
 
 (rule
  (with-stdout-to luv_c_generated_types.ml

@@ -2,7 +2,7 @@
  (name tester)
  (libraries alcotest luv threads))
 
-(alias
- (name runtest)
+(rule
+ (alias runtest)
  (deps read_test_input)
  (action (run %{exe:tester.exe})))
