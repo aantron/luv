@@ -120,6 +120,8 @@ val fileno :
 
 (**/**)
 
+(* Internal functions; do not use. *)
+
 val allocate :
   ?reference_count:int -> 'kind C.Types.Handle.t Ctypes.typ -> 'kind t
 val release : _ t -> unit

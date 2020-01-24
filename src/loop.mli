@@ -113,6 +113,6 @@ val fork : t -> (unit, Error.t) result
 
 (**/**)
 
-val get_data : t -> unit Ctypes.ptr
-val set_data : t -> unit Ctypes.ptr -> unit
+(* Internal functions; do not use. *)
+
 val or_default : t option -> t

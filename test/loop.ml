@@ -18,22 +18,6 @@ let with_loop f =
 
 let tests = [
   "loop", [
-    "data", `Quick, begin fun () ->
-      with_loop begin fun loop ->
-        let data = 42 in
-
-        data
-        |> Nativeint.of_int
-        |> Ctypes.ptr_of_raw_address
-        |> Luv.Loop.set_data loop;
-
-        Luv.Loop.get_data loop
-        |> Ctypes.raw_address_of_ptr
-        |> Nativeint.to_int
-        |> Alcotest.(check int) "value" data
-      end
-    end;
-
     "init, close", `Quick, begin fun () ->
       with_loop ignore;
     end;

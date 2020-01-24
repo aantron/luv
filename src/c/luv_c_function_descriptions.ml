@@ -482,14 +482,6 @@ struct
     let fork =
       foreign "uv_loop_fork"
         (ptr t @-> returning error_code)
-
-    let get_data =
-      foreign "uv_loop_get_data"
-        (ptr t @-> returning (ptr void))
-
-    let set_data =
-      foreign "uv_loop_set_data"
-        (ptr t @-> ptr void @-> returning void)
   end
 
   module Handle =

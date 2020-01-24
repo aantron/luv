@@ -119,6 +119,8 @@ val set_blocking : _ t -> bool -> (unit, Error.t) result
 
 (**/**)
 
+(* Internal interfaces; do not use. *)
+
 module Connect_request :
 sig
   type t = [ `Connect ] Request.t

@@ -39,6 +39,8 @@ val cancel :
 
 (**/**)
 
+(* Internal functions; do not use. *)
+
 val allocate :
   ?reference_count:int -> 'kind C.Types.Request.t Ctypes.typ -> 'kind t
 val set_callback : _ t -> (_ -> unit) -> unit

@@ -60,6 +60,8 @@ sig
 
     (**/**)
 
+    (* Internal functions; do not use. *)
+
     val to_c : t -> int
     val from_c : int -> t
   end
@@ -76,6 +78,8 @@ sig
     ]
 
     (**/**)
+
+    (* Internal functions; do not use. *)
 
     val to_c : t -> int
     val from_c : int -> t
@@ -112,6 +116,8 @@ sig
   (** Extracts the port in a network address. *)
 
   (**/**)
+
+  (* Internal functions; do not use. *)
 
   val copy_storage : C.Types.Sockaddr.storage Ctypes.ptr -> t
   val copy_sockaddr : C.Types.Sockaddr.t Ctypes.ptr -> int -> t
