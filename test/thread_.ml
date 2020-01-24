@@ -42,7 +42,7 @@ let tests = [
       let ran = ref false in
       let finished = ref false in
 
-      Luv.Thread.Pool.queue_work (fun () -> ran := true) begin fun result ->
+      Luv.Thread_pool.queue_work (fun () -> ran := true) begin fun result ->
         check_success_result "queue_work" result;
         finished := true
       end;
@@ -55,14 +55,14 @@ let tests = [
 
     "work: work exception", `Quick, begin fun () ->
       check_exception Exit begin fun () ->
-        Luv.Thread.Pool.queue_work (fun () -> raise Exit) ignore;
+        Luv.Thread_pool.queue_work (fun () -> raise Exit) ignore;
         run ()
       end
     end;
 
     "work: end exception", `Quick, begin fun () ->
       check_exception Exit begin fun () ->
-        Luv.Thread.Pool.queue_work ignore (fun _ -> raise Exit);
+        Luv.Thread_pool.queue_work ignore (fun _ -> raise Exit);
         run ()
       end
     end;
