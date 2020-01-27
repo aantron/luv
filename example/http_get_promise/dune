@@ -1,3 +1,0 @@
-(executable
- (name http_get_promise)
- (libraries luv_promise))

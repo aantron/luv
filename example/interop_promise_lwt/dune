@@ -1,3 +1,0 @@
-(executable
- (name interop_promise_lwt)
- (libraries luv_lwt luv_promise))

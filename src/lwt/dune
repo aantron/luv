@@ -1,4 +1,0 @@
-(library
- (name luv_lwt)
- (public_name luv_lwt)
- (libraries luv lwt))

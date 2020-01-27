@@ -1,4 +1,0 @@
-(executable
- (name let_syntax)
- (libraries luv)
- (preprocess (future_syntax)))

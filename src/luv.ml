@@ -63,11 +63,3 @@ module Passwd = Passwd
 module Env = Env
 module Time = Time
 module Random = Random
-
-module Syntax = Syntax
-
-module Promisify = Promisify
-module Integration = Integration
-
-module Lwt = Luv_lwt
-module Promise = Luv_promise

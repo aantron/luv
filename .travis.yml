@@ -45,9 +45,7 @@ before_script:
   - |
     if [ ! -d _cache/_build ]
     then
-      opam pin add -y promise git+https://github.com/aantron/promise.git
       opam install -y --deps-only ./luv.opam
-      opam install -y --unset-root lwt lwt_ppx reason
     fi
 
 script:
@@ -61,7 +59,6 @@ script:
 
 before_cache:
   - opam clean
-  - rm -rf _opam/.opam-switch/sources/bisect_ppx
 
 cache:
   directories:
