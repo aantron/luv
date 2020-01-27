@@ -5,7 +5,7 @@
 
 (** Timers.
 
-    See {{:http://docs.libuv.org/en/v1.x/timer.html} [uv_timer_t] {i - Timer
+    See {{:http://docs.libuv.org/en/v1.x/timer.html} [uv_timer_t] {i — Timer
     handle}}. *)
 
 type t = [ `Timer ] Handle.t

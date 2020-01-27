@@ -1,3 +1,0 @@
-(executable
- (name http_get)
- (libraries luv))

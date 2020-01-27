@@ -5,7 +5,7 @@
 
 (** Per-iteration callback.
 
-    See {{:http://docs.libuv.org/en/v1.x/idle.html} [uv_idle_t] {i - Idle
+    See {{:http://docs.libuv.org/en/v1.x/idle.html} [uv_idle_t] {i — Idle
     handle}}. *)
 
 type t = [ `Idle ] Handle.t

@@ -5,7 +5,7 @@
 
 (** Signals.
 
-    See {{:http://docs.libuv.org/en/v1.x/signal.html} [uv_signal_t] {i - Signal
+    See {{:http://docs.libuv.org/en/v1.x/signal.html} [uv_signal_t] {i — Signal
     handle}}. *)
 
 

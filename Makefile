@@ -4,21 +4,59 @@ build :
 
 .PHONY : test
 test :
-	dune build test/tester.exe
-	dune runtest -j 1 --no-buffer --force
+	dune runtest --no-buffer --force
 
-.PHONY : test-ci
-test-ci :
-	dune build @default test/tester.exe @runtest --no-buffer --force
-
-.PHONY : test-examples
-test-examples :
+.PHONY : examples
+examples :
 	dune build \
-	  example/delay/delay.exe \
-	  example/http_get/http_get.exe \
-	  example/tcp_echo_server/tcp_echo_server.exe
-	_build/default/example/delay/delay.exe
-	_build/default/example/http_get/http_get.exe google.com > /dev/null
+	  example/hello_world.exe \
+	  example/delay.exe \
+	  example/idle.exe \
+	  example/cat.exe \
+	  example/onchange.exe \
+	  example/tcp_echo_server.exe \
+	  example/tcp_hello_world.exe \
+	  example/udp_echo_server.exe \
+	  example/udp_hello_world.exe \
+	  example/host.exe \
+	  example/http_get.exe \
+	  example/threads.exe \
+	  example/thread_pool.exe \
+	  example/mutex.exe \
+	  example/progress.exe \
+	  example/spawn.exe \
+	  example/stdout.exe \
+	  example/pipe.exe \
+	  example/pipe_echo_server.exe \
+	  example/pipe_hello_world.exe \
+	  example/send_signal.exe \
+	  example/sigint.exe
+	_build/default/example/hello_world.exe
+	_build/default/example/delay.exe
+	_build/default/example/idle.exe
+	_build/default/example/cat.exe LICENSE.md
+	(_build/default/example/onchange.exe false LICENSE.md || true) & \
+	  (sleep 1; touch LICENSE.md)
+	_build/default/example/tcp_echo_server.exe & \
+	  (_build/default/example/tcp_hello_world.exe; \
+	   sleep 1; killall tcp_echo_server.exe)
+	_build/default/example/udp_echo_server.exe & \
+	  (_build/default/example/udp_hello_world.exe; \
+	   sleep 1; killall udp_echo_server.exe)
+	_build/default/example/host.exe localhost
+	_build/default/example/http_get.exe google.com /
+	_build/default/example/threads.exe
+	_build/default/example/thread_pool.exe
+	_build/default/example/mutex.exe
+	_build/default/example/progress.exe
+	_build/default/example/spawn.exe
+	_build/default/example/stdout.exe
+	_build/default/example/pipe.exe
+	rm -f echo-pipe
+	_build/default/example/pipe_echo_server.exe & \
+	  (_build/default/example/pipe_hello_world.exe; \
+	   sleep 1; killall pipe_echo_server.exe)
+	_build/default/example/send_signal.exe
 
 .PHONY : test-installation
 test-installation : clean
@@ -36,19 +74,56 @@ test-installation-ci :
 	opam pin remove -y luv
 
 .PHONY : docs
-docs :
-	dune build @doc -p luv
-	# cp docs/odoc.css _build/default/_doc/_html/
+docs : api-docs luvbook
 
-.PHONY : watch-docs
-watch-docs : docs
-	inotifywait -mr -e modify --format '%f' src docs | xargs -L1 -I X make docs
+.PHONY : api-docs
+api-docs :
+	dune build @doc -p luv
+
+.PHONY : luvbook
+luvbook :
+	sphinx-build -b html docs docs/_build
+
+.PHONY : watch-api-docs
+watch-api-docs : api-docs
+	inotifywait -mr -e modify --format '%f' src docs/index.mld \
+	  | xargs -L1 -I X make api-docs
+
+.PHONY : watch-luvbook
+watch-luvbook : luvbook
+	inotifywait -mr -e modify docs/conf.py docs/*.rst example \
+	  | xargs -L1 -I X make luvbook
+
+# make watch-api-docs &
+# make watch-luvbook &
+# open _build/default/_doc/_html/index.html
+# open docs/_build/index.html
+
+DOCS := ../gh-pages
+
+.PHONY : stage-docs
+stage-docs : api-docs luvbook
+	[ -d $(DOCS) ] || git clone git@github.com:aantron/luv.git $(DOCS)
+	cd $(DOCS) && git checkout gh-pages
+	rm -rf $(DOCS)/*
+	cp -r _build/default/_doc/_html/* $(DOCS)
+	cp -r docs/_build/* $(DOCS)
+	cd $(DOCS) && mv _static static
+	cd $(DOCS) && mv _sources sources
+	cd $(DOCS) && ls *.html | xargs -L1 sed -i 's#_static/#static/#g'
+	cd $(DOCS) && ls *.html | xargs -L1 sed -i 's#_sources/#sources/#g'
+	cd $(DOCS) && git add -A && git commit --amend --no-edit --reset-author
+
+.PHONY : publish-docs
+publish-docs : stage-docs
+	cd $(DOCS) && git push --force-with-lease
 
 .PHONY : clean
 clean :
 	dune clean
+	rm -rf docs/_build
 
 .PHONY : todos
 todos :
 	@grep -rn TODO example src test .travis.yml Makefile README.md *.opam \
-	  | grep -v 'src/vendor/[^/][^/]*/' | grep -v grep
+	  | grep -v 'src/c/vendor/[^/][^/]*/' | grep -v grep

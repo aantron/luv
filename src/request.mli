@@ -5,7 +5,7 @@
 
 (** Requests.
 
-    See {{:http://docs.libuv.org/en/v1.x/request.html} [uv_req_t] - {i Base
+    See {{:http://docs.libuv.org/en/v1.x/request.html} [uv_req_t] — {i Base
     request}}.
 
     Requests are objects libuv uses to track asynchronous operations, and
@@ -23,7 +23,7 @@
     - {!Luv.File.Request.t}
     - {!Luv.DNS.Addr_info.Request.t}
     - {!Luv.DNS.Name_info.Request.t}
-    - {!Luv.Thread.Pool.Request.t} *)
+    - {!Luv.Thread_pool.Request.t} *)
 
 type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
 (** Binds {{:http://docs.libuv.org/en/v1.x/request.html#c.uv_req_t}

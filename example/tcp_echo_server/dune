@@ -1,3 +1,0 @@
-(executable
- (name tcp_echo_server)
- (libraries luv))

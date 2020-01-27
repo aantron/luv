@@ -5,7 +5,7 @@
 
 (** Event loops.
 
-    See {{:http://docs.libuv.org/en/v1.x/loop.html} [uv_loop_t] - {i Event
+    See {{:http://docs.libuv.org/en/v1.x/loop.html} [uv_loop_t] — {i Event
     loop}}. *)
 
 type t = C.Types.Loop.t Ctypes.ptr

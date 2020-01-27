@@ -5,7 +5,7 @@
 
 (** Subprocesses.
 
-    See {{:http://docs.libuv.org/en/v1.x/process.html} [uv_process_t] {i -
+    See {{:http://docs.libuv.org/en/v1.x/process.html} [uv_process_t] {i —
     Process handle}}. *)
 
 type t = [ `Process ] Handle.t

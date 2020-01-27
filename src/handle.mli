@@ -5,7 +5,7 @@
 
 (** Handles.
 
-    See {{:http://docs.libuv.org/en/v1.x/handle.html} [uv_handle_t] - {i Base
+    See {{:http://docs.libuv.org/en/v1.x/handle.html} [uv_handle_t] — {i Base
     handle}}.
 
     In libuv, [uv_handle_t] is a sort of "abstract" base type that supports

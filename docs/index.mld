@@ -39,7 +39,7 @@ let _ =
 - {!Luv.Pipe} — pipes
 - {!Luv.TTY} — consoles
 - {!Luv.File} — file operations
-- {!Luv.FS_event} — file system events
+- {!Luv.FS_event} — filesystem events
 
 {2 System threads}
 
@@ -61,7 +61,7 @@ let _ =
 - {!Luv.Random} — system entropy source
 - {!Luv.Sockaddr} — network addresses
 - {!Luv.Network} — network interfaces and hostname
-- {!Luv.FS_poll} — file system polling
+- {!Luv.FS_poll} — filesystem polling
 - {!Luv.Poll} — file descriptor polling
 - {!Luv.Resource} — resource usage
 - {!Luv.System_info} — system information

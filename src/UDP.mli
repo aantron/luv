@@ -5,7 +5,7 @@
 
 (** UDP sockets.
 
-    See {{:http://docs.libuv.org/en/v1.x/udp.html} [uv_udp_t] {i - UDP
+    See {{:http://docs.libuv.org/en/v1.x/udp.html} [uv_udp_t] {i — UDP
     handle}}. *)
 
 type t = [ `UDP ] Handle.t

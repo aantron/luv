@@ -3,9 +3,9 @@
 
 
 
-(** File system polling.
+(** Filesystem polling.
 
-    See {{:http://docs.libuv.org/en/v1.x/fs_poll.html} [uv_fs_poll_t] {i - FS
+    See {{:http://docs.libuv.org/en/v1.x/fs_poll.html} [uv_fs_poll_t] {i — FS
     Poll handle}}. *)
 
 type t = [ `FS_poll ] Handle.t

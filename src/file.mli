@@ -3,12 +3,12 @@
 
 
 
-(** File system operations.
+(** File operations.
 
     See {{:http://docs.libuv.org/en/v1.x/fs.html} {i File system operations}} in
     the libuv documentation.
 
-    This module exposes all the file system operations of libuv with an
+    This module exposes all the filesystem operations of libuv with an
     asynchronous (callback) interface. There is an additional submodule,
     {!Luv.File.Sync}, which exposes all the same operations with a synchronous
     (direct) interface. So, for example, there are:
@@ -21,12 +21,12 @@
         string -> Mode.t list -> (unit, Error.t) result
     ]}
 
-    For file system operations, synchronous operations are generally faster,
+    For filesystem operations, synchronous operations are generally faster,
     because most asynchronous operations have to be run in a worker thread.
     However, synchronous operations can block.
 
     A general guideline is that if performance is not critical, or your code may
-    be used to access a network file system, use asynchronous operations. The
+    be used to access a network filesystem, use asynchronous operations. The
     latter condition may be especially important if you are writing a library,
     and cannot readily predict whether it will be used to access a network file
     system or not.
@@ -70,7 +70,7 @@ type t
 
     By default, request objects are managed internally by Luv, and the user does
     not need to be aware of them. The only purpose of exposing them in the API
-    is to allow the user to {{!Luv.Request.cancel} cancel} file system
+    is to allow the user to {{!Luv.Request.cancel} cancel} filesystem
     operations.
 
     All functions in this module that start asynchronous operations take a
@@ -566,7 +566,7 @@ val statfs :
   string ->
   ((Statfs.t, Error.t) result -> unit) ->
     unit
-(** Retrieves status information for the file system containing the given path.
+(** Retrieves status information for the filesystem containing the given path.
 
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_statfs}
     [uv_fs_statfs]}. See {{:http://man7.org/linux/man-pages/man2/statfs.2.html}

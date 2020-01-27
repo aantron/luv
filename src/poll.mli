@@ -5,7 +5,7 @@
 
 (** File descriptor polling.
 
-    See {{:http://docs.libuv.org/en/v1.x/poll.html} [uv_poll_t] {i - Poll
+    See {{:http://docs.libuv.org/en/v1.x/poll.html} [uv_poll_t] {i — Poll
     handle}}. *)
 
 type t = [ `Poll ] Handle.t

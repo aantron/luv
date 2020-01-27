@@ -5,7 +5,7 @@
 
 (** TCP sockets.
 
-    See {{:http://docs.libuv.org/en/v1.x/tcp.html} [uv_tcp_t] {i - TCP
+    See {{:http://docs.libuv.org/en/v1.x/tcp.html} [uv_tcp_t] {i — TCP
     handle}}. *)
 
 type t = [ `TCP ] Stream.t

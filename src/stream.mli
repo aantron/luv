@@ -5,13 +5,13 @@
 
 (** Streams.
 
-    See {{:http://docs.libuv.org/en/v1.x/stream.html} [uv_stream_t] {i - Stream
+    See {{:http://docs.libuv.org/en/v1.x/stream.html} [uv_stream_t] {i — Stream
     handle}}.
 
     Several types of {{!Luv.Handle.t} handle} have a portion of their interface
     in common, which portion is abstracted out into this module {!Luv.Stream}.
 
-    Concreate streams are:
+    Concrete streams are:
 
     - {!Luv.Pipe.t}
     - {!Luv.TCP.t}

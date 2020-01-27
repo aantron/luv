@@ -3,9 +3,9 @@
 
 
 
-(** File system events.
+(** Filesystem events.
 
-    See {{:http://docs.libuv.org/en/v1.x/fs_event.html} [uv_fs_event_t] {i - FS
+    See {{:http://docs.libuv.org/en/v1.x/fs_event.html} [uv_fs_event_t] {i — FS
     Event handle}}. *)
 
 type t = [ `FS_event ] Handle.t

@@ -3,3 +3,4 @@ _build/
 *.install
 _opam/
 scratch/
+echo-pipe

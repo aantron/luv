@@ -5,7 +5,7 @@
 
 (** Pipes.
 
-    See {{:http://docs.libuv.org/en/v1.x/pipe.html} [uv_pipe_t] {i - Pipe
+    See {{:http://docs.libuv.org/en/v1.x/pipe.html} [uv_pipe_t] {i — Pipe
     handle}}. *)
 
 type t = [ `Pipe ] Stream.t

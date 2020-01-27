@@ -1,0 +1,25 @@
+(executables
+ (names
+  hello_world
+  delay
+  idle
+  cat
+  onchange
+  tcp_echo_server
+  tcp_hello_world
+  udp_echo_server
+  udp_hello_world
+  host
+  http_get
+  threads
+  thread_pool
+  mutex
+  progress
+  spawn
+  stdout
+  pipe
+  pipe_echo_server
+  pipe_hello_world
+  send_signal
+  sigint)
+ (libraries luv))

@@ -14,7 +14,6 @@
 
 
 ; The vendored libuv.
-
 (rule
  (targets libuv.a dlluv.so)
  (deps (source_tree vendor) link-gyp.ml copy-so.ml)
