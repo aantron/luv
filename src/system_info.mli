@@ -42,4 +42,5 @@ val uname : unit -> (Uname.t, Error.t) result
 (** Retrieves operating system name and version information.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_uname}
-    [uv_os_uname]}. *)
+    [uv_os_uname]}. See {{:http://man7.org/linux/man-pages/man3/uname.3p.html}
+    [uname(3p)]}. *)

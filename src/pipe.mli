@@ -41,25 +41,31 @@ val bind : t -> string -> (unit, Error.t) result
 (** Assigns a pipe a name or an address.
 
     Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_bind}
-    [uv_pipe_bind]}. *)
+    [uv_pipe_bind]}. See {{:http://man7.org/linux/man-pages/man3/bind.3p.html}
+    [bind(3p)]}. *)
 
 val connect : t -> string -> ((unit, Error.t) result -> unit) -> unit
 (** Connects to the pipe at the given name or address.
 
     Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_connect}
-    [uv_pipe_connect]}. *)
+    [uv_pipe_connect]}. See
+    {{:http://man7.org/linux/man-pages/man3/connect.3p.html} [connect(3p)]}. *)
 
 val getsockname : t -> (string, Error.t) result
 (** Retrieves the name or address assigned to the given pipe.
 
     Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_getsockname}
-    [uv_pipe_getsockname]}. *)
+    [uv_pipe_getsockname]}. See
+    {{:http://man7.org/linux/man-pages/man3/getsockname.3p.html}
+    [getsockname(3p)]}. *)
 
 val getpeername : t -> (string, Error.t) result
 (** Retrieves the name or address of the given pipe's peer.
 
     Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_getpeername}
-    [uv_pipe_getpeername]}. *)
+    [uv_pipe_getpeername]}. See
+    {{:http://man7.org/linux/man-pages/man3/getpeername.3p.html}
+    [getpeername(3p)]}. *)
 
 val pending_instances : t -> int -> unit
 (** Binds

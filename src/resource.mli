@@ -7,25 +7,29 @@ val uptime : unit -> (float, Error.t) result
 (** Evaluates to the current uptime.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_uptime}
-    [uv_uptime]}. *)
+    [uv_uptime]}. See {{:http://man7.org/linux/man-pages/man2/sysinfo.2.html}
+    [sysinfo(2)]}. *)
 
 val loadavg : unit -> float * float * float
 (** Evaluates to the load average.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_loadavg}
-    [uv_loadavg]}. *)
+    [uv_loadavg]}. See {{:http://man7.org/linux/man-pages/man2/sysinfo.2.html}
+    [sysinfo(2)]}. *)
 
 val free_memory : unit -> Unsigned.uint64
 (** Evaluates to the amount of free memory, in bytes.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_free_memory}
-    [uv_get_free_memory]}. *)
+    [uv_get_free_memory]}. See
+    {{:http://man7.org/linux/man-pages/man2/sysinfo.2.html} [sysinfo(2)]}. *)
 
 val total_memory : unit -> Unsigned.uint64
 (** Evaluates to the total amount of memory, in bytes.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_total_memory}
-    [uv_get_total_memory]}. *)
+    [uv_get_total_memory]}. See
+    {{:http://man7.org/linux/man-pages/man2/sysinfo.2.html} [sysinfo(2)]}. *)
 
 val constrained_memory : unit -> Unsigned.uint64 option
 (** Binds
@@ -35,13 +39,17 @@ val getpriority : int -> (int, Error.t) result
 (** Evaluates to the priority of the process with the given pid.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_getpriority}
-    [uv_os_getpriority]}. *)
+    [uv_os_getpriority]}. See
+    {{:http://man7.org/linux/man-pages/man3/getpriority.3p.html}
+    [getpriority(3p)]}. *)
 
 val setpriority : int -> int -> (unit, Error.t) result
 (** Sets the priority of the process with the given pid.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_setpriority}
-    [uv_os_setpriority]}. *)
+    [uv_os_setpriority]}. See
+    {{:http://man7.org/linux/man-pages/man3/setpriority.3p.html}
+    [setpriority(3p)]}. *)
 
 val resident_set_memory : unit -> (Unsigned.size_t, Error.t) result
 (** Evaluates to the resident set size for the current process.
@@ -84,5 +92,5 @@ val getrusage : unit -> (rusage, Error.t) result
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_getrusage}
     [uv_getrusage]}.
 
-    See {{:http://man7.org/linux/man-pages/man2/getrusage.2.html}
-    [getrusage(2)]}. *)
+    See {{:http://man7.org/linux/man-pages/man3/getrusage.3p.html}
+    [getrusage(3p)]}. *)

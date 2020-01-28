@@ -26,14 +26,17 @@ val shutdown : _ t -> ((unit, Error.t) result -> unit) -> unit
 (** Shuts down the write side of the stream.
 
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_shutdown}
-    [uv_shutdown]}. *)
+    [uv_shutdown]}. See
+    {{:http://man7.org/linux/man-pages/man3/shutdown.3p.html}
+    [shutdown(3p)]}. *)
 
 val listen :
   ?backlog:int -> _ t -> ((unit, Error.t) result -> unit) -> unit
 (** Starts listening for incoming connections.
 
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_listen}
-    [uv_listen]}.
+    [uv_listen]}. See {{:http://man7.org/linux/man-pages/man3/listen.3p.html}
+    [listen(3p)]}.
 
     The default value of [?backlog] is [SOMAXCONN]. *)
 
@@ -41,7 +44,8 @@ val accept : server:'kind t -> client:'kind t -> (unit, Error.t) result
 (** Accepts an incoming connection.
 
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_accept}
-    [uv_accept]}.
+    [uv_accept]}. See {{:http://man7.org/linux/man-pages/man3/accept.3p.html}
+    [accept(3p)]}.
 
     [~client] should be a freshly-initialized stream of the same kind as
     [~server]. In other words, if [~server] is a {!Luv.TCP.t}, [~client] should
@@ -56,7 +60,8 @@ val read_start :
 (** Starts calling its callback whenever data is available on the stream.
 
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_read_start}
-    [uv_read_start]}.
+    [uv_read_start]}. See {{:http://man7.org/linux/man-pages/man3/readv.3p.html}
+    [readv(3p)]}.
 
     [?allocate] is called before each call to the main callback, to create a
     the buffer into which the data will be read. One particular use of it is to
@@ -80,6 +85,7 @@ val write :
 (** Writes the given buffer to the stream.
 
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_write} [uv_write]}.
+    See {{:http://man7.org/linux/man-pages/man3/writev.3p.html} [writev(3p)]}.
 
     To write only part of a buffer, use {!Luv.Buffer.sub} to create a view into
     the buffer, and pass the view to this function {!Luv.Stream.write}.

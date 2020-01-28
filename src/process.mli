@@ -109,7 +109,8 @@ val kill : t -> int -> (unit, Error.t) result
 (** Sends the given signal to the process.
 
     Binds {{:http://docs.libuv.org/en/v1.x/process.html#c.uv_process_kill}
-    [uv_process_kill]}.
+    [uv_process_kill]}. See
+    {{:http://man7.org/linux/man-pages/man3/kill.3p.html} [kill(3p)]}.
 
     See {!Luv.Signal} for signal numbers. *)
 

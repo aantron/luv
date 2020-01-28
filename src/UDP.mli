@@ -36,13 +36,16 @@ val bind :
 (** Assigns an address to the given UDP handle.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_bind}
-    [uv_udp_bind]}. *)
+    [uv_udp_bind]}. See {{:http://man7.org/linux/man-pages/man3/bind.3p.html}
+    [bind(3p)]}. *)
 
 val getsockname : t -> (Sockaddr.t, Error.t) result
 (** Retrieves the address assigned to the given UDP handle.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_getsockname}
-    [uv_udp_getsockname]}. *)
+    [uv_udp_getsockname]}. See
+    {{:http://man7.org/linux/man-pages/man3/getsockname.3p.html}
+    [getsockname(3p)]}. *)
 
 (** Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_membership}
     [uv_membership]}. *)
@@ -112,7 +115,8 @@ val send :
 (** Sends a datagram.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_send}
-    [uv_udp_send]}.
+    [uv_udp_send]}. See {{:http://man7.org/linux/man-pages/man3/send.3p.html}
+    [send(3p)]}.
 
     For connected UDP sockets, see {!Luv.UDP.Connected.send}. *)
 
@@ -143,7 +147,8 @@ val recv_start :
     socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_recv_start}
-    [uv_udp_recv_start]}.
+    [uv_udp_recv_start]}. See
+    {{:http://man7.org/linux/man-pages/man3/recv.3p.html} [recv(3p)]}.
 
     The behavior is similar to {!Luv.Stream.read_start}. See that function for
     the meaning of the [?allocate] callback. *)

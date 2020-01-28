@@ -60,25 +60,31 @@ val bind : ?ipv6only:bool -> t -> Sockaddr.t -> (unit, Error.t) result
 (** Assigns an address to the given TCP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_bind}
-    [uv_tcp_bind]}. *)
+    [uv_tcp_bind]}. See {{:http://man7.org/linux/man-pages/man3/bind.3p.html}
+    [bind(3p)]}. *)
 
 val getsockname : t -> (Sockaddr.t, Error.t) result
 (** Retrieves the address assigned to the given TCP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_getsockname}
-    [uv_tcp_getsockname]}. *)
+    [uv_tcp_getsockname]}. See
+    {{:http://man7.org/linux/man-pages/man3/getsockname.3p.html}
+    [getsockname(3p)]}. *)
 
 val getpeername : t -> (Sockaddr.t, Error.t) result
 (** Retrieves the address of the given TCP socket's peer.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_getpeername}
-    [uv_tcp_getpeername]}. *)
+    [uv_tcp_getpeername]}. See
+    {{:http://man7.org/linux/man-pages/man3/getpeername.3p.html}
+    [getpeername(3p)]}. *)
 
 val connect : t -> Sockaddr.t -> ((unit, Error.t) result -> unit) -> unit
 (** Connects to a host.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_connect}
-    [uv_tcp_connect]}. *)
+    [uv_tcp_connect]}. See
+    {{:http://man7.org/linux/man-pages/man3/connect.3p.html} [connect(3p)]}. *)
 
 val close_reset : t -> ((unit, Error.t) result -> unit) -> unit
 (** Resets the connection.

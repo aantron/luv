@@ -20,10 +20,13 @@ val hrtime : unit -> Unsigned.uint64
 (** Samples the high-resolution timer.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_hrtime}
-    [uv_hrtime]}. *)
+    [uv_hrtime]}. See
+    {{:http://man7.org/linux/man-pages/man3/clock_gettime.3p.html}
+    [clock_gettime(3p)]}. *)
 
 val sleep : int -> unit
 (** Suspends the calling thread for at least the given number of milliseconds.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_sleep}
-    [uv_sleep]}. *)
+    [uv_sleep]}. See {{:http://man7.org/linux/man-pages/man3/sleep.3p.html}
+    [sleep(3p)]}. *)
