@@ -6,7 +6,7 @@
 (** Filesystem polling.
 
     See {{:http://docs.libuv.org/en/v1.x/fs_poll.html} [uv_fs_poll_t] {i — FS
-    Poll handle}}. *)
+    Poll handle}} in libuv. *)
 
 type t = [ `FS_poll ] Handle.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/fs_poll.html#c.uv_fs_poll_t}

@@ -6,7 +6,7 @@
 (** Semaphores.
 
     See {{:http://docs.libuv.org/en/v1.x/threading.html#semaphores}
-    {i Semaphores}}. *)
+    {i Semaphores}} in libuv. *)
 
 type t
 (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_sem_t}

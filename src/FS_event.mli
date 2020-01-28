@@ -5,8 +5,10 @@
 
 (** Filesystem events.
 
-    See {{:http://docs.libuv.org/en/v1.x/fs_event.html} [uv_fs_event_t] {i — FS
-    Event handle}}. *)
+    See {{:https://aantron.github.io/luv/filesystem.html#file-change-events} {i
+    File change events}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/fs_event.html} [uv_fs_event_t] {i — FS
+    Event handle}} in libuv. *)
 
 type t = [ `FS_event ] Handle.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/fs_event.html#c.uv_fs_event_t}

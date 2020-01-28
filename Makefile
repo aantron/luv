@@ -87,7 +87,7 @@ luvbook :
 
 .PHONY : watch-api-docs
 watch-api-docs : api-docs
-	inotifywait -mr -e modify --format '%f' src docs/index.mld \
+	inotifywait -mr -e modify --format '%f' src \
 	  | xargs -L1 -I X make api-docs
 
 .PHONY : watch-luvbook

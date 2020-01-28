@@ -5,10 +5,11 @@
 
 (** Handles.
 
-    See {{:http://docs.libuv.org/en/v1.x/handle.html} [uv_handle_t] — {i Base
-    handle}}.
+    See {{:https://aantron.github.io/luv/basics.html#handles} {i Handles}} in
+    the user guide and  {{:http://docs.libuv.org/en/v1.x/handle.html}
+    [uv_handle_t] — {i Base handle}} in libuv.
 
-    In libuv, [uv_handle_t] is a sort of "abstract" base type that supports
+    In libuv, [uv_handle_t] is a sort of “abstract” base type that supports
     functions common to all handles. All concrete handles are of more specific
     types, such as [uv_udp_t].
 

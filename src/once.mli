@@ -7,7 +7,7 @@
 
     See
     {{:http://docs.libuv.org/en/v1.x/threading.html#once-only-initialization}
-    {i Once-only initialization}}. *)
+    {i Once-only initialization}} in libuv. *)
 
 type t
 (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_once_t}

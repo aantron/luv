@@ -5,8 +5,9 @@
 
 (** UDP sockets.
 
-    See {{:http://docs.libuv.org/en/v1.x/udp.html} [uv_udp_t] {i — UDP
-    handle}}. *)
+    See {{:https://aantron.github.io/luv/networking.html#udp} {i UDP}} in the
+    user guide and {{:http://docs.libuv.org/en/v1.x/udp.html} [uv_udp_t] {i —
+    UDP handle}} in libuv. *)
 
 type t = [ `UDP ] Handle.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_t} [uv_udp_t]}.

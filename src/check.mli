@@ -6,7 +6,7 @@
 (** Post-I/O callback.
 
     See {{:http://docs.libuv.org/en/v1.x/check.html} [uv_check_t] {i — Check
-    handle}}. *)
+    handle}} in libuv. *)
 
 type t = [ `Check ] Handle.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/check.html#c.uv_check_t}

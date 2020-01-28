@@ -6,7 +6,7 @@
 (** Pre-I/O callback.
 
     See {{:http://docs.libuv.org/en/v1.x/prepare.html} [uv_prepare_t] {i —
-    Prepare handle}}. *)
+    Prepare handle}} in libuv. *)
 
 type t = [ `Prepare ] Handle.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/prepare.html#c.uv_prepare_t}

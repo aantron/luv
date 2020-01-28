@@ -6,7 +6,7 @@
 (** Thread-local storage.
 
     See {{:http://docs.libuv.org/en/v1.x/threading.html#thread-local-storage}
-    {i Thread-local storage}}. *)
+    {i Thread-local storage}} in libuv. *)
 
 type t
 (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_key_t}

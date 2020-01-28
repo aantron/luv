@@ -1,4 +1,4 @@
-Luv User Guide
+Luv user guide
 ==============
 
 This guide is a small set of tutorials on using Luv_, a binding from OCaml to

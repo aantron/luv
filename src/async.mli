@@ -5,8 +5,11 @@
 
 (** Inter-loop communication.
 
-    See {{:http://docs.libuv.org/en/v1.x/async.html} [uv_async_t] {i — Async
-    handle}}. *)
+    See
+    {{:https://aantron.github.io/luv/threads.html#inter-thread-communication} {i
+    Inter-thread communication}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/async.html} [uv_async_t] {i — Async
+    handle}} in libuv. *)
 
 type t = [ `Async ] Handle.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/async.html#c.uv_async_t}

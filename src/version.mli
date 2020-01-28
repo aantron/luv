@@ -3,9 +3,10 @@
 
 
 
-(** Version information for the vendored libuv. See
-    {{:http://docs.libuv.org/en/v1.x/version.html} {i Version-checking macros
-    and functions}} in the libuv documentation.
+(** Version information for the vendored libuv.
+
+    See {{:http://docs.libuv.org/en/v1.x/version.html} {i Version-checking
+    macros and functions}} in libuv.
 
     Luv currently vendors libuv
     {{:https://github.com/libuv/libuv/releases/tag/v1.30.1} 1.30.1}. *)

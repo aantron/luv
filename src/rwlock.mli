@@ -6,7 +6,7 @@
 (** Read-write locks.
 
     See {{:http://docs.libuv.org/en/v1.x/threading.html#read-write-locks}
-    {i Read-write locks}}. *)
+    {i Read-write locks}} in libuv. *)
 
 type t
 (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_rwlock_t}

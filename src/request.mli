@@ -5,8 +5,9 @@
 
 (** Requests.
 
-    See {{:http://docs.libuv.org/en/v1.x/request.html} [uv_req_t] — {i Base
-    request}}.
+    See {{:https://aantron.github.io/luv/basics.html#requests} {i Requests}} in
+    the user guide and {{:http://docs.libuv.org/en/v1.x/request.html} [uv_req_t]
+    — {i Base request}} in libuv.
 
     Requests are objects libuv uses to track asynchronous operations, and
     sometimes to communicate their results. For the most part Luv handles

@@ -72,16 +72,16 @@ opam install luv
 
 ## Documentation
 
-- [User Guide][guide]
+- [User guide][guide]
 - [API reference][api]
-- [Examples][examples] &mdash; explained in the User Guide.
+- [Examples][examples] &mdash; explained in the user guide.
 - [libuv manual][libuv-docs]
 
 <br/>
 
 ## Experimenting
 
-The User Guide has [instructions][experiment] on how to clone the repo and
+The user guide has [instructions][experiment] on how to clone the repo and
 quickly write your own experiments, or how to run Luv in a REPL.
 
 <br/>
@@ -98,9 +98,9 @@ Luv has several pieces, with slightly different permissive licenses:
 - Similarly, this repo links to [gyp][gyp], which is part of the libuv build
   process, and is included in Luv release archives. gyp is
   [licensed][gyp-license] under the 3-clause BSD license.
-- The User Guide is a very heavily reworked version of [uvbook][uvbook],
+- The user guide is a very heavily reworked version of [uvbook][uvbook],
   originally by Nikhil Marathe, which was incorporated into the libuv docs as
-  the [libuv User Guide][libuv-guide], and made available under
+  the [libuv user guide][libuv-guide], and made available under
   [CC BY 4.0][guide-license].
 
 [luv]: https://github.com/aantron/luv

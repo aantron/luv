@@ -5,8 +5,11 @@
 
 (** Mutexes.
 
-    See {{:http://docs.libuv.org/en/v1.x/threading.html#mutex-locks} {i Mutex
-    locks}}. *)
+    See
+    {{:https://aantron.github.io/luv/threads.html#synchronization-primitives} {i
+    Synchronization primitives}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/threading.html#mutex-locks} {i Mutex
+    locks}} in libuv. *)
 
 type t = C.Types.Mutex.t Ctypes.ptr
 (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_t}

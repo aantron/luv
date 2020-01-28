@@ -5,8 +5,9 @@
 
 (** Event loops.
 
-    See {{:http://docs.libuv.org/en/v1.x/loop.html} [uv_loop_t] — {i Event
-    loop}}. *)
+    See {{:https://aantron.github.io/luv/basics.html#event-loops} {i Event
+    loops}} in the user guide and {{:http://docs.libuv.org/en/v1.x/loop.html}
+    [uv_loop_t] — {i Event loop}} in libuv. *)
 
 type t = C.Types.Loop.t Ctypes.ptr
 (** Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_t}

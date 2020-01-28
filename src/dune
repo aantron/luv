@@ -3,3 +3,5 @@
  (public_name luv)
  (libraries luv.c result)
  (flags (:standard -w -49 -open Result)))
+
+(documentation)

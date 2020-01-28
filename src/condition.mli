@@ -6,7 +6,7 @@
 (** Condition variables.
 
     See {{:http://docs.libuv.org/en/v1.x/threading.html#conditions}
-    {i Conditions}}. *)
+    {i Conditions}} in libuv. *)
 
 type t
 (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_cond_t}

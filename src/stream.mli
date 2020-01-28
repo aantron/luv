@@ -5,8 +5,9 @@
 
 (** Streams.
 
-    See {{:http://docs.libuv.org/en/v1.x/stream.html} [uv_stream_t] {i — Stream
-    handle}}.
+    See {{:https://aantron.github.io/luv/networking.html#tcp} {i TCP}} in the
+    user guide and {{:http://docs.libuv.org/en/v1.x/stream.html} [uv_stream_t]
+    {i — Stream handle}} in libuv.
 
     Several types of {{!Luv.Handle.t} handle} have a portion of their interface
     in common, which portion is abstracted out into this module {!Luv.Stream}.

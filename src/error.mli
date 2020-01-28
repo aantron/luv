@@ -5,8 +5,10 @@
 
 (** Error handling.
 
-    See {{:http://docs.libuv.org/en/v1.x/errors.html} {i Error handling}} in the
-    libuv documentation. *)
+    See {{:https://aantron.github.io/luv/basics.html#error-handling} {i Error
+    handling}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/errors.html} {i Error handling}} in
+    libuv. *)
 
 type t = [
   | `E2BIG

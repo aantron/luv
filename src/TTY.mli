@@ -6,7 +6,7 @@
 (** Consoles.
 
     See {{:http://docs.libuv.org/en/v1.x/tty.html} [uv_tty_t] {i — TTY
-    handle}}. *)
+    handle}} in libuv. *)
 
 type t = [ `TTY ] Stream.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/tty.html#c.uv_tty_t}}.

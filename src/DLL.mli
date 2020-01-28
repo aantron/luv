@@ -6,7 +6,7 @@
 (** Dynamic linking.
 
     See {{:http://docs.libuv.org/en/v1.x/dll.html} {i Shared library
-    handling}}. *)
+    handling}} in libuv. *)
 
 type t
 (** Binds {{:http://docs.libuv.org/en/v1.x/dll.html#c.uv_lib_t} [uv_lib_t]}. *)

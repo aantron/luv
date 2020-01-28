@@ -1,5 +1,5 @@
-Basics of Luv and libuv
-=======================
+Basics
+======
 
 libuv offers an **asynchronous**, **event-driven** style of programming.  Its
 core job is to provide an event loop and callback-based notifications of I/O
