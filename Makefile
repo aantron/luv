@@ -57,6 +57,7 @@ examples :
 	  (_build/default/example/pipe_hello_world.exe; \
 	   sleep 1; killall pipe_echo_server.exe)
 	_build/default/example/send_signal.exe
+	bash -c "[ A$$TRAVIS == Atrue ]" || _build/default/example/sigint.exe
 
 .PHONY : test-installation
 test-installation : clean
