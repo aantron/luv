@@ -1,144 +1,125 @@
-<h1 align="center">Luv</h1>
+# Luv &nbsp;&nbsp; [![version 0.5.0][version]][releases] [![libuv 1.34.2][libuv-version]][libuv-releases] [![Travis status][travis-img]][travis]
 
-#### What is Luv?
+[releases]: https://github.com/aantron/luv/releases
+[version]: https://img.shields.io/badge/version-0.5.0~dev-blue.svg
+[libuv-releases]: https://github.com/libuv/libuv/releases
+[libuv-version]: https://img.shields.io/badge/libuv-1.34.2-blue.svg
+[travis]: https://travis-ci.org/aantron/luv
+[travis-img]: https://img.shields.io/travis/aantron/luv/master.svg?label=travis
 
-**Luv** is a binding from OCaml/ReasonML to [libuv][libuv]. It looks like this:
+[**Luv**][luv] is a binding from OCaml/ReasonML to [libuv][libuv], the C
+library that does asynchronous I/O in Node.js.
 
 ```ocaml
-let _ =
+let () =
   (* Create a 1-second timer. *)
-  let Ok timer = Luv.Timer.init () in
-  Luv.Timer.start timer 1000 (fun () -> print_endline "Hello, world!");
+  let timer = Luv.Timer.init () |> Stdlib.Result.get_ok in
+  ignore @@ Luv.Timer.start timer 1000 (fun () ->
+    print_endline "Hello, world!");
 
   (* Run the main loop. *)
-  Luv.Loop.(run (default ()) Run_mode.default)
-
-(* ocamlfind opt -linkpkg -package luv foo.ml *)
+  ignore @@ Luv.Loop.run ()
 ```
 
 <br/>
 
-#### What is libuv?
+Luv exposes a [comprehensive operating system API][api].
 
-[libuv][libuv] is the C library in Node.js that runs Node's event loop and does
-its asynchronous I/O.
-
-<br/><br/>
-
-Because libuv is critical to Node.js, it is [**cross-platform**][platforms] and
-[**well-maintained**][maintainers]. Luv inherits these properties, taking care
-of the tricky parts of calling into libuv from OCaml:
-
-- **Memory management** &mdash; Luv keeps track of OCaml objects that have been
-  passed to libuv, and are no longer otherwise retained on the OCaml side.
-- **The runtime lock** &mdash; Multithreaded OCaml and libuv programs operate
-  normally.
-- **API problems** &mdash; Where libuv is forced to offer difficult APIs due to
-  the limitations of C, Luv provides more natural APIs.
-- **The build** &mdash; When Luv is installed, it builds libuv, so users don't
-  have to figure out how to do it.
+Because libuv is a major component of Node.js, it is
+[cross-platform][platforms] and [well-maintained][maintainers]. Luv, being a
+fairly thin binding, inherits these properties.
 
 <br/>
 
-Luv is usable standalone, but its main purpose is to be integrated as a back end
-into bigger I/O libraries, such as [Repromise][repromise] and [Lwt][lwt]. To
-that end, Luv aims to be...
+Luv takes care of the tricky parts of dealing with libuv from OCaml:
+
+- **Memory management** &mdash; Luv keeps track of OCaml objects that have been
+  passed to libuv, and are otherwise referenced only by C callbacks.
+- **The OCaml runtime lock** &mdash; multithreaded Luv programs are safe.
+- **API problems** &mdash; where libuv is forced to offer difficult APIs due to
+  the limitations of C, Luv provides more natural APIs.
+- **The build** &mdash; when Luv is installed, it builds libuv, so users don't
+  have to figure out how to do it.
+
+Basically, when wrapped in Luv, libuv looks like any normal OCaml library, with
+the kind of usage functional programmers expect.
+
+<br/>
+
+One of the design goals of Luv is to be easy to integrate into larger libraries,
+such as [Lwt][lwt]. To that end, Luv is...
 
 - **Minimalist** &mdash; Luv only takes care of inherent libuv headaches, such
-  as memory management, building as little as possible over libuv.
+  as memory management, building as little else as possible over libuv.
 - **Unopinionated** &mdash; Luv avoids committing to design decisions beyond
   those dictated by libuv and OCaml.
 - **Maintainable** &mdash; Luv uses [Ctypes][ctypes] to minimize the amount of C
   code in this repo, and [vendors][vendor] libuv to avoid versioning issues.
 
-<br/>
-
-Luv is [well-tested][tests]. Apart from checking return values and I/O behavior,
-the test cases also check for memory leaks, lost references, and potential
-issues with multithreading.
-
-
+Luv is [thoroughly tested][tests]. Apart from checking return values and I/O
+effects, the test cases also check for memory leaks, invalid references, and
+potential issues with multithreading.
 
 <br/>
 
-## Status
-
-Luv is an early alpha at this point. The binding covers the full libuv API
-(with a few exceptions), but the library might not build in various
-circumstances, lacks docs, etc. This will all be addressed in upcoming
-development.
-
-
-
-<br/>
-
-## Trying
+## Installing
 
 ```
-git clone --recurse-submodules https://github.com/aantron/luv.git
-cd luv
-opam install --unset-root alcotest ctypes dune result
-make test
-dune exec example/http_get/http_get.exe -- www.google.com
+opam install luv
 ```
-
-You can try the Luv+[Lwt][lwt] HTTP GET example by installing a couple more
-dependencies:
-
-```
-opam install --unset-root lwt lwt_ppx
-dune exec example/http_get_lwt/http_get_lwt.exe -- www.google.com
-```
-
-Or, for the [reason-promise][reason-promise] version:
-
-```
-opam install --unset-root promise
-dune exec example/http_get_promise/http_get_promise.exe -- www.google.com
-```
-
-Luv probably doesn't work on Windows at the moment. The code is actually highly
-portable, but it is likely there are minor bugs and oversights, due to a lack of
-testing on Windows. This is to be fixed in the near future :)
-
-
 
 <br/>
 
 ## Documentation
 
-Proper docs for Luv haven't been started yet. However, one can get a listing of
-the available OCaml modules by looking in [`luv.ml`][luv.ml]. The modules are
-listed in the same order as [libuv's API docs][libuv-api] list features. The
-general libuv docs can be found [here][libuv-docs].
-
-We will eventually write and generate nice HTML docs for Luv itself, with plenty
-of links back to libuv :)
-
-luv currently uses libuv 1.34.0.
-
-
+- [User Guide][guide]
+- [API reference][api]
+- [Examples][examples] &mdash; explained in the User Guide.
+- [libuv manual][libuv-docs]
 
 <br/>
 
-## Roadmap
+## Experimenting
 
-- [ ] esy packaging and build.
-- [x] Proof-of-concept integration with Lwt and Repromise.
-- [ ] Vendor correctly Windows.
-- [ ] Documentation, examples, CI; user-friendly repo.
-- [ ] Look into using Luv for native Node.js modules.
+The User Guide has [instructions][experiment] on how to clone the repo and
+quickly write your own experiments, or how to run Luv in a REPL.
 
+<br/>
 
+## License
 
+Luv has several pieces, with slightly different permissive licenses:
+
+- Luv itself is under the [MIT license][license].
+- This repo links to libuv with a git module. However, a release archive will
+  generally include the full libuv source. Portions of libuv are variously
+  [licensed][libuv-license] under the MIT, 2-clause BSD, 3-clause BSD, and ISC
+  licenses.
+- Similarly, this repo links to [gyp][gyp], which is part of the libuv build
+  process, and is included in Luv release archives. gyp is
+  [licensed][gyp-license] under the 3-clause BSD license.
+- The User Guide is a very heavily reworked version of [uvbook][uvbook],
+  originally by Nikhil Marathe, which was incorporated into the libuv docs as
+  the [libuv User Guide][libuv-guide], and made available under
+  [CC BY 4.0][guide-license].
+
+[luv]: https://github.com/aantron/luv
 [libuv]: https://libuv.org/
 [platforms]: https://github.com/libuv/libuv/blob/master/SUPPORTED_PLATFORMS.md#readme
 [maintainers]: https://github.com/libuv/libuv/blob/master/MAINTAINERS.md#readme
 [ctypes]: https://github.com/ocamllabs/ocaml-ctypes#readme
-[vendor]: https://github.com/aantron/luv/tree/master/src/vendor
+[vendor]: https://github.com/aantron/luv/tree/master/src/c/vendor
 [tests]: https://github.com/aantron/luv/tree/master/test
-[luv.ml]: https://github.com/aantron/luv/blob/master/src/luv.ml
-[libuv-api]: http://docs.libuv.org/en/v1.x/api.html
+[guide]: https://aantron.github.io/luv/
+[api]: https://aantron.github.io/luv/luv/index.html#api-reference
+[examples]: https://github.com/aantron/luv/tree/master/example
 [libuv-docs]: http://docs.libuv.org/en/v1.x/
+[experiment]: https://aantron.github.io/luv/introduction.html
 [lwt]: https://github.com/ocsigen/lwt#readme
-[reason-promise]: https://github.com/aantron/promise#readme
+[gyp]: https://gyp.gsrc.io/
+[license]: https://github.com/aantron/luv/blob/master/LICENSE.md
+[libuv-license]: https://github.com/libuv/libuv/blob/v1.x/LICENSE
+[gyp-license]: https://chromium.googlesource.com/external/gyp/+/refs/heads/master/LICENSE
+[uvbook]: https://github.com/nikhilm/uvbook
+[libuv-guide]: http://docs.libuv.org/en/v1.x/guide.html
+[guide-license]: https://github.com/aantron/luv/blob/master/docs/LICENSE
