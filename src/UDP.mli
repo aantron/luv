@@ -139,18 +139,47 @@ end
 
 val recv_start :
   ?allocate:(int -> Buffer.t) ->
-  ?buffer_not_used:(unit -> unit) ->
   t ->
-  ((Buffer.t * Sockaddr.t * Recv_flag.t list, Error.t) result -> unit) ->
+  ((Buffer.t * Sockaddr.t option * Recv_flag.t list, Error.t) result -> unit) ->
     unit
 (** Calls its callback whenever a datagram is received on the UDP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_recv_start}
     [uv_udp_recv_start]}. See
-    {{:http://man7.org/linux/man-pages/man3/recv.3p.html} [recv(3p)]}.
+    {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_recv_cb}
+    [uv_udp_recv_cb]} and {{:http://man7.org/linux/man-pages/man3/recv.3p.html}
+    [recv(3p)]}.
 
     The behavior is similar to {!Luv.Stream.read_start}. See that function for
-    the meaning of the [?allocate] callback. *)
+    the meaning of the [?allocate] callback.
+
+    The main callback takes a [Sockaddr.t option]. This is usually [Some
+    sender_address], carrying the address of the peer. [None] usually indicates
+    [EAGAIN] in libuv; libuv still calls the callback, in order to give the C
+    user a chance to deallocate the data buffer. Since this is not usually an
+    issue in OCaml, it is usually safe to simply ignore calls to the callback
+    with sender address [None].
+
+    The buffer can be empty ([Luv.Buffer.size buffer = 0]). This indicates an
+    empty datagram.
+
+    Since UDP is connectionless, there is no EOF, and no means to indicate it.
+
+    The [Recv_flag.t list] callback argument can contain [`PARTIAL], which
+    indicates that the buffer allocated was too small for the datagram, a prefix
+    of the data was received, and the rest of the datagram was dropped.
+
+    In summary, the important possible combinations of callback arguments are:
+
+    - [Error _]: “true” error that should be handled, reported, etc.
+    - [Ok (_, None, _)]: [EAGAIN] inside libuv. Should typically be ignored.
+    - [Ok (buffer, Some peer, flags)]: datagram received. In this case, there
+      are additional possibilities:
+      {ul
+      {- [Luv.Buffer.size buffer = 0]: the datagram is empty, because an empty
+         datagram was sent.}
+      {- [List.mem `PARTIAL flags = true]: the read was partial, because the
+         buffer was too small for the datagram.}} *)
 
 val recv_stop : t -> (unit, Error.t) result
 (** Stops the callback provided to {!Luv.UDP.recv_start}.

@@ -103,7 +103,7 @@ Let's write UDP versions of the echo server and the "Hello, world!" program:
 .. literalinclude:: ../example/udp_echo_server.ml
     :language: ocaml
     :linenos:
-    :emphasize-lines: 4,6,10
+    :emphasize-lines: 4,6,12
 
 .. rubric:: :example:`udp_hello_world.ml`
 .. literalinclude:: ../example/udp_hello_world.ml

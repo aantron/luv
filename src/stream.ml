@@ -51,7 +51,6 @@ let alloc_trampoline =
 let read_trampoline =
   C.Functions.Stream.get_read_trampoline ()
 
-(* DOC Document memory management of this function. *)
 let read_start ?(allocate = Buffer.create) stream callback =
   let last_allocated_buffer = ref None in
 
@@ -66,7 +65,13 @@ let read_start ?(allocate = Buffer.create) stream callback =
           | None -> assert false
         in
         last_allocated_buffer := None;
-        Result.Ok (Buffer.sub buffer ~offset:0 ~length)
+        let buffer =
+          if Buffer.size buffer <= length then
+            buffer
+          else
+            Buffer.sub buffer ~offset:0 ~length
+        in
+        Result.Ok buffer
       end
       else begin
         last_allocated_buffer := None;

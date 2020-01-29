@@ -146,9 +146,7 @@ let alloc_trampoline =
 let recv_trampoline =
   C.Functions.UDP.get_recv_trampoline ()
 
-let recv_start
-    ?(allocate = Buffer.create) ?(buffer_not_used = ignore) udp callback =
-
+let recv_start ?(allocate = Buffer.create) udp callback =
   let last_allocated_buffer = ref None in
 
   Handle.set_reference udp begin fun nread_or_error sockaddr flags ->
@@ -158,9 +156,6 @@ let recv_start
     if nread_or_error < 0 then
       callback (Error.result_from_c nread_or_error)
 
-    else if sockaddr = Nativeint.zero then
-      buffer_not_used ()
-
     else begin
       let length = nread_or_error in
       let buffer =
@@ -168,12 +163,21 @@ let recv_start
         | Some buffer -> buffer
         | None -> assert false
       in
-      let buffer = Buffer.sub buffer ~offset:0 ~length in
+      let buffer =
+        if Buffer.size buffer <= length then
+          buffer
+        else
+          Buffer.sub buffer ~offset:0 ~length
+      in
       let sockaddr =
-        sockaddr
-        |> Ctypes.ptr_of_raw_address
-        |> Ctypes.from_voidp C.Types.Sockaddr.storage
-        |> Sockaddr.copy_storage
+        if sockaddr = Nativeint.zero then
+          None
+        else
+          sockaddr
+          |> Ctypes.ptr_of_raw_address
+          |> Ctypes.from_voidp C.Types.Sockaddr.storage
+          |> Sockaddr.copy_storage
+          |> fun sockaddr -> Some sockaddr
       in
       let flags =
         if flags land C.Types.UDP.Flag.partial = 0 then

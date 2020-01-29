@@ -60,27 +60,33 @@ val read_start :
 (** Calls its callback whenever data is available on the stream.
 
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_read_start}
-    [uv_read_start]}. See {{:http://man7.org/linux/man-pages/man3/readv.3p.html}
-    [readv(3p)]}.
+    [uv_read_start]}. See {{:http://man7.org/linux/man-pages/man3/read.3p.html}
+    [read(3p)]}.
+
+    [?allocate] is called immediately before each call to the main callback with
+    [Ok buffer'], to create [buffer], into which the data will be read.
+    [buffer'] is, in general, a {{!Luv.Buffer.sub} view} into [buffer]. The
+    default [?allocate] allocates a fresh buffer every time it is called. One
+    particular use of [?allocate] is to always read data into the same
+    pre-existing buffer. The [int] argument passed to [?allocate] is a suggested
+    size. It is acceptable to return a buffer of a smaller size. To read into an
+    existing buffer, but not at its beginning, use {!Luv.Buffer.sub} to create a
+    view into the buffer.
 
     The end of the stream (typically, when the remote peer closes or shuts down
     the connection) is indicated by [Error `EOF] being passed to the callback.
-    Note that this is different from {!Luv.File.read}. Zero-length reads are
-    possible, and do not indicate the end of stream. For the purposes of an
-    application or a higher-level library, it should be safe for a wrapper to
-    drop zero-length reads reported by [Luv.Stream.read_start], and convert
-    [Error `EOF] into zero-length reads, to simulate the standard convention.
+    Note that this behavior is different from {!Luv.File.read}.
 
-    [?allocate] is called before each call to the main callback, to create a
-    the buffer into which the data will be read. One particular use of it is to
-    always read data into the same buffer. The argument passed to [?allocate] is
-    a suggested size. It is acceptable to return a buffer of a smaller size. To
-    read into an existing buffer, but not at its beginning, use
-    {!Luv.Buffer.sub} to create a view into the buffer. The default [?allocate]
-    allocates a fresh buffer of the given size every time it is called.
+    Zero-length reads are possible, and do not indicate the end of stream.
+    Instead, they usually indicate [EAGAIN] inside libuv; libuv still calls the
+    callback in order to give the C user a chance to deallocate the data buffer.
+    This is not usually an issue in OCaml, so a wrapper of this function can
+    usually simply ignore zero-length reads. It is then also safe to convert
+    [Error `EOF] to zero-length reads in a higher-level API, for consistency
+    with reading files, and in accordance with OS API convention.
 
     To read only once, call {!Luv.Stream.read_stop} immediately, in the main
-    callback. *)
+    callback. Otherwise, the main callback will be called repeatedly. *)
 
 val read_stop : _ t -> (unit, Error.t) result
 (** Stops reading.
@@ -99,7 +105,10 @@ val write :
     the buffer, and pass the view to this function {!Luv.Stream.write}.
 
     The second argument passed to the callback is the number of bytes
-    written. *)
+    written. libuv has an internal queue of writes, in part to implement retry.
+    This means that writes can be partial at the libuv (and Luv) API level, so
+    it is possible to receive both an [Error] result, and for some data to have
+    been successfully written. *)
 
 val write2 :
   [< `Pipe ] t -> Buffer.t list -> send_handle:[< `TCP | `Pipe ] t ->

@@ -6,7 +6,9 @@ let () =
   Luv.UDP.recv_start server begin function
     | Error e ->
       Printf.eprintf "Receive error: %s\n" (Luv.Error.strerror e)
-    | Ok (buffer, client_address, _flags) ->
+    | Ok (_, None, _) ->
+      ()
+    | Ok (buffer, Some client_address, _flags) ->
       Luv.UDP.send server [buffer] client_address ignore
   end;
 

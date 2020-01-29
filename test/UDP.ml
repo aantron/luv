@@ -26,28 +26,15 @@ let with_sender_and_receiver ~receiver_logic ~sender_logic =
 
   run ()
 
-let expect ?(buffer_not_used = false) receiver expected_data k =
-  let buffer_not_used_callback =
-    if buffer_not_used then
-      k
-    else
-      fun () -> Alcotest.fail "received no data"
-  in
-
-  Luv.UDP.recv_start
-      ~buffer_not_used:buffer_not_used_callback receiver begin fun result ->
-
+let expect receiver expected_data k =
+  Luv.UDP.recv_start receiver begin fun result ->
     let buffer, _peer_address, flags =
       check_success_result "recv_start" result in
-    if buffer_not_used then
-      Alcotest.fail "expected no data"
-    else begin
-      if flags <> [] then
-        Alcotest.fail "unexpected partial recv";
-      Alcotest.(check int) "length"
-        (String.length expected_data) (Luv.Buffer.size buffer);
-      Alcotest.(check string) "data" expected_data Luv.Buffer.(to_string buffer)
-    end;
+    if flags <> [] then
+      Alcotest.fail "unexpected partial recv";
+    Alcotest.(check int) "length"
+      (String.length expected_data) (Luv.Buffer.size buffer);
+    Alcotest.(check string) "data" expected_data Luv.Buffer.(to_string buffer);
     Luv.UDP.recv_stop receiver |> check_success_result "recv_stop";
     k ()
   end
@@ -170,24 +157,6 @@ let tests = [
         ~sender_logic:
           begin fun sender address ->
             Luv.UDP.try_send sender [Luv.Buffer.from_string ""] address
-            |> check_success_result "try_send";
-            Luv.Handle.close sender ignore
-          end
-    end;
-
-    "drain", `Quick, begin fun () ->
-      with_sender_and_receiver
-        ~receiver_logic:
-          begin fun receiver ->
-            expect receiver "foo" begin fun () ->
-              expect ~buffer_not_used:true receiver "" begin fun () ->
-                Luv.Handle.close receiver ignore
-              end
-            end
-          end
-        ~sender_logic:
-          begin fun sender address ->
-            Luv.UDP.try_send sender [Luv.Buffer.from_string "foo"] address
             |> check_success_result "try_send";
             Luv.Handle.close sender ignore
           end
