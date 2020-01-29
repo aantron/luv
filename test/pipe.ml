@@ -184,10 +184,10 @@ let tests = [
         |> Alcotest.(check int) "read byte count" 1;
 
         begin match Luv.Pipe.receive_handle ipc_1 with
-        | `Pipe accept ->
+        | `Pipe receive ->
           let received =
             Luv.Pipe.init () |> check_success_result "init received" in
-          accept received |> check_success_result "handle accept";
+          receive received |> check_success_result "handle accept";
           let buffer = Luv.Buffer.from_string "x" in
           Luv.Stream.try_write received [buffer]
           |> check_success_result "try_write"

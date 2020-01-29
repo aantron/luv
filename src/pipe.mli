@@ -80,17 +80,18 @@ val receive_handle :
   ]
 (** Receives a file descriptor over the given pipe.
 
-    File descriptors are sent using the [?send_handle] argument of
-    {!Luv.Stream.write}.
+    File descriptors are sent using the [~send_handle] argument of
+    {!Luv.Stream.write2}.
 
     On the receiving end, call {!Luv.Stream.read_start}. When that function
     calls its callback, there may be file descriptors in the pipe, in addition
     to the ordinary data provided to the callback.
 
     To check, call this function {!Luv.Pipe.recieve_handle} in a loop until it
-    returns [`None]. If it returns [`TCP f] or [`Pipe f], create an appropriate
-    handle [handle] using either {!Luv.TCP.init} or {!Luv.Pipe.init}, and call
-    [f handle] to receive the fd and associate it with the handle. *)
+    returns [`None]. Each time it returns [`TCP receive] or [`Pipe receive],
+    create an appropriate [handle] using either {!Luv.TCP.init} or
+    {!Luv.Pipe.init}, and call [receive handle] to receive the file descriptor
+    and associate it with [handle]. *)
 
 (** Constants for {!Luv.Pipe.chmod}. *)
 module Mode :
