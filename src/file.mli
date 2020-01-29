@@ -227,7 +227,7 @@ val close :
 val read :
   ?loop:Loop.t ->
   ?request:Request.t ->
-  ?offset:int64 ->
+  ?file_offset:int64 ->
   t ->
   Buffer.t list ->
   ((Unsigned.Size_t.t, Error.t) result -> unit) ->
@@ -248,8 +248,8 @@ val read :
     [Bigarray.Array1.sub]} or {!Luv.Buffer.sub} to create a shorter view of the
     buffer.
 
-    If the [?offset] argument is not specified, the read is done at the current
-    offset into the file, and the file offset is updated. Otherwise, a
+    If the [?file_offset] argument is not specified, the read is done at the
+    current offset into the file, and the file offset is updated. Otherwise, a
     positioned read is done at the given offset, and the file offset is not
     updated. See {{:http://man7.org/linux/man-pages/man3/pread.3p.html}
     [pread(3p)]}.
@@ -260,7 +260,7 @@ val read :
 val write :
   ?loop:Loop.t ->
   ?request:Request.t ->
-  ?offset:int64 ->
+  ?file_offset:int64 ->
   t ->
   Buffer.t list ->
   ((Unsigned.Size_t.t, Error.t) result -> unit) ->
@@ -272,7 +272,7 @@ val write :
     [writev(3p)]}. The synchronous version is {!Luv.File.Sync.write}.
 
     See {!Luv.File.read} for notes on the lengths of the buffers and the meaning
-    of [?offset]. *)
+    of [?file_offset]. *)
 
 
 
@@ -872,12 +872,12 @@ sig
   (** Synchronous version of {!Luv.File.close}. *)
 
   val read :
-    ?offset:int64 -> t -> Buffer.t list ->
+    ?file_offset:int64 -> t -> Buffer.t list ->
       (Unsigned.Size_t.t, Error.t) result
   (** Synchronous version of {!Luv.File.read}. *)
 
   val write :
-    ?offset:int64 -> t -> Buffer.t list ->
+    ?file_offset:int64 -> t -> Buffer.t list ->
       (Unsigned.Size_t.t, Error.t) result
   (** Synchronous version of {!Luv.File.write}. *)
 

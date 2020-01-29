@@ -493,11 +493,11 @@ struct
     async_or_sync
       c_function
       returns_byte_count
-      (fun run ?(offset = -1L) file buffers ->
+      (fun run ?(file_offset = -1L) file buffers ->
         let count = List.length buffers in
         let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
         run
-          (!file @@ !(Ctypes.CArray.start iovecs) @@ uint count @@ !offset)
+          (!file @@ !(Ctypes.CArray.start iovecs) @@ uint count @@ !file_offset)
           (fun () ->
             let module Sys = Compatibility.Sys in
             ignore (Sys.opaque_identity buffers);
