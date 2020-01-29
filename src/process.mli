@@ -72,7 +72,7 @@ val stderr : int
 
 val spawn :
   ?loop:Loop.t ->
-  ?on_exit:(t -> exit_status:int -> term_signal:int -> unit) ->
+  ?on_exit:(t -> exit_status:int64 -> term_signal:int -> unit) ->
   ?environment:(string * string) list ->
   ?working_directory:string ->
   ?redirect:redirection list ->
@@ -96,7 +96,17 @@ val spawn :
     {{:http://docs.libuv.org/en/v1.x/process.html#public-members} here}. The
     remaining arguments correspond to flags from
     {{:http://docs.libuv.org/en/v1.x/process.html#c.uv_process_flags}
-    [uv_process_flags]}. *)
+    [uv_process_flags]}.
+
+    On Unix, the [~term_signal] argument to [?on_exit] will be non-zero if the
+    process was terminated by a signal. In this case, the [~exit_status] is
+    invalid.
+
+    On Windows, [~term_signal] and [~exit_status] are independent of each other.
+    [~term_signal] is set by {!Luv.Process.kill}, i.e. it is emulated by libuv.
+    The operating system separately reports [~exit_status], so it is always
+    valid. If there is an error retrieving [~exit_status] from the OS, it is set
+    to a negative value. *)
 
 val disable_stdio_inheritance : unit -> unit
 (** Disables (tries) file descriptor inheritance for inherited descriptors.

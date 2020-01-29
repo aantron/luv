@@ -22,7 +22,7 @@ let tests = [
         Luv.Process.spawn "echo" ["echo"; "-n"]
             ~on_exit:begin fun process ~exit_status ~term_signal:_ ->
 
-          Alcotest.(check int) "exit status" 0 exit_status;
+          Alcotest.(check int64) "exit status" 0L exit_status;
           Luv.Handle.close process ignore;
           called := true
         end
@@ -221,7 +221,7 @@ let tests = [
 
       run ();
 
-      Alcotest.(check (option int)) "exit code" (Some 1) !exit_code;
+      Alcotest.(check (option int64)) "exit code" (Some 1L) !exit_code;
       Alcotest.(check bool) "finished" true !finished;
 
       Unix.putenv "FOO" ""

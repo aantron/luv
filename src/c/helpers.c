@@ -7,6 +7,7 @@
 #include <string.h>
 
 #define CAML_NAME_SPACE
+#include <caml/alloc.h>
 #include <caml/bigarray.h>
 #include <caml/callback.h>
 #include <caml/mlvalues.h>
@@ -101,7 +102,8 @@ static void luv_exit_trampoline(
 {
     caml_acquire_runtime_system();
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
-    caml_callback2(callback, Val_int(exit_status), Val_int(term_signal));
+    caml_callback2(
+        callback, caml_copy_int64(exit_status), Val_int(term_signal));
     caml_release_runtime_system();
 }
 
