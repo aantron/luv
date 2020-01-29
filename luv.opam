@@ -17,7 +17,6 @@ depends: [
   "ctypes" {>= "0.13.0"}
   "dune" {>= "2.0.0"}
   "ocaml" {>= "4.02.0"}
-  ("ocaml" {>= "4.08.0"} | "ocaml-syntax-shims")
   "result"
 
   "alcotest" {dev & >= "0.8.1"}
