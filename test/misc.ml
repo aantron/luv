@@ -39,6 +39,28 @@ let tests = [
       if delta > 1. then
         Alcotest.failf "times: %f %f" uv_time ocaml_time
     end;
+
+    "sleep: basic", `Quick, begin fun () ->
+      Luv.Time.sleep 100
+    end;
+
+    "sleep: multithreading", `Quick, begin fun () ->
+      let start_time = Unix.gettimeofday () in
+
+      let thread =
+        Luv.Thread.create (fun () -> Luv.Time.sleep 500)
+        |> check_success_result "create"
+      in
+
+      Luv.Time.sleep 500;
+
+      Luv.Thread.join thread
+      |> check_success_result "join";
+
+      let elapsed = Unix.gettimeofday () -. start_time in
+      if elapsed > 0.75 then
+        Alcotest.failf "%f s elapsed" elapsed
+    end;
   ];
 
   "random", [
@@ -60,12 +82,6 @@ let tests = [
       |> check_success_result "random";
       if Luv.Buffer.to_string buffer = content then
         Alcotest.fail "buffer contents"
-    end;
-  ];
-
-  "sleep", [
-    "sleep", `Quick, begin fun () ->
-      Luv.Time.sleep 100
     end;
   ];
 ]

@@ -396,6 +396,13 @@ struct
       foreign "uv_barrier_wait"
         (ptr Types.Barrier.t @-> returning bool)
   end
+
+  module Time =
+  struct
+    let sleep =
+      foreign "uv_sleep"
+        (int @-> returning void)
+  end
 end
 
 module Descriptions (F : Ctypes.FOREIGN) =
@@ -1756,10 +1763,6 @@ struct
     let hrtime =
       foreign "uv_hrtime"
         (void @-> returning uint64_t)
-
-    let sleep =
-      foreign "uv_sleep"
-        (int @-> returning void)
   end
 
   module Random =

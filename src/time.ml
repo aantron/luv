@@ -22,4 +22,4 @@ let hrtime =
   C.Functions.Time.hrtime
 
 let sleep =
-  C.Functions.Time.sleep
+  C.Blocking.Time.sleep
