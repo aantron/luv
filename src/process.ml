@@ -15,11 +15,11 @@ let no_redirection =
   Ctypes.setf redirection Redirection.flags Redirection.ignore;
   redirection
 
-let to_new_pipe
+let to_parent_pipe
     ?(readable_in_child = true)
     ?(writable_in_child = true)
     ?(overlapped = false)
-    ~fd ~to_parent_pipe () =
+    ~fd ~parent_pipe () =
 
   let redirection = Ctypes.make Redirection.t in
   let flags =
@@ -30,7 +30,7 @@ let to_new_pipe
     |> accumulate Redirection.overlapped_pipe overlapped
   in
   Ctypes.setf redirection Redirection.flags flags;
-  Ctypes.setf redirection Redirection.stream Handle.(coerce to_parent_pipe);
+  Ctypes.setf redirection Redirection.stream Handle.(coerce parent_pipe);
   (fd, redirection)
 
 let inherit_fd ~fd ~from_parent_fd () =

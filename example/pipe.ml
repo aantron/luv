@@ -2,7 +2,7 @@ let () =
   let pipe = Luv.Pipe.init () |> Stdlib.Result.get_ok in
 
   let redirect = Luv.Process.[
-    to_new_pipe ~fd:stdout ~to_parent_pipe:pipe ()
+    to_parent_pipe ~fd:stdout ~parent_pipe:pipe ()
   ]
   in
   ignore (Luv.Process.spawn ~redirect "echo" ["echo"; "Hello,"; "world!"]);

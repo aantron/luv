@@ -119,7 +119,7 @@ let tests = [
 
       Luv.Process.(spawn
         "echo" ["echo"; "-n"; "foo"]
-        ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
+        ~redirect:[to_parent_pipe ~fd:stdout ~parent_pipe:parent_end ()])
       |> check_success_result "spawn"
       |> fun p -> Luv.Handle.close p ignore;
 
@@ -144,7 +144,7 @@ let tests = [
       Luv.Process.(spawn
         "printenv" ["printenv"; "FOO"]
         ~environment:["FOO", "foobar"]
-        ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
+        ~redirect:[to_parent_pipe ~fd:stdout ~parent_pipe:parent_end ()])
       |> check_success_result "spawn"
       |> fun p -> Luv.Handle.close p ignore;
 
@@ -171,7 +171,7 @@ let tests = [
 
       Luv.Process.(spawn
         "printenv" ["printenv"; "FOO"]
-        ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
+        ~redirect:[to_parent_pipe ~fd:stdout ~parent_pipe:parent_end ()])
       |> check_success_result "spawn"
       |> fun p -> Luv.Handle.close p ignore;
 
@@ -203,7 +203,7 @@ let tests = [
         Luv.Process.(spawn
           "printenv" ["printenv"; "FOO"]
           ~environment:[]
-          ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()]
+          ~redirect:[to_parent_pipe ~fd:stdout ~parent_pipe:parent_end ()]
           ~on_exit:begin fun process ~exit_status ~term_signal:_ ->
             Luv.Handle.close process ignore;
             exit_code := Some exit_status
@@ -235,7 +235,7 @@ let tests = [
       Luv.Process.(spawn
         "pwd" ["pwd"]
         ~working_directory:child_working_directory
-        ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
+        ~redirect:[to_parent_pipe ~fd:stdout ~parent_pipe:parent_end ()])
       |> check_success_result "spawn"
       |> fun p -> Luv.Handle.close p ignore;
 
@@ -262,7 +262,7 @@ let tests = [
 
       Luv.Process.(spawn
         "pwd" ["pwd"]
-        ~redirect:[to_new_pipe ~fd:stdout ~to_parent_pipe:parent_end ()])
+        ~redirect:[to_parent_pipe ~fd:stdout ~parent_pipe:parent_end ()])
       |> check_success_result "spawn"
       |> fun p -> Luv.Handle.close p ignore;
 

@@ -20,12 +20,12 @@ type t = [ `Process ] Handle.t
 type redirection
 (** File descriptor redirections for use with {!Luv.Process.spawn}. *)
 
-val to_new_pipe :
+val to_parent_pipe :
   ?readable_in_child:bool ->
   ?writable_in_child:bool ->
   ?overlapped:bool ->
   fd:int ->
-  to_parent_pipe:Pipe.t ->
+  parent_pipe:Pipe.t ->
   unit ->
     redirection
 (** Causes [~fd] in the child to be connected to [~to_parent_pipe] in the
