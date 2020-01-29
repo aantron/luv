@@ -403,6 +403,26 @@ struct
       foreign "uv_sleep"
         (int @-> returning void)
   end
+
+  module Random =
+  struct
+    let request = Types.Random.Request.t
+
+    let trampoline =
+      static_funptr
+        Ctypes.(ptr request @-> error_code @-> ptr void @-> size_t @->
+          returning void)
+
+    let random =
+      foreign "uv_random"
+        (ptr Types.Loop.t @->
+         ptr request @->
+         ptr char @->
+         size_t @->
+         uint @->
+         trampoline @->
+          returning error_code)
+  end
 end
 
 module Descriptions (F : Ctypes.FOREIGN) =

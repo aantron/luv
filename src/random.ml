@@ -39,7 +39,7 @@ struct
     C.Functions.Random.get_null_callback ()
 
   let random buffer =
-    C.Functions.Random.random
+    C.Blocking.Random.random
       Ctypes.(from_voidp C.Types.Loop.t null)
       Ctypes.(from_voidp C.Types.Random.Request.t null)
       Ctypes.(bigarray_start array1 buffer)
