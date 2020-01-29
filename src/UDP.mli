@@ -143,8 +143,7 @@ val recv_start :
   t ->
   ((Buffer.t * Sockaddr.t * Recv_flag.t list, Error.t) result -> unit) ->
     unit
-(** Starts calling its callback whenever a datagram is received on the UDP
-    socket.
+(** Calls its callback whenever a datagram is received on the UDP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_recv_start}
     [uv_udp_recv_start]}. See

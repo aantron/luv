@@ -252,7 +252,10 @@ val read :
     offset into the file, and the file offset is updated. Otherwise, a
     positioned read is done at the given offset, and the file offset is not
     updated. See {{:http://man7.org/linux/man-pages/man3/pread.3p.html}
-    [pread(3p)]}. *)
+    [pread(3p)]}.
+
+    End of file is indicated by [Ok Unsigned.Size_t.zero]. Note that this is
+    different from {!Luv.Stream.read_start}. *)
 
 val write :
   ?loop:Loop.t ->

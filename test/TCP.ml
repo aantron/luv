@@ -269,6 +269,27 @@ let tests = [
       Alcotest.(check bool) "finalized" true !buffer3_finalized
     end;
 
+    "eof", `Quick, begin fun () ->
+      let read_finished = ref false in
+
+      with_server_and_client
+        ~server_logic:
+          begin fun server client ->
+            Luv.Stream.read_start client begin fun result ->
+              check_error_result "read_start" `EOF result;
+              Luv.Handle.close client ignore;
+              Luv.Handle.close server ignore;
+              read_finished := true
+            end
+          end
+        ~client_logic:
+          begin fun client _address ->
+            Luv.Handle.close client ignore
+          end;
+
+      Alcotest.(check bool) "read finished" true !read_finished;
+    end;
+
     "write: sync error", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         let called = ref false in

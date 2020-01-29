@@ -81,7 +81,7 @@ let tests = [
       Luv.File.open_ "read_test_input" [`RDONLY] begin fun result ->
         let file = check_success_result "file" result in
 
-        let buffer = Luv.Buffer.create 4 in
+        let buffer = Luv.Buffer.create 9 in
         Luv.Buffer.fill buffer '\000';
 
         Luv.File.read file [buffer] begin fun result ->
@@ -89,15 +89,21 @@ let tests = [
             check_success_result "read result" result
             |> Unsigned.Size_t.to_int
           in
-          Alcotest.(check int) "byte count" 4 length;
+          Alcotest.(check int) "byte count" 9 length;
 
           Luv.Buffer.sub buffer ~offset:0 ~length
           |> Luv.Buffer.to_string
-          |> Alcotest.(check string) "data" "open";
+          |> Alcotest.(check string) "data" "open Foo\n";
 
-          Luv.File.close file begin fun result ->
-            check_success_result "close result" result;
-            finished := true
+          Luv.File.read file [buffer] begin fun result ->
+            check_success_result "read result (eof)" result
+            |> Unsigned.Size_t.to_int
+            |> Alcotest.(check int) "byte count (eof)" 0;
+
+            Luv.File.close file begin fun result ->
+              check_success_result "close result" result;
+              finished := true
+            end
           end
         end
       end;
@@ -113,7 +119,7 @@ let tests = [
         |> check_success_result "open_"
       in
 
-      let buffer = Luv.Buffer.create 4 in
+      let buffer = Luv.Buffer.create 9 in
       Luv.Buffer.fill buffer '\000';
 
       let length =
@@ -122,11 +128,16 @@ let tests = [
         |> Unsigned.Size_t.to_int
       in
 
-      Alcotest.(check int) "byte count" 4 length;
+      Alcotest.(check int) "byte count" 9 length;
 
       Luv.Buffer.sub buffer ~offset:0 ~length
       |> Luv.Buffer.to_string
-      |> Alcotest.(check string) "data" "open";
+      |> Alcotest.(check string) "data" "open Foo\n";
+
+      Luv.File.Sync.read file [buffer]
+      |> check_success_result "read (eof)"
+      |> Unsigned.Size_t.to_int
+      |> Alcotest.(check int) "byte count (eof)" 0;
 
       Luv.File.Sync.close file
       |> check_success_result "close"

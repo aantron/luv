@@ -57,11 +57,19 @@ val read_start :
   _ t ->
   ((Buffer.t, Error.t) result -> unit) ->
     unit
-(** Starts calling its callback whenever data is available on the stream.
+(** Calls its callback whenever data is available on the stream.
 
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_read_start}
     [uv_read_start]}. See {{:http://man7.org/linux/man-pages/man3/readv.3p.html}
     [readv(3p)]}.
+
+    The end of the stream (typically, when the remote peer closes or shuts down
+    the connection) is indicated by [Error `EOF] being passed to the callback.
+    Note that this is different from {!Luv.File.read}. Zero-length reads are
+    possible, and do not indicate the end of stream. For the purposes of an
+    application or a higher-level library, it should be safe for a wrapper to
+    drop zero-length reads reported by [Luv.Stream.read_start], and convert
+    [Error `EOF] into zero-length reads, to simulate the standard convention.
 
     [?allocate] is called before each call to the main callback, to create a
     the buffer into which the data will be read. One particular use of it is to
