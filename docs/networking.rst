@@ -161,16 +161,16 @@ You can try this in the Luv repo with the command::
 Network interfaces
 ------------------
 
-Information about the system's network interfaces can be obtained through libuv
-using ``uv_interface_addresses``. This simple program just prints out all the
-interface details so you get an idea of the fields that are available. This is
-useful to allow your service to bind to IP addresses when it starts.
+Information about the system's network interfaces can be obtained by calling
+:api:`Luv.Network.interface_addresses
+<Network/index.html#val-interface_addresses>`. This simple program prints out
+all the interface details made available by libuv:
 
-.. rubric:: interfaces/main.c
-.. literalinclude:: ../../code/interfaces/main.c
+.. rubric:: :example:`ifconfig.ml`
+.. literalinclude:: ../example/ifconfig.ml
+    :language: ocaml
     :linenos:
-    :emphasize-lines: 9,17
 
-``is_internal`` is true for loopback interfaces. Note that if a physical
-interface has multiple IPv4/IPv6 addresses, the name will be reported multiple
-times, with each address being reported once.
+``is_internal`` is true for loopback interfaces. Note that if an interface has
+multiple addresses (for example, an IPv4 address and an IPv6 address), the
+interface will be reported multiple times, once with each address.

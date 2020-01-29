@@ -20,6 +20,7 @@ examples :
 	  example/udp_hello_world.exe \
 	  example/host.exe \
 	  example/http_get.exe \
+	  example/ifconfig.exe \
 	  example/threads.exe \
 	  example/thread_pool.exe \
 	  example/mutex.exe \
@@ -45,6 +46,7 @@ examples :
 	   sleep 1; killall udp_echo_server.exe)
 	_build/default/example/host.exe localhost
 	_build/default/example/http_get.exe google.com /
+	_build/default/example/ifconfig.exe
 	_build/default/example/threads.exe
 	_build/default/example/thread_pool.exe
 	_build/default/example/mutex.exe

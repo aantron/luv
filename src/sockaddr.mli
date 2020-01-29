@@ -77,7 +77,7 @@ val port : t -> int option
 (* Internal functions; do not use. *)
 
 val copy_storage : C.Types.Sockaddr.storage Ctypes.ptr -> t
-val copy_sockaddr : C.Types.Sockaddr.t Ctypes.ptr -> int -> t
+val copy_sockaddr : int -> C.Types.Sockaddr.t Ctypes.ptr -> t
 
 val as_sockaddr : t -> C.Types.Sockaddr.t Ctypes.ptr
 val null : C.Types.Sockaddr.t Ctypes.ptr

@@ -888,6 +888,20 @@ struct
 
   module Network =
   struct
+    module Interface_address =
+    struct
+      let t : ([ `Interface_address ] structure) typ =
+        structure "uv_interface_address_s"
+      let name = field t "name" string
+      let phys_addr = field t "phys_addr" (array 6 char)
+      let is_internal = field t "is_internal" bool
+      let address4 = field t "address.address4" Sockaddr.in_
+      let address6 = field t "address.address6" Sockaddr.in6
+      let netmask4 = field t "netmask.netmask4" Sockaddr.in_
+      let netmask6 = field t "netmask.netmask6" Sockaddr.in6
+      let () = seal t
+    end
+
     let if_namesize = constant "UV_IF_NAMESIZE" int
     let maxhostnamesize = constant "UV_MAXHOSTNAMESIZE" int
   end

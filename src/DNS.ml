@@ -85,7 +85,7 @@ let rec addrinfo_list_to_ocaml addrinfo =
       Sockaddr.Socket_type.from_c (Ctypes.getf addrinfo AI.socktype) in
     let addr =
       Sockaddr.copy_sockaddr
-        (Ctypes.getf addrinfo AI.addr) (Ctypes.getf addrinfo AI.addrlen)
+        (Ctypes.getf addrinfo AI.addrlen) (Ctypes.getf addrinfo AI.addr)
     in
     let ocaml_addrinfo = {
       Addr_info.family;

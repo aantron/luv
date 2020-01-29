@@ -1659,6 +1659,15 @@ struct
 
   module Network =
   struct
+    let interface_addresses =
+      foreign "uv_interface_addresses"
+        (ptr (ptr Types.Network.Interface_address.t) @-> ptr int @->
+          returning error_code)
+
+    let free_interface_addresses =
+      foreign "uv_free_interface_addresses"
+        (ptr Types.Network.Interface_address.t @-> int @-> returning void)
+
     let if_indextoname =
       foreign "uv_if_indextoname"
         (uint @-> ocaml_bytes @-> ptr size_t @-> returning error_code)

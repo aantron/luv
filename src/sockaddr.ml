@@ -119,7 +119,7 @@ let copy_storage address =
   Ctypes.(addr storage <-@ !@ address);
   storage
 
-let copy_sockaddr address length =
+let copy_sockaddr length address =
   let storage = make () in
   C.Functions.Sockaddr.memcpy_from_sockaddr
     (Ctypes.addr storage) address length;

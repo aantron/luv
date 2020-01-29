@@ -3,6 +3,27 @@
 
 
 
+(** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_interface_address_t}
+    [uv_interface_address_t]}. [t.physical] is a string of length 6. *)
+module Interface_address :
+sig
+  type t = {
+    name : string;
+    is_internal : bool;
+    physical : string;
+    address : Sockaddr.t;
+    netmask : Sockaddr.t;
+  }
+end
+
+val interface_addresses : unit -> (Interface_address.t list, Error.t) result
+(** Lists network interface addresses.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_interface_addresses}
+    [uv_interface_addresses]}. See
+    {{:https://aantron.github.io/luv/networking.html#network-interfaces}
+    {i Network interfaces}} in the user guide. *)
+
 val if_indextoname : int -> (string, Error.t) result
 (** Retrieves a network interface name.
 
