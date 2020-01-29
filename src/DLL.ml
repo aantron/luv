@@ -25,5 +25,5 @@ let sym lib name =
   else
     Some (Ctypes.(raw_address_of_ptr (!@ address)))
 
-let last_error =
+let error =
   C.Functions.DLL.error

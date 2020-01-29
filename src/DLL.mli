@@ -36,7 +36,7 @@ val sym : t -> string -> nativeint option
     Evaluates to [None] on failure. In that case, call {!Luv.DLL.last_error} to
     get the error message. *)
 
-val last_error : t -> string
+val error : t -> string
 (** Retrieves the last error message from {!Luv.DLL.open_} or {!Luv.DLL.sym}.
 
     Binds {{:http://docs.libuv.org/en/v1.x/dll.html#c.uv_dlerror}
