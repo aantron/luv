@@ -28,7 +28,12 @@ val queue_work :
 (** Schedules a function to be called by a thread in the thread pool.
 
     Binds {{:http://docs.libuv.org/en/v1.x/threadpool.html#c.uv_queue_work}
-    [uv_queue_work]}. *)
+    [uv_queue_work]}.
+
+    In [Luv.Thread_pool.queue_work f after], [f] is the function that will be
+    called in the thread pool. [after] will be called by the libuv loop (that
+    is, typically, in the main thread) after [f] completes, or immediately, in
+    case there is an error scheduling [f]. *)
 
 val queue_c_work :
   ?loop:Loop.t ->
