@@ -77,7 +77,6 @@ let trampoline =
 let null_callback =
   C.Functions.Process.get_null_callback ()
 
-(* TODO Is this legitimate in terms of memory management? *)
 let c_string_array strings =
   strings @ [""]
   |> Ctypes.(CArray.of_list string)

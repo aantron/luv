@@ -359,5 +359,3 @@ let tests = [
     end;
   ]
 ]
-
-(* TODO Test cancelation here. *)

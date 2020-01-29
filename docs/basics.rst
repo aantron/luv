@@ -126,6 +126,19 @@ So, it has signature
     Luv.Timer.start :
       Luv.Timer.t -> int -> (unit -> unit) -> (unit, Luv.Error.t) result
 
+Luv does not raise exceptions. In addition, callbacks you pass to Luv APIs
+shouldn't raise exceptions at the top level (they can use exceptions interally).
+This is because such exceptions can't be allowed to go up the stack into libuv.
+If a callback passed to Luv raises an exception, Luv catches it, prints a stack
+trace to ``STDERR``, and then calls ``exit 2``. You can change this behavior by
+installing your own handler:
+
+.. code-block:: ocaml
+
+    Luv.Error.set_on_unhandled_exception (fun exn -> (* ... *))
+
+Generally, only applications, rather than libraries, should call this function.
+
 Handles
 -------
 

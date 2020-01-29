@@ -158,7 +158,6 @@ let to_c = let open C.Types.Error in function
   | `ENXIO -> enxio
   | `EMLINK -> emlink
 
-(* TODO What does this compile to? Hopefully a nice switch. *)
 let from_c = let open C.Types.Error in function
   | e when e = e2big -> `E2BIG
   | e when e = eacces -> `EACCES

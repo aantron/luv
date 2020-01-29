@@ -79,6 +79,14 @@ response, and prints it:
     :linenos:
     :emphasize-lines: 5,10,11,13
 
+You can run the above server and this client together with these commands:
+
+.. code-block::
+
+    dune exec example/tcp_echo_server.exe &
+    dune exec example/tcp_hello_world.exe
+    killall tcp_echo_server.exe
+
 In the DNS_ section below, we will expand this example to look up a web server
 and perform an HTTP GET request.
 
@@ -110,6 +118,14 @@ Let's write UDP versions of the echo server and the "Hello, world!" program:
     :language: ocaml
     :linenos:
     :emphasize-lines: 6,8
+
+You can run the client and the server together with:
+
+.. code-block::
+
+    dune exec example/udp_echo_server.exe &
+    dune exec example/udp_hello_world.exe
+    killall udp_echo_server.exe
 
 The two most immediate differences, compared to the TCP functions, are:
 

@@ -230,8 +230,6 @@ let tests = [
       Alcotest.(check bool) "did read" true !did_read
     end;
 
-    (* TODO Does sending a 0-length buffer result in a segfault? *)
-
     "chmod, unbound", `Quick, begin fun () ->
       with_pipe begin fun pipe ->
         Luv.Pipe.chmod pipe [`READABLE]

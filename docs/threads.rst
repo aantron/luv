@@ -108,3 +108,39 @@ can be sent by any thread.
     <Async/index.html#val-send>` is called, or after some time. libuv may
     combine multiple calls to :api:`Luv.Async.send
     <Async/index.html#val-send>` into one callback call.
+
+Multiple event loops
+--------------------
+
+You can run multiple libuv event loops. A complex application might have several
+"primary" threads, each running its own event loop, several ordinary worker
+threads, and be communicating with some external processes, some of which might
+also be running libuv.
+
+To run multiple event loops, create them with :api:`Luv.Loop.init
+<Loop/index.html#val-init>`. Then, pass them as the `?loop` arguments to the
+various Luv APIs. Here are some sample calls:
+
+.. code-block:: ocaml
+
+    let secondary_loop = Luv.Loop.init () |> Stdlib.Result.get_ok in (* ... *)
+
+    ignore @@ Luv.Loop.run ~loop:secondary_loop ();
+
+    Luv.File.open_ ~loop:secondary_loop "foo" [`RDONLY] (fun _ -> (* ... *))
+
+In the future, we may lazily create a loop on demand in each thread when it
+first tries to use libuv, store a reference to it in a TLS key, and pass that as
+the default value of the `?loop` argument throughout the API.
+
+OCaml runtime lock
+------------------
+
+Luv integrates libuv with the OCaml runtime lock. This means that, as in any
+other OCaml program, two threads cannot be running OCaml code at the same time.
+However, Luv releases the lock when calling a potentially-blocking libuv API, so
+that other threads can run while the calling thread is blocked. In particular,
+the lock is released during calls to :api:`Luv.Loop.run
+<Loop/index.html#val-run>`, which means that other threads can run in between
+when you make a call to a *non-blocking* API, and when its callback is called by
+libuv.

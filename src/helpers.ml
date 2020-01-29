@@ -19,7 +19,6 @@ struct
   let coerce : _ t -> [ `Base ] t =
     Obj.magic
 
-  (* DOC Explain the handle/request retention scheme. *)
   let allocate ?(reference_count = Object.default_reference_count) kind =
     let references = Array.make reference_count ignore in
 

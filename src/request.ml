@@ -10,7 +10,6 @@ include Helpers.Retained
     include C.Functions.Request
   end)
 
-(* TODO Proper memory management for cancel? *)
 let cancel request =
   C.Functions.Request.cancel (coerce request)
   |> Error.to_result ()

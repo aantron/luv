@@ -7,9 +7,6 @@
    proportionally in the number of files the bindings are spread over.
    https://github.com/ocaml/dune/issues/135. *)
 
-(* DOC Tell users they may need to scan strings for internal null terminators
-   and fail if found? *)
-
 module Types = Luv_c_types
 
 (* We want to be able to call some of the libuv functions with the OCaml runtime

@@ -27,7 +27,7 @@ optional arguments for controlling the child process' working directory,
 environment variables, and so on. Three of the optional arguments deserve some
 extra attention:
 
-- ``?on_exit`` TODO - this needs an API fix.
+- ``?on_exit``, if supplied, is called when the process terminates.
 - ``?detached:true`` makes the child process fully independent of the parent; in
   particular, the parent can exit without killing the child.
 - ``?redirect`` is the subject of the next section.
@@ -95,6 +95,14 @@ same, because both pipes and TCP sockets are libuv streams.
     :language: ocaml
     :linenos:
     :emphasize-lines: 4,9,10,12
+
+You can run the IPC server and client together with:
+
+.. code-block::
+
+    dune exec example/pipe_echo_server.exe &
+    dune exec example/pipe_hello_world.exe
+    killall pipe_echo_server.exe
 
 Signals
 -------

@@ -455,7 +455,6 @@ sig
   type 'value cps_or_normal_return
   type 'fn maybe_with_loop_and_request_arguments
 
-  (* DOC This type is not meant to be understood. *)
   val async_or_sync :
     (Loop.t -> Request_.t -> 'c_signature) ->
     'result Returns.t ->

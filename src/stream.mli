@@ -63,6 +63,9 @@ val read_start :
     [uv_read_start]}. See {{:http://man7.org/linux/man-pages/man3/read.3p.html}
     [read(3p)]}.
 
+    The amount of data read is equal to the length of the buffer passed to the
+    callback.
+
     [?allocate] is called immediately before each call to the main callback with
     [Ok buffer'], to create [buffer], into which the data will be read.
     [buffer'] is, in general, a {{!Luv.Buffer.sub} view} into [buffer]. The

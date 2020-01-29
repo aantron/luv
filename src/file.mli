@@ -60,8 +60,8 @@
 type t
 (** Files.
 
-    Roughly, on Unix, these correspond to file descriptors, and on Windows,
-    these correspond to [HANDLE]. *)
+    Roughly, on Unix, these correspond to OS file descriptors, and on Windows,
+    these are [HANDLE]s wrapped in C runtime file descriptors. *)
 
 (** {{!Luv.File.Request} Request objects} that can be optionally used with this
     module.
@@ -1046,8 +1046,29 @@ end
 (** {1 Conversions} *)
 
 val get_osfhandle : t -> (Os_fd.Fd.t, Error.t) result
+(** Converts a {!Luv.File.t} to an OS file handle.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_get_osfhandle}
+    [uv_get_osfhandle]}. See
+    {{:https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/get-osfhandle}
+    [_get_osfhandle]}.
+
+    On Unix-like systems, this passes the file descriptor through unchanged. On
+    Windows, a {!Luv.File.t} is an C runtime library file descritpor. This
+    function converts it to a [HANDLE]. *)
+
 val open_osfhandle : Os_fd.Fd.t -> (t, Error.t) result
+(** Inverse of {!Luv.File.get_osfhandle}.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_open_osfhandle}
+    [uv_open_osfhandle]}. See
+    {{:https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/open-osfhandle}
+    [_open_osfhandle]}. *)
 
 val to_int : t -> int
-(* DOC This is here largely because the Process module is defined by libuv to
-   expect ints. *)
+(** Returns the integer representation of a {!Luv.File.t}.
+
+    {!Luv.File.t} is defined as an integer file descriptor by libuv on all
+    platforms at the moment. This is a convenience function for interoperability
+    with {!Luv.Process}, the API of which assumes that files are represented by
+    integers. *)
