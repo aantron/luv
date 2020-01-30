@@ -786,10 +786,7 @@ module Request = Request_
 
 let get_osfhandle file =
   let handle = C.Functions.Os_fd.get_osfhandle file in
-  if C.Functions.Os_fd.is_invalid_handle_value handle then
-    Result.Error `EBADF
-  else
-    Result.Ok handle
+  Result.Ok handle
 
 let open_osfhandle handle =
   let file = C.Functions.Os_fd.open_osfhandle handle in

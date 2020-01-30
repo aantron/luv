@@ -168,20 +168,6 @@ int luv_os_uname(char *buffer);
 
 
 
-// File descriptor plumbing. The different operating systems have different
-// kinds of file descriptors. libuv, meanwhile, uses CRT file descriptors. THese
-// coincide with Unix system fds, but not Windows. In addition, there is
-// Unix.file_descr. These helpers are used for converting between all these
-// types in a relatively safe way.
-int luv_is_invalid_handle_value(uv_os_fd_t handle);
-CAMLprim value luv_unix_fd_to_os_fd(value unix_fd, value os_fd_storage);
-CAMLprim value luv_os_fd_to_unix_fd(value os_fd_storage);
-int luv_is_invalid_socket_value(uv_os_sock_t socket);
-CAMLprim value luv_unix_fd_to_os_socket(value unix_fd, value os_socket_storage);
-CAMLprim value luv_os_socket_to_unix_fd(value os_socket_storage);
-
-
-
 // Miscellaneous helpers - other things that are easiest to do in C.
 
 // Ctypes.constant can't bind a char*, so we return it instead.

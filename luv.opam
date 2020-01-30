@@ -12,7 +12,7 @@ maintainer: "Anton Bachin <antonbachin@yahoo.com>"
 dev-repo: "git+https://github.com/aantron/luv.git"
 
 depends: [
-  "base-unix"
+  "base-unix" {build}
   "conf-python-2-7" {build}
   "ctypes" {>= "0.13.0"}
   "dune" {>= "2.0.0"}

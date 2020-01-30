@@ -80,10 +80,11 @@ module Request = Request_
 
 let set_size ?(if_not_already_set = false) thread_count =
   let already_set =
-    try ignore (Unix.getenv "UV_THREADPOOL_SIZE"); true
-    with Not_found -> false
+    match Env.getenv "UV_THREADPOOL_SIZE" with
+    | Result.Ok _ -> true
+    | Result.Error _ -> false
   in
   if already_set && if_not_already_set then
     ()
   else
-    Unix.putenv "UV_THREADPOOL_SIZE" (string_of_int thread_count)
+    ignore (Env.setenv "UV_THREADPOOL_SIZE" ~value:(string_of_int thread_count))
