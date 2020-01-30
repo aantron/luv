@@ -7,23 +7,44 @@
 [travis]: https://travis-ci.org/aantron/luv
 [travis-img]: https://img.shields.io/travis/aantron/luv/master.svg?label=travis
 
-[**Luv**][luv] is a binding from OCaml/ReasonML to [libuv][libuv], the C
-library that does asynchronous I/O in Node.js.
+[**Luv**][luv] is a binding from OCaml/ReasonML to [libuv][libuv], the
+cross-platform C library that does asynchronous I/O in Node.js and runs its main
+loop.
+
+Here's a simplified example, which retrieves the Google search page using libuv:
 
 ```ocaml
 let () =
-  (* Create a 1-second timer. *)
-  let timer = Luv.Timer.init () |> Stdlib.Result.get_ok in
-  ignore @@ Luv.Timer.start timer 1000 (fun () ->
-    print_endline "Hello, world!");
+  Luv.DNS.getaddrinfo ~family:`INET ~node:"google.com" ~service:"80" ()
+      begin fun result ->
 
-  (* Run the main loop. *)
-  ignore @@ Luv.Loop.run ()
+    let address = (List.hd (Stdlib.Result.get_ok result)).addr in
+    let socket = Luv.TCP.init () |> Stdlib.Result.get_ok in
+    Luv.TCP.connect socket address begin fun _ ->
+
+      Luv.Stream.write socket [Luv.Buffer.from_string "GET / HTTP/1.1\r\n\r\n"]
+        (fun _ _ -> Luv.Stream.shutdown socket ignore);
+
+      Luv.Stream.read_start socket (function
+        | Error `EOF -> Luv.Handle.close socket ignore
+        | Error _ -> exit 2
+        | Ok response -> print_string (Luv.Buffer.to_string response))
+
+    end
+  end;
+
+  Luv.Loop.run () |> ignore
 ```
 
 <br/>
 
-Luv exposes a [comprehensive operating system API][api].
+libuv does more than just asynchronous I/O. It also supports
+[multiprocessing][processes] and [multithreading][threads]. You can even [run
+multiple async I/O loops, in different threads][loops]. libuv wraps a lot of
+other functionality, and exposes a [comprehensive operating system API][api].
+
+In fact, Luv does not depend on [`Unix`][unix], but is an alternative operating
+system API, though Luv and `Unix` can coexist readily in one program.
 
 Because libuv is a major component of Node.js, it is
 [cross-platform][platforms] and [well-maintained][maintainers]. Luv, being a
@@ -74,15 +95,69 @@ opam install luv
 
 - [User guide][guide]
 - [API reference][api]
-- [Examples][examples] &mdash; explained in the user guide.
+- [Examples][examples] &mdash; explained in the [user guide][guide].
 - [libuv manual][libuv-docs]
 
 <br/>
 
 ## Experimenting
 
-The user guide has [instructions][experiment] on how to clone the repo and
-quickly write your own experiments, or how to run Luv in a REPL.
+You can run any example by cloning the repo:
+
+```
+git clone https://github.com/aantron/luv.git --recursive
+cd luv
+opam install --deps-only .
+```
+
+*Note: the clone *has* to be recursive, because libuv is vendored using a git
+module.*
+
+Then, to run, say, [`delay.ml`][delay.ml]...
+
+```
+dune exec example/delay.exe
+```
+
+The first time you do this, it will take a couple minutes, because Luv will
+build libuv.
+
+You can add your own experiments to the [`example/`][examples] directory. To run
+them, add the module name to [`example/dune`][example/dune], and then run them
+like any other example:
+
+```
+dune exec example/my_test.exe
+```
+
+Alternatively, you can try Luv in a REPL by installing [utop][utop]:
+
+```
+opam install --unset-root utop
+dune utop
+```
+
+Once you get the REPL prompt, try running `Luv.Env.environ ();;`
+
+<br/>
+
+## Future
+
+- [ ] A "post-compose" functor that applies a transformation to the whole API,
+for globally converting callbacks to promises, changing the error handling
+strategy, etc. Prototype was [here][postcompose].
+- [ ] Integration with [Lwt][lwt]. There was an old [example][lwt-integration]
+that used the early post-compose functor and a [Luv-based Lwt event
+loop][lwt-loop].
+- [ ] Full Windows support. The code should already be portable, but the repo
+needs a proper testing and CI setup for genuine support, and libuv build
+commands may need adjustment.
+- [ ] Cross-compilation support. This will probably require more care in how Luv
+builds libuv.
+- [ ] Luv could make multithreaded event-driven programming very easy by lazily
+initializing a loop for each thread, and storing the reference to it in a TLS
+key that Luv uses internally. This could be especially powerful once OCaml has a
+genuine multicore runtime.
 
 <br/>
 
@@ -123,3 +198,13 @@ Luv has several pieces, with slightly different permissive licenses:
 [uvbook]: https://github.com/nikhilm/uvbook
 [libuv-guide]: http://docs.libuv.org/en/v1.x/guide.html
 [guide-license]: https://github.com/aantron/luv/blob/master/docs/LICENSE
+[processes]: https://aantron.github.io/luv/processes.html
+[threads]: https://aantron.github.io/luv/threads.html
+[loops]: https://aantron.github.io/luv/threads.html#multiple-event-loops
+[unix]: https://caml.inria.fr/pub/docs/manual-ocaml/libref/Unix.html
+[delay.ml]: https://github.com/aantron/luv/blob/master/example/delay.ml
+[example/dune]: https://github.com/aantron/luv/blob/master/example/dune
+[utop]: https://github.com/ocaml-community/utop
+[postcompose]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/src/promisify_signatures.ml
+[lwt-integration]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/example/http_get_lwt/http_get_lwt.ml
+[lwt-loop]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/src/lwt/luv_lwt.ml

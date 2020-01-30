@@ -1,5 +1,8 @@
-Running examples
-================
+Introduction
+============
+
+Running the examples
+--------------------
 
 All the examples in this guide can be found in the ``example/`` directory in the
 Luv_ repo. You can run them locally by cloning the repo::
@@ -40,7 +43,7 @@ Let's say you add a file, ``example/test.ml``. Add it to the ``names`` list in
 
 .. code-block::
 
-    dune exec example/test.exe
+    dune exec example/my_test.exe
 
 If you have utop_ installed, you can also run::
 

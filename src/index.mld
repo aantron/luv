@@ -1,21 +1,39 @@
 {0 Luv}
 
-Luv is a binding to {{:https://libuv.org/} libuv}, the asynchronous I/O library
-inside Node.js.
-
-Basic usage looks like this:
+{{:https://github.com/aantron/luv} Luv} is a binding to {{:https://libuv.org/}
+libuv}, the cross-platform C library that does asynchronous I/O in Node.js and
+runs its main loop.
 
 {[
-let _ =
-  (* Create a 1-second timer. *)
-  let Ok timer = Luv.Timer.init () in
-  Luv.Timer.start timer 1000 (fun () -> print_endline "Hello, world!");
+let () =
+  Luv.DNS.getaddrinfo ~family:`INET ~node:"google.com" ~service:"80" ()
+      begin fun result ->
 
-  (* Run the main loop. *)
-  Luv.Loop.(run (default ()) Run_mode.default)
+    let address = (List.hd (Stdlib.Result.get_ok result)).addr in
+    let socket = Luv.TCP.init () |> Stdlib.Result.get_ok in
+    Luv.TCP.connect socket address begin fun _ ->
 
-(* ocamlfind opt -linkpkg -package luv foo.ml *)
+      Luv.Stream.write socket [Luv.Buffer.from_string "GET / HTTP/1.1\r\n\r\n"]
+        (fun _ _ -> Luv.Stream.shutdown socket ignore);
+
+      Luv.Stream.read_start socket (function
+        | Error `EOF -> Luv.Handle.close socket ignore
+        | Error _ -> exit 2
+        | Ok response -> print_string (Luv.Buffer.to_string response))
+
+    end
+  end;
+
+  Luv.Loop.run () |> ignore
 ]}
+
+This is the auto-generated API reference. For more conceptual information and
+examples, see:
+
+- {{:https://github.com/aantron/luv} Project home page}
+- {{:https://aantron.github.io/luv/} User guide}
+- {{:https://github.com/aantron/luv/tree/master/example} Examples}, which are
+presented in the user guide.
 
 {1 API reference}
 

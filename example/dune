@@ -11,6 +11,7 @@
   udp_hello_world
   host
   http_get
+  readme
   ifconfig
   threads
   thread_pool

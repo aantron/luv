@@ -1,10 +1,11 @@
 opam-version: "2.0"
 
-synopsis: "Binding to libuv"
+synopsis: "Binding to libuv: cross-platform asynchronous I/O"
 
 version: "dev"
 license: "MIT"
 homepage: "https://github.com/aantron/luv"
+doc: "https://aantron.github.io/luv"
 bug-reports: "https://github.com/aantron/luv/issues"
 
 authors: "Anton Bachin <antonbachin@yahoo.com>"
@@ -25,3 +26,11 @@ depends: [
 build: [
   ["dune" "build" "-p" name "-j" jobs]
 ]
+
+description: "Luv is a binding to libuv, the cross-platform C library that does
+asynchronous I/O in Node.js and runs its main loop.
+
+Besides asynchronous I/O, libuv also supports multiprocessing and
+multithreading. Multiple event loops can be run in different threads. libuv also
+exposes a lot of other functionality, amounting to a full OS API, and an
+alternative to the standard module Unix."
