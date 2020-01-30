@@ -127,8 +127,3 @@ publish-docs : stage-docs
 clean :
 	dune clean
 	rm -rf docs/_build
-
-.PHONY : todos
-todos :
-	@grep -rn TODO example src test .travis.yml Makefile README.md *.opam docs \
-	  | grep -v 'src/c/vendor/[^/][^/]*/' | grep -v grep
