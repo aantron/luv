@@ -20,12 +20,11 @@ depends: [
   "ocaml" {>= "4.02.0"}
   "result"
 
-  "alcotest" {with-test & >= "0.8.1"}
+  "alcotest" {dev & >= "0.8.1"}
 ]
 
 build: [
   ["dune" "build" "-p" name "-j" jobs]
-  ["dune" "runtest" "-p" name] {with-test}
 ]
 
 description: "Luv is a binding to libuv, the cross-platform C library that does
