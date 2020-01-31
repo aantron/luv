@@ -150,8 +150,6 @@ static void luv_getnameinfo_trampoline(
 {
     caml_acquire_runtime_system();
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
-    fprintf(stderr, "%p %p\n", hostname, service);
-    fflush(stderr);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
 }
