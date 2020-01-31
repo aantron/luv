@@ -44,7 +44,7 @@ multiple async I/O loops, in different threads][loops]. libuv wraps a lot of
 other functionality, and exposes a [comprehensive operating system API][api].
 
 In fact, Luv does not depend on [`Unix`][unix], but is an alternative operating
-system API, though Luv and `Unix` can coexist readily in one program.
+system API. Nonetheless, Luv and `Unix` can coexist readily in one program.
 
 Because libuv is a major component of Node.js, it is
 [cross-platform][platforms] and [well-maintained][maintainers]. Luv, being a
