@@ -7,16 +7,15 @@ Node.js.
 
 See also:
 
-- `Project home page`_ on GitHub.
-- `Generated API docs`_ with details on every module, function, and type, with
-  links to libuv documentation and man pages.
-- `Documentation of libuv`_.
+- `Project page`_
+- `API reference`_
+- `libuv manual`_
 
 .. _Luv: https://github.com/aantron/luv
-.. _Project home page: https://github.com/aantron/luv
+.. _Project page: https://github.com/aantron/luv
 .. _libuv: https://github.com/libuv/libuv
-.. _Generated API docs: https://aantron.github.io/luv/luv/index.html
-.. _Documentation of libuv: http://docs.libuv.org/en/v1.x/
+.. _API reference: https://aantron.github.io/luv/luv/index.html#api-reference
+.. _libuv manual: http://docs.libuv.org/en/v1.x/
 
 .. rubric:: Table of contents
 

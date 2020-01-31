@@ -7,11 +7,11 @@
 [travis]: https://travis-ci.org/aantron/luv
 [travis-img]: https://img.shields.io/travis/aantron/luv/master.svg?label=travis
 
-[**Luv**][luv] is a binding from OCaml/ReasonML to [libuv][libuv], the
-cross-platform C library that does asynchronous I/O in Node.js and runs its main
-loop.
+[**Luv**][luv] is an OCaml/ReasonML binding to [libuv][libuv], the
+cross-platform C library that does asynchronous I/O in Node.js and runs Node's
+main loop.
 
-Here's a simplified example, which retrieves the Google search page using libuv:
+Here's an example, which retrieves the Google search page:
 
 ```ocaml
 let () =
@@ -43,7 +43,7 @@ libuv does more than just asynchronous I/O. It also supports
 multiple async I/O loops, in different threads][loops]. libuv wraps a lot of
 other functionality, and exposes a [comprehensive operating system API][api].
 
-In fact, Luv does not depend on [`Unix`][unix], but is an alternative operating
+Indeed, Luv does not depend on [`Unix`][unix]. It is an alternative operating
 system API. Nonetheless, Luv and `Unix` can coexist readily in one program.
 
 Because libuv is a major component of Node.js, it is
@@ -179,7 +179,7 @@ Luv has several pieces, with slightly different permissive licenses:
   [CC BY 4.0][guide-license].
 
 [luv]: https://github.com/aantron/luv
-[libuv]: https://libuv.org/
+[libuv]: https://github.com/libuv/libuv
 [platforms]: https://github.com/libuv/libuv/blob/master/SUPPORTED_PLATFORMS.md#readme
 [maintainers]: https://github.com/libuv/libuv/blob/master/MAINTAINERS.md#readme
 [ctypes]: https://github.com/ocamllabs/ocaml-ctypes#readme

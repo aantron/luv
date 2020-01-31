@@ -2,7 +2,7 @@
 
 {{:https://github.com/aantron/luv} Luv} is a binding to {{:https://libuv.org/}
 libuv}, the cross-platform C library that does asynchronous I/O in Node.js and
-runs its main loop.
+runs Node's main loop.
 
 {[
 let () =
@@ -30,7 +30,7 @@ let () =
 This is the auto-generated API reference. For more conceptual information and
 examples, see:
 
-- {{:https://github.com/aantron/luv} Project home page}
+- {{:https://github.com/aantron/luv} Project page}
 - {{:https://aantron.github.io/luv/} User guide}
 - {{:https://github.com/aantron/luv/tree/master/example} Examples}, which are
 presented in the user guide.

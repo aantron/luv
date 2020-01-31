@@ -118,7 +118,7 @@ threads, and be communicating with some external processes, some of which might
 also be running libuv.
 
 To run multiple event loops, create them with :api:`Luv.Loop.init
-<Loop/index.html#val-init>`. Then, pass them as the `?loop` arguments to the
+<Loop/index.html#val-init>`. Then, pass them as the ``?loop`` arguments to the
 various Luv APIs. Here are some sample calls:
 
 .. code-block:: ocaml
@@ -129,9 +129,9 @@ various Luv APIs. Here are some sample calls:
 
     Luv.File.open_ ~loop:secondary_loop "foo" [`RDONLY] (fun _ -> (* ... *))
 
-In the future, we may lazily create a loop on demand in each thread when it
+In the future, Luv may lazily create a loop on demand in each thread when it
 first tries to use libuv, store a reference to it in a TLS key, and pass that as
-the default value of the `?loop` argument throughout the API.
+the default value of the ``?loop`` argument throughout the API.
 
 OCaml runtime lock
 ------------------

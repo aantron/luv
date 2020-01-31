@@ -149,6 +149,7 @@ release : clean
 	cd test/installation && dune exec ./user.exe
 	opam remove -y luv
 	opam pin remove -y luv
+	md5sum $(RELEASE).tar.gz
 
 .PHONY : clean
 clean :
