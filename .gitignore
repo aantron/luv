@@ -4,3 +4,7 @@ _build/
 _opam/
 scratch/
 echo-pipe
+luv-*/
+*.tar
+*.gz
+_release/

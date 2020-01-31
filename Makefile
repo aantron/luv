@@ -123,7 +123,34 @@ stage-docs : api-docs luvbook
 publish-docs : stage-docs
 	cd $(DOCS) && git push --force-with-lease
 
+VERSION := $(shell git describe)
+RELEASE := luv-$(VERSION)
+
+.PHONY : release
+release : clean
+	rm -rf $(RELEASE) $(RELEASE).tar $(RELEASE).tar.gz _release
+	mkdir $(RELEASE)
+	cp -r dune-project LICENSE.md luv.opam README.md src $(RELEASE)
+	rm -rf $(RELEASE)/src/c/vendor/gyp/test
+	rm -rf $(RELEASE)/src/c/vendor/gyp/tools
+	rm -rf $(RELEASE)/src/c/vendor/libuv/docs
+	rm -rf $(RELEASE)/src/c/vendor/libuv/img
+	sed -i "s/version: \"dev\"/version: \"$(VERSION)\"/" $(RELEASE)/luv.opam
+	diff -u luv.opam $(RELEASE)/luv.opam || true
+	tar cf $(RELEASE).tar $(RELEASE)
+	ls -l $(RELEASE).tar
+	gzip -9 $(RELEASE).tar
+	ls -l $(RELEASE).tar.gz
+	mkdir -p _release
+	cp $(RELEASE).tar.gz _release
+	(cd _release && tar xf $(RELEASE).tar.gz)
+	opam pin add -y --no-action luv _release/$(RELEASE) --kind=path
+	opam reinstall -y --verbose luv
+	cd test/installation && dune exec ./user.exe
+	opam remove -y luv
+	opam pin remove -y luv
+
 .PHONY : clean
 clean :
 	dune clean
-	rm -rf docs/_build
+	rm -rf docs/_build luv-* *.tar *.tar.gz _release *.install echo-pipe
