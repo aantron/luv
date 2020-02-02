@@ -19,12 +19,14 @@
  (deps (source_tree vendor) link-gyp.ml copy-so.ml)
  (action (progn
   (run ocaml link-gyp.ml)
-  (chdir vendor/libuv (run ./gyp_uv.py -f make -Duv_library=static_library))
+  (chdir vendor/libuv
+   (run python3 gyp_uv.py -f make -Duv_library=static_library))
   (setenv CFLAGS -fPIC
    (setenv BUILDTYPE Release
     (run make -C vendor/libuv/out libuv)))
   (run cp vendor/libuv/out/Release/libuv.a libuv.a)
-  (chdir vendor/libuv (run ./gyp_uv.py -f make -Duv_library=shared_library))
+  (chdir vendor/libuv
+   (run python3 gyp_uv.py -f make -Duv_library=shared_library))
   (setenv CFLAGS -fPIC
    (setenv BUILDTYPE Release
     (run make -C vendor/libuv/out libuv)))
