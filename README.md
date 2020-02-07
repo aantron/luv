@@ -89,6 +89,14 @@ potential issues with multithreading.
 opam install luv
 ```
 
+If using esy, add
+
+```
+"dependencies": {
+  "@opam/luv": "*"
+}
+```
+
 <br/>
 
 ## Documentation

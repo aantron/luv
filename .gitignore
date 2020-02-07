@@ -8,3 +8,6 @@ luv-*/
 *.tar
 *.gz
 _release/
+_esy/
+*esy.lock/
+node_modules/
