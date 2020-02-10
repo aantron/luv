@@ -175,7 +175,7 @@ genuine multicore runtime.
 Luv has several pieces, with slightly different permissive licenses:
 
 - Luv itself is under the [MIT license][license].
-- This repo links to libuv with a git module. However, a release archive will
+- This repo links to libuv with a git submodule. However, a release archive will
   generally include the full libuv source. Portions of libuv are variously
   [licensed][libuv-license] under the MIT, 2-clause BSD, 3-clause BSD, and ISC
   licenses.
