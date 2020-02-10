@@ -166,6 +166,7 @@ builds libuv.
 initializing a loop for each thread, and storing the reference to it in a TLS
 key that Luv uses internally. This could be especially powerful once OCaml has a
 genuine multicore runtime.
+- [ ] [`let*` operators][let] for convenient chaining of callbacks.
 
 <br/>
 
@@ -216,3 +217,4 @@ Luv has several pieces, with slightly different permissive licenses:
 [postcompose]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/src/promisify_signatures.ml
 [lwt-integration]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/example/http_get_lwt/http_get_lwt.ml
 [lwt-loop]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/src/lwt/luv_lwt.ml
+[let]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/src/syntax/syntax.mli#L6-L15
