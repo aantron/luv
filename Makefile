@@ -123,7 +123,7 @@ stage-docs : api-docs luvbook
 publish-docs : stage-docs
 	cd $(DOCS) && git push --force-with-lease
 
-VERSION := $(shell git describe)
+VERSION := $(shell git describe --abbrev=0)
 RELEASE := luv-$(VERSION)
 
 .PHONY : release
