@@ -6,7 +6,20 @@
 (** Thread-local storage.
 
     See {{:http://docs.libuv.org/en/v1.x/threading.html#thread-local-storage}
-    {i Thread-local storage}} in libuv. *)
+    {i Thread-local storage}} in libuv.
+
+    The interface is currently written in terms of [nativeint], the type of
+    pointer-sized raw values. You can store OCaml values in TLS by manipulating
+    and registering them with the GC using
+    {{:https://github.com/ocamllabs/ocaml-ctypes/blob/1e1429fe249778f0c4db458aa33df5991f2a93ca/src/ctypes/ctypes.mli#L570}
+    [Ctypes.Root]}. The conversions between [unit ptr] and [nativeint] are
+    {{:https://github.com/ocamllabs/ocaml-ctypes/blob/1e1429fe249778f0c4db458aa33df5991f2a93ca/src/ctypes/ctypes.mli#L213}
+    [Ctypes.ptr_of_raw_address]} and
+    {{:https://github.com/ocamllabs/ocaml-ctypes/blob/1e1429fe249778f0c4db458aa33df5991f2a93ca/src/ctypes/ctypes.mli#L219}
+    [Ctypes.raw_address_of_ptr]}.
+
+    A future version of this API is likely to handle GC roots internally, and be
+    directly usable with OCaml values. *)
 
 type t
 (** Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_key_t}
