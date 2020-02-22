@@ -17,7 +17,7 @@ before_script:
       rm -rf ./_opam
       rm -rf ./_cache
     fi
-  - VERSION=2.0.5
+  - VERSION=2.0.6
   - |
     case "$TRAVIS_OS_NAME" in
       linux) OS=linux;;
