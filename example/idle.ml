@@ -1,5 +1,5 @@
 let () =
-  let idle = Luv.Idle.init () |> Stdlib.Result.get_ok in
+  let idle = Luv.Idle.init () |> Result.get_ok in
 
   let counter = ref 0 in
 

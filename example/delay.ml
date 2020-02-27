@@ -1,5 +1,5 @@
 let () =
-  let timer = Luv.Timer.init () |> Stdlib.Result.get_ok in
+  let timer = Luv.Timer.init () |> Result.get_ok in
 
   ignore (Luv.Timer.start timer 1000 (fun () ->
     print_endline "Hello, world!"));

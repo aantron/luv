@@ -1,6 +1,6 @@
 let () =
   Luv.Network.interface_addresses ()
-  |> Stdlib.Result.get_ok
+  |> Result.get_ok
   |> List.iter begin fun interface ->
     let open Luv.Network.Interface_address in
 

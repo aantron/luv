@@ -8,7 +8,7 @@ let () =
     | Ok addr_infos ->
       let address = (List.hd addr_infos).addr in
 
-      let socket = Luv.TCP.init () |> Stdlib.Result.get_ok in
+      let socket = Luv.TCP.init () |> Result.get_ok in
       Luv.TCP.connect socket address begin function
         | Error e ->
           Printf.eprintf "Cannot connect: %s\n" (Luv.Error.strerror e)

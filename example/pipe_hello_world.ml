@@ -1,5 +1,5 @@
 let () =
-  let client = Luv.Pipe.init () |> Stdlib.Result.get_ok in
+  let client = Luv.Pipe.init () |> Result.get_ok in
 
   Luv.Pipe.connect client "echo-pipe" begin function
     | Error e ->

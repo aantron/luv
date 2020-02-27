@@ -5,7 +5,7 @@ let () =
 
   | _::command::files ->
     files |> List.iter begin fun target ->
-      let watcher = Luv.FS_event.init () |> Stdlib.Result.get_ok in
+      let watcher = Luv.FS_event.init () |> Result.get_ok in
 
       Luv.FS_event.start ~recursive:true watcher target begin function
         | Error e ->

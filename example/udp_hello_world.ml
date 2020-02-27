@@ -1,6 +1,6 @@
 let () =
-  let address = Luv.Sockaddr.ipv4 "127.0.0.1" 7000 |> Stdlib.Result.get_ok in
-  let client = Luv.UDP.init () |> Stdlib.Result.get_ok in
+  let address = Luv.Sockaddr.ipv4 "127.0.0.1" 7000 |> Result.get_ok in
+  let client = Luv.UDP.init () |> Result.get_ok in
 
   let message = Luv.Buffer.from_string "Hello, world!" in
   Luv.UDP.send client [message] address ignore;

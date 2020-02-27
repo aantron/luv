@@ -1,6 +1,6 @@
 let () =
-  let address = Luv.Sockaddr.ipv4 "127.0.0.1" 7000 |> Stdlib.Result.get_ok in
-  let server = Luv.UDP.init () |> Stdlib.Result.get_ok in
+  let address = Luv.Sockaddr.ipv4 "127.0.0.1" 7000 |> Result.get_ok in
+  let server = Luv.UDP.init () |> Result.get_ok in
   ignore (Luv.UDP.bind server address);
 
   Luv.UDP.recv_start server begin function

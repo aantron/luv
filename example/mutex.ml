@@ -1,5 +1,5 @@
 let () =
-  let mutex = Luv.Mutex.init () |> Stdlib.Result.get_ok in
+  let mutex = Luv.Mutex.init () |> Result.get_ok in
   Luv.Mutex.lock mutex;
 
   ignore @@ Luv.Thread.create begin fun () ->

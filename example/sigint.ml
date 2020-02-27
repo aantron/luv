@@ -1,5 +1,5 @@
 let () =
-  let handle = Luv.Signal.init () |> Stdlib.Result.get_ok in
+  let handle = Luv.Signal.init () |> Result.get_ok in
 
   ignore @@ Luv.Signal.start handle Luv.Signal.sigint begin fun () ->
     Luv.Handle.close handle ignore;

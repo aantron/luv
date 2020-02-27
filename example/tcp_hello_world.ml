@@ -1,6 +1,6 @@
 let () =
-  let address = Luv.Sockaddr.ipv4 "127.0.0.1" 7000 |> Stdlib.Result.get_ok in
-  let client = Luv.TCP.init () |> Stdlib.Result.get_ok in
+  let address = Luv.Sockaddr.ipv4 "127.0.0.1" 7000 |> Result.get_ok in
+  let client = Luv.TCP.init () |> Result.get_ok in
 
   Luv.TCP.connect client address begin function
     | Error e ->

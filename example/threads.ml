@@ -21,12 +21,12 @@ let () =
 
   let tortoise =
     Luv.Thread.create (fun () -> run_tortoise track_length)
-    |> Stdlib.Result.get_ok
+    |> Result.get_ok
   in
 
   let hare =
     Luv.Thread.create (fun () -> run_hare track_length)
-    |> Stdlib.Result.get_ok
+    |> Result.get_ok
   in
 
   ignore (Luv.Thread.join tortoise);

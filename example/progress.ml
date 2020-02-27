@@ -4,7 +4,7 @@ let () =
     Printf.printf "%i%%\n%!" (int_of_float (!progress *. 100.)) in
 
   let notification =
-    Luv.Async.init (fun _ -> show_progress ()) |> Stdlib.Result.get_ok in
+    Luv.Async.init (fun _ -> show_progress ()) |> Result.get_ok in
 
   let rec do_work total n =
     if n >= total then
