@@ -164,9 +164,11 @@ sig
     | `IWOTH
     | `IXOTH
 
+(* TODO: Not supported on Windows.
     | `ISUID
     | `ISGID
     | `ISVTX
+*)
 
     | `NUMERIC of int
   ]

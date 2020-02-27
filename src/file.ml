@@ -121,9 +121,11 @@ struct
     | `IWOTH
     | `IXOTH
 
+(* TODO: Not supported on Windows
     | `ISUID
     | `ISGID
     | `ISVTX
+*)
 
     | `NUMERIC of int
   ]
@@ -144,9 +146,9 @@ struct
     | `IWOTH -> iwoth
     | `IXOTH -> ixoth
 
-    | `ISUID -> isuid
+    (*| `ISUID -> isuid
     | `ISGID -> isgid
-    | `ISVTX -> isvtx
+    | `ISVTX -> isvtx*)
 
     | `NUMERIC i -> i
 
