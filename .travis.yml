@@ -48,6 +48,7 @@ before_script:
     then
       opam install -y --deps-only ./luv.opam
     fi
+  - opam list
 
 script:
   - '[ ! -d _cache/_build ] || cp -r _cache/_build .'
