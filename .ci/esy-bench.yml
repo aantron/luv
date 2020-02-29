@@ -1,9 +1,0 @@
-# Run benchmarks
-
-steps:
-  - script: esy @bench install
-    displayName: 'esy @bench install'
-  - script: esy @bench build
-    displayName: 'esy @bench build'
-  - script: esy @bench x ReveryBench
-    displayName: 'esy @bench x ReveryBench'
