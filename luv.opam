@@ -14,7 +14,6 @@ dev-repo: "git+https://github.com/aantron/luv.git"
 
 depends: [
   "base-unix" {build}
-  "conf-python-3" {build}
   "ctypes" {>= "0.13.0"}
   "dune" {>= "2.0.0"}
   "ocaml" {>= "4.02.0"}

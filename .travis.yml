@@ -51,7 +51,9 @@ before_script:
   - opam list
 
 script:
+  - make check-ejected-build
   - '[ ! -d _cache/_build ] || cp -r _cache/_build .'
+  - make
   - make test
   - '[ "$REVDEPS" != yes ] || make examples'
   - mkdir -p _cache

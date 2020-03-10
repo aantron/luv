@@ -15,22 +15,24 @@
 
 ; The vendored libuv.
 (rule
- (targets libuv.a dlluv.so)
- (deps (source_tree vendor) link-gyp.ml copy-so.ml)
+ (targets libuv.a dlluv%{ext_dll})
+ (deps (source_tree vendor))
  (action (progn
-  (run ocaml link-gyp.ml)
-  (chdir vendor/libuv
-   (run python3 gyp_uv.py -f make -Duv_library=static_library))
-  (setenv CFLAGS -fPIC
-   (setenv BUILDTYPE Release
-    (run make -C vendor/libuv/out libuv)))
-  (run cp vendor/libuv/out/Release/libuv.a libuv.a)
-  (chdir vendor/libuv
-   (run python3 gyp_uv.py -f make -Duv_library=shared_library))
-  (setenv CFLAGS -fPIC
-   (setenv BUILDTYPE Release
-    (run make -C vendor/libuv/out libuv)))
-  (run ocaml copy-so.ml))))
+  (bash "cp -r vendor/configure/* vendor/libuv/")
+  (chdir vendor/libuv (progn
+   (bash
+    "sh configure --host `ocamlc -config | awk '/host/ {print $NF}'` \
+      'CC=%{cc}' CFLAGS=-DNDEBUG --silent --enable-silent-rules")
+   (ignore-outputs (bash
+    "make V=0 -o aclocal.m4 -o Makefile.in -o configure -o configure.status \
+      -o Makefile libuv.la"))
+   (ignore-outputs (bash
+    "sh libtool --silent --no-warnings --mode install cp libuv.la `pwd`"))))
+  (bash "cp vendor/libuv/libuv.a .")
+  (bash
+   "cp vendor/libuv/libuv.so.1.0.0 dlluv.so || \
+    cp vendor/libuv/libuv.1.dylib dlluv.so || \
+    cp vendor/libuv/libuv.dll.a dlluv.dll"))))
 
 (data_only_dirs vendor)
 

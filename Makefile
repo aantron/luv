@@ -78,6 +78,40 @@ test-installation-ci :
 	opam remove -y luv
 	opam pin remove -y luv
 
+AUTOGEN_OUTPUT := src/c/vendor/configure
+AUTOGEN_SCRATCH := libuv-scratch
+
+.PHONY : eject-build
+eject-build :
+	rm -rf $(AUTOGEN_SCRATCH)
+	cp -r src/c/vendor/libuv $(AUTOGEN_SCRATCH)
+	(cd $(AUTOGEN_SCRATCH) && ./autogen.sh)
+	rm -rf $(AUTOGEN_OUTPUT)
+	mkdir -p $(AUTOGEN_OUTPUT)
+	mkdir -p $(AUTOGEN_OUTPUT)/m4
+	(diff -qr src/c/vendor/libuv $(AUTOGEN_SCRATCH) || true) \
+	  | sed 's#^Only in ##' \
+	  | sed 's#: #/#' \
+	  | sed 's#^$(AUTOGEN_SCRATCH)/##' \
+	  | xargs -I FILE cp -r $(AUTOGEN_SCRATCH)/FILE $(AUTOGEN_OUTPUT)/FILE
+	rm -rf $(AUTOGEN_SCRATCH)
+	(cd $(AUTOGEN_OUTPUT) && rm -rf aclocal.m4 autom4te.cache m4)
+	(cd src/c/vendor/libuv && git rev-parse HEAD) \
+	  > $(AUTOGEN_OUTPUT)/commit-hash
+
+.PHONY : check-ejected-build
+check-ejected-build :
+	@((cd src/c/vendor/libuv && git rev-parse HEAD) \
+	  | diff $(AUTOGEN_OUTPUT)/commit-hash -) || \
+	  (echo; \
+       echo The vendored configure script is out of sync with libuv. Run; \
+	   echo; \
+	   echo "  make eject-build"; \
+	   echo; \
+	   echo and commit the changes to $(AUTOGEN_OUTPUT).; \
+	   echo; \
+	   false)
+
 .PHONY : docs
 docs : api-docs luvbook
 
@@ -127,12 +161,10 @@ VERSION := $(shell git describe --abbrev=0)
 RELEASE := luv-$(VERSION)
 
 .PHONY : release
-release : clean
+release : check-ejected-build clean
 	rm -rf $(RELEASE) $(RELEASE).tar $(RELEASE).tar.gz _release
 	mkdir $(RELEASE)
 	cp -r dune-project LICENSE.md luv.opam README.md src $(RELEASE)
-	rm -rf $(RELEASE)/src/c/vendor/gyp/test
-	rm -rf $(RELEASE)/src/c/vendor/gyp/tools
 	rm -rf $(RELEASE)/src/c/vendor/libuv/docs
 	rm -rf $(RELEASE)/src/c/vendor/libuv/img
 	sed -i "s/version: \"dev\"/version: \"$(VERSION)\"/" $(RELEASE)/luv.opam
