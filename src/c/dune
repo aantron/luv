@@ -9,7 +9,8 @@
   (language c)
   (names c_generated_functions helpers)
   (include_dirs vendor/libuv/include))
- (foreign_archives uv))
+ (foreign_archives uv)
+ (c_library_flags (:include extra_libs.sexp)))
 
 
 
@@ -32,9 +33,18 @@
   (ignore-outputs (bash
    "cp vendor/libuv/libuv.so.1.0.0 dlluv.so || \
     cp vendor/libuv/libuv.1.dylib dlluv.so || \
-    cp vendor/libuv/libuv.dll.a dlluv.dll")))))
+    cp vendor/bin/libuv-1.dll dlluv.dll")))))
 
 (data_only_dirs vendor)
+
+(rule
+ (targets extra_libs.sexp)
+ (action (ignore-outputs (bash "\
+   if ocamlc -config | grep mingw; then \
+     echo '(-liphlpapi -lpsapi -luserenv)' > extra_libs.sexp; \
+   else \
+     echo '()' > extra_libs.sexp; \
+   fi"))))
 
 
 
@@ -64,7 +74,7 @@
  (deps (:c generate_types_step_2.c) helpers.h)
  (action (bash "\
   %{cc} %{c} \
-  -I `dirname %{lib:ctypes:ctypes_cstubs_internals.h}` \
+  -I '%{lib:ctypes:.}' \
   -I %{ocaml_where} \
   -I vendor/libuv/include -o %{targets}")))
 

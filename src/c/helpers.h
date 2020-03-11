@@ -17,6 +17,23 @@
 
 
 
+#ifdef _WIN32
+#ifndef S_ISUID
+#define S_ISUID 0
+#endif
+#ifndef S_ISGID
+#define S_ISGID 0
+#endif
+#ifndef S_ISVTX
+#define S_ISVTX 0
+#endif
+#ifndef SIGPROF
+#define SIGPROF 0
+#endif
+#endif
+
+
+
 // Callback trampolines.
 //
 // We need to pass C function pointers to libuv, but call OCaml callbacks.
