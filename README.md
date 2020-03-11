@@ -179,9 +179,6 @@ Luv has several pieces, with slightly different permissive licenses:
   generally include the full libuv source. Portions of libuv are variously
   [licensed][libuv-license] under the MIT, 2-clause BSD, 3-clause BSD, and ISC
   licenses.
-- Similarly, this repo links to [gyp][gyp], which is part of the libuv build
-  process, and is included in Luv release archives. gyp is
-  [licensed][gyp-license] under the 3-clause BSD license.
 - The user guide is a very heavily reworked version of [uvbook][uvbook],
   originally by Nikhil Marathe, which was incorporated into the libuv docs as
   the [libuv user guide][libuv-guide], and made available under
@@ -200,10 +197,8 @@ Luv has several pieces, with slightly different permissive licenses:
 [libuv-docs]: http://docs.libuv.org/en/v1.x/
 [experiment]: https://aantron.github.io/luv/introduction.html
 [lwt]: https://github.com/ocsigen/lwt#readme
-[gyp]: https://gyp.gsrc.io/
 [license]: https://github.com/aantron/luv/blob/master/LICENSE.md
 [libuv-license]: https://github.com/libuv/libuv/blob/v1.x/LICENSE
-[gyp-license]: https://chromium.googlesource.com/external/gyp/+/refs/heads/master/LICENSE
 [uvbook]: https://github.com/nikhilm/uvbook
 [libuv-guide]: http://docs.libuv.org/en/v1.x/guide.html
 [guide-license]: https://github.com/aantron/luv/blob/master/docs/LICENSE
