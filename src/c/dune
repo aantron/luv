@@ -29,10 +29,10 @@
    (ignore-outputs (bash
     "sh libtool --silent --no-warnings --mode install cp libuv.la `pwd`"))))
   (bash "cp vendor/libuv/libuv.a .")
-  (bash
+  (ignore-outputs (bash
    "cp vendor/libuv/libuv.so.1.0.0 dlluv.so || \
     cp vendor/libuv/libuv.1.dylib dlluv.so || \
-    cp vendor/libuv/libuv.dll.a dlluv.dll"))))
+    cp vendor/libuv/libuv.dll.a dlluv.dll")))))
 
 (data_only_dirs vendor)
 
