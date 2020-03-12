@@ -154,7 +154,7 @@ let tests = [
       Luv.Thread.join child
       |> check_success_result "join";
       Luv.Thread.join child
-      |> check_error_result "second join" `ESRCH
+      |> check_error_results "second join" [`ESRCH; `EBADF]
     end;
 
     "function leak", `Quick, begin fun () ->
@@ -221,7 +221,8 @@ let tests = [
       let mutex = Luv.Mutex.init () |> check_success_result "init" in
 
       Luv.Mutex.trylock mutex |> check_success_result "trylock 1";
-      Luv.Mutex.trylock mutex |> check_error_result "trylock 2" `EBUSY;
+      if not Sys.win32 then
+        Luv.Mutex.trylock mutex |> check_error_result "trylock 2" `EBUSY;
 
       let child_trylock_result = ref (Result.Ok ()) in
       let child_tried_to_lock = Event.create () in

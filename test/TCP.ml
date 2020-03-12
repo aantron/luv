@@ -134,7 +134,7 @@ let tests = [
           result := result'
         end;
 
-        check_error_result "connect" `EALREADY !result;
+        check_error_results "connect" [`EALREADY; `EINVAL] !result;
         run ()
       end
     end;
@@ -295,7 +295,7 @@ let tests = [
         let called = ref false in
 
         Luv.Stream.write tcp [] begin fun result count ->
-          check_error_result "write" `EBADF result;
+          check_error_results "write" [`EBADF; `EPIPE] result;
           Alcotest.(check int) "count" 0 count;
           called := true
         end;
@@ -393,7 +393,7 @@ let tests = [
     "try_write: error", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         Luv.Stream.try_write tcp []
-        |> check_error_result "try_write" `EBADF
+        |> check_error_results "try_write" [`EBADF; `EPIPE]
       end
     end;
 
@@ -465,7 +465,7 @@ let tests = [
 
       with_tcp begin fun tcp ->
         Luv.TCP.close_reset tcp begin fun result ->
-          check_error_result "close_reset" `EBADF result;
+          check_error_results "close_reset" [`EBADF; `ENOTSOCK] result;
           called := true
         end
       end;

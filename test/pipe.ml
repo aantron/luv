@@ -5,7 +5,11 @@
 
 open Test_helpers
 
-let filename = "pipe"
+let filename =
+  if not Sys.win32 then
+    "pipe"
+  else
+    "\\\\.\\pipe\\pipe"
 
 let with_pipe f =
   let pipe =
@@ -84,7 +88,9 @@ let tests = [
           begin fun server client ->
             Luv.Pipe.getsockname client
             |> check_success_result "getsockname result"
-            |> Alcotest.(check string) "getsockname address" filename;
+            |> fun name ->
+              if not @@ List.mem name [filename; ""] then
+                Alcotest.failf "getpeername address: %s" name;
             accepted := true;
             proceed server_ran;
             defer client_ran begin fun () ->
@@ -96,7 +102,9 @@ let tests = [
           begin fun client ->
             Luv.Pipe.getpeername client
             |> check_success_result "getpeername result"
-            |> Alcotest.(check string) "getpeername address" filename;
+            |> fun name ->
+              if not @@ List.mem name [filename; "\\\\?\\pipe\\pipe"] then
+                Alcotest.failf "getpeername address: %s" name;
             connected := true;
             proceed client_ran;
             defer server_ran (fun () -> Luv.Handle.close client ignore)

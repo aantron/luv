@@ -18,7 +18,8 @@ let tests = [
   "system name", [
     "uname", `Quick, begin fun () ->
       let uname = Luv.System_info.uname () |> check_success_result "uname" in
-      if uname.sysname <> "Linux" && uname.sysname <> "Darwin" then
+      let names = ["Linux"; "Darwin"; "MINGW32_NT-10.0"] in
+      if not @@ List.mem uname.sysname names then
         Alcotest.failf "sysname: got %s" uname.sysname;
       Alcotest.(check string) "machine" "x86_64" uname.machine;
     end;

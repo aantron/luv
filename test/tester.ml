@@ -11,17 +11,17 @@ let () =
     Timer.tests;
     Loop_watcher.tests;
     Async.tests;
-    Poll.tests;
-    Signal.tests;
+    if not Sys.win32 then Poll.tests else [];
+    if not Sys.win32 then Signal.tests else [];
     TCP.tests;
-    Pipe.tests;
+    if not Sys.win32 then Pipe.tests else [];
     UDP.tests;
     TTY.tests;
     File.tests;
-    Process.tests;
+    if not Sys.win32 then Process.tests else [];
     FS_event.tests;
     FS_poll.tests;
-    DNS.tests;
+    if not Sys.win32 then DNS.tests else [];
     Thread_.tests;
     Misc.tests;
   ])

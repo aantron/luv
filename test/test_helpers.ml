@@ -29,6 +29,17 @@ let check_error_result name expected result =
   Alcotest.(check (result reject error_code_testable))
     name (Result.Error expected) result
 
+let check_error_results name expected result =
+  match result with
+  | Result.Ok _ ->
+    Alcotest.failf "%s: expected Error _; got Ok _." name
+  | Result.Error code ->
+    if not @@ List.mem code expected then
+      Alcotest.failf "%s: expected %s; got %s."
+        name
+        (List.map Luv.Error.err_name expected |> String.concat ", ")
+        (Luv.Error.err_name code)
+
 let pointer_testable =
   let format formatter pointer =
     if Ctypes.is_null pointer then

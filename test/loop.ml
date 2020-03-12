@@ -24,16 +24,23 @@ let tests = [
 
     "configure", `Quick, begin fun () ->
       with_loop begin fun loop ->
+        let check_result =
+          if not Sys.win32 then
+            check_success_result "configure"
+          else
+            check_error_result "configure" `ENOSYS
+        in
+
         Luv.Loop.configure
           loop Luv.Loop.Option.block_signal Luv.Loop.Option.sigprof
-        |> check_success_result "configure"
+        |> check_result
       end
     end;
 
     "configure, invalid", `Quick, begin fun () ->
       with_loop begin fun loop ->
         Luv.Loop.configure loop Luv.Loop.Option.block_signal 0
-        |> check_error_result "configure" `EINVAL
+        |> check_error_results "configure" [`EINVAL; `ENOSYS]
       end
     end;
 

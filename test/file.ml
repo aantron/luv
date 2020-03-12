@@ -1,5 +1,11 @@
 open Test_helpers
 
+let statfs_path =
+  if not Sys.win32 then
+    "file.ml"
+  else
+    Printf.sprintf "%c:\\" (Sys.getcwd ()).[0]
+
 let with_file_for_reading ?(to_fail = false) f =
   let flags =
     if not to_fail then
@@ -233,7 +239,7 @@ let tests = [
         let buffer = Luv.Buffer.create 1 in
 
         Luv.File.read file [buffer] begin fun result ->
-          check_error_result "byte_count" `EBADF result
+          check_error_results "byte_count" [`EBADF; `EPERM] result
         end;
 
         run ()
@@ -245,7 +251,7 @@ let tests = [
         let buffer = Luv.Buffer.create 1 in
 
         Luv.File.Sync.read file [buffer]
-        |> check_error_result "read" `EBADF
+        |> check_error_results "read" [`EBADF; `EPERM]
       end
     end;
 
@@ -786,16 +792,16 @@ let tests = [
     end;
 
     "statfs: async", `Quick, begin fun () ->
-      Luv.File.statfs "file.ml" begin fun result ->
-        check_success_result "stat" result |> ignore
+      Luv.File.statfs statfs_path begin fun result ->
+        check_success_result "statfs" result |> ignore
       end;
 
       run ()
     end;
 
     "statfs: sync", `Quick, begin fun () ->
-      Luv.File.Sync.statfs "file.ml"
-      |> check_success_result "stat"
+      Luv.File.Sync.statfs statfs_path
+      |> check_success_result "statfs"
       |> ignore
     end;
 
@@ -803,7 +809,7 @@ let tests = [
       let finished = ref false in
 
       Luv.File.statfs "non_existent_file" begin fun result ->
-        check_error_result "stat" `ENOENT result;
+        check_error_result "statfs" `ENOENT result;
         finished := true
       end;
 
@@ -813,7 +819,7 @@ let tests = [
 
     "statfs failure: sync", `Quick, begin fun () ->
       Luv.File.Sync.statfs "non_existent_file"
-      |> check_error_result "stat" `ENOENT
+      |> check_error_result "statfs" `ENOENT
     end;
 
     "rename: async", `Quick, begin fun () ->
@@ -900,7 +906,7 @@ let tests = [
         let finished = ref false in
 
         Luv.File.ftruncate file 0L begin fun result ->
-          check_error_result "ftruncate" `EINVAL result;
+          check_error_results "ftruncate" [`EINVAL; `EPERM] result;
           finished := true
         end;
 
@@ -912,7 +918,7 @@ let tests = [
     "ftruncate failure: sync", `Quick, begin fun () ->
       with_file_for_reading begin fun file ->
         Luv.File.Sync.ftruncate file 0L
-        |> check_error_result "ftruncate" `EINVAL
+        |> check_error_results "ftruncate" [`EINVAL; `EPERM]
       end
     end;
 

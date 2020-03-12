@@ -19,7 +19,7 @@ let with_tty f =
 let tests = [
   "tty",
   (* There is no TTY when running in Travis, at least under macOS. *)
-  if in_travis then
+  if in_travis || Sys.win32 then
     []
   else [
       "tty", `Quick, begin fun () ->

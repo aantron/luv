@@ -6,6 +6,8 @@
 val check_success_result : string -> ('a, Luv.Error.t) Result.result -> 'a
 val check_error_result :
   string -> Luv.Error.t -> (_, Luv.Error.t) Result.result -> unit
+val check_error_results :
+  string -> Luv.Error.t list -> (_, Luv.Error.t) Result.result -> unit
 val check_error_code : string -> Luv.Error.t -> Luv.Error.t -> unit
 
 val check_not_null : string -> _ Ctypes.ptr -> unit

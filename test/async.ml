@@ -19,6 +19,7 @@ let tests = [
 
     "send", `Quick, begin fun () ->
       let called = ref false in
+      let timer = Luv.Timer.init () |> check_success_result "timer init" in
 
       let async =
         Luv.Async.init (fun _ -> called := true)
@@ -26,8 +27,9 @@ let tests = [
       in
 
       Luv.Async.send async |> check_success_result "send";
-      Luv.Loop.run ~mode:`NOWAIT () |> ignore;
-      Luv.Handle.close async ignore;
+      Luv.Timer.start timer 100 (fun () ->
+        Luv.Handle.close async ignore)
+      |> check_success_result "delay";
       run ();
 
       Alcotest.(check bool) "called" true !called
@@ -56,14 +58,17 @@ let tests = [
 
     "exception", `Quick, begin fun () ->
       check_exception Exit begin fun () ->
+        let timer = Luv.Timer.init () |> check_success_result "timer init" in
+
         let async =
           Luv.Async.init (fun _ -> raise Exit)
           |> check_success_result "init"
         in
 
         Luv.Async.send async |> check_success_result "send";
-        Luv.Loop.run ~mode:`NOWAIT () |> ignore;
-        Luv.Handle.close async ignore;
+        Luv.Timer.start timer 100 (fun () ->
+          Luv.Handle.close async ignore)
+        |> check_success_result "delay";
         run ()
       end
     end;
