@@ -21,7 +21,7 @@ let () =
     if not Sys.win32 then Process.tests else [];
     FS_event.tests;
     FS_poll.tests;
-    if not Sys.win32 then DNS.tests else [];
+    DNS.tests;
     Thread_.tests;
     Misc.tests;
   ])

@@ -31,19 +31,20 @@ struct
     | `STREAM
     | `DGRAM
     | `RAW
+    | `OTHER of int
   ]
 
   let to_c = let open C.Types.Socket_type in function
     | `STREAM -> stream
     | `DGRAM -> dgram
     | `RAW -> raw
+    | `OTHER i -> i
 
   let from_c = let open C.Types.Socket_type in function
     | socket_type when socket_type = stream -> `STREAM
     | socket_type when socket_type = dgram -> `DGRAM
     | socket_type when socket_type = raw -> `RAW
-    | socket_type ->
-      Printf.ksprintf failwith "Luv.Misc.Socket_type.from_c: %i" socket_type
+    | socket_type -> `OTHER socket_type
 end
 
 type t = C.Types.Sockaddr.storage

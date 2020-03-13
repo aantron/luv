@@ -32,6 +32,7 @@ sig
     | `STREAM
     | `DGRAM
     | `RAW
+    | `OTHER of int
   ]
 
   (**/**)

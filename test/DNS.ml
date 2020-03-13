@@ -35,9 +35,9 @@ let tests = [
       let resolved = ref false in
 
       Luv.DNS.getnameinfo address begin fun result ->
-        check_success_result "getnameinfo" result
-        |> fst
-        |> Alcotest.(check string) "host" "localhost";
+        let hostname = fst @@ check_success_result "getnameinfo" result in
+        if not @@ List.mem hostname ["localhost"; Unix.gethostname ()] then
+          Alcotest.failf "hostname: %s" hostname;
         resolved := true
       end;
 
