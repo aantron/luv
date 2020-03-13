@@ -157,11 +157,6 @@ strategy, etc. Prototype was [here][postcompose].
 - [ ] Integration with [Lwt][lwt]. There was an old [example][lwt-integration]
 that used the early post-compose functor and a [Luv-based Lwt event
 loop][lwt-loop].
-- [ ] Full Windows support. The code should already be portable, but the repo
-needs a proper testing and CI setup for genuine support, and libuv build
-commands may need adjustment.
-- [ ] Cross-compilation support. This will probably require more care in how Luv
-builds libuv.
 - [ ] Luv could make multithreaded event-driven programming very easy by lazily
 initializing a loop for each thread, and storing the reference to it in a TLS
 key that Luv uses internally. This could be especially powerful once OCaml has a
