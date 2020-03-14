@@ -167,6 +167,10 @@ release : check-ejected-build clean
 	cp -r dune-project LICENSE.md luv.opam README.md src $(RELEASE)
 	rm -rf $(RELEASE)/src/c/vendor/libuv/docs
 	rm -rf $(RELEASE)/src/c/vendor/libuv/img
+	rm -rf $(RELEASE)/src/c/vendor/libuv/test
+	rm -rf $(RELEASE)/src/c/vendor/libuv/tools
+	rm -rf $(RELEASE)/src/c/vendor/libuv/m4
+	rm -rf $(RELEASE)/src/gen
 	sed -i "s/version: \"dev\"/version: \"$(VERSION)\"/" $(RELEASE)/luv.opam
 	diff -u luv.opam $(RELEASE)/luv.opam || true
 	tar cf $(RELEASE).tar $(RELEASE)
