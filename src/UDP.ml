@@ -137,6 +137,7 @@ module Recv_flag =
 struct
   type t = [
     | `PARTIAL
+    | `MMSG_CHUNK
   ]
 end
 
@@ -179,11 +180,16 @@ let recv_start ?(allocate = Buffer.create) udp callback =
           |> Sockaddr.copy_storage
           |> fun sockaddr -> Some sockaddr
       in
-      let flags =
-        if flags land C.Types.UDP.Flag.partial = 0 then
-          []
+      let convert_flag raw converted flag_list =
+        if flags land raw = 0 then
+          flag_list
         else
-          [`PARTIAL]
+          converted::flag_list
+      in
+      let flags =
+        []
+        |> convert_flag C.Types.UDP.Flag.partial `PARTIAL
+        |> convert_flag C.Types.UDP.Flag.mmsg_chunk `MMSG_CHUNK
       in
       Error.catch_exceptions callback (Result.Ok (buffer, sockaddr, flags))
     end

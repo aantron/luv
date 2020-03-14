@@ -134,6 +134,7 @@ module Recv_flag :
 sig
   type t = [
     | `PARTIAL
+    | `MMSG_CHUNK
   ]
 end
 

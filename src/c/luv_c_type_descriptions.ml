@@ -601,6 +601,7 @@ struct
       let ipv6only = constant "UV_UDP_IPV6ONLY" int
       let partial = constant "UV_UDP_PARTIAL" int
       let reuseaddr = constant "UV_UDP_REUSEADDR" int
+      let mmsg_chunk = constant "UV_UDP_MMSG_CHUNK" int
     end
 
     module Membership =
