@@ -1,7 +1,7 @@
-# Luv &nbsp;&nbsp; [![version 0.5.0][version]][releases] [![libuv 1.35.0][libuv-version]][libuv-releases] [![Travis status][travis-img]][travis]
+# Luv &nbsp;&nbsp; [![version 0.5.1][version]][releases] [![libuv 1.35.0][libuv-version]][libuv-releases] [![Travis status][travis-img]][travis]
 
 [releases]: https://github.com/aantron/luv/releases
-[version]: https://img.shields.io/badge/version-0.5.0-blue.svg
+[version]: https://img.shields.io/badge/version-0.5.1-blue.svg
 [libuv-releases]: https://github.com/libuv/libuv/releases
 [libuv-version]: https://img.shields.io/badge/libuv-1.35.0-blue.svg
 [travis]: https://travis-ci.org/aantron/luv
