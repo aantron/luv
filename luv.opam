@@ -19,7 +19,8 @@ depends: [
   "ocaml" {>= "4.02.0"}
   "result"
 
-  "alcotest" {dev & >= "0.8.1"}
+  "alcotest" {with-test & >= "0.8.1"}
+  "base-unix" {with-test}
 ]
 
 build: [
