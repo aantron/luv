@@ -668,9 +668,9 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-threadpool.c test/test-timer-again.c \
 	test/test-timer-from-check.c test/test-timer.c \
 	test/test-tmpdir.c test/test-tty-duplicate-key.c \
-	test/test-tty.c test/test-udp-alloc-cb-fail.c \
-	test/test-udp-bind.c test/test-udp-connect.c \
-	test/test-udp-create-socket-early.c \
+	test/test-tty-escape-sequence-processing.c test/test-tty.c \
+	test/test-udp-alloc-cb-fail.c test/test-udp-bind.c \
+	test/test-udp-connect.c test/test-udp-create-socket-early.c \
 	test/test-udp-dgram-too-big.c test/test-udp-ipv6.c \
 	test/test-udp-multicast-interface.c \
 	test/test-udp-multicast-interface6.c \
@@ -821,6 +821,7 @@ am_test_run_tests_OBJECTS =  \
 	test/test_run_tests-test-timer.$(OBJEXT) \
 	test/test_run_tests-test-tmpdir.$(OBJEXT) \
 	test/test_run_tests-test-tty-duplicate-key.$(OBJEXT) \
+	test/test_run_tests-test-tty-escape-sequence-processing.$(OBJEXT) \
 	test/test_run_tests-test-tty.$(OBJEXT) \
 	test/test_run_tests-test-udp-alloc-cb-fail.$(OBJEXT) \
 	test/test_run_tests-test-udp-bind.$(OBJEXT) \
@@ -1207,9 +1208,9 @@ test_run_tests_SOURCES = test/blackhole-server.c test/dns-server.c \
 	test/test-threadpool.c test/test-timer-again.c \
 	test/test-timer-from-check.c test/test-timer.c \
 	test/test-tmpdir.c test/test-tty-duplicate-key.c \
-	test/test-tty.c test/test-udp-alloc-cb-fail.c \
-	test/test-udp-bind.c test/test-udp-connect.c \
-	test/test-udp-create-socket-early.c \
+	test/test-tty-escape-sequence-processing.c test/test-tty.c \
+	test/test-udp-alloc-cb-fail.c test/test-udp-bind.c \
+	test/test-udp-connect.c test/test-udp-create-socket-early.c \
 	test/test-udp-dgram-too-big.c test/test-udp-ipv6.c \
 	test/test-udp-multicast-interface.c \
 	test/test-udp-multicast-interface6.c \
@@ -1774,6 +1775,8 @@ test/test_run_tests-test-tmpdir.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-tty-duplicate-key.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/test_run_tests-test-tty-escape-sequence-processing.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-tty.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-udp-alloc-cb-fail.$(OBJEXT):  \
@@ -2062,6 +2065,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-timer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tmpdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tty-duplicate-key.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tty-escape-sequence-processing.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tty.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-alloc-cb-fail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-bind.Po@am__quote@
@@ -4593,6 +4597,20 @@ test/test_run_tests-test-tty-duplicate-key.obj: test/test-tty-duplicate-key.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tty-duplicate-key.c' object='test/test_run_tests-test-tty-duplicate-key.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-tty-duplicate-key.obj `if test -f 'test/test-tty-duplicate-key.c'; then $(CYGPATH_W) 'test/test-tty-duplicate-key.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tty-duplicate-key.c'; fi`
+
+test/test_run_tests-test-tty-escape-sequence-processing.o: test/test-tty-escape-sequence-processing.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-tty-escape-sequence-processing.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-tty-escape-sequence-processing.Tpo -c -o test/test_run_tests-test-tty-escape-sequence-processing.o `test -f 'test/test-tty-escape-sequence-processing.c' || echo '$(srcdir)/'`test/test-tty-escape-sequence-processing.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-tty-escape-sequence-processing.Tpo test/$(DEPDIR)/test_run_tests-test-tty-escape-sequence-processing.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tty-escape-sequence-processing.c' object='test/test_run_tests-test-tty-escape-sequence-processing.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-tty-escape-sequence-processing.o `test -f 'test/test-tty-escape-sequence-processing.c' || echo '$(srcdir)/'`test/test-tty-escape-sequence-processing.c
+
+test/test_run_tests-test-tty-escape-sequence-processing.obj: test/test-tty-escape-sequence-processing.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-tty-escape-sequence-processing.obj -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-tty-escape-sequence-processing.Tpo -c -o test/test_run_tests-test-tty-escape-sequence-processing.obj `if test -f 'test/test-tty-escape-sequence-processing.c'; then $(CYGPATH_W) 'test/test-tty-escape-sequence-processing.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tty-escape-sequence-processing.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-tty-escape-sequence-processing.Tpo test/$(DEPDIR)/test_run_tests-test-tty-escape-sequence-processing.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tty-escape-sequence-processing.c' object='test/test_run_tests-test-tty-escape-sequence-processing.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-tty-escape-sequence-processing.obj `if test -f 'test/test-tty-escape-sequence-processing.c'; then $(CYGPATH_W) 'test/test-tty-escape-sequence-processing.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tty-escape-sequence-processing.c'; fi`
 
 test/test_run_tests-test-tty.o: test/test-tty.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-tty.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-tty.Tpo -c -o test/test_run_tests-test-tty.o `test -f 'test/test-tty.c' || echo '$(srcdir)/'`test/test-tty.c
