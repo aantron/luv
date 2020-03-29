@@ -24,7 +24,7 @@ let () =
     end
   end;
 
-  Luv.Loop.run () |> ignore
+  ignore (Luv.Loop.run () : bool)
 ]}
 
 This is the auto-generated API reference. For more conceptual information and

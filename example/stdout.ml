@@ -4,4 +4,4 @@ let () =
   ]
   in
   ignore (Luv.Process.spawn ~redirect "echo" ["echo"; "Hello,"; "world!"]);
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

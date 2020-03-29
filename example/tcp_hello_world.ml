@@ -21,4 +21,4 @@ let () =
       end
   end;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

@@ -12,4 +12,4 @@ let () =
       Luv.UDP.send server [buffer] client_address ignore
   end;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

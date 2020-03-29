@@ -24,4 +24,4 @@ let () =
 
   Luv.Thread_pool.queue_work (fun () -> do_work 3 0) finished;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

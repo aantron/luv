@@ -5,4 +5,4 @@ let () =
     print_endline "Hello, world!"));
 
   print_endline "Waiting...";
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

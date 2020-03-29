@@ -14,4 +14,4 @@ let () =
       Luv.Handle.close client ignore
   end;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

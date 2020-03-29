@@ -11,4 +11,4 @@ let () =
       ignore (Luv.Idle.stop idle)
   end;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

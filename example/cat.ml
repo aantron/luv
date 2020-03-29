@@ -29,4 +29,4 @@ let () =
       Luv.File.read file [buffer] on_read
   end;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

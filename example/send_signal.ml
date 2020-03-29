@@ -4,4 +4,4 @@ let () =
 
   ignore (Luv.Process.kill child Luv.Signal.sigkill);
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

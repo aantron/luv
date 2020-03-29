@@ -17,4 +17,4 @@ let () =
       print_string (Luv.Buffer.to_string buffer)
   end;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

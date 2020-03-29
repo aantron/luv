@@ -7,4 +7,4 @@ let () =
         (Option.get (Luv.Sockaddr.to_string (List.hd addr_infos).addr))
   end;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

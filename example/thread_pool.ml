@@ -4,4 +4,4 @@ let () =
     print_endline "Finished")
     ignore;
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

@@ -36,6 +36,9 @@ val run : ?loop:t -> ?mode:Run_mode.t -> unit -> bool
     meaning of the constants that can be specified with [?mode]. The default
     value is [`DEFAULT].
 
+    Again, see {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_run} [uv_run]}
+    for information on the return value.
+
     This function typically should not be called by a library based on Luv.
     Rather, it should be called by applications. *)
 

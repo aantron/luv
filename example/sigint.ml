@@ -8,4 +8,4 @@ let () =
 
   print_endline "Type Ctrl+C to continue...";
 
-  ignore (Luv.Loop.run ())
+  ignore (Luv.Loop.run () : bool)

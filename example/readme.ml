@@ -17,4 +17,4 @@ let () =
     end
   end;
 
-  Luv.Loop.run () |> ignore
+  ignore (Luv.Loop.run () : bool)
