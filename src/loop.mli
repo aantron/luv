@@ -37,7 +37,8 @@ val run : ?loop:t -> ?mode:Run_mode.t -> unit -> bool
     value is [`DEFAULT].
 
     Again, see {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_run} [uv_run]}
-    for information on the return value.
+    for information on the return value. Zero from [uv_run] corresponds to
+    [false] from [Luv.Loop.run], and non-zero corresponds to [true].
 
     This function typically should not be called by a library based on Luv.
     Rather, it should be called by applications. *)
