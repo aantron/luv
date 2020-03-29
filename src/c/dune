@@ -25,8 +25,8 @@
     "sh configure --host `ocamlc -config | awk '/host/ {print $NF}'` \
       'CC=%{cc}' CFLAGS=-DNDEBUG --silent --enable-silent-rules")
    (ignore-outputs (bash
-    "make V=0 -o aclocal.m4 -o Makefile.in -o configure -o configure.status \
-      -o Makefile libuv.la"))
+    "make V=0 -j 4 -o aclocal.m4 -o Makefile.in -o configure \
+      -o configure.status -o Makefile libuv.la"))
    (ignore-outputs (bash
     "sh libtool --silent --no-warnings --mode install cp libuv.la `pwd`"))))
   (bash "cp vendor/libuv/libuv.a .")
