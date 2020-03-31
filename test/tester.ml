@@ -11,7 +11,7 @@ let () =
     Timer.tests;
     Loop_watcher.tests;
     Async.tests;
-    if not Sys.win32 then Poll.tests else [];
+    Poll.tests;
     if not Sys.win32 then Signal.tests else [];
     TCP.tests;
     if not Sys.win32 then Pipe.tests else [];

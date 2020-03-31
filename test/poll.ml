@@ -5,28 +5,41 @@
 
 open Test_helpers
 
-let test_fd =
-  if Sys.win32 then
-    Luv.Process.stderr
-  else begin
-    (* On Linux in Travis, trying to create a poll handle for STDERR results in
-       EPERM, so we create a dummy pipe instead. We don't bother closing it:
-       only one will be created on tester startup, and it will be closed by the
-       system on process exit. *)
-    let (_read_end, write_end) = Unix.pipe () in
-    (Obj.magic write_end : int)
+let with_test_fd f =
+  let address = fresh_address () in
+
+  let server = Luv.TCP.init () |> check_success_result "server init" in
+  let remote_client =
+    Luv.TCP.init () |> check_success_result "remote client init" in
+  Luv.TCP.bind server address |> check_success_result "bind";
+  Luv.Stream.listen server begin fun result ->
+    check_success_result "listen" result;
+    Luv.Stream.accept ~server ~client:remote_client
+    |> check_success_result "accept"
+  end;
+
+  let client = Luv.TCP.init () |> check_success_result "client init" in
+  Luv.TCP.connect client address begin fun result ->
+    check_success_result "connect" result;
+    let os_socket = Luv.Handle.fileno client |> check_success_result "fileno" in
+    let os_socket : Luv.Os_fd.Socket.t = Obj.magic os_socket in
+    f (os_socket);
+    Luv.Handle.close client ignore;
+    Luv.Handle.close remote_client ignore
   end
 
 let with_poll f =
-  let poll =
-    Luv.Poll.init test_fd
-    |> check_success_result "init"
-  in
+  with_test_fd begin fun socket ->
+    let poll =
+      Luv.Poll.init_socket socket
+      |> check_success_result "init_socket"
+    in
 
-  f poll;
+    f poll;
 
-  Luv.Handle.close poll ignore;
-  run ()
+    Luv.Handle.close poll ignore;
+    run ()
+  end
 
 let tests = [
   "poll", [
