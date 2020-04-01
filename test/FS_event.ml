@@ -74,12 +74,15 @@ let tests = [
 
         open_out filename |> close_out;
 
+        let start = Unix.gettimeofday() in
+
         Luv.FS_event.start event filename begin fun result ->
           Luv.FS_event.stop event |> check_success_result "stop";
           let filename', events = check_success_result "start" result in
           Alcotest.(check string) "filename" filename filename';
           Alcotest.(check bool) "rename" false (List.mem `RENAME events);
           Alcotest.(check bool) "change" true (List.mem `CHANGE events);
+          Printf.printf "Success: %f\n%!" (Unix.gettimeofday() -. start);
           occurred := true
         end;
         
@@ -88,6 +91,8 @@ let tests = [
         close_out oc;
 
         run ~with_timeout:true ();
+
+        Printf.printf "Done: %f\n%!" (Unix.gettimeofday() -. start);
         
         Alcotest.(check bool) "occurred" true !occurred
       end
