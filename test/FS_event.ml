@@ -67,5 +67,30 @@ let tests = [
         Alcotest.(check bool) "occurred" true !occurred
       end
     end;
+    
+    "change", `Quick, begin fun () ->
+      with_fs_event begin fun event ->
+        let occurred = ref false in
+
+        open_out filename |> close_out;
+
+        Luv.FS_event.start event filename begin fun result ->
+          Luv.FS_event.stop event |> check_success_result "stop";
+          let filename', events = check_success_result "start" result in
+          Alcotest.(check string) "filename" filename filename';
+          Alcotest.(check bool) "rename" false (List.mem `RENAME events);
+          Alcotest.(check bool) "change" true (List.mem `CHANGE events);
+          occurred := true
+        end;
+        
+        let oc = open_out filename in
+        let () = Printf.fprintf oc "foo" in
+        close_out oc;
+
+        run ~with_timeout:true ();
+        
+        Alcotest.(check bool) "occurred" true !occurred
+      end
+    end;
   ]
 ]
