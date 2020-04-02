@@ -28,8 +28,7 @@ jobs:
         with:
           ocaml-version: ${{ matrix.ocaml }}
       - run: opam depext -y conf-pkg-config
-      - run: opam install -y --deps-only .
-      - run: opam install alcotest
+      - run: opam install -y --deps-only --with-test .
       - run: opam exec -- dune runtest -p luv
 
   esy:
