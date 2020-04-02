@@ -82,6 +82,8 @@ let tests = [
           Alcotest.(check bool) "change" true (List.mem `CHANGE events);
           occurred := true
         end;
+
+        let start = Unix.gettimeofday() in
         
         let oc = open_out filename in
         let () = Printf.fprintf oc "foo" in
@@ -89,7 +91,8 @@ let tests = [
 
         run ();
         
-        Alcotest.(check bool) "occurred" true !occurred
+        Alcotest.(check bool) "occurred" true !occurred;
+        Alcotest.(check (float 0.1)) "delay < 1000ms" 0. (Unix.gettimeofday() -. start);
       end
     end;
   ]
