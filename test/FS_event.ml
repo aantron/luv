@@ -83,18 +83,20 @@ let tests = [
           occurred := true
         end;
 
-        Unix.sleepf(0.1);
+        let start = ref(0.) in
 
-        let start = Unix.gettimeofday() in
-        
-        let oc = open_out filename in
-        let () = Printf.fprintf oc "foo" in
-        close_out oc;
+        let timer = Luv.Timer.init () |> check_success_result "timer init" in
+        Luv.Timer.start timer 100 (fun () -> 
+          start := Unix.gettimeofday ();
+          let oc = open_out filename in
+          let () = Printf.fprintf oc "foo" in
+          close_out oc;
+        ) |> check_success_result "timer start";
 
         run ();
         
         Alcotest.(check bool) "occurred" true !occurred;
-        Alcotest.(check (float 0.1)) "delay < 1000ms" 0. (Unix.gettimeofday() -. start);
+        Alcotest.(check (float 0.1)) "delay < 100ms" 0. (Unix.gettimeofday () -. !start);
       end
     end;
   ]
