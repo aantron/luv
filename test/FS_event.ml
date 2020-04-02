@@ -83,6 +83,8 @@ let tests = [
           occurred := true
         end;
 
+        Unix.sleepf(0.1);
+
         let start = Unix.gettimeofday() in
         
         let oc = open_out filename in
