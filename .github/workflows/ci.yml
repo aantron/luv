@@ -28,8 +28,8 @@ jobs:
         with:
           ocaml-version: ${{ matrix.ocaml }}
       - run: opam depext -y conf-pkg-config
-      - run: opam install -y --deps-only --with-test .
-      - run: opam exec -- dune runtest -p luv
+      - run: opam install -y --deps-only .
+      - run: opam exec -- dune build -p luv
 
   esy:
     runs-on: ${{ matrix.os }}
