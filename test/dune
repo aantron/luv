@@ -1,6 +1,7 @@
 (executable
  (name tester)
- (libraries alcotest luv threads))
+ (libraries unix)
+ (modules tester))
 
 (rule
  (alias runtest)
