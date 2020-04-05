@@ -5,7 +5,7 @@
 
 let () =
   Alcotest.run "luv" (List.flatten [
-    Error.tests;
+    (* Error.tests;
     Version.tests;
     Loop.tests;
     Timer.tests;
@@ -18,10 +18,10 @@ let () =
     UDP.tests;
     TTY.tests;
     File.tests;
-    if not Sys.win32 then Process.tests else [];
+    if not Sys.win32 then Process.tests else []; *)
     FS_event.tests;
-    FS_poll.tests;
+    (* FS_poll.tests;
     DNS.tests;
     Thread_.tests;
-    Misc.tests;
+    Misc.tests; *)
   ])

@@ -20,7 +20,7 @@ let with_fs_event f =
 
 let tests = [
   "fs_event", [
-    "init, close", `Quick, begin fun () ->
+    (* "init, close", `Quick, begin fun () ->
       with_fs_event ignore
     end;
 
@@ -66,7 +66,7 @@ let tests = [
 
         Alcotest.(check bool) "occurred" true !occurred
       end
-    end;
+    end; *)
 
     "change", `Quick, begin fun () ->
       with_fs_event begin fun event ->
@@ -85,14 +85,14 @@ let tests = [
 
         let start = ref 0. in
 
-        let timer = Luv.Timer.init () |> check_success_result "timer init" in
+        (* let timer = Luv.Timer.init () |> check_success_result "timer init" in
         check_success_result "timer start" @@
-        Luv.Timer.start timer 100 begin fun () ->
+        Luv.Timer.start timer 100 begin fun () -> *)
           start := Unix.gettimeofday ();
           let oc = open_out filename in
           let () = Printf.fprintf oc "foo" in
-          close_out oc
-        end;
+          close_out oc;
+        (* end; *)
 
         run ();
 
