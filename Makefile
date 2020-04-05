@@ -4,7 +4,9 @@ build :
 
 .PHONY : test
 test :
-	dune runtest --no-buffer --force
+	# dune runtest --no-buffer --force
+	dune build test/tester.exe
+	_build/default/test/tester.exe
 
 .PHONY : examples
 examples :
