@@ -3,11 +3,11 @@
 
 
 
-open Test_helpers
+(* open Test_helpers *)
 
 let filename = "fs_event"
 
-let with_fs_event f =
+(* let with_fs_event f =
   if Sys.file_exists filename then
     Sys.remove filename;
 
@@ -16,17 +16,17 @@ let with_fs_event f =
   f event;
 
   Luv.Handle.close event ignore;
-  run ()
+  run () *)
 
 let () =
-  with_fs_event begin fun _event ->
+  (* with_fs_event begin fun _event -> *)
     let occurred = ref false in
+
+    Printf.printf "start of test %b\n%!" (Sys.file_exists filename);
 
     open_out filename |> close_out;
 
     let start = Unix.gettimeofday () in
-
-    Printf.printf "start of test\n%!";
 
       Printf.printf "touch %f\n%!" ((Unix.gettimeofday () -. start) *. 1e3);
       let oc = open_out filename in
@@ -45,7 +45,7 @@ let () =
     Alcotest.(check bool) "occurred" true !occurred;
     Alcotest.(check (float 0.1)) "delay < 100ms" 0.
       (Unix.gettimeofday () -. start)
-  end
+  (* end *)
 
   (* Alcotest.run "luv" (List.flatten [ *)
     (* Error.tests;
