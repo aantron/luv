@@ -46,7 +46,7 @@ before_script:
   - |
     if [ ! -d _cache/_build ]
     then
-      opam install -y --deps-only ./luv.opam
+      opam install -y --deps-only --with-test ./luv.opam
     fi
   - opam list
 
