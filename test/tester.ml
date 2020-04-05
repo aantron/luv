@@ -28,33 +28,17 @@ let () =
 
     Printf.printf "start of test\n%!";
 
-    (* Luv.FS_event.start event filename begin fun result ->
-      Printf.printf "callback %f\n%!" ((Unix.gettimeofday () -. start) *. 1e3);
-      Luv.FS_event.stop event |> check_success_result "stop";
-      let filename', events = check_success_result "start" result in
-      Alcotest.(check string) "filename" filename filename';
-      Alcotest.(check bool) "rename" false (List.mem `RENAME events);
-      Alcotest.(check bool) "change" true (List.mem `CHANGE events);
-      occurred := true
-    end; *)
-
-    (* let start = ref 0. in *)
-
-    (* let timer = Luv.Timer.init () |> check_success_result "timer init" in
-    check_success_result "timer start" @@
-    Luv.Timer.start timer 100 begin fun () -> *)
       Printf.printf "touch %f\n%!" ((Unix.gettimeofday () -. start) *. 1e3);
       let oc = open_out filename in
       Printf.printf "write %f\n%!" ((Unix.gettimeofday () -. start) *. 1e3);
       let () = Printf.fprintf oc "foo" in
       Printf.printf "close %f\n%!" ((Unix.gettimeofday () -. start) *. 1e3);
       close_out oc;
-    (* end; *)
 
     Printf.printf "run %f\n%!" ((Unix.gettimeofday () -. start) *. 1e3);
     Printf.printf "run 2 %f\n%!" ((Unix.gettimeofday () -. start) *. 1e3);
 
-    run ();
+    (* run (); *)
 
     Printf.printf "end %f\n%!" ((Unix.gettimeofday () -. start) *. 1e3);
 
