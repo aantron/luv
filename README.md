@@ -119,7 +119,7 @@ opam install --deps-only .
 ```
 
 *Note: the clone *has* to be recursive, because libuv is vendored using a git
-module.*
+module. Also, the examples require OCaml 4.08+.*
 
 Then, to run, say, [`delay.ml`][delay.ml]...
 

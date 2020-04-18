@@ -10,8 +10,10 @@ Luv_ repo. You can run them locally by cloning the repo::
     git clone https://github.com/aantron/luv.git --recursive
     cd luv
 
-and then running ``make examples``. To run a specific example, say,
-``delay.ml``, run::
+and then running ``make examples``. Note the examples require OCaml 4.08 or
+higher.
+
+To run a specific example, say, ``delay.ml``, run::
 
     dune exec example/delay.exe
 
