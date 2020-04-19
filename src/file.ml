@@ -662,6 +662,7 @@ struct
 
   let utime = generic_utime C.Blocking.File.utime
   let futime = generic_utime C.Blocking.File.futime
+  let lutime = generic_utime C.Blocking.File.lutime
 
   let link =
     async_or_sync

@@ -263,6 +263,16 @@ struct
          trampoline @->
           returning error_code)
 
+    let lutime =
+      foreign "uv_fs_lutime"
+        (ptr Types.Loop.t @->
+         ptr request @->
+         string @->
+         float @->
+         float @->
+         trampoline @->
+          returning error_code)
+
     let link =
       foreign "uv_fs_link"
         (ptr Types.Loop.t @->

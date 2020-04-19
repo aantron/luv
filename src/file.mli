@@ -741,8 +741,22 @@ val futime :
 (** Like {!Luv.File.utime}, but takes a file instead of a path.
 
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_futime}
-    [uv_fs_futime]}. See {{:http://man7.org/linux/man-pages/man3/futime.3p.html}
-    [futime(3p)]}. The synchronous version is {!Luv.File.Sync.futime}. *)
+    [uv_fs_futime]}. See {{:http://man7.org/linux/man-pages/man3/futimes.3.html}
+    [futimes(3)]}. The synchronous version is {!Luv.File.Sync.futime}. *)
+
+val lutime :
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  string ->
+  atime:float ->
+  mtime:float ->
+  ((unit, Error.t) result -> unit) ->
+    unit
+(** Like {!Luv.File.utime}, but does not dereference symlinks.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_lutime}
+    [uv_fs_lutime]}. See {{:http://man7.org/linux/man-pages/man3/lutimes.3.html}
+    [lutimes(3)]}. The synchronous version is {!Luv.File.Sync.lutime}. *)
 
 
 
@@ -1004,6 +1018,11 @@ sig
     t -> atime:float -> mtime:float ->
       (unit, Error.t) result
   (** Synchronous version of {!Luv.File.futime}. *)
+
+  val lutime :
+    string -> atime:float -> mtime:float ->
+      (unit, Error.t) result
+  (** Synchronous version of {!Luv.File.lutime}. *)
 
   val link :
     string -> link:string ->
