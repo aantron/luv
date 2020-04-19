@@ -3,7 +3,7 @@
 [releases]: https://github.com/aantron/luv/releases
 [version]: https://img.shields.io/badge/version-0.5.1-blue.svg
 [libuv-releases]: https://github.com/libuv/libuv/releases
-[libuv-version]: https://img.shields.io/badge/libuv-1.35.0-blue.svg
+[libuv-version]: https://img.shields.io/badge/libuv-1.36.0-blue.svg
 [ci]: https://github.com/aantron/luv/actions
 [ci-img]: https://img.shields.io/github/workflow/status/aantron/luv/ci/master?label=ci
 

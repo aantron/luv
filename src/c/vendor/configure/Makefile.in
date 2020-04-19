@@ -195,7 +195,8 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @SUNOS_TRUE@                         -D_XOPEN_SOURCE=500 \
 @SUNOS_TRUE@                         -D_REENTRANT
 
-@OS390_TRUE@am__append_16 = -D_UNIX03_THREADS \
+@OS390_TRUE@am__append_16 = -D_ISOC99_SOURCE \
+@OS390_TRUE@                         -D_UNIX03_THREADS \
 @OS390_TRUE@                         -D_UNIX03_SOURCE \
 @OS390_TRUE@                         -D_OPEN_SYS_IF_EXT=1 \
 @OS390_TRUE@                         -D_OPEN_SYS_SOCK_IPV6 \
@@ -1118,17 +1119,9 @@ EXTRA_DIST = test/fixtures/empty_file \
              include \
              docs \
              img \
-             android-configure-arm \
-             android-configure-arm64 \
-             android-configure-x86 \
-             android-configure-x86_64 \
              CONTRIBUTING.md \
              LICENSE \
-             README.md \
-             vcbuild.bat \
-             common.gypi \
-             gyp_uv.py \
-             uv.gyp
+             README.md
 
 test_run_tests_CFLAGS = $(am__append_8) $(am__append_11) \
 	$(am__append_12) $(am__append_13) $(am__append_14) \
