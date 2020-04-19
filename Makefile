@@ -176,7 +176,6 @@ release : check-ejected-build clean
 	tar cf $(RELEASE).tar $(RELEASE)
 	ls -l $(RELEASE).tar
 	gzip -9 $(RELEASE).tar
-	ls -l $(RELEASE).tar.gz
 	mkdir -p _release
 	cp $(RELEASE).tar.gz _release
 	(cd _release && tar xf $(RELEASE).tar.gz)
@@ -186,6 +185,7 @@ release : check-ejected-build clean
 	opam remove -y luv
 	opam pin remove -y luv
 	md5sum $(RELEASE).tar.gz
+	ls -l $(RELEASE).tar.gz
 
 .PHONY : clean
 clean :
