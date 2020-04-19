@@ -1,4 +1,4 @@
-# Luv &nbsp;&nbsp; [![version 0.5.1][version]][releases] [![libuv 1.35.0][libuv-version]][libuv-releases] [![CI status][ci-img]][ci]
+# Luv &nbsp;&nbsp; [![version][version]][releases] [![libuv][libuv-version]][libuv-releases] [![CI status][ci-img]][ci]
 
 [releases]: https://github.com/aantron/luv/releases
 [version]: https://img.shields.io/badge/version-0.5.1-blue.svg
