@@ -44,6 +44,16 @@ val to_parent_pipe :
     {{:http://docs.libuv.org/en/v1.x/process.html#c.uv_stdio_flags}
     [UV_OVERLAPPED_PIPE]}. *)
 
+val ignore_fd :
+  fd: int ->
+  unit ->
+    redirection
+(** Causes [~fd] in the child to not be connected. If [~fd] is 
+    [stdin], [stdout], or [stderr], it'll redirect to [/dev/null].
+
+    Binds {{:http://docs.libuv.org/en/v1.x/process.html#c.uv_stdio_flags}
+    [UV_IGNORE]}. *)
+
 val inherit_fd :
   fd:int ->
   from_parent_fd:int ->
