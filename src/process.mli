@@ -106,7 +106,11 @@ val spawn :
     [~term_signal] is set by {!Luv.Process.kill}, i.e. it is emulated by libuv.
     The operating system separately reports [~exit_status], so it is always
     valid. If there is an error retrieving [~exit_status] from the OS, it is set
-    to a negative value. *)
+    to a negative value.
+
+    Redirections for STDIN, STDOUT, STDERR that are not specified are set by Luv
+    to [UV_IGNORE]. This causes libuv to open new file descriptors for the child
+    process, and redirect them to [/dev/null] or [nul]. *)
 
 val disable_stdio_inheritance : unit -> unit
 (** Disables (tries) file descriptor inheritance for inherited descriptors.
