@@ -17,7 +17,7 @@ type t = [ `UDP ] Handle.t
     {!Luv.Handle.close}. *)
 
 val init :
-  ?loop:Loop.t -> ?domain:Sockaddr.Address_family.t -> unit ->
+  ?loop:Loop.t -> ?domain:Sockaddr.Address_family.t -> ?recvmmsg:bool -> unit ->
     (t, Error.t) result
 (** Allocates and initializes a UDP socket.
 

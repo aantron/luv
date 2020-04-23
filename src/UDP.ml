@@ -7,20 +7,16 @@ type t = [ `UDP ] Handle.t
 
 module Membership = C.Types.UDP.Membership
 
-let init ?loop ?domain () =
+let init ?loop ?(domain = `UNSPEC) ?(recvmmsg = false) () =
   let udp =
     Handle.allocate
       C.Types.UDP.t ~reference_count:C.Types.UDP.reference_count
   in
   let loop = Loop.or_default loop in
-  let result =
-    match domain with
-    | None ->
-      C.Functions.UDP.init loop udp
-    | Some domain ->
-      let domain = Sockaddr.Address_family.to_c domain in
-      C.Functions.UDP.init_ex loop udp (Unsigned.UInt.of_int domain)
-  in
+  let domain = Sockaddr.Address_family.to_c domain in
+  let recvmmsg = if recvmmsg then C.Types.UDP.Flag.recvmmsg else 0 in
+  let flags = domain lor recvmmsg in
+  let result = C.Functions.UDP.init_ex loop udp (Unsigned.UInt.of_int flags) in
   Error.to_result udp result
 
 let open_ udp socket =
