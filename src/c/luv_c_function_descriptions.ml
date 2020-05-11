@@ -1614,7 +1614,7 @@ struct
 
     let ntohs =
       foreign "ntohs"
-        (short @-> returning short)
+        (ushort @-> returning ushort)
   end
 
   module Resource =

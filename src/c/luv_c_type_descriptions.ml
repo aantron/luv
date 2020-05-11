@@ -303,12 +303,12 @@ struct
 
     type in_ = [ `Sockaddr_in ] structure
     let in_ : in_ typ = structure "sockaddr_in"
-    let sin_port = field in_ "sin_port" short
+    let sin_port = field in_ "sin_port" ushort
     let () = seal in_
 
     type in6 = [ `Sockaddr_in6 ] structure
     let in6 : in6 typ = structure "sockaddr_in6"
-    let sin6_port = field in6 "sin6_port" short
+    let sin6_port = field in6 "sin6_port" ushort
     let () = seal in6
 
     type storage = [ `Sockaddr_storage ] structure

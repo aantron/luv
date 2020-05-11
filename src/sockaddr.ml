@@ -99,7 +99,7 @@ let to_string storage =
     None
 
 let finish_to_port network_order_port =
-  Some (C.Functions.Sockaddr.ntohs network_order_port)
+  Some (Unsigned.UShort.to_int (C.Functions.Sockaddr.ntohs network_order_port))
 
 let port storage =
   let family =
