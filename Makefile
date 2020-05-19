@@ -78,6 +78,37 @@ test-installation-ci :
 	opam remove -y luv
 	opam pin remove -y luv
 
+LATEST_TAG := \
+  git for-each-ref refs/tags \
+    --sort=-taggerdate --format='%(refname:short)' --count=1
+
+.PHONY : upgrade-libuv
+upgrade-libuv :
+	(cd src/c/vendor/libuv && git fetch)
+	(cd src/c/vendor/libuv && git checkout `$(LATEST_TAG)`)
+	make clean
+	make eject-build
+	(make && make test) || true
+	@echo
+	@echo "Sanity check:"
+	@echo
+	@(cd src/c/vendor/libuv && git log --pretty=oneline -n 5)
+	@echo
+	@git status
+	@echo
+	@echo "To get the tests to pass, edit at least test/version.ml. Then, fix"
+	@echo "any other errors, review the changelog, and expose any new features."
+	@echo "For examples, see commits around earlier libuv version upgrades."
+	@echo "Suggestions for review:"
+	@echo
+	@echo "  make view-libuv-changelog"
+	@echo "  git diff"
+	@echo
+
+.PHONY : view-libuv-changelog
+view-libuv-changelog :
+	(cd src/c/vendor/libuv && git show `$(LATEST_TAG)`)
+
 AUTOGEN_OUTPUT := src/c/vendor/configure
 AUTOGEN_SCRATCH := libuv-scratch
 
