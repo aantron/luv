@@ -3,8 +3,18 @@
 
 
 
+module Request :
+sig
+  type t = [ `Random ] Request.t
+  val make : unit -> t
+end
+
 val random :
-  ?loop:Loop.t -> Buffer.t -> ((unit, Error.t) result -> unit) -> unit
+  ?loop:Loop.t ->
+  ?request:Request.t ->
+  Buffer.t ->
+  ((unit, Error.t) result -> unit) ->
+    unit
 (** Fills the given buffer with bits from the system entropy source.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_random}

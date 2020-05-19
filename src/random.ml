@@ -3,13 +3,20 @@
 
 
 
+module Request_ =
+struct
+  type t = [ `Random ] Request.t
+
+  let make () =
+    Request.allocate C.Types.Random.Request.t
+end
+
 module Async =
 struct
   let trampoline =
     C.Functions.Random.get_trampoline ()
 
-  let random ?loop buffer callback =
-    let request = Request.allocate C.Types.Random.Request.t in
+  let random ?loop ?(request = Request_.make ()) buffer callback =
     Request.set_callback request begin fun result ->
       ignore (Compatibility.Sys.opaque_identity buffer);
       Error.catch_exceptions callback (Error.to_result () result)
@@ -48,3 +55,5 @@ struct
       null_callback
     |> Error.to_result ()
 end
+
+module Request = Request_

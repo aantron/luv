@@ -31,7 +31,7 @@ type 'kind t = 'kind C.Types.Request.t Ctypes.ptr
     [uv_req_t]}. *)
 
 val cancel :
-  [< `File | `Addr_info | `Name_info | `Thread_pool ] t ->
+  [< `File | `Addr_info | `Name_info | `Random | `Thread_pool ] t ->
     (unit, Error.t) result
 (** Tries to cancel a pending request.
 
