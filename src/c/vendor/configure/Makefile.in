@@ -257,8 +257,9 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @DARWIN_TRUE@am__append_29 = -D_DARWIN_USE_64_BIT_INODE=1 \
 @DARWIN_TRUE@	-D_DARWIN_UNLIMITED_SELECT=1
 @DARWIN_TRUE@am__append_30 = src/unix/bsd-ifaddrs.c \
-@DARWIN_TRUE@                    src/unix/darwin.c \
 @DARWIN_TRUE@                    src/unix/darwin-proctitle.c \
+@DARWIN_TRUE@                    src/unix/darwin-stub.h \
+@DARWIN_TRUE@                    src/unix/darwin.c \
 @DARWIN_TRUE@                    src/unix/fsevents.c \
 @DARWIN_TRUE@                    src/unix/kqueue.c \
 @DARWIN_TRUE@                    src/unix/proctitle.c \
@@ -369,9 +370,10 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/ax_pthread.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/m4/libuv-extra-automake-flags.m4 \
 	$(top_srcdir)/m4/as_case.m4 \
 	$(top_srcdir)/m4/libuv-check-flags.m4 \
@@ -448,8 +450,8 @@ am__libuv_la_SOURCES_DIST = src/fs-poll.c src/heap-inl.h src/idna.c \
 	src/unix/random-getrandom.c src/unix/random-sysctl-linux.c \
 	src/unix/sysinfo-loadavg.c src/unix/cygwin.c \
 	src/unix/bsd-ifaddrs.c src/unix/posix-hrtime.c \
-	src/unix/sysinfo-memory.c src/unix/darwin.c \
-	src/unix/darwin-proctitle.c src/unix/fsevents.c \
+	src/unix/sysinfo-memory.c src/unix/darwin-proctitle.c \
+	src/unix/darwin-stub.h src/unix/darwin.c src/unix/fsevents.c \
 	src/unix/kqueue.c src/unix/proctitle.c \
 	src/unix/random-getentropy.c src/unix/bsd-proctitle.c \
 	src/unix/freebsd.c src/unix/haiku.c src/unix/linux-syscalls.h \
@@ -517,8 +519,8 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @CYGWIN_TRUE@	src/unix/libuv_la-sysinfo-loadavg.lo \
 @CYGWIN_TRUE@	src/unix/libuv_la-sysinfo-memory.lo
 @DARWIN_TRUE@am__objects_7 = src/unix/libuv_la-bsd-ifaddrs.lo \
-@DARWIN_TRUE@	src/unix/libuv_la-darwin.lo \
 @DARWIN_TRUE@	src/unix/libuv_la-darwin-proctitle.lo \
+@DARWIN_TRUE@	src/unix/libuv_la-darwin.lo \
 @DARWIN_TRUE@	src/unix/libuv_la-fsevents.lo \
 @DARWIN_TRUE@	src/unix/libuv_la-kqueue.lo \
 @DARWIN_TRUE@	src/unix/libuv_la-proctitle.lo \
@@ -1025,6 +1027,9 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PTHREAD_CC = @PTHREAD_CC@
+PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -1043,6 +1048,7 @@ am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
+ax_pthread_config = @ax_pthread_config@
 bindir = @bindir@
 build = @build@
 build_alias = @build_alias@
@@ -1452,9 +1458,9 @@ src/unix/libuv_la-posix-hrtime.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-sysinfo-memory.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
-src/unix/libuv_la-darwin.lo: src/unix/$(am__dirstamp) \
-	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-darwin-proctitle.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-darwin.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-fsevents.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
@@ -2603,19 +2609,19 @@ src/unix/libuv_la-sysinfo-memory.lo: src/unix/sysinfo-memory.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-sysinfo-memory.lo `test -f 'src/unix/sysinfo-memory.c' || echo '$(srcdir)/'`src/unix/sysinfo-memory.c
 
-src/unix/libuv_la-darwin.lo: src/unix/darwin.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-darwin.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-darwin.Tpo -c -o src/unix/libuv_la-darwin.lo `test -f 'src/unix/darwin.c' || echo '$(srcdir)/'`src/unix/darwin.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-darwin.Tpo src/unix/$(DEPDIR)/libuv_la-darwin.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/darwin.c' object='src/unix/libuv_la-darwin.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-darwin.lo `test -f 'src/unix/darwin.c' || echo '$(srcdir)/'`src/unix/darwin.c
-
 src/unix/libuv_la-darwin-proctitle.lo: src/unix/darwin-proctitle.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-darwin-proctitle.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-darwin-proctitle.Tpo -c -o src/unix/libuv_la-darwin-proctitle.lo `test -f 'src/unix/darwin-proctitle.c' || echo '$(srcdir)/'`src/unix/darwin-proctitle.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-darwin-proctitle.Tpo src/unix/$(DEPDIR)/libuv_la-darwin-proctitle.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/darwin-proctitle.c' object='src/unix/libuv_la-darwin-proctitle.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-darwin-proctitle.lo `test -f 'src/unix/darwin-proctitle.c' || echo '$(srcdir)/'`src/unix/darwin-proctitle.c
+
+src/unix/libuv_la-darwin.lo: src/unix/darwin.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-darwin.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-darwin.Tpo -c -o src/unix/libuv_la-darwin.lo `test -f 'src/unix/darwin.c' || echo '$(srcdir)/'`src/unix/darwin.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-darwin.Tpo src/unix/$(DEPDIR)/libuv_la-darwin.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/darwin.c' object='src/unix/libuv_la-darwin.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-darwin.lo `test -f 'src/unix/darwin.c' || echo '$(srcdir)/'`src/unix/darwin.c
 
 src/unix/libuv_la-fsevents.lo: src/unix/fsevents.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-fsevents.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-fsevents.Tpo -c -o src/unix/libuv_la-fsevents.lo `test -f 'src/unix/fsevents.c' || echo '$(srcdir)/'`src/unix/fsevents.c
