@@ -516,6 +516,10 @@ struct
     let fork =
       foreign "uv_loop_fork"
         (ptr t @-> returning error_code)
+
+    let library_shutdown =
+      foreign "uv_library_shutdown"
+        (void @-> returning void)
   end
 
   module Handle =

@@ -58,3 +58,6 @@ let backend_timeout loop =
 let fork loop =
   C.Functions.Loop.fork loop
   |> Error.to_result ()
+
+let library_shutdown =
+  C.Functions.Loop.library_shutdown

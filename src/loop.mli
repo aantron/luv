@@ -116,6 +116,14 @@ val fork : t -> (unit, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_fork}
     [uv_loop_fork]}. *)
 
+val library_shutdown : unit -> unit
+(** Releases any state libuv is holding on to.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_library_shutdown}
+    [uv_library_shutdown]}.
+
+    Note especially the warnings in the libuv documentation of this function. *)
+
 (**/**)
 
 (* Internal functions; do not use. *)
