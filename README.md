@@ -61,6 +61,9 @@ Luv takes care of the tricky parts of dealing with libuv from OCaml:
   the limitations of C, Luv provides more natural APIs.
 - **The build** &mdash; when Luv is installed, it builds libuv, so users don't
   have to figure out how to do it.
+- **Linking** &mdash; a specific release of libuv is statically linked into
+  your  program together with Luv, and there is no dependency on a system
+  installation of libuv.
 
 Basically, when wrapped in Luv, libuv looks like any normal OCaml library, with
 the kind of usage functional programmers expect.
