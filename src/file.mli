@@ -168,6 +168,14 @@ sig
     | `ISGID
     | `ISVTX
 
+    | `IFMT
+    | `IFSOCK
+    | `IFDIR
+    | `IFBLK
+    | `IFCHR
+    | `IFLNK
+    | `IFIFO
+
     | `NUMERIC of int
   ]
   (** The bits.
