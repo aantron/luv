@@ -125,6 +125,13 @@ struct
     | `ISGID
     | `ISVTX
 
+    | `IFMT
+    | `IFDIR
+    | `IFBLK
+    | `IFCHR
+    | `IFLNK
+    | `IFIFO
+
     | `NUMERIC of int
   ]
 
@@ -147,6 +154,13 @@ struct
     | `ISUID -> isuid
     | `ISGID -> isgid
     | `ISVTX -> isvtx
+
+    | `IFMT -> ifmt
+    | `IFDIR -> ifdir
+    | `IFBLK -> ifblk
+    | `IFCHR -> ifchr
+    | `IFLNK -> iflnk
+    | `IFIFO -> ififo
 
     | `NUMERIC i -> i
 
