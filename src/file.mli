@@ -169,7 +169,6 @@ sig
     | `ISVTX
 
     | `IFMT
-    | `IFSOCK
     | `IFDIR
     | `IFBLK
     | `IFCHR

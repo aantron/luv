@@ -403,7 +403,6 @@ struct
       let isvtx = constant "S_ISVTX" int
 
       let ifmt = constant "S_IFMT" int
-      let ifsock = constant "S_IFSOCK" int
       let ifdir = constant "S_IFDIR" int
       let ifblk = constant "S_IFBLK" int
       let ifchr = constant "S_IFCHR" int
