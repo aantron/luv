@@ -21,10 +21,10 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
         with:
           submodules: recursive
-      - uses: avsm/setup-ocaml@master
+      - uses: avsm/setup-ocaml@v1
         with:
           ocaml-version: ${{ matrix.ocaml }}
       - run: opam depext -y conf-pkg-config
@@ -42,7 +42,7 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
         with:
           submodules: recursive
       - run: npm install esy
