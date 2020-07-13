@@ -4,6 +4,8 @@ matrix:
   include:
     - os: osx
       env: COMPILER=4.11.1
+    - os: freebsd
+      env: COMPILER=4.11.1
     - os: linux
       env: COMPILER=4.11.1 REVDEPS=yes
     - os: linux
@@ -22,6 +24,7 @@ before_script:
     case "$TRAVIS_OS_NAME" in
       linux) OS=linux;;
         osx) OS=macos;;
+    freebsd) OS=openbsd;;
           *) echo Unsupported system $TRAVIS_OS_NAME; exit 1;;
     esac
   - FILENAME=opam-$VERSION-x86_64-$OS
@@ -51,14 +54,19 @@ before_script:
   - opam list
 
 script:
-  - make check-ejected-build
+  - |
+    case "$TRAVIS_OS_NAME" in
+      freebsd) MAKE=gmake;;
+      *) MAKE=make;;
+    esac
+  - ${MAKE} check-ejected-build
   - '[ ! -d _cache/_build ] || cp -r _cache/_build .'
-  - make
-  - make test
-  - '[ "$REVDEPS" != yes ] || make examples'
+  - ${MAKE}
+  - ${MAKE} test
+  - '[ "$REVDEPS" != yes ] || ${MAKE} examples'
   - mkdir -p _cache
   - '[ -d _cache/_build ] || cp -r _build _cache'
-  - '[ "$REVDEPS" != yes ] || make test-installation-ci'
+  - '[ "$REVDEPS" != yes ] || ${MAKE} test-installation-ci'
   - opam lint .
 
 before_cache:
