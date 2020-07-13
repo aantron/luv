@@ -231,19 +231,19 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @OS400_TRUE@                    src/unix/no-proctitle.c
 
 @ANDROID_TRUE@am__append_23 = include/uv/android-ifaddrs.h
-@ANDROID_TRUE@am__append_24 = src/unix/android-ifaddrs.c \
+@ANDROID_TRUE@am__append_24 = -D_GNU_SOURCE
+@ANDROID_TRUE@am__append_25 = src/unix/android-ifaddrs.c \
 @ANDROID_TRUE@                    src/unix/linux-core.c \
 @ANDROID_TRUE@                    src/unix/linux-inotify.c \
 @ANDROID_TRUE@                    src/unix/linux-syscalls.c \
 @ANDROID_TRUE@                    src/unix/procfs-exepath.c \
 @ANDROID_TRUE@                    src/unix/pthread-fixes.c \
 @ANDROID_TRUE@                    src/unix/random-getrandom.c \
-@ANDROID_TRUE@                    src/unix/random-sysctl-linux.c \
-@ANDROID_TRUE@                    src/unix/sysinfo-loadavg.c
+@ANDROID_TRUE@                    src/unix/random-sysctl-linux.c
 
-@CYGWIN_TRUE@am__append_25 = include/uv/posix.h
-@CYGWIN_TRUE@am__append_26 = -D_GNU_SOURCE
-@CYGWIN_TRUE@am__append_27 = src/unix/cygwin.c \
+@CYGWIN_TRUE@am__append_26 = include/uv/posix.h
+@CYGWIN_TRUE@am__append_27 = -D_GNU_SOURCE
+@CYGWIN_TRUE@am__append_28 = src/unix/cygwin.c \
 @CYGWIN_TRUE@                    src/unix/bsd-ifaddrs.c \
 @CYGWIN_TRUE@                    src/unix/no-fsevents.c \
 @CYGWIN_TRUE@                    src/unix/no-proctitle.c \
@@ -253,10 +253,10 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @CYGWIN_TRUE@                    src/unix/sysinfo-loadavg.c \
 @CYGWIN_TRUE@                    src/unix/sysinfo-memory.c
 
-@DARWIN_TRUE@am__append_28 = include/uv/darwin.h
-@DARWIN_TRUE@am__append_29 = -D_DARWIN_USE_64_BIT_INODE=1 \
+@DARWIN_TRUE@am__append_29 = include/uv/darwin.h
+@DARWIN_TRUE@am__append_30 = -D_DARWIN_USE_64_BIT_INODE=1 \
 @DARWIN_TRUE@	-D_DARWIN_UNLIMITED_SELECT=1
-@DARWIN_TRUE@am__append_30 = src/unix/bsd-ifaddrs.c \
+@DARWIN_TRUE@am__append_31 = src/unix/bsd-ifaddrs.c \
 @DARWIN_TRUE@                    src/unix/darwin-proctitle.c \
 @DARWIN_TRUE@                    src/unix/darwin-stub.h \
 @DARWIN_TRUE@                    src/unix/darwin.c \
@@ -265,53 +265,52 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @DARWIN_TRUE@                    src/unix/proctitle.c \
 @DARWIN_TRUE@                    src/unix/random-getentropy.c
 
-@DARWIN_TRUE@am__append_31 = -lutil
-@DRAGONFLY_TRUE@am__append_32 = include/uv/bsd.h
-@DRAGONFLY_TRUE@am__append_33 = src/unix/bsd-ifaddrs.c \
+@DARWIN_TRUE@am__append_32 = -lutil
+@DRAGONFLY_TRUE@am__append_33 = include/uv/bsd.h
+@DRAGONFLY_TRUE@am__append_34 = src/unix/bsd-ifaddrs.c \
 @DRAGONFLY_TRUE@                    src/unix/bsd-proctitle.c \
 @DRAGONFLY_TRUE@                    src/unix/freebsd.c \
 @DRAGONFLY_TRUE@                    src/unix/kqueue.c \
 @DRAGONFLY_TRUE@                    src/unix/posix-hrtime.c
 
-@DRAGONFLY_TRUE@am__append_34 = -lutil
-@FREEBSD_TRUE@am__append_35 = include/uv/bsd.h
-@FREEBSD_TRUE@am__append_36 = src/unix/bsd-ifaddrs.c \
+@DRAGONFLY_TRUE@am__append_35 = -lutil
+@FREEBSD_TRUE@am__append_36 = include/uv/bsd.h
+@FREEBSD_TRUE@am__append_37 = src/unix/bsd-ifaddrs.c \
 @FREEBSD_TRUE@                    src/unix/bsd-proctitle.c \
 @FREEBSD_TRUE@                    src/unix/freebsd.c \
 @FREEBSD_TRUE@                    src/unix/kqueue.c \
 @FREEBSD_TRUE@                    src/unix/posix-hrtime.c \
 @FREEBSD_TRUE@                    src/unix/random-getrandom.c
 
-@FREEBSD_TRUE@am__append_37 = -lutil
-@HAIKU_TRUE@am__append_38 = include/uv/posix.h
-@HAIKU_TRUE@am__append_39 = -D_BSD_SOURCE
-@HAIKU_TRUE@am__append_40 = src/unix/bsd-ifaddrs.c \
+@FREEBSD_TRUE@am__append_38 = -lutil
+@HAIKU_TRUE@am__append_39 = include/uv/posix.h
+@HAIKU_TRUE@am__append_40 = -D_BSD_SOURCE
+@HAIKU_TRUE@am__append_41 = src/unix/bsd-ifaddrs.c \
 @HAIKU_TRUE@                    src/unix/haiku.c \
 @HAIKU_TRUE@                    src/unix/no-fsevents.c \
 @HAIKU_TRUE@                    src/unix/no-proctitle.c \
 @HAIKU_TRUE@                    src/unix/posix-hrtime.c \
 @HAIKU_TRUE@                    src/unix/posix-poll.c
 
-@HURD_TRUE@am__append_41 = include/uv/posix.h
-@HURD_TRUE@am__append_42 = src/unix/no-fsevents.c \
+@HURD_TRUE@am__append_42 = include/uv/posix.h
+@HURD_TRUE@am__append_43 = src/unix/no-fsevents.c \
 @HURD_TRUE@                    src/unix/posix-hrtime.c \
 @HURD_TRUE@                    src/unix/posix-poll.c
 
-@LINUX_TRUE@am__append_43 = include/uv/linux.h
-@LINUX_TRUE@am__append_44 = -D_GNU_SOURCE
-@LINUX_TRUE@am__append_45 = src/unix/linux-core.c \
+@LINUX_TRUE@am__append_44 = include/uv/linux.h
+@LINUX_TRUE@am__append_45 = -D_GNU_SOURCE
+@LINUX_TRUE@am__append_46 = src/unix/linux-core.c \
 @LINUX_TRUE@                    src/unix/linux-inotify.c \
 @LINUX_TRUE@                    src/unix/linux-syscalls.c \
 @LINUX_TRUE@                    src/unix/linux-syscalls.h \
 @LINUX_TRUE@                    src/unix/procfs-exepath.c \
 @LINUX_TRUE@                    src/unix/proctitle.c \
 @LINUX_TRUE@                    src/unix/random-getrandom.c \
-@LINUX_TRUE@                    src/unix/random-sysctl-linux.c \
-@LINUX_TRUE@                    src/unix/sysinfo-loadavg.c
+@LINUX_TRUE@                    src/unix/random-sysctl-linux.c
 
-@LINUX_TRUE@am__append_46 = -lutil
-@MSYS_TRUE@am__append_47 = -D_GNU_SOURCE
-@MSYS_TRUE@am__append_48 = src/unix/cygwin.c \
+@LINUX_TRUE@am__append_47 = -lutil
+@MSYS_TRUE@am__append_48 = -D_GNU_SOURCE
+@MSYS_TRUE@am__append_49 = src/unix/cygwin.c \
 @MSYS_TRUE@                    src/unix/bsd-ifaddrs.c \
 @MSYS_TRUE@                    src/unix/no-fsevents.c \
 @MSYS_TRUE@                    src/unix/no-proctitle.c \
@@ -321,32 +320,32 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @MSYS_TRUE@                    src/unix/sysinfo-loadavg.c \
 @MSYS_TRUE@                    src/unix/sysinfo-memory.c
 
-@NETBSD_TRUE@am__append_49 = include/uv/bsd.h
-@NETBSD_TRUE@am__append_50 = src/unix/bsd-ifaddrs.c \
+@NETBSD_TRUE@am__append_50 = include/uv/bsd.h
+@NETBSD_TRUE@am__append_51 = src/unix/bsd-ifaddrs.c \
 @NETBSD_TRUE@                    src/unix/bsd-proctitle.c \
 @NETBSD_TRUE@                    src/unix/kqueue.c \
 @NETBSD_TRUE@                    src/unix/netbsd.c \
 @NETBSD_TRUE@                    src/unix/posix-hrtime.c
 
-@NETBSD_TRUE@am__append_51 = -lutil
-@OPENBSD_TRUE@am__append_52 = include/uv/bsd.h
-@OPENBSD_TRUE@am__append_53 = src/unix/bsd-ifaddrs.c \
+@NETBSD_TRUE@am__append_52 = -lutil
+@OPENBSD_TRUE@am__append_53 = include/uv/bsd.h
+@OPENBSD_TRUE@am__append_54 = src/unix/bsd-ifaddrs.c \
 @OPENBSD_TRUE@                    src/unix/bsd-proctitle.c \
 @OPENBSD_TRUE@                    src/unix/kqueue.c \
 @OPENBSD_TRUE@                    src/unix/openbsd.c \
 @OPENBSD_TRUE@                    src/unix/posix-hrtime.c \
 @OPENBSD_TRUE@                    src/unix/random-getentropy.c
 
-@OPENBSD_TRUE@am__append_54 = -lutil
-@SUNOS_TRUE@am__append_55 = include/uv/sunos.h
-@SUNOS_TRUE@am__append_56 = -D__EXTENSIONS__ \
+@OPENBSD_TRUE@am__append_55 = -lutil
+@SUNOS_TRUE@am__append_56 = include/uv/sunos.h
+@SUNOS_TRUE@am__append_57 = -D__EXTENSIONS__ \
 @SUNOS_TRUE@                   -D_XOPEN_SOURCE=500 \
 @SUNOS_TRUE@                   -D_REENTRANT
 
-@SUNOS_TRUE@am__append_57 = src/unix/no-proctitle.c \
+@SUNOS_TRUE@am__append_58 = src/unix/no-proctitle.c \
 @SUNOS_TRUE@                    src/unix/sunos.c
 
-@OS390_TRUE@am__append_58 = -D_UNIX03_THREADS \
+@OS390_TRUE@am__append_59 = -D_UNIX03_THREADS \
 @OS390_TRUE@                   -D_UNIX03_SOURCE \
 @OS390_TRUE@                   -D_OPEN_SYS_IF_EXT=1 \
 @OS390_TRUE@                   -D_OPEN_MSGQ_EXT \
@@ -362,8 +361,8 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @OS390_TRUE@                   -qXPLINK \
 @OS390_TRUE@                   -qFLOAT=IEEE
 
-@OS390_TRUE@am__append_59 = -qXPLINK
-@OS390_TRUE@am__append_60 = src/unix/pthread-fixes.c \
+@OS390_TRUE@am__append_60 = -qXPLINK
+@OS390_TRUE@am__append_61 = src/unix/pthread-fixes.c \
 @OS390_TRUE@                    src/unix/os390.c \
 @OS390_TRUE@                    src/unix/os390-syscalls.c \
 @OS390_TRUE@                    src/unix/proctitle.c
@@ -448,8 +447,8 @@ am__libuv_la_SOURCES_DIST = src/fs-poll.c src/heap-inl.h src/idna.c \
 	src/unix/linux-inotify.c src/unix/linux-syscalls.c \
 	src/unix/procfs-exepath.c src/unix/pthread-fixes.c \
 	src/unix/random-getrandom.c src/unix/random-sysctl-linux.c \
-	src/unix/sysinfo-loadavg.c src/unix/cygwin.c \
-	src/unix/bsd-ifaddrs.c src/unix/posix-hrtime.c \
+	src/unix/cygwin.c src/unix/bsd-ifaddrs.c \
+	src/unix/posix-hrtime.c src/unix/sysinfo-loadavg.c \
 	src/unix/sysinfo-memory.c src/unix/darwin-proctitle.c \
 	src/unix/darwin-stub.h src/unix/darwin.c src/unix/fsevents.c \
 	src/unix/kqueue.c src/unix/proctitle.c \
@@ -507,8 +506,7 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @ANDROID_TRUE@	src/unix/libuv_la-procfs-exepath.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-pthread-fixes.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-random-getrandom.lo \
-@ANDROID_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo \
-@ANDROID_TRUE@	src/unix/libuv_la-sysinfo-loadavg.lo
+@ANDROID_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo
 @CYGWIN_TRUE@am__objects_6 = src/unix/libuv_la-cygwin.lo \
 @CYGWIN_TRUE@	src/unix/libuv_la-bsd-ifaddrs.lo \
 @CYGWIN_TRUE@	src/unix/libuv_la-no-fsevents.lo \
@@ -551,8 +549,7 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @LINUX_TRUE@	src/unix/libuv_la-procfs-exepath.lo \
 @LINUX_TRUE@	src/unix/libuv_la-proctitle.lo \
 @LINUX_TRUE@	src/unix/libuv_la-random-getrandom.lo \
-@LINUX_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo \
-@LINUX_TRUE@	src/unix/libuv_la-sysinfo-loadavg.lo
+@LINUX_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo
 @MSYS_TRUE@am__objects_13 = src/unix/libuv_la-cygwin.lo \
 @MSYS_TRUE@	src/unix/libuv_la-bsd-ifaddrs.lo \
 @MSYS_TRUE@	src/unix/libuv_la-no-fsevents.lo \
@@ -681,6 +678,7 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-udp-multicast-ttl.c test/test-udp-open.c \
 	test/test-udp-options.c test/test-udp-send-and-recv.c \
 	test/test-udp-send-hang-loop.c test/test-udp-send-immediate.c \
+	test/test-udp-sendmmsg-error.c \
 	test/test-udp-send-unreachable.c test/test-udp-try-send.c \
 	test/test-uname.c test/test-walk-handles.c \
 	test/test-watcher-cross-stop.c test/runner-win.c \
@@ -842,6 +840,7 @@ am_test_run_tests_OBJECTS =  \
 	test/test_run_tests-test-udp-send-and-recv.$(OBJEXT) \
 	test/test_run_tests-test-udp-send-hang-loop.$(OBJEXT) \
 	test/test_run_tests-test-udp-send-immediate.$(OBJEXT) \
+	test/test_run_tests-test-udp-sendmmsg-error.$(OBJEXT) \
 	test/test_run_tests-test-udp-send-unreachable.$(OBJEXT) \
 	test/test_run_tests-test-udp-try-send.$(OBJEXT) \
 	test/test_run_tests-test-uname.$(OBJEXT) \
@@ -1098,27 +1097,27 @@ uvincludedir = $(includedir)/uv
 uvinclude_HEADERS = include/uv/errno.h include/uv/threadpool.h \
 	include/uv/version.h $(am__append_2) $(am__append_5) \
 	$(am__append_18) $(am__append_21) $(am__append_23) \
-	$(am__append_25) $(am__append_28) $(am__append_32) \
-	$(am__append_35) $(am__append_38) $(am__append_41) \
-	$(am__append_43) $(am__append_49) $(am__append_52) \
-	$(am__append_55)
+	$(am__append_26) $(am__append_29) $(am__append_33) \
+	$(am__append_36) $(am__append_39) $(am__append_42) \
+	$(am__append_44) $(am__append_50) $(am__append_53) \
+	$(am__append_56)
 CLEANFILES = 
 lib_LTLIBRARIES = libuv.la
 libuv_la_CFLAGS = @CFLAGS@ $(am__append_1) $(am__append_17) \
-	$(am__append_20) $(am__append_26) $(am__append_29) \
-	$(am__append_39) $(am__append_44) $(am__append_47) \
-	$(am__append_56) $(am__append_58)
-libuv_la_LDFLAGS = -no-undefined -version-info 1:0:0 $(am__append_59)
+	$(am__append_20) $(am__append_24) $(am__append_27) \
+	$(am__append_30) $(am__append_40) $(am__append_45) \
+	$(am__append_48) $(am__append_57) $(am__append_59)
+libuv_la_LDFLAGS = -no-undefined -version-info 1:0:0 $(am__append_60)
 libuv_la_SOURCES = src/fs-poll.c src/heap-inl.h src/idna.c src/idna.h \
 	src/inet.c src/queue.h src/random.c src/strscpy.c \
 	src/strscpy.h src/threadpool.c src/timer.c \
 	src/uv-data-getter-setters.c src/uv-common.c src/uv-common.h \
 	src/version.c $(am__append_4) $(am__append_7) $(am__append_19) \
-	$(am__append_22) $(am__append_24) $(am__append_27) \
-	$(am__append_30) $(am__append_33) $(am__append_36) \
-	$(am__append_40) $(am__append_42) $(am__append_45) \
-	$(am__append_48) $(am__append_50) $(am__append_53) \
-	$(am__append_57) $(am__append_60)
+	$(am__append_22) $(am__append_25) $(am__append_28) \
+	$(am__append_31) $(am__append_34) $(am__append_37) \
+	$(am__append_41) $(am__append_43) $(am__append_46) \
+	$(am__append_49) $(am__append_51) $(am__append_54) \
+	$(am__append_58) $(am__append_61)
 EXTRA_DIST = test/fixtures/empty_file \
              test/fixtures/load_error.node \
              test/fixtures/lorem_ipsum.txt \
@@ -1132,9 +1131,9 @@ EXTRA_DIST = test/fixtures/empty_file \
 test_run_tests_CFLAGS = $(am__append_8) $(am__append_11) \
 	$(am__append_12) $(am__append_13) $(am__append_14) \
 	$(am__append_15) $(am__append_16)
-test_run_tests_LDFLAGS = $(am__append_31) $(am__append_34) \
-	$(am__append_37) $(am__append_46) $(am__append_51) \
-	$(am__append_54)
+test_run_tests_LDFLAGS = $(am__append_32) $(am__append_35) \
+	$(am__append_38) $(am__append_47) $(am__append_52) \
+	$(am__append_55)
 test_run_tests_SOURCES = test/blackhole-server.c test/dns-server.c \
 	test/echo-server.c test/run-tests.c test/runner.c \
 	test/runner.h test/task.h test/test-active.c test/test-async.c \
@@ -1217,6 +1216,7 @@ test_run_tests_SOURCES = test/blackhole-server.c test/dns-server.c \
 	test/test-udp-multicast-ttl.c test/test-udp-open.c \
 	test/test-udp-options.c test/test-udp-send-and-recv.c \
 	test/test-udp-send-hang-loop.c test/test-udp-send-immediate.c \
+	test/test-udp-sendmmsg-error.c \
 	test/test-udp-send-unreachable.c test/test-udp-try-send.c \
 	test/test-uname.c test/test-walk-handles.c \
 	test/test-watcher-cross-stop.c $(am__append_9) \
@@ -1448,13 +1448,13 @@ src/unix/libuv_la-random-getrandom.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-random-sysctl-linux.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
-src/unix/libuv_la-sysinfo-loadavg.lo: src/unix/$(am__dirstamp) \
-	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-cygwin.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-bsd-ifaddrs.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-posix-hrtime.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-sysinfo-loadavg.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-sysinfo-memory.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
@@ -1810,6 +1810,8 @@ test/test_run_tests-test-udp-send-hang-loop.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-udp-send-immediate.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/test_run_tests-test-udp-sendmmsg-error.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-udp-send-unreachable.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-udp-try-send.$(OBJEXT): test/$(am__dirstamp) \
@@ -2083,6 +2085,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-send-hang-loop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-send-immediate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-send-unreachable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-sendmmsg-error.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-try-send.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-uname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-walk-handles.Po@am__quote@
@@ -2574,13 +2577,6 @@ src/unix/libuv_la-random-sysctl-linux.lo: src/unix/random-sysctl-linux.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-random-sysctl-linux.lo `test -f 'src/unix/random-sysctl-linux.c' || echo '$(srcdir)/'`src/unix/random-sysctl-linux.c
 
-src/unix/libuv_la-sysinfo-loadavg.lo: src/unix/sysinfo-loadavg.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-sysinfo-loadavg.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-sysinfo-loadavg.Tpo -c -o src/unix/libuv_la-sysinfo-loadavg.lo `test -f 'src/unix/sysinfo-loadavg.c' || echo '$(srcdir)/'`src/unix/sysinfo-loadavg.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-sysinfo-loadavg.Tpo src/unix/$(DEPDIR)/libuv_la-sysinfo-loadavg.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/sysinfo-loadavg.c' object='src/unix/libuv_la-sysinfo-loadavg.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-sysinfo-loadavg.lo `test -f 'src/unix/sysinfo-loadavg.c' || echo '$(srcdir)/'`src/unix/sysinfo-loadavg.c
-
 src/unix/libuv_la-cygwin.lo: src/unix/cygwin.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-cygwin.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-cygwin.Tpo -c -o src/unix/libuv_la-cygwin.lo `test -f 'src/unix/cygwin.c' || echo '$(srcdir)/'`src/unix/cygwin.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-cygwin.Tpo src/unix/$(DEPDIR)/libuv_la-cygwin.Plo
@@ -2601,6 +2597,13 @@ src/unix/libuv_la-posix-hrtime.lo: src/unix/posix-hrtime.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/posix-hrtime.c' object='src/unix/libuv_la-posix-hrtime.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-posix-hrtime.lo `test -f 'src/unix/posix-hrtime.c' || echo '$(srcdir)/'`src/unix/posix-hrtime.c
+
+src/unix/libuv_la-sysinfo-loadavg.lo: src/unix/sysinfo-loadavg.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-sysinfo-loadavg.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-sysinfo-loadavg.Tpo -c -o src/unix/libuv_la-sysinfo-loadavg.lo `test -f 'src/unix/sysinfo-loadavg.c' || echo '$(srcdir)/'`src/unix/sysinfo-loadavg.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-sysinfo-loadavg.Tpo src/unix/$(DEPDIR)/libuv_la-sysinfo-loadavg.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/sysinfo-loadavg.c' object='src/unix/libuv_la-sysinfo-loadavg.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-sysinfo-loadavg.lo `test -f 'src/unix/sysinfo-loadavg.c' || echo '$(srcdir)/'`src/unix/sysinfo-loadavg.c
 
 src/unix/libuv_la-sysinfo-memory.lo: src/unix/sysinfo-memory.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-sysinfo-memory.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-sysinfo-memory.Tpo -c -o src/unix/libuv_la-sysinfo-memory.lo `test -f 'src/unix/sysinfo-memory.c' || echo '$(srcdir)/'`src/unix/sysinfo-memory.c
@@ -4848,6 +4851,20 @@ test/test_run_tests-test-udp-send-immediate.obj: test/test-udp-send-immediate.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-udp-send-immediate.c' object='test/test_run_tests-test-udp-send-immediate.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-udp-send-immediate.obj `if test -f 'test/test-udp-send-immediate.c'; then $(CYGPATH_W) 'test/test-udp-send-immediate.c'; else $(CYGPATH_W) '$(srcdir)/test/test-udp-send-immediate.c'; fi`
+
+test/test_run_tests-test-udp-sendmmsg-error.o: test/test-udp-sendmmsg-error.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-udp-sendmmsg-error.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-udp-sendmmsg-error.Tpo -c -o test/test_run_tests-test-udp-sendmmsg-error.o `test -f 'test/test-udp-sendmmsg-error.c' || echo '$(srcdir)/'`test/test-udp-sendmmsg-error.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-udp-sendmmsg-error.Tpo test/$(DEPDIR)/test_run_tests-test-udp-sendmmsg-error.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-udp-sendmmsg-error.c' object='test/test_run_tests-test-udp-sendmmsg-error.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-udp-sendmmsg-error.o `test -f 'test/test-udp-sendmmsg-error.c' || echo '$(srcdir)/'`test/test-udp-sendmmsg-error.c
+
+test/test_run_tests-test-udp-sendmmsg-error.obj: test/test-udp-sendmmsg-error.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-udp-sendmmsg-error.obj -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-udp-sendmmsg-error.Tpo -c -o test/test_run_tests-test-udp-sendmmsg-error.obj `if test -f 'test/test-udp-sendmmsg-error.c'; then $(CYGPATH_W) 'test/test-udp-sendmmsg-error.c'; else $(CYGPATH_W) '$(srcdir)/test/test-udp-sendmmsg-error.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-udp-sendmmsg-error.Tpo test/$(DEPDIR)/test_run_tests-test-udp-sendmmsg-error.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-udp-sendmmsg-error.c' object='test/test_run_tests-test-udp-sendmmsg-error.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-udp-sendmmsg-error.obj `if test -f 'test/test-udp-sendmmsg-error.c'; then $(CYGPATH_W) 'test/test-udp-sendmmsg-error.c'; else $(CYGPATH_W) '$(srcdir)/test/test-udp-sendmmsg-error.c'; fi`
 
 test/test_run_tests-test-udp-send-unreachable.o: test/test-udp-send-unreachable.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-udp-send-unreachable.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-udp-send-unreachable.Tpo -c -o test/test_run_tests-test-udp-send-unreachable.o `test -f 'test/test-udp-send-unreachable.c' || echo '$(srcdir)/'`test/test-udp-send-unreachable.c
