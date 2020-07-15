@@ -126,6 +126,7 @@ struct
     | `ISVTX
 
     | `IFMT
+    | `IFREG
     | `IFDIR
     | `IFBLK
     | `IFCHR
@@ -156,6 +157,7 @@ struct
     | `ISVTX -> isvtx
 
     | `IFMT -> ifmt
+    | `IFREG -> ifreg
     | `IFDIR -> ifdir
     | `IFBLK -> ifblk
     | `IFCHR -> ifchr
