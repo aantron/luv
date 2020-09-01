@@ -227,8 +227,7 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @OS400_TRUE@am__append_22 = src/unix/aix-common.c \
 @OS400_TRUE@                    src/unix/ibmi.c \
 @OS400_TRUE@                    src/unix/posix-poll.c \
-@OS400_TRUE@                    src/unix/no-fsevents.c \
-@OS400_TRUE@                    src/unix/no-proctitle.c
+@OS400_TRUE@                    src/unix/no-fsevents.c
 
 @ANDROID_TRUE@am__append_23 = include/uv/android-ifaddrs.h
 @ANDROID_TRUE@am__append_24 = -D_GNU_SOURCE
@@ -442,12 +441,12 @@ am__libuv_la_SOURCES_DIST = src/fs-poll.c src/heap-inl.h src/idna.c \
 	src/unix/spinlock.h src/unix/stream.c src/unix/tcp.c \
 	src/unix/thread.c src/unix/tty.c src/unix/udp.c src/unix/aix.c \
 	src/unix/aix-common.c src/unix/ibmi.c src/unix/posix-poll.c \
-	src/unix/no-fsevents.c src/unix/no-proctitle.c \
-	src/unix/android-ifaddrs.c src/unix/linux-core.c \
-	src/unix/linux-inotify.c src/unix/linux-syscalls.c \
-	src/unix/procfs-exepath.c src/unix/pthread-fixes.c \
-	src/unix/random-getrandom.c src/unix/random-sysctl-linux.c \
-	src/unix/cygwin.c src/unix/bsd-ifaddrs.c \
+	src/unix/no-fsevents.c src/unix/android-ifaddrs.c \
+	src/unix/linux-core.c src/unix/linux-inotify.c \
+	src/unix/linux-syscalls.c src/unix/procfs-exepath.c \
+	src/unix/pthread-fixes.c src/unix/random-getrandom.c \
+	src/unix/random-sysctl-linux.c src/unix/cygwin.c \
+	src/unix/bsd-ifaddrs.c src/unix/no-proctitle.c \
 	src/unix/posix-hrtime.c src/unix/sysinfo-loadavg.c \
 	src/unix/sysinfo-memory.c src/unix/darwin-proctitle.c \
 	src/unix/darwin-stub.h src/unix/darwin.c src/unix/fsevents.c \
@@ -497,8 +496,7 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @OS400_TRUE@am__objects_4 = src/unix/libuv_la-aix-common.lo \
 @OS400_TRUE@	src/unix/libuv_la-ibmi.lo \
 @OS400_TRUE@	src/unix/libuv_la-posix-poll.lo \
-@OS400_TRUE@	src/unix/libuv_la-no-fsevents.lo \
-@OS400_TRUE@	src/unix/libuv_la-no-proctitle.lo
+@OS400_TRUE@	src/unix/libuv_la-no-fsevents.lo
 @ANDROID_TRUE@am__objects_5 = src/unix/libuv_la-android-ifaddrs.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-linux-core.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-linux-inotify.lo \
@@ -624,10 +622,10 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-loop-handles.c test/test-loop-alive.c \
 	test/test-loop-close.c test/test-loop-stop.c \
 	test/test-loop-time.c test/test-loop-configure.c \
-	test/test-multiple-listen.c test/test-mutexes.c \
-	test/test-osx-select.c test/test-pass-always.c \
-	test/test-ping-pong.c test/test-pipe-bind-error.c \
-	test/test-pipe-connect-error.c \
+	test/test-metrics.c test/test-multiple-listen.c \
+	test/test-mutexes.c test/test-osx-select.c \
+	test/test-pass-always.c test/test-ping-pong.c \
+	test/test-pipe-bind-error.c test/test-pipe-connect-error.c \
 	test/test-pipe-connect-multiple.c \
 	test/test-pipe-connect-prepare.c test/test-pipe-getsockname.c \
 	test/test-pipe-pending-instances.c test/test-pipe-sendmsg.c \
@@ -657,22 +655,24 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-tcp-connect-error.c test/test-tcp-connect-timeout.c \
 	test/test-tcp-connect6-error.c test/test-tcp-flags.c \
 	test/test-tcp-open.c test/test-tcp-read-stop.c \
+	test/test-tcp-read-stop-start.c \
 	test/test-tcp-shutdown-after-write.c \
 	test/test-tcp-unexpected-read.c test/test-tcp-oob.c \
 	test/test-tcp-write-to-half-open-connection.c \
 	test/test-tcp-write-after-connect.c test/test-tcp-writealot.c \
 	test/test-tcp-write-fail.c test/test-tcp-try-write.c \
 	test/test-tcp-try-write-error.c \
-	test/test-tcp-write-queue-order.c test/test-thread-equal.c \
-	test/test-thread.c test/test-threadpool-cancel.c \
-	test/test-threadpool.c test/test-timer-again.c \
-	test/test-timer-from-check.c test/test-timer.c \
-	test/test-tmpdir.c test/test-tty-duplicate-key.c \
+	test/test-tcp-write-queue-order.c test/test-test-macros.c \
+	test/test-thread-equal.c test/test-thread.c \
+	test/test-threadpool-cancel.c test/test-threadpool.c \
+	test/test-timer-again.c test/test-timer-from-check.c \
+	test/test-timer.c test/test-tmpdir.c \
+	test/test-tty-duplicate-key.c \
 	test/test-tty-escape-sequence-processing.c test/test-tty.c \
 	test/test-udp-alloc-cb-fail.c test/test-udp-bind.c \
 	test/test-udp-connect.c test/test-udp-create-socket-early.c \
 	test/test-udp-dgram-too-big.c test/test-udp-ipv6.c \
-	test/test-udp-multicast-interface.c \
+	test/test-udp-mmsg.c test/test-udp-multicast-interface.c \
 	test/test-udp-multicast-interface6.c \
 	test/test-udp-multicast-join.c test/test-udp-multicast-join6.c \
 	test/test-udp-multicast-ttl.c test/test-udp-open.c \
@@ -747,6 +747,7 @@ am_test_run_tests_OBJECTS =  \
 	test/test_run_tests-test-loop-stop.$(OBJEXT) \
 	test/test_run_tests-test-loop-time.$(OBJEXT) \
 	test/test_run_tests-test-loop-configure.$(OBJEXT) \
+	test/test_run_tests-test-metrics.$(OBJEXT) \
 	test/test_run_tests-test-multiple-listen.$(OBJEXT) \
 	test/test_run_tests-test-mutexes.$(OBJEXT) \
 	test/test_run_tests-test-osx-select.$(OBJEXT) \
@@ -803,6 +804,7 @@ am_test_run_tests_OBJECTS =  \
 	test/test_run_tests-test-tcp-flags.$(OBJEXT) \
 	test/test_run_tests-test-tcp-open.$(OBJEXT) \
 	test/test_run_tests-test-tcp-read-stop.$(OBJEXT) \
+	test/test_run_tests-test-tcp-read-stop-start.$(OBJEXT) \
 	test/test_run_tests-test-tcp-shutdown-after-write.$(OBJEXT) \
 	test/test_run_tests-test-tcp-unexpected-read.$(OBJEXT) \
 	test/test_run_tests-test-tcp-oob.$(OBJEXT) \
@@ -813,6 +815,7 @@ am_test_run_tests_OBJECTS =  \
 	test/test_run_tests-test-tcp-try-write.$(OBJEXT) \
 	test/test_run_tests-test-tcp-try-write-error.$(OBJEXT) \
 	test/test_run_tests-test-tcp-write-queue-order.$(OBJEXT) \
+	test/test_run_tests-test-test-macros.$(OBJEXT) \
 	test/test_run_tests-test-thread-equal.$(OBJEXT) \
 	test/test_run_tests-test-thread.$(OBJEXT) \
 	test/test_run_tests-test-threadpool-cancel.$(OBJEXT) \
@@ -830,6 +833,7 @@ am_test_run_tests_OBJECTS =  \
 	test/test_run_tests-test-udp-create-socket-early.$(OBJEXT) \
 	test/test_run_tests-test-udp-dgram-too-big.$(OBJEXT) \
 	test/test_run_tests-test-udp-ipv6.$(OBJEXT) \
+	test/test_run_tests-test-udp-mmsg.$(OBJEXT) \
 	test/test_run_tests-test-udp-multicast-interface.$(OBJEXT) \
 	test/test_run_tests-test-udp-multicast-interface6.$(OBJEXT) \
 	test/test_run_tests-test-udp-multicast-join.$(OBJEXT) \
@@ -1162,10 +1166,10 @@ test_run_tests_SOURCES = test/blackhole-server.c test/dns-server.c \
 	test/test-loop-handles.c test/test-loop-alive.c \
 	test/test-loop-close.c test/test-loop-stop.c \
 	test/test-loop-time.c test/test-loop-configure.c \
-	test/test-multiple-listen.c test/test-mutexes.c \
-	test/test-osx-select.c test/test-pass-always.c \
-	test/test-ping-pong.c test/test-pipe-bind-error.c \
-	test/test-pipe-connect-error.c \
+	test/test-metrics.c test/test-multiple-listen.c \
+	test/test-mutexes.c test/test-osx-select.c \
+	test/test-pass-always.c test/test-ping-pong.c \
+	test/test-pipe-bind-error.c test/test-pipe-connect-error.c \
 	test/test-pipe-connect-multiple.c \
 	test/test-pipe-connect-prepare.c test/test-pipe-getsockname.c \
 	test/test-pipe-pending-instances.c test/test-pipe-sendmsg.c \
@@ -1195,22 +1199,24 @@ test_run_tests_SOURCES = test/blackhole-server.c test/dns-server.c \
 	test/test-tcp-connect-error.c test/test-tcp-connect-timeout.c \
 	test/test-tcp-connect6-error.c test/test-tcp-flags.c \
 	test/test-tcp-open.c test/test-tcp-read-stop.c \
+	test/test-tcp-read-stop-start.c \
 	test/test-tcp-shutdown-after-write.c \
 	test/test-tcp-unexpected-read.c test/test-tcp-oob.c \
 	test/test-tcp-write-to-half-open-connection.c \
 	test/test-tcp-write-after-connect.c test/test-tcp-writealot.c \
 	test/test-tcp-write-fail.c test/test-tcp-try-write.c \
 	test/test-tcp-try-write-error.c \
-	test/test-tcp-write-queue-order.c test/test-thread-equal.c \
-	test/test-thread.c test/test-threadpool-cancel.c \
-	test/test-threadpool.c test/test-timer-again.c \
-	test/test-timer-from-check.c test/test-timer.c \
-	test/test-tmpdir.c test/test-tty-duplicate-key.c \
+	test/test-tcp-write-queue-order.c test/test-test-macros.c \
+	test/test-thread-equal.c test/test-thread.c \
+	test/test-threadpool-cancel.c test/test-threadpool.c \
+	test/test-timer-again.c test/test-timer-from-check.c \
+	test/test-timer.c test/test-tmpdir.c \
+	test/test-tty-duplicate-key.c \
 	test/test-tty-escape-sequence-processing.c test/test-tty.c \
 	test/test-udp-alloc-cb-fail.c test/test-udp-bind.c \
 	test/test-udp-connect.c test/test-udp-create-socket-early.c \
 	test/test-udp-dgram-too-big.c test/test-udp-ipv6.c \
-	test/test-udp-multicast-interface.c \
+	test/test-udp-mmsg.c test/test-udp-multicast-interface.c \
 	test/test-udp-multicast-interface6.c \
 	test/test-udp-multicast-join.c test/test-udp-multicast-join6.c \
 	test/test-udp-multicast-ttl.c test/test-udp-open.c \
@@ -1430,8 +1436,6 @@ src/unix/libuv_la-posix-poll.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-no-fsevents.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
-src/unix/libuv_la-no-proctitle.lo: src/unix/$(am__dirstamp) \
-	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-android-ifaddrs.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-linux-core.lo: src/unix/$(am__dirstamp) \
@@ -1451,6 +1455,8 @@ src/unix/libuv_la-random-sysctl-linux.lo: src/unix/$(am__dirstamp) \
 src/unix/libuv_la-cygwin.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-bsd-ifaddrs.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-no-proctitle.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-posix-hrtime.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
@@ -1624,6 +1630,8 @@ test/test_run_tests-test-loop-time.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-loop-configure.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/test_run_tests-test-metrics.$(OBJEXT): test/$(am__dirstamp) \
+	test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-multiple-listen.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-mutexes.$(OBJEXT): test/$(am__dirstamp) \
@@ -1736,6 +1744,8 @@ test/test_run_tests-test-tcp-open.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-tcp-read-stop.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/test_run_tests-test-tcp-read-stop-start.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-tcp-shutdown-after-write.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-tcp-unexpected-read.$(OBJEXT):  \
@@ -1756,6 +1766,8 @@ test/test_run_tests-test-tcp-try-write-error.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-tcp-write-queue-order.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/test_run_tests-test-test-macros.$(OBJEXT): test/$(am__dirstamp) \
+	test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-thread-equal.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-thread.$(OBJEXT): test/$(am__dirstamp) \
@@ -1789,6 +1801,8 @@ test/test_run_tests-test-udp-create-socket-early.$(OBJEXT):  \
 test/test_run_tests-test-udp-dgram-too-big.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-udp-ipv6.$(OBJEXT): test/$(am__dirstamp) \
+	test/$(DEPDIR)/$(am__dirstamp)
+test/test_run_tests-test-udp-mmsg.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/test_run_tests-test-udp-multicast-interface.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
@@ -1991,6 +2005,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-loop-handles.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-loop-stop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-loop-time.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-metrics.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-multiple-listen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-mutexes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-osx-select.Po@am__quote@
@@ -2047,6 +2062,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-flags.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-oob.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-open.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-read-stop-start.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-read-stop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-shutdown-after-write.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-try-write-error.Po@am__quote@
@@ -2057,6 +2073,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-write-queue-order.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-write-to-half-open-connection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-tcp-writealot.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-test-macros.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-thread-equal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-thread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-threadpool-cancel.Po@am__quote@
@@ -2074,6 +2091,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-create-socket-early.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-dgram-too-big.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-ipv6.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-mmsg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-multicast-interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-multicast-interface6.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/test_run_tests-test-udp-multicast-join.Po@am__quote@
@@ -2514,13 +2532,6 @@ src/unix/libuv_la-no-fsevents.lo: src/unix/no-fsevents.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-no-fsevents.lo `test -f 'src/unix/no-fsevents.c' || echo '$(srcdir)/'`src/unix/no-fsevents.c
 
-src/unix/libuv_la-no-proctitle.lo: src/unix/no-proctitle.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-no-proctitle.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-no-proctitle.Tpo -c -o src/unix/libuv_la-no-proctitle.lo `test -f 'src/unix/no-proctitle.c' || echo '$(srcdir)/'`src/unix/no-proctitle.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-no-proctitle.Tpo src/unix/$(DEPDIR)/libuv_la-no-proctitle.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/no-proctitle.c' object='src/unix/libuv_la-no-proctitle.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-no-proctitle.lo `test -f 'src/unix/no-proctitle.c' || echo '$(srcdir)/'`src/unix/no-proctitle.c
-
 src/unix/libuv_la-android-ifaddrs.lo: src/unix/android-ifaddrs.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-android-ifaddrs.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Tpo -c -o src/unix/libuv_la-android-ifaddrs.lo `test -f 'src/unix/android-ifaddrs.c' || echo '$(srcdir)/'`src/unix/android-ifaddrs.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Tpo src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Plo
@@ -2590,6 +2601,13 @@ src/unix/libuv_la-bsd-ifaddrs.lo: src/unix/bsd-ifaddrs.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/bsd-ifaddrs.c' object='src/unix/libuv_la-bsd-ifaddrs.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-bsd-ifaddrs.lo `test -f 'src/unix/bsd-ifaddrs.c' || echo '$(srcdir)/'`src/unix/bsd-ifaddrs.c
+
+src/unix/libuv_la-no-proctitle.lo: src/unix/no-proctitle.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-no-proctitle.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-no-proctitle.Tpo -c -o src/unix/libuv_la-no-proctitle.lo `test -f 'src/unix/no-proctitle.c' || echo '$(srcdir)/'`src/unix/no-proctitle.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-no-proctitle.Tpo src/unix/$(DEPDIR)/libuv_la-no-proctitle.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/no-proctitle.c' object='src/unix/libuv_la-no-proctitle.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-no-proctitle.lo `test -f 'src/unix/no-proctitle.c' || echo '$(srcdir)/'`src/unix/no-proctitle.c
 
 src/unix/libuv_la-posix-hrtime.lo: src/unix/posix-hrtime.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-posix-hrtime.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-posix-hrtime.Tpo -c -o src/unix/libuv_la-posix-hrtime.lo `test -f 'src/unix/posix-hrtime.c' || echo '$(srcdir)/'`src/unix/posix-hrtime.c
@@ -3550,6 +3568,20 @@ test/test_run_tests-test-loop-configure.obj: test/test-loop-configure.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-loop-configure.obj `if test -f 'test/test-loop-configure.c'; then $(CYGPATH_W) 'test/test-loop-configure.c'; else $(CYGPATH_W) '$(srcdir)/test/test-loop-configure.c'; fi`
 
+test/test_run_tests-test-metrics.o: test/test-metrics.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-metrics.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-metrics.Tpo -c -o test/test_run_tests-test-metrics.o `test -f 'test/test-metrics.c' || echo '$(srcdir)/'`test/test-metrics.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-metrics.Tpo test/$(DEPDIR)/test_run_tests-test-metrics.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-metrics.c' object='test/test_run_tests-test-metrics.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-metrics.o `test -f 'test/test-metrics.c' || echo '$(srcdir)/'`test/test-metrics.c
+
+test/test_run_tests-test-metrics.obj: test/test-metrics.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-metrics.obj -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-metrics.Tpo -c -o test/test_run_tests-test-metrics.obj `if test -f 'test/test-metrics.c'; then $(CYGPATH_W) 'test/test-metrics.c'; else $(CYGPATH_W) '$(srcdir)/test/test-metrics.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-metrics.Tpo test/$(DEPDIR)/test_run_tests-test-metrics.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-metrics.c' object='test/test_run_tests-test-metrics.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-metrics.obj `if test -f 'test/test-metrics.c'; then $(CYGPATH_W) 'test/test-metrics.c'; else $(CYGPATH_W) '$(srcdir)/test/test-metrics.c'; fi`
+
 test/test_run_tests-test-multiple-listen.o: test/test-multiple-listen.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-multiple-listen.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-multiple-listen.Tpo -c -o test/test_run_tests-test-multiple-listen.o `test -f 'test/test-multiple-listen.c' || echo '$(srcdir)/'`test/test-multiple-listen.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-multiple-listen.Tpo test/$(DEPDIR)/test_run_tests-test-multiple-listen.Po
@@ -4334,6 +4366,20 @@ test/test_run_tests-test-tcp-read-stop.obj: test/test-tcp-read-stop.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-tcp-read-stop.obj `if test -f 'test/test-tcp-read-stop.c'; then $(CYGPATH_W) 'test/test-tcp-read-stop.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-read-stop.c'; fi`
 
+test/test_run_tests-test-tcp-read-stop-start.o: test/test-tcp-read-stop-start.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-tcp-read-stop-start.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-tcp-read-stop-start.Tpo -c -o test/test_run_tests-test-tcp-read-stop-start.o `test -f 'test/test-tcp-read-stop-start.c' || echo '$(srcdir)/'`test/test-tcp-read-stop-start.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-tcp-read-stop-start.Tpo test/$(DEPDIR)/test_run_tests-test-tcp-read-stop-start.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-read-stop-start.c' object='test/test_run_tests-test-tcp-read-stop-start.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-tcp-read-stop-start.o `test -f 'test/test-tcp-read-stop-start.c' || echo '$(srcdir)/'`test/test-tcp-read-stop-start.c
+
+test/test_run_tests-test-tcp-read-stop-start.obj: test/test-tcp-read-stop-start.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-tcp-read-stop-start.obj -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-tcp-read-stop-start.Tpo -c -o test/test_run_tests-test-tcp-read-stop-start.obj `if test -f 'test/test-tcp-read-stop-start.c'; then $(CYGPATH_W) 'test/test-tcp-read-stop-start.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-read-stop-start.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-tcp-read-stop-start.Tpo test/$(DEPDIR)/test_run_tests-test-tcp-read-stop-start.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-read-stop-start.c' object='test/test_run_tests-test-tcp-read-stop-start.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-tcp-read-stop-start.obj `if test -f 'test/test-tcp-read-stop-start.c'; then $(CYGPATH_W) 'test/test-tcp-read-stop-start.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-read-stop-start.c'; fi`
+
 test/test_run_tests-test-tcp-shutdown-after-write.o: test/test-tcp-shutdown-after-write.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-tcp-shutdown-after-write.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-tcp-shutdown-after-write.Tpo -c -o test/test_run_tests-test-tcp-shutdown-after-write.o `test -f 'test/test-tcp-shutdown-after-write.c' || echo '$(srcdir)/'`test/test-tcp-shutdown-after-write.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-tcp-shutdown-after-write.Tpo test/$(DEPDIR)/test_run_tests-test-tcp-shutdown-after-write.Po
@@ -4473,6 +4519,20 @@ test/test_run_tests-test-tcp-write-queue-order.obj: test/test-tcp-write-queue-or
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-write-queue-order.c' object='test/test_run_tests-test-tcp-write-queue-order.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-tcp-write-queue-order.obj `if test -f 'test/test-tcp-write-queue-order.c'; then $(CYGPATH_W) 'test/test-tcp-write-queue-order.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-write-queue-order.c'; fi`
+
+test/test_run_tests-test-test-macros.o: test/test-test-macros.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-test-macros.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-test-macros.Tpo -c -o test/test_run_tests-test-test-macros.o `test -f 'test/test-test-macros.c' || echo '$(srcdir)/'`test/test-test-macros.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-test-macros.Tpo test/$(DEPDIR)/test_run_tests-test-test-macros.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-test-macros.c' object='test/test_run_tests-test-test-macros.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-test-macros.o `test -f 'test/test-test-macros.c' || echo '$(srcdir)/'`test/test-test-macros.c
+
+test/test_run_tests-test-test-macros.obj: test/test-test-macros.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-test-macros.obj -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-test-macros.Tpo -c -o test/test_run_tests-test-test-macros.obj `if test -f 'test/test-test-macros.c'; then $(CYGPATH_W) 'test/test-test-macros.c'; else $(CYGPATH_W) '$(srcdir)/test/test-test-macros.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-test-macros.Tpo test/$(DEPDIR)/test_run_tests-test-test-macros.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-test-macros.c' object='test/test_run_tests-test-test-macros.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-test-macros.obj `if test -f 'test/test-test-macros.c'; then $(CYGPATH_W) 'test/test-test-macros.c'; else $(CYGPATH_W) '$(srcdir)/test/test-test-macros.c'; fi`
 
 test/test_run_tests-test-thread-equal.o: test/test-thread-equal.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-thread-equal.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-thread-equal.Tpo -c -o test/test_run_tests-test-thread-equal.o `test -f 'test/test-thread-equal.c' || echo '$(srcdir)/'`test/test-thread-equal.c
@@ -4711,6 +4771,20 @@ test/test_run_tests-test-udp-ipv6.obj: test/test-udp-ipv6.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-udp-ipv6.c' object='test/test_run_tests-test-udp-ipv6.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-udp-ipv6.obj `if test -f 'test/test-udp-ipv6.c'; then $(CYGPATH_W) 'test/test-udp-ipv6.c'; else $(CYGPATH_W) '$(srcdir)/test/test-udp-ipv6.c'; fi`
+
+test/test_run_tests-test-udp-mmsg.o: test/test-udp-mmsg.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-udp-mmsg.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-udp-mmsg.Tpo -c -o test/test_run_tests-test-udp-mmsg.o `test -f 'test/test-udp-mmsg.c' || echo '$(srcdir)/'`test/test-udp-mmsg.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-udp-mmsg.Tpo test/$(DEPDIR)/test_run_tests-test-udp-mmsg.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-udp-mmsg.c' object='test/test_run_tests-test-udp-mmsg.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-udp-mmsg.o `test -f 'test/test-udp-mmsg.c' || echo '$(srcdir)/'`test/test-udp-mmsg.c
+
+test/test_run_tests-test-udp-mmsg.obj: test/test-udp-mmsg.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-udp-mmsg.obj -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-udp-mmsg.Tpo -c -o test/test_run_tests-test-udp-mmsg.obj `if test -f 'test/test-udp-mmsg.c'; then $(CYGPATH_W) 'test/test-udp-mmsg.c'; else $(CYGPATH_W) '$(srcdir)/test/test-udp-mmsg.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/test_run_tests-test-udp-mmsg.Tpo test/$(DEPDIR)/test_run_tests-test-udp-mmsg.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-udp-mmsg.c' object='test/test_run_tests-test-udp-mmsg.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/test_run_tests-test-udp-mmsg.obj `if test -f 'test/test-udp-mmsg.c'; then $(CYGPATH_W) 'test/test-udp-mmsg.c'; else $(CYGPATH_W) '$(srcdir)/test/test-udp-mmsg.c'; fi`
 
 test/test_run_tests-test-udp-multicast-interface.o: test/test-udp-multicast-interface.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/test_run_tests-test-udp-multicast-interface.o -MD -MP -MF test/$(DEPDIR)/test_run_tests-test-udp-multicast-interface.Tpo -c -o test/test_run_tests-test-udp-multicast-interface.o `test -f 'test/test-udp-multicast-interface.c' || echo '$(srcdir)/'`test/test-udp-multicast-interface.c
