@@ -188,6 +188,15 @@ val recv_stop : t -> (unit, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_recv_stop}
     [uv_udp_recv_stop]}. *)
 
+val using_recvmmsg : t -> bool
+(** Evaluates to [true] if and only if the given handle was created with
+    [~recvmmsg:true] and the platform supports
+    {{:https://www.man7.org/linux/man-pages/man2/recvmmsg.2.html}
+    [recvmmsg(2)]}.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_using_recvmmsg}
+    [uv_udp_using_recvmmsg]}. *)
+
 val get_send_queue_size : t -> int
 (** Binds
     {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_get_send_queue_size}

@@ -1155,6 +1155,10 @@ struct
       foreign "uv_udp_recv_stop"
         (ptr t @-> returning error_code)
 
+    let using_recvmmsg =
+      foreign "uv_udp_using_recvmmsg"
+        (ptr t @-> returning bool)
+
     let get_send_queue_size =
       foreign "uv_udp_get_send_queue_size"
         (ptr t @-> returning size_t)

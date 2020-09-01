@@ -208,6 +208,9 @@ let recv_stop udp =
   C.Functions.UDP.recv_stop udp
   |> Error.to_result ()
 
+let using_recvmmsg =
+  C.Functions.UDP.using_recvmmsg
+
 let get_send_queue_size udp =
   C.Functions.UDP.get_send_queue_size udp
   |> Unsigned.Size_t.to_int
