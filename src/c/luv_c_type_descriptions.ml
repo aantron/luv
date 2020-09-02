@@ -45,6 +45,7 @@ struct
     let eexist = constant "UV_EEXIST" int
     let efault = constant "UV_EFAULT" int
     let efbig = constant "UV_EFBIG" int
+    let eftype = constant "UV_EFTYPE" int
     let ehostunreach = constant "UV_EHOSTUNREACH" int
     let eilseq = constant "UV_EILSEQ" int
     let eintr = constant "UV_EINTR" int
@@ -72,6 +73,7 @@ struct
     let enotempty = constant "UV_ENOTEMPTY" int
     let enotsock = constant "UV_ENOTSOCK" int
     let enotsup = constant "UV_ENOTSUP" int
+    let enotty = constant "UV_ENOTTY" int
     let eperm = constant "UV_EPERM" int
     let epipe = constant "UV_EPIPE" int
     let eproto = constant "UV_EPROTO" int

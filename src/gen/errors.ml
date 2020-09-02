@@ -30,6 +30,7 @@ let errors = [
   "UV_EEXIST";
   "UV_EFAULT";
   "UV_EFBIG";
+  "UV_EFTYPE";
   "UV_EHOSTUNREACH";
   "UV_EILSEQ";
   "UV_EINTR";
@@ -57,6 +58,7 @@ let errors = [
   "UV_ENOTEMPTY";
   "UV_ENOTSOCK";
   "UV_ENOTSUP";
+  "UV_ENOTTY";
   "UV_EPERM";
   "UV_EPIPE";
   "UV_EPROTO";

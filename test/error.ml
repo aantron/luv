@@ -44,6 +44,7 @@ let tests = [
     t "EEXIST" "file already exists" `EEXIST;
     t "EFAULT" "bad address in system call argument" `EFAULT;
     t "EFBIG" "file too large" `EFBIG;
+    t "EFTYPE" "inappropriate file type or format" `EFTYPE;
     t "EHOSTUNREACH" "host is unreachable" `EHOSTUNREACH;
     t "EILSEQ" "illegal byte sequence" `EILSEQ;
     t "EINTR" "interrupted system call" `EINTR;
@@ -71,6 +72,7 @@ let tests = [
     t "ENOTEMPTY" "directory not empty" `ENOTEMPTY;
     t "ENOTSOCK" "socket operation on non-socket" `ENOTSOCK;
     t "ENOTSUP" "operation not supported on socket" `ENOTSUP;
+    t "ENOTTY" "inappropriate ioctl for device" `ENOTTY;
     t "EPERM" "operation not permitted" `EPERM;
     t "EPIPE" "broken pipe" `EPIPE;
     t "EPROTO" "protocol error" `EPROTO;
@@ -131,6 +133,7 @@ let tests = [
     t "EEXIST" `EEXIST;
     t "EFAULT" `EFAULT;
     t "EFBIG" `EFBIG;
+    t "EFTYPE" `EFTYPE;
     t "EHOSTUNREACH" `EHOSTUNREACH;
     t "EILSEQ" `EILSEQ;
     t "EINTR" `EINTR;
@@ -158,6 +161,7 @@ let tests = [
     t "ENOTEMPTY" `ENOTEMPTY;
     t "ENOTSOCK" `ENOTSOCK;
     t "ENOTSUP" `ENOTSUP;
+    t "ENOTTY" `ENOTTY;
     t "EPERM" `EPERM;
     t "EPIPE" `EPIPE;
     t "EPROTO" `EPROTO;

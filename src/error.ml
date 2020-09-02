@@ -35,6 +35,7 @@ type t = [
   | `EEXIST
   | `EFAULT
   | `EFBIG
+  | `EFTYPE
   | `EHOSTUNREACH
   | `EILSEQ
   | `EINTR
@@ -62,6 +63,7 @@ type t = [
   | `ENOTEMPTY
   | `ENOTSOCK
   | `ENOTSUP
+  | `ENOTTY
   | `EPERM
   | `EPIPE
   | `EPROTO
@@ -113,6 +115,7 @@ let to_c = let open C.Types.Error in function
   | `EEXIST -> eexist
   | `EFAULT -> efault
   | `EFBIG -> efbig
+  | `EFTYPE -> eftype
   | `EHOSTUNREACH -> ehostunreach
   | `EILSEQ -> eilseq
   | `EINTR -> eintr
@@ -140,6 +143,7 @@ let to_c = let open C.Types.Error in function
   | `ENOTEMPTY -> enotempty
   | `ENOTSOCK -> enotsock
   | `ENOTSUP -> enotsup
+  | `ENOTTY -> enotty
   | `EPERM -> eperm
   | `EPIPE -> epipe
   | `EPROTO -> eproto
@@ -190,6 +194,7 @@ let from_c = let open C.Types.Error in function
   | e when e = eexist -> `EEXIST
   | e when e = efault -> `EFAULT
   | e when e = efbig -> `EFBIG
+  | e when e = eftype -> `EFTYPE
   | e when e = ehostunreach -> `EHOSTUNREACH
   | e when e = eilseq -> `EILSEQ
   | e when e = eintr -> `EINTR
@@ -217,6 +222,7 @@ let from_c = let open C.Types.Error in function
   | e when e = enotempty -> `ENOTEMPTY
   | e when e = enotsock -> `ENOTSOCK
   | e when e = enotsup -> `ENOTSUP
+  | e when e = enotty -> `ENOTTY
   | e when e = eperm -> `EPERM
   | e when e = epipe -> `EPIPE
   | e when e = eproto -> `EPROTO

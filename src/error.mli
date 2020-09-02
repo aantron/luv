@@ -42,6 +42,7 @@ type t = [
   | `EEXIST
   | `EFAULT
   | `EFBIG
+  | `EFTYPE
   | `EHOSTUNREACH
   | `EILSEQ
   | `EINTR
@@ -69,6 +70,7 @@ type t = [
   | `ENOTEMPTY
   | `ENOTSOCK
   | `ENOTSUP
+  | `ENOTTY
   | `EPERM
   | `EPIPE
   | `EPROTO
