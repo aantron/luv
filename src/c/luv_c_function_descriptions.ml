@@ -1816,4 +1816,11 @@ struct
          trampoline @->
           returning error_code)
   end
+
+  module Metrics =
+  struct
+    let idle_time =
+      foreign "uv_metrics_idle_time"
+        (ptr Types.Loop.t @-> returning uint64_t)
+  end
 end

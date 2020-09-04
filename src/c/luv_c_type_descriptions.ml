@@ -129,6 +129,7 @@ struct
     struct
       let block_signal = constant "UV_LOOP_BLOCK_SIGNAL" int
       let sigprof = constant "SIGPROF" int
+      let idle_time = constant "UV_METRICS_IDLE_TIME" int
     end
 
     type t = [ `Loop ] structure

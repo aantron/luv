@@ -63,3 +63,4 @@ module Passwd = Passwd
 module Env = Env
 module Time = Time
 module Random = Random
+module Metrics = Metrics

@@ -82,8 +82,11 @@ val update_time : t -> unit
 module Option :
 sig
   type 'value t
+
   val block_signal : int t
   val sigprof : int
+
+  val idle_time : unit t
 end
 
 val configure : t -> 'value Option.t -> 'value -> (unit, Error.t) result
