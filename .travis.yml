@@ -3,9 +3,9 @@ language: generic
 matrix:
   include:
     - os: osx
-      env: COMPILER=4.10.0
+      env: COMPILER=4.11.1
     - os: linux
-      env: COMPILER=4.10.0 REVDEPS=yes
+      env: COMPILER=4.11.1 REVDEPS=yes
     - os: linux
       env: COMPILER=4.02.3
 

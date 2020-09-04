@@ -11,7 +11,7 @@ jobs:
           - macos-latest
           - windows-latest
         ocaml:
-          - 4.10.0
+          - 4.11.1
           - 4.02.3
         exclude:
           - os: macos-latest
