@@ -88,6 +88,7 @@ presented in the user guide.
 - {!Luv.DLL} — dynamic linking
 - {!Luv.Passwd} — current user information
 - {!Luv.Async} — inter-loop communication
+- {!Luv.Metrics} — loop metrics
 - {!Luv.Prepare} — pre-I/O callbacks
 - {!Luv.Check} — post-I/O callbacks
 - {!Luv.Idle} — per-iteration callbacks
