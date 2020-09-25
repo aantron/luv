@@ -135,6 +135,7 @@ sig
   type t = [
     | `PARTIAL
     | `MMSG_CHUNK
+    | `MMSG_FREE
   ]
 end
 

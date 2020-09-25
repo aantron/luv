@@ -134,6 +134,7 @@ struct
   type t = [
     | `PARTIAL
     | `MMSG_CHUNK
+    | `MMSG_FREE
   ]
 end
 
@@ -186,6 +187,7 @@ let recv_start ?(allocate = Buffer.create) udp callback =
         []
         |> convert_flag C.Types.UDP.Flag.partial `PARTIAL
         |> convert_flag C.Types.UDP.Flag.mmsg_chunk `MMSG_CHUNK
+        |> convert_flag C.Types.UDP.Flag.mmsg_free `MMSG_FREE
       in
       Error.catch_exceptions callback (Result.Ok (buffer, sockaddr, flags))
     end

@@ -613,6 +613,7 @@ struct
       let partial = constant "UV_UDP_PARTIAL" int
       let reuseaddr = constant "UV_UDP_REUSEADDR" int
       let mmsg_chunk = constant "UV_UDP_MMSG_CHUNK" int
+      let mmsg_free = constant "UV_UDP_MMSG_FREE" int
       let recvmmsg = constant "UV_UDP_RECVMMSG" int
     end
 
