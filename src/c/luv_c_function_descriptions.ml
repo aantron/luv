@@ -644,6 +644,10 @@ struct
     let get_repeat =
       foreign "uv_timer_get_repeat"
         (ptr t @-> returning uint64_t)
+
+    let get_due_in =
+      foreign "uv_timer_get_due_in"
+        (ptr t @-> returning uint64_t)
   end
 
   module Prepare =

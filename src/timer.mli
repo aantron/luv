@@ -54,3 +54,10 @@ val get_repeat : t -> int
 
     Binds {{:http://docs.libuv.org/en/v1.x/timer.html#c.uv_timer_get_repeat}
     [uv_timer_get_repeat]}. *)
+
+val get_due_in : t -> int
+(** Evaluates to the time until the timer expires, or zero if it has already
+    expired.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/timer.html#c.uv_timer_get_due_in}
+    [uv_timer_get_due_in]}. *)

@@ -41,3 +41,7 @@ let set_repeat timer repeat =
 let get_repeat timer =
   C.Functions.Timer.get_repeat timer
   |> Unsigned.UInt64.to_int
+
+let get_due_in timer =
+  C.Functions.Timer.get_due_in timer
+  |> Unsigned.UInt64.to_int
