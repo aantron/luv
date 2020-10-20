@@ -68,6 +68,7 @@ test-installation : clean
 	opam pin add -y --no-action luv . --kind=path
 	opam reinstall -y luv
 	cd test/installation && dune exec ./user.exe
+	cd test/headers && dune exec ./headers.exe
 	opam remove -y luv
 
 .PHONY : test-installation-ci
@@ -75,6 +76,7 @@ test-installation-ci :
 	opam pin add -y --no-action luv . --kind=git
 	opam install -y luv
 	cd test/installation && dune exec ./user.exe
+	cd test/headers && dune exec ./headers.exe
 	opam remove -y luv
 	opam pin remove -y luv
 
@@ -88,6 +90,7 @@ upgrade-libuv :
 	(cd src/c/vendor/libuv && git checkout `$(LATEST_TAG)`)
 	make clean
 	make eject-build
+	ocaml src/gen/headers.ml
 	(make && make test) || true
 	@echo
 	@echo "Sanity check:"

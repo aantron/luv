@@ -12,6 +12,27 @@
  (foreign_archives uv)
  (c_library_flags (:include extra_libs.sexp)))
 
+(install
+ (section lib)
+ (package luv)
+ (files
+  (vendor/libuv/include/uv.h as uv.h)
+  (vendor/libuv/include/uv/aix.h as uv/aix.h)
+  (vendor/libuv/include/uv/android-ifaddrs.h as uv/android-ifaddrs.h)
+  (vendor/libuv/include/uv/bsd.h as uv/bsd.h)
+  (vendor/libuv/include/uv/darwin.h as uv/darwin.h)
+  (vendor/libuv/include/uv/errno.h as uv/errno.h)
+  (vendor/libuv/include/uv/linux.h as uv/linux.h)
+  (vendor/libuv/include/uv/os390.h as uv/os390.h)
+  (vendor/libuv/include/uv/posix.h as uv/posix.h)
+  (vendor/libuv/include/uv/stdint-msvc2008.h as uv/stdint-msvc2008.h)
+  (vendor/libuv/include/uv/sunos.h as uv/sunos.h)
+  (vendor/libuv/include/uv/threadpool.h as uv/threadpool.h)
+  (vendor/libuv/include/uv/tree.h as uv/tree.h)
+  (vendor/libuv/include/uv/unix.h as uv/unix.h)
+  (vendor/libuv/include/uv/version.h as uv/version.h)
+  (vendor/libuv/include/uv/win.h as uv/win.h)))
+
 
 
 ; The vendored libuv.

@@ -1,0 +1,4 @@
+(executable
+ (name headers)
+ (libraries luv)
+ (foreign_stubs (language c) (names headers)))
