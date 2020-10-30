@@ -266,7 +266,7 @@ struct
     let t : ([ `Base ] t) typ = typedef (structure "`Stream") "uv_stream_t"
     let () = seal t
 
-    let somaxconn = constant "SOMAXCONN" int
+    let somaxconn = constant "SOMAXCONN" nativeint
 
     let reference_count = constant "LUV_STREAM_REFERENCE_COUNT" int
     let connection_callback_index = constant "LUV_CONNECTION_CALLBACK" int

@@ -30,7 +30,14 @@ let shutdown stream callback =
 let connection_trampoline =
   C.Functions.Stream.get_connection_trampoline ()
 
-let listen ?(backlog = C.Types.Stream.somaxconn) server callback =
+let somaxconn =
+  if Nativeint.compare C.Types.Stream.somaxconn (Nativeint.of_int max_int) > 0
+      then
+    max_int
+  else
+    Nativeint.to_int C.Types.Stream.somaxconn
+
+let listen ?(backlog = somaxconn) server callback =
   let wrapped_callback result =
     Error.catch_exceptions callback (Error.to_result () result)
   in
