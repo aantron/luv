@@ -1,6 +1,6 @@
 (executable
  (name tester)
- (libraries alcotest luv threads))
+ (libraries alcotest luv luv_unix threads))
 
 (rule
  (alias runtest)

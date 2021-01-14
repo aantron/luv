@@ -65,3 +65,4 @@ module Time = Time
 module Random = Random
 module Metrics = Metrics
 module Require = Require
+module Unix = Luv_unix

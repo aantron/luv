@@ -212,6 +212,15 @@ int luv_spawn(
     int uid,
     int gid);
 
+// File descriptor validity checks. These are used only by Luv.Unix. However,
+// because they are exposed in OCaml through Ctypes, it is convenient to have
+// them here. They don't introduce a dependency on Unix. THe rest of the file
+// descriptor C helpers, which do depend on Unix, are defined in Luv.Unix's own
+// C helper file. Conveniently, they are, and must be, exposed in OCaml through
+// the built-in FFI.
+int luv_is_invalid_handle_value(uv_os_fd_t handle);
+int luv_is_invalid_socket_value(uv_os_sock_t socket);
+
 
 
 #endif // #ifndef LUV_HELPERS_H_

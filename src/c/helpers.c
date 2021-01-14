@@ -650,3 +650,19 @@ int luv_spawn(
 
     return result;
 }
+
+int luv_is_invalid_handle_value(uv_os_fd_t handle)
+{
+    if (handle == -1)
+        return 1;
+    else
+        return 0;
+}
+
+int luv_is_invalid_socket_value(uv_os_sock_t socket)
+{
+    if (socket == -1)
+        return 1;
+    else
+        return 0;
+}

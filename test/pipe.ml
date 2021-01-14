@@ -53,10 +53,13 @@ let with_server_and_client ?for_handle_passing () ~server_logic ~client_logic =
 
   Alcotest.(check bool) "file deleted" false (Sys.file_exists filename)
 
-(* Until https://github.com/libuv/libuv/pull/1498. This implementation will not
-   work on Windows. One can be provided, but hopefully the PR lands first. *)
-let unix_fd_to_file : Unix.file_descr -> Luv.File.t =
-  Obj.magic
+(* Until https://github.com/libuv/libuv/pull/1498. Should be out in 1.41.0. *)
+let unix_fd_to_file unix_fd =
+  unix_fd
+  |> Luv.Unix.Os_fd.Fd.from_unix
+  |> check_success_result "from_unix"
+  |> Luv.File.open_osfhandle
+  |> check_success_result "get_osfhandle"
 
 let tests = [
   "pipe", [

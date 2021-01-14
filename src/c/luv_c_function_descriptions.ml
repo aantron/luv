@@ -1372,6 +1372,14 @@ struct
     let open_osfhandle =
       foreign "uv_open_osfhandle"
         (Types.Os_fd.t @-> returning int)
+
+    let is_invalid_handle_value =
+      foreign "luv_is_invalid_handle_value"
+        (Types.Os_fd.t @-> returning bool)
+
+    let is_invalid_socket_value =
+      foreign "luv_is_invalid_socket_value"
+        (Types.Os_socket.t @-> returning bool)
   end
 
   module Bigstring =

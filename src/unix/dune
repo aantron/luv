@@ -1,0 +1,4 @@
+(library
+ (public_name luv_unix)
+ (libraries luv luv.c unix)
+ (foreign_stubs (language c) (names luv_unix)))

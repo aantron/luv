@@ -9,4 +9,5 @@
  (action
   (run feature/detect_features.exe require.ml 99)))
 
-(documentation)
+(documentation
+ (package luv))

@@ -53,6 +53,11 @@ before_script:
     fi
   - opam list
 
+  # Work around https://github.com/ocaml/dune/issues/4121.
+  - git clone https://github.com/libuv/libuv.git
+  - sudo mv libuv/include/* /usr/include/
+  - rm -rf libuv
+
 script:
   - |
     case "$TRAVIS_OS_NAME" in
@@ -63,6 +68,10 @@ script:
   - '[ ! -d _cache/_build ] || cp -r _cache/_build .'
   - ${MAKE}
   - ${MAKE} test
+
+  # Undo workaround for https://github.com/ocaml/dune/issues/4121.
+  - rm -f /usr/include/uv.h
+
   - '[ "$REVDEPS" != yes ] || ${MAKE} --output-sync=target examples'
   - mkdir -p _cache
   - '[ -d _cache/_build ] || cp -r _build _cache'
