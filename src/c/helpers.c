@@ -462,7 +462,7 @@ int luv_add_c_function_and_argument(
 
     c_fields[C_OCAML_GC_ROOT] = uv_req_get_data((uv_req_t*)c_request);
     c_fields[C_FUNCTION] = (void*)function;
-    c_fields[C_FIELD_COUNT] = (void*)argument;
+    c_fields[C_ARGUMENT] = (void*)argument;
 
     uv_req_set_data((uv_req_t*)c_request, c_fields);
 
