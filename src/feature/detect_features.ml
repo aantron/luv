@@ -118,6 +118,8 @@ let () =
   bool "metrics_idle_time" (version >= 39);
   bool "udp_using_recvmmsg" (version >= 39);
 
+  bool "library_shutdown" (version >= 38);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

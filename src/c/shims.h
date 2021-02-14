@@ -25,3 +25,9 @@
         return 0;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 38
+    static void uv_library_shutdown()
+    {
+    }
+#endif
