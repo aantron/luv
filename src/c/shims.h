@@ -35,3 +35,12 @@
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 37
     #define UV_UDP_RECVMMSG 0
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 36
+    static int uv_fs_lutime(
+        uv_loop_t *loop, uv_fs_t *request, const char *path, double atime,
+        double mtime, uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+#endif

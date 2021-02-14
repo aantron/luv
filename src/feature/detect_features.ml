@@ -122,6 +122,8 @@ let () =
 
   bool "udp_recvmmsg" (version >= 37);
 
+  bool "fs_lutime" (version >= 36);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;
