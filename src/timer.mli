@@ -60,4 +60,6 @@ val get_due_in : t -> int
     expired.
 
     Binds {{:http://docs.libuv.org/en/v1.x/timer.html#c.uv_timer_get_due_in}
-    [uv_timer_get_due_in]}. *)
+    [uv_timer_get_due_in]}.
+
+    @since Luv 0.5.6 (libuv 1.40.0) *)

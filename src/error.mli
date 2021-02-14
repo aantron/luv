@@ -94,7 +94,9 @@ type t = [
     Binds {{:http://docs.libuv.org/en/v1.x/errors.html#error-constants} libuv
     error codes}, which resemble
     {{:http://man7.org/linux/man-pages/man3/errno.3.html#DESCRIPTION} Unix error
-    codes}. *)
+    codes}.
+
+    [`EFTYPE] and [`ENOTTY] are available since Luv 0.5.5 (libuv 1.39.0). *)
 
 val strerror : t -> string
 (** Returns the error message corresponding to the given error code.

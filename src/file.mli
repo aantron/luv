@@ -191,7 +191,12 @@ sig
 
       {[
         [`NUMERIC 0o644]
-      ]} *)
+      ]}
+
+      [`IFREG] is available since Luv 0.5.5.
+
+      [`IFMT], [`IFDIR], [`IFBLK], [`IFCHR], [`IFLNK], [`IFIFO] are available
+      since Luv 0.5.4. *)
 
   type numeric
   (** Abstract type for a bit field of permissions bits, i.e., an [int] in which
@@ -764,7 +769,9 @@ val lutime :
 
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_lutime}
     [uv_fs_lutime]}. See {{:http://man7.org/linux/man-pages/man3/lutimes.3.html}
-    [lutimes(3)]}. The synchronous version is {!Luv.File.Sync.lutime}. *)
+    [lutimes(3)]}. The synchronous version is {!Luv.File.Sync.lutime}.
+
+    @since Luv 0.5.2 (libuv 1.36.0). *)
 
 
 
@@ -1030,7 +1037,9 @@ sig
   val lutime :
     string -> atime:float -> mtime:float ->
       (unit, Error.t) result
-  (** Synchronous version of {!Luv.File.lutime}. *)
+  (** Synchronous version of {!Luv.File.lutime}.
+
+      @since Luv 0.5.2 (libuv 1.36.0). *)
 
   val link :
     string -> link:string ->

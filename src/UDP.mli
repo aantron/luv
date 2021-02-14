@@ -22,7 +22,9 @@ val init :
 (** Allocates and initializes a UDP socket.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_init_ex}
-    [uv_udp_init_ex]}. *)
+    [uv_udp_init_ex]}.
+
+    [?recvmmsg] is available since Luv 0.5.2 (libuv 1.37.0). *)
 
 val open_ : t -> Os_fd.Socket.t -> (unit, Error.t) result
 (** Wraps an existing socket in a libuv UDP handle.
@@ -137,6 +139,9 @@ sig
     | `MMSG_CHUNK
     | `MMSG_FREE
   ]
+  (** [`MMSG_CHUNK] is possible since Luv 0.5.1 (libuv 1.35.0).
+
+      [`MMSG_FREE] is possible since Luv 0.5.6 (libuv 1.40.0). *)
 end
 
 val recv_start :
@@ -196,7 +201,9 @@ val using_recvmmsg : t -> bool
     [recvmmsg(2)]}.
 
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_using_recvmmsg}
-    [uv_udp_using_recvmmsg]}. *)
+    [uv_udp_using_recvmmsg]}.
+
+    @since Luv 0.5.5 (libuv 1.39.0) *)
 
 val get_send_queue_size : t -> int
 (** Binds

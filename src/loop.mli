@@ -125,7 +125,9 @@ val library_shutdown : unit -> unit
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_library_shutdown}
     [uv_library_shutdown]}.
 
-    Note especially the warnings in the libuv documentation of this function. *)
+    Note especially the warnings in the libuv documentation of this function.
+
+    @since Luv 0.5.3 (libuv 1.38.0) *)
 
 (**/**)
 
