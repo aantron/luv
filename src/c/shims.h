@@ -11,3 +11,17 @@
         return 0;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 39
+    #define UV_METRICS_IDLE_TIME 0
+
+    static uint64_t uv_metrics_idle_time(uv_loop_t *loop)
+    {
+        return 0;
+    }
+
+    static int uv_udp_using_recvmmsg(uv_udp_t *udp)
+    {
+        return 0;
+    }
+#endif

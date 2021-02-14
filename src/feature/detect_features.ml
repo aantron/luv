@@ -115,6 +115,9 @@ let () =
   bool "udp_mmsg_free" (version >= 40);
   bool "timer_get_due_in" (version >= 40);
 
+  bool "metrics_idle_time" (version >= 39);
+  bool "udp_using_recvmmsg" (version >= 39);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;
