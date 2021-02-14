@@ -4,4 +4,9 @@
  (libraries luv.c result)
  (flags (:standard -w -49 -open Result)))
 
+(rule
+ (targets feature.mli feature.ml)
+ (action
+  (run feature/detect_features.exe)))
+
 (documentation)

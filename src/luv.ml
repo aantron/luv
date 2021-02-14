@@ -64,3 +64,4 @@ module Env = Env
 module Time = Time
 module Random = Random
 module Metrics = Metrics
+module Feature = Feature
