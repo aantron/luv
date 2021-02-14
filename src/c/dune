@@ -1,3 +1,20 @@
+(* -*- tuareg -*- *)
+
+let foreign_archives, uv_library_flag =
+  let use_system_libuv =
+    match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
+    | "yes" -> true
+    | _ -> false
+    | exception Not_found -> false
+  in
+
+  if use_system_libuv then
+    "", "-luv"
+  else
+    "(foreign_archives uv)", ""
+
+let () = Jbuild_plugin.V1.send @@ {|
+
 ; The final FFI module, containing all the OCaml bits, and linked with libuv.
 (library
  (name luv_c)
@@ -9,8 +26,8 @@
   (language c)
   (names c_generated_functions helpers)
   (include_dirs vendor/libuv/include))
- (foreign_archives uv)
- (c_library_flags (:include extra_libs.sexp)))
+ |}^ foreign_archives ^{|
+ (c_library_flags |}^ uv_library_flag ^{| (:include extra_libs.sexp)))
 
 (install
  (section lib)
@@ -56,8 +73,6 @@
    "cp vendor/libuv/libuv.so.1.0.0 dlluv.so || \
     cp vendor/libuv/libuv.1.dylib dlluv.so || \
     cp vendor/bin/libuv-1.dll dlluv.dll")))))
-
-(data_only_dirs vendor)
 
 (rule
  (targets extra_libs.sexp)
@@ -130,3 +145,5 @@
 (rule
  (with-stdout-to luv_c_generated_functions.ml
   (run ./generate_ml_functions.exe luv_stub)))
+
+|}
