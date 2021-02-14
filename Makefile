@@ -152,6 +152,10 @@ check-ejected-build :
 	   echo; \
 	   false)
 
+.PHONY : install-autotools
+install-autotools :
+	sudo apt install automake libtool
+
 .PHONY : docs
 docs : api-docs luvbook
 
