@@ -120,6 +120,8 @@ let () =
 
   bool "library_shutdown" (version >= 38);
 
+  bool "udp_recvmmsg" (version >= 37);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

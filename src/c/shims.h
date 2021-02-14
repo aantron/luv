@@ -31,3 +31,7 @@
     {
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 37
+    #define UV_UDP_RECVMMSG 0
+#endif
