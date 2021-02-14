@@ -105,11 +105,15 @@ let () =
 
   let context = mli_buffer, ml_buffer in
   let int = int context in
-  let _bool = bool context in
+  let bool = bool context in
 
   let version = Luv_c_types.Version.minor in
 
   int "libuv1" version;
+  int "luv05" 7;
+
+  bool "udp_mmsg_free" (version >= 40);
+  bool "timer_get_due_in" (version >= 40);
 
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;

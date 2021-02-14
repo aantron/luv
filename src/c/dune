@@ -108,7 +108,7 @@ let () = Jbuild_plugin.V1.send @@ {|
 ;   https://github.com/avsm/ocaml-yaml/blob/master/types/stubgen/jbuild#L20
 (rule
  (targets generate_types_step_2.exe)
- (deps (:c generate_types_step_2.c) helpers.h)
+ (deps (:c generate_types_step_2.c) helpers.h shims.h)
  (action (bash "\
   %{cc} %{c} \
   -I '%{lib:ctypes:.}' \

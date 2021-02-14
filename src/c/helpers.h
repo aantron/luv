@@ -14,6 +14,7 @@
 
 #include <caml/mlvalues.h>
 #include <uv.h>
+#include "shims.h"
 
 
 
