@@ -1,6 +1,6 @@
 (* -*- tuareg -*- *)
 
-let foreign_archives, uv_library_flag =
+let foreign_archives, uv_library_flag, include_dirs =
   let use_system_libuv =
     match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
     | "yes" -> true
@@ -9,9 +9,9 @@ let foreign_archives, uv_library_flag =
   in
 
   if use_system_libuv then
-    "", "-luv"
+    "", "-luv", ""
   else
-    "(foreign_archives uv)", ""
+    "(foreign_archives uv)", "", "(include_dirs vendor/libuv/include)"
 
 let () = Jbuild_plugin.V1.send @@ {|
 
@@ -25,7 +25,7 @@ let () = Jbuild_plugin.V1.send @@ {|
  (foreign_stubs
   (language c)
   (names c_generated_functions helpers)
-  (include_dirs vendor/libuv/include))
+  |}^ include_dirs ^{|)
  |}^ foreign_archives ^{|
  (c_library_flags |}^ uv_library_flag ^{| (:include extra_libs.sexp)))
 
