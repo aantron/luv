@@ -84,6 +84,40 @@ Here's a slightly more interesting program, which waits for one second, prints
     :language: ocaml
     :linenos:
 
+Console output
+--------------
+
+The first two examples used OCaml's own ``print_endline`` for console output. In
+a fully asynchronous program, you may want to use libuv to write to the console
+(or STDOUT) instead. Luv offers at least three ways of doing this.
+
+Using the pre-opened file :api:`Luv.File.stdout <File/index.html#val-stdout>`:
+
+.. rubric:: :example:`print_using_file.ml`
+.. literalinclude:: ../example/print_using_file.ml
+    :language: ocaml
+    :linenos:
+
+Wrapping :api:`Luv.File.stdout <File/index.html#val-stdout>` in a pipe with
+:api:`Luv.Pipe.open_ <Pipe/index.html#val-open_>`:
+
+.. rubric:: :example:`print_using_pipe.ml`
+.. literalinclude:: ../example/print_using_pipe.ml
+    :language: ocaml
+    :linenos:
+
+Wrapping :api:`Luv.File.stdout <File/index.html#val-stdout>` in a TTY handle
+with :api:`Luv.TTY.init <TTY/index.html#val-init>`:
+
+.. rubric:: :example:`print_using_tty.ml`
+.. literalinclude:: ../example/print_using_tty.ml
+    :language: ocaml
+    :linenos:
+
+As you can see, all of these are too low-level and verbose for ordinary use.
+They would need to be wrapped in a higher-level library. The examples will
+continue to use ``print_endline``, which is fine for most purposes.
+
 .. _libuv-error-handling:
 
 Error handling
@@ -181,6 +215,7 @@ loop:
 .. rubric:: :example:`idle.ml`
 .. literalinclude:: ../example/idle.ml
     :language: ocaml
+    :linenos:
 
 The error handling in this example is not robust! It is using ``Result.get_ok``
 and ``ignore`` to avoid dealing with potential ``Error``. If you are writing a

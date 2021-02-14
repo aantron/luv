@@ -2,6 +2,9 @@
  (names
   hello_world
   delay
+  print_using_file
+  print_using_pipe
+  print_using_tty
   idle
   cat
   onchange

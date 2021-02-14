@@ -11,6 +11,9 @@ examples :
 	dune build \
 	  example/hello_world.exe \
 	  example/delay.exe \
+	  example/print_using_file.exe \
+	  example/print_using_pipe.exe \
+	  example/print_using_tty.exe \
 	  example/idle.exe \
 	  example/cat.exe \
 	  example/onchange.exe \
@@ -35,6 +38,9 @@ examples :
 	  example/sigint.exe
 	_build/default/example/hello_world.exe
 	_build/default/example/delay.exe
+	_build/default/example/print_using_file.exe
+	_build/default/example/print_using_pipe.exe
+	_build/default/example/print_using_tty.exe
 	_build/default/example/idle.exe
 	_build/default/example/cat.exe LICENSE.md
 	(_build/default/example/onchange.exe false LICENSE.md || true) & \
@@ -166,6 +172,11 @@ watch-api-docs : api-docs
 watch-luvbook : luvbook
 	inotifywait -mr -e modify docs/conf.py docs/*.rst example \
 	  | xargs -L1 -I X make luvbook
+
+.PHONY : install-sphinx
+install-sphinx :
+	sudo apt install python3-pip
+	pip3 install -U sphinx
 
 # make watch-api-docs &
 # make watch-luvbook &
