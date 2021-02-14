@@ -44,3 +44,7 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 35
+    #define UV_UDP_MMSG_CHUNK 0
+#endif
