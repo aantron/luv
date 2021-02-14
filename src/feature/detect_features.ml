@@ -126,6 +126,9 @@ let () =
 
   bool "udp_mmsg_chunk" (version >= 35);
 
+  bool "fs_mkstemp" (version >= 34);
+  bool "sleep" (version >= 34);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

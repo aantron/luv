@@ -48,3 +48,16 @@
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 35
     #define UV_UDP_MMSG_CHUNK 0
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 34
+    static int uv_fs_mkstemp(
+        uv_loop_t *loop, uv_fs_t *request, const char *template,
+        uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+
+    static void uv_sleep(unsigned int msec)
+    {
+    }
+#endif
