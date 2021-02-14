@@ -61,3 +61,24 @@
     {
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 33
+    typedef int uv_random_t;
+    typedef void (*uv_random_cb)(
+        uv_random_t *request, int status, void* buffer, size_t length);
+    static int uv_random(
+        uv_loop_t *loop, uv_random_t *request, void *buffer, size_t length,
+        unsigned int flags, uv_random_cb callback)
+    {
+        return ENOSYS;
+    }
+
+    typedef enum {UV_TTY_SUPPORTED, UV_TTY_UNSUPPORTED} uv_tty_vtermstate_t;
+    static void uv_tty_set_vterm_state(uv_tty_vtermstate_t state)
+    {
+    }
+    static int uv_tty_get_vterm_state(uv_tty_vtermstate_t *state)
+    {
+        return ENOTSUP;
+    }
+#endif
