@@ -132,6 +132,10 @@ let () =
   bool "random" (version >= 33);
   bool "tty_vterm_state" (version >= 33);
 
+  bool "eilseq" (version >= 32);
+  bool "tcp_close_reset" (version >= 32);
+  bool "udp_set_source_membership" (version >= 32);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

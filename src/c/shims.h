@@ -82,3 +82,20 @@
         return ENOTSUP;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 32
+    #define UV_EILSEQ 0x04242424
+
+    static int uv_tcp_close_reset(uv_tcp_t *handle, uv_close_cb close_callback)
+    {
+        return ENOSYS;
+    }
+
+    static int uv_udp_set_source_membership(
+        uv_udp_t *handle, const char *multicast_addr,
+        const char *interface_addr, const char *source_addr,
+        uv_membership membership)
+    {
+        return ENOSYS;
+    }
+#endif
