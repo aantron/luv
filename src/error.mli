@@ -103,13 +103,19 @@ val strerror : t -> string
 (** Returns the error message corresponding to the given error code.
 
     Binds {{:http://docs.libuv.org/en/v1.x/errors.html#c.uv_strerror_r}
-    [uv_strerror_r]}. *)
+    [uv_strerror_r]}.
+
+    If you are using libuv 1.21.0 or earlier, [Luv.Error.strerror `UNKNOWN]
+    slowly leaks memory. *)
 
 val err_name : t -> string
 (** Returns the name of the given error code.
 
     Binds {{:http://docs.libuv.org/en/v1.x/errors.html#c.uv_err_name_r}
-    [uv_err_name_r]}. *)
+    [uv_err_name_r]}.
+
+    If you are using libuv 1.21.0 or earlier, [Luv.Error.err_name `UNKNOWN]
+    slowly leaks memory. *)
 
 val translate_sys_error : int -> t
 (** Converts a system error code to a libuv error code.

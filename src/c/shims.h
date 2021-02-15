@@ -228,3 +228,19 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 22
+    static char* uv_strerror_r(int error, char *buffer, size_t length)
+    {
+        strncpy(buffer, uv_strerror(error), length - 1);
+        buffer[length] = 0;
+        return buffer;
+    }
+
+    static char* uv_err_name_r(int error, char *buffer, size_t length)
+    {
+        strncpy(buffer, uv_err_name(error), length - 1);
+        buffer[length] = 0;
+        return buffer;
+    }
+#endif

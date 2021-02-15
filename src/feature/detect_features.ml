@@ -158,6 +158,9 @@ let () =
   bool "open_osfhandle" (version >= 23);
   bool "uv_os_priority" (version >= 23);
 
+  bool "strerror_r" (version >= 22);
+  bool "err_name_r" (version >= 22);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;
