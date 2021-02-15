@@ -3,6 +3,13 @@
 
 
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 15
+    static int uv_mutex_init_recursive(uv_mutex_t *mutex)
+    {
+        return ENOSYS;
+    }
+#endif
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 16
     #define UV_ENOTTY 0x24242424
 
