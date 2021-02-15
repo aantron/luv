@@ -32,6 +32,8 @@ let constrained_memory () =
   else
     Some result
 
+module Priority = C.Types.Resource.Priority
+
 let getpriority pid =
   let priority = Ctypes.(allocate int) 0 in
   C.Functions.Resource.getpriority pid priority

@@ -40,6 +40,17 @@ val constrained_memory : unit -> Unsigned.uint64 option
     {{!Luv.Require} Feature check}:
     [Luv.Require.(has get_constrained_memory)] *)
 
+(** Priority constants. *)
+module Priority :
+sig
+    val low : int
+    val below_normal : int
+    val normal : int
+    val above_normal : int
+    val high : int
+    val highest : int
+end
+
 val getpriority : int -> (int, Error.t) result
 (** Evaluates to the priority of the process with the given pid.
 

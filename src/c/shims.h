@@ -398,6 +398,13 @@
         return (int)-1;
     }
 
+    #define UV_PRIORITY_LOW 19
+    #define UV_PRIORITY_BELOW_NORMAL 10
+    #define UV_PRIORITY_NORMAL 0
+    #define UV_PRIORITY_ABOVE_NORMAL -7
+    #define UV_PRIORITY_HIGH -14
+    #define UV_PRIORITY_HIGHEST -20
+
     static int uv_os_getpriority(uv_pid_t pid, int *priority)
     {
         return ENOSYS;

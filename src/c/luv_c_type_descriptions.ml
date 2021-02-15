@@ -846,6 +846,16 @@ struct
 
   module Resource =
   struct
+    module Priority =
+    struct
+      let low = constant "UV_PRIORITY_LOW" int
+      let below_normal = constant "UV_PRIORITY_BELOW_NORMAL" int
+      let normal = constant "UV_PRIORITY_NORMAL" int
+      let above_normal = constant "UV_PRIORITY_ABOVE_NORMAL" int
+      let high = constant "UV_PRIORITY_HIGH" int
+      let highest = constant "UV_PRIORITY_HIGHEST" int
+    end
+
     module Timeval =
     struct
       let t : ([ `Timeval ] structure) typ =
