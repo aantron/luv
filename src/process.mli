@@ -42,8 +42,9 @@ val to_parent_pipe :
 
     [?overlapped] sets
     {{:http://docs.libuv.org/en/v1.x/process.html#c.uv_stdio_flags}
-    [UV_OVERLAPPED_PIPE]}. This requires libuv 1.21.0. On earlier versions, the
-    optional argument does nothing.
+    [UV_NONBLOCK_PIPE]}. The flag was formerly known as [UV_OVERLAPPED_PIPE] in
+    libuv. This requires libuv 1.21.0. On earlier versions, this optional
+    argument does nothing.
 
     {{!Luv.Require} Feature check}: [Luv.Require.(has overlapped_pipe)] *)
 

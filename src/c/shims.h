@@ -624,3 +624,10 @@
         return 0;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 41
+    static int uv_pipe(uv_file pipes[2], int read_flags, int write_flags)
+    {
+        return ENOSYS;
+    }
+#endif

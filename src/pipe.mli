@@ -37,6 +37,34 @@ val open_ : t -> File.t -> (unit, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_open}
     [uv_pipe_open]}. *)
 
+(** Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe}
+    [UV_NONBLOCK_PIPE]}. *)
+module Flag :
+sig
+  type t = [
+    | `NONBLOCK
+  ]
+end
+
+val pipe :
+  ?read_flags:Flag.t list -> ?write_flags:Flag.t list -> unit ->
+    (File.t * File.t, Error.t) result
+(** Creates a pair of connected pipes.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe} [uv_pipe]}.
+
+    In case of success, in the value [(read_pipe, write_pipe)], data written
+    to [write_pipe] can be read from [read_pipe].
+
+    [?read_flags] specifies flags for [read_pipe]. Likewise, [?write_flags]
+    specifies flags for [write_pipe]. The only possible flag at the moment is
+    [`NONBLOCK], which binds [UV_NONBLOCK_PIPE]. Both arguments are
+    set to [[`NONBLOCK]] by default.
+
+    Requires Luv 0.5.7 and libuv 1.41.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has pipe)] *)
+
 val bind : t -> string -> (unit, Error.t) result
 (** Assigns a pipe a name or an address.
 

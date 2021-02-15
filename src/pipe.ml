@@ -22,6 +22,26 @@ let init ?loop ?(for_handle_passing = false) () =
   C.Functions.Pipe.init (Loop.or_default loop) pipe for_handle_passing
   |> Error.to_result pipe
 
+module Flag =
+struct
+  type t = [
+    `NONBLOCK
+  ]
+end
+
+let pipe ?(read_flags = [`NONBLOCK]) ?(write_flags = [`NONBLOCK]) () =
+  let convert_flags = function
+    | [] -> 0
+    | _ -> C.Types.Process.Redirection.overlapped_pipe
+  in
+  let fds = Ctypes.allocate_n C.Types.File.t ~count:2 in
+  C.Functions.Pipe.pipe
+    fds
+    (convert_flags read_flags)
+    (convert_flags write_flags)
+  |> Error.to_result_lazy Ctypes.(fun () ->
+    File.from_int (!@ fds), File.from_int (!@ (fds +@ 1)))
+
 let open_ pipe file =
   C.Functions.Pipe.open_ pipe (File.to_int file)
   |> Error.to_result ()

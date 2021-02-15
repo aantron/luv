@@ -1159,3 +1159,7 @@ val to_int : t -> int
     platforms at the moment. This is a convenience function for interoperability
     with {!Luv.Process}, the API of which assumes that files are represented by
     integers. *)
+
+(**/**)
+
+val from_int : int -> t

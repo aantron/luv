@@ -977,6 +977,10 @@ struct
       foreign "uv_pipe_init"
         (ptr Loop.t @-> ptr t @-> bool @-> returning error_code)
 
+    let pipe =
+      foreign "uv_pipe"
+        (ptr int @-> int @-> int @-> returning error_code)
+
     let open_ =
       foreign "uv_pipe_open"
         (ptr t @-> int @-> returning error_code)

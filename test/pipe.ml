@@ -64,6 +64,35 @@ let tests = [
       with_pipe ignore
     end;
 
+    "pipe", `Quick, begin fun () ->
+      let wrap file =
+        let pipe = Luv.Pipe.init () |> check_success_result "init" in
+        Luv.Pipe.open_ pipe file |> check_success_result "open_";
+        pipe
+      in
+      let read_file, write_file =
+        Luv.Pipe.pipe () |> check_success_result "pipe" in
+      let read_pipe = wrap read_file in
+      let write_pipe = wrap write_file in
+
+      Luv.Stream.write write_pipe [Luv.Buffer.from_string "x"] (fun _ _ -> ());
+      Luv.Handle.close write_pipe ignore;
+
+      let read = ref false in
+
+      Luv.Stream.read_start read_pipe begin fun result ->
+        check_success_result "read_start" result
+        |> Luv.Buffer.to_string
+        |> Alcotest.(check string) "byte" "x";
+        read := true;
+        Luv.Handle.close read_pipe ignore
+      end;
+
+      run ();
+
+      Alcotest.(check bool) "read" true !read
+    end;
+
     "bind", `Quick, begin fun () ->
       with_pipe begin fun pipe ->
         Luv.Pipe.bind pipe filename

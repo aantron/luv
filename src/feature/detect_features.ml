@@ -261,6 +261,7 @@ let () =
   needs  9 "os_tmpdir" ~doc:"See {!Luv.Path.tmpdir}.";
   needs 25 "os_uname" ~doc:"See {!Luv.System_info.uname}.";
   needs 21 "overlapped_pipe" ~doc:"See {!Luv.Process.to_parent_pipe}.";
+  needs 41 "pipe" ~doc:"See {!Luv.Pipe.pipe}";
   needs 16 "pipe_chmod" ~doc:"See {!Luv.Pipe.chmod}.";
   needs 14 "prioritized" ~doc:"See [`PRIORITIZED] in {!Luv.Poll.Event.t}.";
   needs 24 "process_windows_hide_console" ~doc:"See {!Luv.Process.spawn}.";

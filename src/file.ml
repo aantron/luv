@@ -814,3 +814,6 @@ let open_osfhandle handle =
 
 let to_int file =
   file
+
+let from_int fd =
+  fd
