@@ -96,8 +96,17 @@ type t = [
     {{:http://man7.org/linux/man-pages/man3/errno.3.html#DESCRIPTION} Unix error
     codes}.
 
-    [`EFTYPE] is available since Luv 0.5.5 and libuv 1.21.0. [`ENOTTY] is
-    available since Luv 0.5.5 and libuv 1.16.0. *)
+    [`EFTYPE] is available since Luv 0.5.5 and libuv 1.21.0.
+
+    [`ENOTTY] is available since Luv 0.5.5 and libuv 1.16.0.
+
+    [`EILSEQ] is available since libuv 1.32.0.
+
+    {{!Luv.Require} Feature checks}:
+
+    - [Luv.Require.(has eftype)]
+    - [Luv.Require.(has enotty)]
+    - [Luv.Require.(has eilseq)] *)
 
 val strerror : t -> string
 (** Returns the error message corresponding to the given error code.
@@ -121,7 +130,11 @@ val translate_sys_error : int -> t
 (** Converts a system error code to a libuv error code.
 
     Binds {{:http://docs.libuv.org/en/v1.x/errors.html#c.uv_translate_sys_error}
-    [uv_translate_sys_error]}. *)
+    [uv_translate_sys_error]}.
+
+    Requires libuv 1.10.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has translate_sys_error)] *)
 
 val set_on_unhandled_exception : (exn -> unit) -> unit
 (** If user code terminates a callback by raising an exception, the exception

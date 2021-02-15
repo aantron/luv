@@ -62,4 +62,6 @@ val get_due_in : t -> int
     Binds {{:http://docs.libuv.org/en/v1.x/timer.html#c.uv_timer_get_due_in}
     [uv_timer_get_due_in]}.
 
-    @since Luv 0.5.6 (libuv 1.40.0) *)
+    Requires Luv 0.5.6 and libuv 1.40.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has timer_get_due_in)] *)

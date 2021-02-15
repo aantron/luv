@@ -19,7 +19,11 @@ val random :
 (** Fills the given buffer with bits from the system entropy source.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_random}
-    [uv_random]}. *)
+    [uv_random]}.
+
+    Requires libuv 1.33.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has random)] *)
 
 module Sync :
 sig

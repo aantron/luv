@@ -35,7 +35,11 @@ val create : ?stack_size:int -> (unit -> unit) -> (t, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_thread_create}
     [uv_thread_create]}. See
     {{:http://man7.org/linux/man-pages/man3/pthread_create.3p.html}
-    [pthread_create(3p)]}. *)
+    [pthread_create(3p)]}.
+
+    [?stack_size] does nothing on libuv prior to 1.26.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has thread_stack_size)] *)
 
 val create_c :
   ?stack_size:int ->
@@ -45,7 +49,11 @@ val create_c :
 (** Like {!Luv.Thread.create}, but runs a C function by pointer.
 
     The C function should have signature [(*)(void*)]. The default value of
-    [?argument] is [NULL] (0). *)
+    [?argument] is [NULL] (0).
+
+    [?stack_size] does nothing on libuv prior to 1.26.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has thread_stack_size)] *)
 
 val join : t -> (unit, Error.t) result
 (** Waits for the given thread to terminate.

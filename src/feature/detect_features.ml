@@ -5,6 +5,8 @@
 
 let module_doc = {|(** Feature checks.
 
+    {e You probably don't need these!}
+
     If you installed Luv in the usual way, through either opam or esy, you can
     ignore this module completely. In this case, Luv internally installed a
     vendored libuv of a recent version, and you have all the latest APIs
@@ -12,13 +14,16 @@ let module_doc = {|(** Feature checks.
     implemented by libuv.
 
     However, if you installed Luv through a system package manager, or tweaked
-    your Luv installation so that it links to a system or other external libuv,
-    that external libuv might be of a considerably older version than Luv. Not
-    all features normally exposed by Luv might actually be available.
+    your Luv installation so that it links to a system or other external libuv
+    — or if your users will do so — that external libuv might be of a
+    considerably older version than Luv expects. Not all features normally
+    exposed by Luv might actually be available.
 
-    In that case, this module provides a bunch of useful feature checks, so that
-    you can control the behavior of your downstream project and/or prevent its
-    compilation with too old a libuv. *)|}
+    For that case, this module provides a bunch of useful feature checks, so
+    that you can control the behavior of your downstream project and/or prevent
+    its compilation with too old a libuv.
+
+    This module itself is present since Luv 0.5.7. *)|}
 
 let type_feature_doc = {|(** A value of type ['a feature] is physically either a
     [bool] or an [int].
@@ -218,65 +223,67 @@ let () =
   int "libuv1" version ~doc:"libuv minor version in the 1.x series.";
   int "luv05" 7 ~doc:"Luv patch version in the 0.5.x series.";
 
-  let needs min name = bool context name (version >= min) in
+  let needs ?doc min name = bool context ?doc name (version >= min) in
 
-  needs  9 "disconnect";
-  needs 21 "eftype";
-  needs 32 "eilseq";
-  needs 16 "enotty";
-  needs 22 "err_name_r";
-  needs 14 "fs_copyfile";
-  needs 20 "fs_copyfile_ficlone";
-  needs 36 "fs_lutime";
-  needs 21 "fs_lchown";
-  needs 34 "fs_mkstemp";
-  needs 31 "fs_o_filemap";
-  needs  8 "fs_realpath";
-  needs 31 "fs_statfs";
-  needs 29 "get_constrained_memory";
-  needs 12 "get_osfhandle";
-  needs 28 "gettimeofday";
-  needs 16 "if_indextoiid";
-  needs 16 "if_indextoname";
-  needs 38 "library_shutdown";
-  needs 12 "loop_fork";
-  needs 26 "maxhostnamesize";
-  needs 39 "metrics_idle_time";
-  needs 15 "mutex_init_recursive";
-  needs 23 "open_osfhandle";
-  needs 31 "os_environ";
-  needs  6 "os_homedir";
-  needs  9 "os_get_passwd";
-  needs 12 "os_getenv";
-  needs 12 "os_gethostname";
-  needs 18 "os_getpid";
-  needs 16 "os_getppid";
-  needs 23 "os_priority";
-  needs  9 "os_tmpdir";
-  needs 25 "os_uname";
-  needs 21 "overlapped_pipe";
-  needs 16 "pipe_chmod";
-  needs 14 "prioritized";
-  needs 24 "process_windows_hide_console";
-  needs 24 "process_windows_hide_gui";
-  needs 33 "random";
-  needs 28 "readdir";
-  needs 12 "signal_start_oneshot";
-  needs 34 "sleep";
-  needs 22 "strerror_r";
-  needs 32 "tcp_close_reset";
-  needs  7 "tcp_init_ex";
-  needs 40 "timer_get_due_in";
-  needs 26 "thread_stack_size";
-  needs 10 "translate_sys_error";
-  needs 33 "tty_vterm_state";
-  needs 27 "udp_connect";
-  needs  7 "udp_init_ex";
-  needs 35 "udp_mmsg_chunk";
-  needs 40 "udp_mmsg_free";
-  needs 37 "udp_recvmmsg";
-  needs 32 "udp_set_source_membership";
-  needs 39 "udp_using_recvmmsg";
+  needs  9 "disconnect" ~doc:"See [`DISCONNECT] in {!Luv.Poll.Event.t}.";
+  needs 21 "eftype" ~doc:"See [`EFTYPE] in {!Luv.Error.t}.";
+  needs 32 "eilseq" ~doc:"See [`EILSEQ] in {!Luv.Error.t}.";
+  needs 16 "enotty" ~doc:"See [`ENOTTY] in {!Luv.Error.t}.";
+  needs 22 "err_name_r" ~doc:"See {!Luv.Error.err_name}.";
+  needs 14 "fs_copyfile" ~doc:"See {!Luv.File.copyfile}.";
+  needs 20 "fs_copyfile_ficlone" ~doc:"See signature of {!Luv.File.copyfile}.";
+  needs 36 "fs_lutime" ~doc:"See {!Luv.File.lutime}.";
+  needs 21 "fs_lchown" ~doc:"See {!Luv.File.lchown}.";
+  needs 34 "fs_mkstemp" ~doc:"See {!Luv.File.mkstemp}.";
+  needs 31 "fs_o_filemap" ~doc:"See [`FILEMAP] {!Luv.File.Open_flag.t}.";
+  needs  8 "fs_realpath" ~doc:"See {!Luv.File.realpath}.";
+  needs 31 "fs_statfs" ~doc:"See {!Luv.File.statfs}.";
+  needs 29 "get_constrained_memory"
+    ~doc:"See {!Luv.Resource.constrained_memory}.";
+  needs 12 "get_osfhandle" ~doc:"See {!Luv.File.get_osfhandle}.";
+  needs 28 "gettimeofday" ~doc:"See {!Luv.Time.gettimeofday}.";
+  needs 16 "if_indextoiid" ~doc:"See {!Luv.Network.if_indextoiid}.";
+  needs 16 "if_indextoname" ~doc:"See {!Luv.Network.if_indextoname}.";
+  needs 38 "library_shutdown" ~doc:"See {!Luv.Loop.library_shutdown}.";
+  needs 12 "loop_fork" ~doc:"See {!Luv.Loop.fork}.";
+  needs 26 "maxhostnamesize" ~doc:"Used internally.";
+  needs 39 "metrics_idle_time" ~doc:"See {!Luv.Metrics.idle_time}.";
+  needs 15 "mutex_init_recursive" ~doc:"See {!Luv.Mutex.init}.";
+  needs 23 "open_osfhandle" ~doc:"See {!Luv.File.open_osfhandle}.";
+  needs 31 "os_environ" ~doc:"See {!Luv.Env.environ}.";
+  needs  6 "os_homedir" ~doc:"See {!Luv.Path.homedir}.";
+  needs  9 "os_get_passwd" ~doc:"See {!Luv.Passwd.get_passwd}.";
+  needs 12 "os_getenv" ~doc:"See {!Luv.Env.getenv}.";
+  needs 12 "os_gethostname" ~doc:"See {!Luv.Network.gethostname}.";
+  needs 18 "os_getpid" ~doc:"See {!Luv.Pid.getpid}.";
+  needs 16 "os_getppid" ~doc:"See {!Luv.Pid.getppid}.";
+  needs 23 "os_priority" ~doc:"See {!Luv.Resource.setpriority}.";
+  needs  9 "os_tmpdir" ~doc:"See {!Luv.Path.tmpdir}.";
+  needs 25 "os_uname" ~doc:"See {!Luv.System_info.uname}.";
+  needs 21 "overlapped_pipe" ~doc:"See {!Luv.Process.to_parent_pipe}.";
+  needs 16 "pipe_chmod" ~doc:"See {!Luv.Pipe.chmod}.";
+  needs 14 "prioritized" ~doc:"See [`PRIORITIZED] in {!Luv.Poll.Event.t}.";
+  needs 24 "process_windows_hide_console" ~doc:"See {!Luv.Process.spawn}.";
+  needs 24 "process_windows_hide_gui" ~doc:"See {!Luv.Process.spawn}.";
+  needs 33 "random" ~doc:"See {!Luv.Random.random}.";
+  needs 28 "readdir" ~doc:"See {!Luv.File.readdir}.";
+  needs 12 "signal_start_oneshot" ~doc:"See {!Luv.Signal.start_oneshot}.";
+  needs 34 "sleep" ~doc:"See {!Luv.Time.sleep}.";
+  needs 22 "strerror_r" ~doc:"See {!Luv.Error.strerror}.";
+  needs 32 "tcp_close_reset" ~doc:"See {!Luv.TCP.close_reset}.";
+  needs  7 "tcp_init_ex" ~doc:"See {!Luv.TCP.init}.";
+  needs 40 "timer_get_due_in" ~doc:"See {!Luv.Timer.get_due_in}.";
+  needs 26 "thread_stack_size" ~doc:"See {!Luv.Thread.create}.";
+  needs 10 "translate_sys_error" ~doc:"See {!Luv.Error.translate_sys_error}.";
+  needs 33 "tty_vterm_state" ~doc:"See {!Luv.TTY.set_vterm_state}.";
+  needs 27 "udp_connect" ~doc:"See {!Luv.UDP.Connected}.";
+  needs  7 "udp_init_ex" ~doc:"See {!Luv.UDP.init}.";
+  needs 35 "udp_mmsg_chunk" ~doc:"See [`MMSG_CHUNK] in {!Luv.UDP.Recv_flag.t}.";
+  needs 40 "udp_mmsg_free" ~doc:"See [`MMSG_FREE] in {!Luv.UDP.Recv_flag.t}.";
+  needs 37 "udp_recvmmsg" ~doc:"See {!Luv.UDP.init}.";
+  needs 32 "udp_set_source_membership"
+    ~doc:"See {!Luv.UDP.set_source_membership}.";
+  needs 39 "udp_using_recvmmsg" ~doc:"See {!Luv.UDP.using_recvmmsg}.";
 
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;

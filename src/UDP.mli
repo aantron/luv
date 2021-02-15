@@ -24,7 +24,14 @@ val init :
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_init_ex}
     [uv_udp_init_ex]}.
 
-    [?recvmmsg] is available since Luv 0.5.2 (libuv 1.37.0). *)
+    [?domain] requires libuv 1.7.0.
+
+    [?recvmmsg] is requires Luv 0.5.2 and libuv 1.37.0.
+
+    {{!Luv.Require} Feature checks}:
+
+    - [Luv.Require.(has udp_init_ex)]
+    - [Luv.Require.(has udp_recvmmg)] *)
 
 val open_ : t -> Os_fd.Socket.t -> (unit, Error.t) result
 (** Wraps an existing socket in a libuv UDP handle.
@@ -74,7 +81,12 @@ val set_source_membership :
 
     Binds
     {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_set_source_membership}
-    [uv_udp_set_source_membership]}. *)
+    [uv_udp_set_source_membership]}.
+
+    Requires libuv 1.32.0.
+
+    {{!Luv.Require} Feature check}:
+    [Luv.Require.(has udp_set_source_membership)] *)
 
 val set_multicast_loop : t -> bool -> (unit, Error.t) result
 (** Sets multicast loopback.
@@ -139,9 +151,14 @@ sig
     | `MMSG_CHUNK
     | `MMSG_FREE
   ]
-  (** [`MMSG_CHUNK] is possible since Luv 0.5.1 (libuv 1.35.0).
+  (** [`MMSG_CHUNK] occurs since Luv 0.5.1 and libuv 1.35.0.
 
-      [`MMSG_FREE] is possible since Luv 0.5.6 (libuv 1.40.0). *)
+      [`MMSG_FREE] occurs since Luv 0.5.6 and libuv 1.40.0.
+
+      {{!Luv.Require} Feature checks}:
+
+      - [Luv.Require.(has mmsg_chunk)]
+      - [Luv.Require.(has mmsg_free)] *)
 end
 
 val recv_start :
@@ -203,7 +220,9 @@ val using_recvmmsg : t -> bool
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_using_recvmmsg}
     [uv_udp_using_recvmmsg]}.
 
-    @since Luv 0.5.5 (libuv 1.39.0) *)
+    Requires Luv 0.5.5 and libuv 1.39.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has udp_using_recvmmsg)] *)
 
 val get_send_queue_size : t -> int
 (** Binds
@@ -215,7 +234,11 @@ val get_send_queue_count : t -> int
     {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_get_send_queue_count}
     [uv_udp_get_send_queue_count]}. *)
 
-(** Connected UDP sockets. *)
+(** Connected UDP sockets.
+
+    This module requires libuv 1.27.0 or higher.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has udp_connect)] *)
 module Connected :
 sig
   val connect : t -> Sockaddr.t -> (unit, Error.t) result

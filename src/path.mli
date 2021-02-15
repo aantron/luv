@@ -26,10 +26,18 @@ val homedir : unit -> (string, Error.t) result
 (** Evaluates to the path of the home directory.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_homedir}
-    [uv_os_homedir]}. *)
+    [uv_os_homedir]}.
+
+    Requires libuv 1.6.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has os_homedir)] *)
 
 val tmpdir : unit -> (string, Error.t) result
 (** Evaluates to the path of the temporary directory.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_tmpdir}
-    [uv_os_tmpdir]}. *)
+    [uv_os_tmpdir]}.
+
+    Requires libuv 1.9.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has os_tmpdir)] *)

@@ -17,4 +17,6 @@ val idle_time : Loop.t -> Unsigned.UInt64.t
     Binds {{:http://docs.libuv.org/en/v1.x/metrics.html#c.uv_metrics_idle_time}
     [uv_metrics_idle_time]}.
 
-    @since Luv 0.5.5 (libuv 1.39.0) *)
+    Requires Luv 0.5.5 and libuv 1.39.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has metrics_idle_time)] *)

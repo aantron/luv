@@ -30,11 +30,19 @@ val if_indextoname : int -> (string, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_if_indextoname}
     [uv_if_indextoname]}. See
     {{:http://man7.org/linux/man-pages/man3/if_indextoname.3p.html}
-    [if_indextoname(3p)]}. *)
+    [if_indextoname(3p)]}.
+
+    Requires libuv 1.16.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has if_indextoname)] *)
 
 val if_indextoiid : int -> (string, Error.t) result
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_if_indextoiid}
-    [uv_if_indextoiid]}. *)
+    [uv_if_indextoiid]}.
+
+    Requires libuv 1.16.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has if_indextoiid)] *)
 
 val gethostname : unit -> (string, Error.t) result
 (** Evaluates to the system's hostname.
@@ -42,4 +50,8 @@ val gethostname : unit -> (string, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_gethostname}
     [uv_os_gethostname]}. See
     {{:http://man7.org/linux/man-pages/man3/gethostname.3p.html}
-    [gethostname(3p)]}. *)
+    [gethostname(3p)]}.
+
+    Requires.libuv 1.12.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has os_gethostname)] *)

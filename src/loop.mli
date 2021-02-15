@@ -117,7 +117,11 @@ val fork : t -> (unit, Error.t) result
 (** Reinitializes libuv after a call to [fork(2)].
 
     Binds {{:http://docs.libuv.org/en/v1.x/loop.html#c.uv_loop_fork}
-    [uv_loop_fork]}. *)
+    [uv_loop_fork]}.
+
+    Requires libuv 1.12.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has loop_fork)] *)
 
 val library_shutdown : unit -> unit
 (** Releases any state libuv is holding on to.
@@ -127,7 +131,9 @@ val library_shutdown : unit -> unit
 
     Note especially the warnings in the libuv documentation of this function.
 
-    @since Luv 0.5.3 (libuv 1.38.0) *)
+    Requiers Luv 0.5.3 and libuv 1.38.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has library_shutdown)] *)
 
 (**/**)
 

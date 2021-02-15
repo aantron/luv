@@ -25,7 +25,11 @@ val init : ?recursive:bool -> unit -> (t, Error.t) result
 
     If [?recursive] is set to [true], calls
     {{:http://docs.libuv.org/en/v1.x/threading.html#c.uv_mutex_init_recursive}
-    [uv_mutex_init_recursive]} instead. *)
+    [uv_mutex_init_recursive]} instead.
+
+    [?recursive] requires libuv 1.15.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has mutex_init_recursive)] *)
 
 val destroy : t -> unit
 (** Cleans up a mutex.

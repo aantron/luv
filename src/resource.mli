@@ -33,7 +33,12 @@ val total_memory : unit -> Unsigned.uint64
 
 val constrained_memory : unit -> Unsigned.uint64 option
 (** Binds
-    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_constrained_memory}}. *)
+    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_constrained_memory}}.
+
+    Requires libuv 1.29.0.
+
+    {{!Luv.Require} Feature check}:
+    [Luv.Require.(has get_constrained_memory)] *)
 
 val getpriority : int -> (int, Error.t) result
 (** Evaluates to the priority of the process with the given pid.
@@ -41,7 +46,11 @@ val getpriority : int -> (int, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_getpriority}
     [uv_os_getpriority]}. See
     {{:http://man7.org/linux/man-pages/man3/getpriority.3p.html}
-    [getpriority(3p)]}. *)
+    [getpriority(3p)]}.
+
+    Requires libuv 1.23.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has os_priority)] *)
 
 val setpriority : int -> int -> (unit, Error.t) result
 (** Sets the priority of the process with the given pid.
@@ -49,7 +58,11 @@ val setpriority : int -> int -> (unit, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_setpriority}
     [uv_os_setpriority]}. See
     {{:http://man7.org/linux/man-pages/man3/setpriority.3p.html}
-    [setpriority(3p)]}. *)
+    [setpriority(3p)]}.
+
+    Requires libuv 1.23.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has os_priority)] *)
 
 val resident_set_memory : unit -> (Unsigned.size_t, Error.t) result
 (** Evaluates to the resident set size for the current process.

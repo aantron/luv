@@ -106,4 +106,8 @@ val chmod : t -> Mode.t list -> (unit, Error.t) result
 (** Sets pipe permissions.
 
     Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_chmod}
-    [uv_pipe_chmod]}. *)
+    [uv_pipe_chmod]}.
+
+    Requires libuv 1.16.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has pipe_chmod)] *)

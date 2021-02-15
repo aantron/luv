@@ -38,6 +38,20 @@ sig
     | `DISCONNECT
     | `PRIORITIZED
   ]
+  (** Binds {{:http://docs.libuv.org/en/v1.x/poll.html#c.uv_poll_event}
+      [uv_poll_event]}.
+
+      [`DISCONNECT] is implemented starting with libuv 1.9.0. On earlier
+      versions, trying to register for [`DISCONNECT] events does nothing, and,
+      correspondingly, user code cannot receive a [`DISCONNECT] event. The OCaml
+      code will still compile.
+
+      Similarly, [`PRIORITIZED] requires libuv 1.14.0.
+
+      {{!Luv.Require} Feature checks}:
+
+      - [Luv.Require.(has disconnect)]
+      - [Luv.Require.(has prioritized)] *)
 end
 
 val start :

@@ -42,7 +42,10 @@ val to_parent_pipe :
 
     [?overlapped] sets
     {{:http://docs.libuv.org/en/v1.x/process.html#c.uv_stdio_flags}
-    [UV_OVERLAPPED_PIPE]}. *)
+    [UV_OVERLAPPED_PIPE]}. This requires libuv 1.21.0. On earlier versions, the
+    optional argument does nothing.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has overlapped_pipe)] *)
 
 val inherit_fd :
   fd:int ->
@@ -110,7 +113,15 @@ val spawn :
 
     Redirections for STDIN, STDOUT, STDERR that are not specified are set by Luv
     to [UV_IGNORE]. This causes libuv to open new file descriptors for the child
-    process, and redirect them to [/dev/null] or [nul]. *)
+    process, and redirect them to [/dev/null] or [nul].
+
+    [?windows_hide_console] and [?windows_hide_gui] have no effect on libuv
+    prior to 1.24.0.
+
+    {{!Luv.Require} Feature checks}:
+
+    - [Luv.Require.(has process_windows_hide_console)]
+    - [Luv.Require.(has process_windows_hide_gui)] *)
 
 val disable_stdio_inheritance : unit -> unit
 (** Disables (tries) file descriptor inheritance for inherited descriptors.

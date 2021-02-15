@@ -66,8 +66,16 @@ end
 
 val set_vterm_state : Vterm_state.t -> unit
 (** Binds {{:http://docs.libuv.org/en/v1.x/tty.html#c.uv_tty_set_vterm_state}
-    [uv_tty_set_vterm_state]}. *)
+    [uv_tty_set_vterm_state]}.
+
+    Requires libuv 1.33.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has tty_vterm_state)] *)
 
 val get_vterm_state : unit -> (Vterm_state.t, Error.t) result
 (** Binds {{:http://docs.libuv.org/en/v1.x/tty.html#c.uv_tty_get_vterm_state}
-    [uv_tty_get_vterm_state]}. *)
+    [uv_tty_get_vterm_state]}.
+
+    Requires libuv 1.33.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has tty_vterm_state)] *)

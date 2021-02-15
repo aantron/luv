@@ -143,6 +143,9 @@ sig
     | `SYMLINK
     | `SYNC
   ]
+  (** [`FILEMAP] requires libuv 1.31.0.
+
+      {{!Luv.Require} Feature check}: [Luv.Require.(has fs_o_filemap)] *)
 end
 
 (** {{!Luv.File.Mode} Permissions bits}. *)
@@ -331,7 +334,11 @@ val mkstemp :
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_mkstemp}
     [uv_fs_mkstemp]}. See
     {{:http://man7.org/linux/man-pages/man3/mkdtemp.3p.html} [mkstemp(3p)]}. The
-    synchronous version is {!Luv.File.Sync.mkstemp}. *)
+    synchronous version is {!Luv.File.Sync.mkstemp}.
+
+    Requires libuv 1.34.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has fs_mkstemp)] *)
 
 val mkdtemp :
   ?loop:Loop.t ->
@@ -421,7 +428,11 @@ val opendir :
     {{:http://man7.org/linux/man-pages/man3/fdopendir.3p.html} [opendir(3p)]}.
     The synchronous version is {!Luv.File.Sync.opendir}.
 
-    The directory must later be closed with {!Luv.File.closedir}. *)
+    The directory must later be closed with {!Luv.File.closedir}.
+
+    Requires libuv 1.28.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has fs_readdir)] *)
 
 val closedir :
   ?loop:Loop.t ->
@@ -434,7 +445,11 @@ val closedir :
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_closedir}
     [uv_fs_closedir]}. See
     {{:http://man7.org/linux/man-pages/man3/closedir.3p.html} [closedir(3p)]}.
-    The synchronous version is {!Luv.File.Sync.closedir}. *)
+    The synchronous version is {!Luv.File.Sync.closedir}.
+
+    Requires libuv 1.28.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has fs_readdir)] *)
 
 val readdir :
   ?loop:Loop.t ->
@@ -448,7 +463,11 @@ val readdir :
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_readdir}
     [uv_fs_readdir]}. See
     {{:http://man7.org/linux/man-pages/man3/readdir.3p.html} [readdir(3p)]}. The
-    synchronous version is {!Luv.File.Sync.readdir}. *)
+    synchronous version is {!Luv.File.Sync.readdir}.
+
+    Requires libuv 1.28.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has fs_readdir)] *)
 
 (** Abstract type of of directory scans. See {!Luv.File.scandir}. *)
 module Directory_scan :
@@ -587,7 +606,11 @@ val statfs :
 
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_statfs}
     [uv_fs_statfs]}. See {{:http://man7.org/linux/man-pages/man2/statfs.2.html}
-    [statfs(2)]}. The synchronous version is {!Luv.File.Sync.statfs}. *)
+    [statfs(2)]}. The synchronous version is {!Luv.File.Sync.statfs}.
+
+    Requires libuv 1.31.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has fs_statfs)] *)
 
 
 
@@ -649,7 +672,17 @@ val copyfile :
 (** Copies the file at the given path to the path given by [~to_].
 
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_copyfile}
-    [uv_fs_copyfile]}. The synchronous version is {!Luv.File.Sync.copyfile}. *)
+    [uv_fs_copyfile]}. The synchronous version is {!Luv.File.Sync.copyfile}.
+
+    Requires libuv 1.14.0.
+
+    [?ficlone] and [?ficlone_force] have no effect if the libuv version is less
+    than 1.20.0.
+
+    {{!Luv.Require} Feature checks}:
+
+    - [Luv.Require.(has fs_copyfile)]
+    - [Luv.Require.(has fs_copyfile_ficlone)] *)
 
 val sendfile :
   ?loop:Loop.t ->
@@ -771,7 +804,9 @@ val lutime :
     [uv_fs_lutime]}. See {{:http://man7.org/linux/man-pages/man3/lutimes.3.html}
     [lutimes(3)]}. The synchronous version is {!Luv.File.Sync.lutime}.
 
-    @since Luv 0.5.2 (libuv 1.36.0). *)
+    Requires Luv 0.5.2 and libuv 1.36.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has fs_lutime)] *)
 
 
 
@@ -833,7 +868,11 @@ val realpath :
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_realpath}
     [uv_fs_readpath]}. See
     {{:http://man7.org/linux/man-pages/man3/realpath.3p.html} [realpath(3p)]}.
-    The synchronous version is {!Luv.File.Sync.realpath}. *)
+    The synchronous version is {!Luv.File.Sync.realpath}.
+
+    Requires libuv 1.8.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has fs_realpath)] *)
 
 
 
@@ -867,7 +906,11 @@ val lchown :
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_fs_lchown}
     [uv_fs_lchown]}. See
     {{:http://man7.org/linux/man-pages/man3/lchown.3p.html} [lchown(3p)]}. The
-    synchronous version is {!Luv.File.Sync.lchown}. *)
+    synchronous version is {!Luv.File.Sync.lchown}.
+
+    Requires libuv 1.21.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has fs_lchown)] *)
 
 val fchown :
   ?loop:Loop.t ->
@@ -1091,7 +1134,11 @@ val get_osfhandle : t -> (Os_fd.Fd.t, Error.t) result
 
     On Unix-like systems, this passes the file descriptor through unchanged. On
     Windows, a {!Luv.File.t} is an C runtime library file descritpor. This
-    function converts it to a [HANDLE]. *)
+    function converts it to a [HANDLE].
+
+    Requires libuv 1.12.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has get_osfhandle)] *)
 
 val open_osfhandle : Os_fd.Fd.t -> (t, Error.t) result
 (** Inverse of {!Luv.File.get_osfhandle}.
@@ -1099,7 +1146,11 @@ val open_osfhandle : Os_fd.Fd.t -> (t, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/fs.html#c.uv_open_osfhandle}
     [uv_open_osfhandle]}. See
     {{:https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/open-osfhandle}
-    [_open_osfhandle]}. *)
+    [_open_osfhandle]}.
+
+    Requires libuv 1.23.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has open_osfhandle)] *)
 
 val to_int : t -> int
 (** Returns the integer representation of a {!Luv.File.t}.

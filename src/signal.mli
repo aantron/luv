@@ -41,7 +41,11 @@ val start_oneshot : t -> int -> (unit -> unit) -> (unit, Error.t) result
 
     Binds
     {{:http://docs.libuv.org/en/v1.x/signal.html#c.uv_signal_start_oneshot}
-    [uv_signal_start_oneshot]}. *)
+    [uv_signal_start_oneshot]}.
+
+    Requires libuv 1.12.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has signal_start_oneshot)] *)
 
 val stop : t -> (unit, Error.t) result
 (** Stops the signal handle.

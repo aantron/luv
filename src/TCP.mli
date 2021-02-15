@@ -29,7 +29,12 @@ val init :
     [uv_tcp_init_ex]}.
 
     The stream is not yet connected or listening. See {!Luv.TCP.bind},
-    {!Luv.Stream.listen}, and {!Luv.Stream.connect}. *)
+    {!Luv.Stream.listen}, and {!Luv.Stream.connect}.
+
+    On libuv prior to 1.7.0, [?domain] is ignored, and the function behaves as
+    {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_init} [uv_tcp_init]}.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has tcp_init_ex)] *)
 
 val open_ : t -> Os_fd.Socket.t -> (unit, Error.t) result
 (** Wraps an existing socket in a libuv TCP stream.

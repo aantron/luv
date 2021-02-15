@@ -14,7 +14,11 @@ val gettimeofday : unit -> (t, Error.t) result
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_gettimeofday}
     [uv_gettimeofday]}. See
     {{:http://man7.org/linux/man-pages/man3/gettimeofday.3p.html}
-    [gettimeofday(3p)]}. *)
+    [gettimeofday(3p)]}.
+
+    Requires libuv 1.28.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has gettimeofday)] *)
 
 val hrtime : unit -> Unsigned.uint64
 (** Samples the high-resolution timer.
@@ -29,4 +33,8 @@ val sleep : int -> unit
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_sleep}
     [uv_sleep]}. See {{:http://man7.org/linux/man-pages/man3/sleep.3p.html}
-    [sleep(3p)]}. *)
+    [sleep(3p)]}.
+
+    Requires libuv 1.34.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has sleep)] *)

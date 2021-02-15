@@ -19,4 +19,8 @@ val get_passwd : unit -> (t, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_get_passwd}
     [uv_os_get_passwd]}. See
     {{:http://man7.org/linux/man-pages/man3/getpwuid_r.3p.html}
-    [getpwuid_r(3p)]}. *)
+    [getpwuid_r(3p)]}.
+
+    Requires libuv 1.9.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has os_get_passwd)] *)
