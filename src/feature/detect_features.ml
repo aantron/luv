@@ -169,6 +169,12 @@ let () =
 
   bool "os_getpid" (version >= 18);
 
+  bool "enotty" (version >= 16);
+  bool "pipe_chmod" (version >= 16);
+  bool "os_getppid" (version >= 16);
+  bool "if_indextoname" (version >= 16);
+  bool "if_indextoiid" (version >= 16);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;
