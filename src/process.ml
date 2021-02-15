@@ -78,13 +78,11 @@ let null_callback =
   C.Functions.Process.get_null_callback ()
 
 let c_string_array strings =
-  (*
-    The array-of-pointers doesn't hold a reference to the individual string pointers,
-    so we need to allocate and return them so the consumer can ensure they stayed
-    referenced to avoid the GC cleaning them up early.
-  *)
+  (* The array-of-pointers doesn't hold a reference to the individual string
+     pointers, so we need to allocate and return them so the consumer can ensure
+     they stayed referenced to avoid the GC cleaning them up early. *)
   let c_string_ptrs = strings @ [""]
-    |> List.map Ctypes.(CArray.of_string) 
+    |> List.map Ctypes.(CArray.of_string)
     |> List.map Ctypes.CArray.start
   in
   let c_strings =
@@ -164,18 +162,18 @@ let spawn
 
   let redirections, redirection_count = build_redirection_array redirect in
 
-  let gc_arg_handles, c_args = c_string_array arguments in 
+  let gc_arg_handles, c_args = c_string_array arguments in
   let gc_env_handles, c_env = c_string_array env in
 
   let c_cwd = cwd |> Ctypes.(CArray.of_string) |> Ctypes.CArray.start in
   let c_path = path |> Ctypes.(CArray.of_string) |> Ctypes.CArray.start in
 
-  (*
-    Ensure that the GC maintains handles to all the strings we're passing through the duration of the call.
+  (* Ensure that the GC maintains handles to all the strings we're passing
+     through the duration of the call.
 
-    This is important because the runtime is released, and there is a potential race condition if the
-    GC is triggered between releasing the runtime and calling [uv_spawn].
-  *)
+     This is important because the runtime is released, and there is a potential
+     race condition if the GC is triggered between releasing the runtime and
+     calling [uv_spawn]. *)
   let gc_handles = ref (Some (gc_arg_handles, gc_env_handles, c_cwd, c_path)) in
 
   let result =
