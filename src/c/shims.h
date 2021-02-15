@@ -207,3 +207,8 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 24
+    #define UV_PROCESS_WINDOWS_HIDE_CONSOLE 0
+    #define UV_PROCESS_WINDOWS_HIDE_GUI 0
+#endif
