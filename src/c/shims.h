@@ -128,3 +128,10 @@
     {
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 29
+    static uint64_t uv_get_constrained_memory()
+    {
+        return 0;
+    }
+#endif

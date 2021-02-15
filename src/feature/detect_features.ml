@@ -140,6 +140,8 @@ let () =
   bool "fs_statfs" (version >= 31);
   bool "os_environ" (version >= 31);
 
+  bool "get_constrained_memory" (version >= 29);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;
