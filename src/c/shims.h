@@ -194,3 +194,16 @@
         #define UV_MAXHOSTNAMESIZE 256
     #endif
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 25
+    typedef struct {
+        char sysname[256];
+        char release[256];
+        char version[256];
+        char machine[256];
+    } uv_utsname_t;
+    static int uv_os_uname(uv_utsname_t *buffer)
+    {
+        return ENOSYS;
+    }
+#endif
