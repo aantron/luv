@@ -111,7 +111,7 @@ host_triplet = @host@
 @WINNT_TRUE@am__append_2 = include/uv/win.h include/uv/tree.h
 @WINNT_TRUE@am__append_3 = -I$(top_srcdir)/src/win \
 @WINNT_TRUE@               -DWIN32_LEAN_AND_MEAN \
-@WINNT_TRUE@               -D_WIN32_WINNT=0x0600
+@WINNT_TRUE@               -D_WIN32_WINNT=0x0602
 
 @WINNT_TRUE@am__append_4 = src/win/async.c \
 @WINNT_TRUE@                    src/win/atomicops-inl.h \
@@ -232,10 +232,6 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @ANDROID_TRUE@am__append_23 = include/uv/android-ifaddrs.h
 @ANDROID_TRUE@am__append_24 = -D_GNU_SOURCE
 @ANDROID_TRUE@am__append_25 = src/unix/android-ifaddrs.c \
-@ANDROID_TRUE@                    src/unix/linux-core.c \
-@ANDROID_TRUE@                    src/unix/linux-inotify.c \
-@ANDROID_TRUE@                    src/unix/linux-syscalls.c \
-@ANDROID_TRUE@                    src/unix/procfs-exepath.c \
 @ANDROID_TRUE@                    src/unix/pthread-fixes.c \
 @ANDROID_TRUE@                    src/unix/random-getrandom.c \
 @ANDROID_TRUE@                    src/unix/random-sysctl-linux.c
@@ -442,17 +438,17 @@ am__libuv_la_SOURCES_DIST = src/fs-poll.c src/heap-inl.h src/idna.c \
 	src/unix/thread.c src/unix/tty.c src/unix/udp.c src/unix/aix.c \
 	src/unix/aix-common.c src/unix/ibmi.c src/unix/posix-poll.c \
 	src/unix/no-fsevents.c src/unix/android-ifaddrs.c \
-	src/unix/linux-core.c src/unix/linux-inotify.c \
-	src/unix/linux-syscalls.c src/unix/procfs-exepath.c \
 	src/unix/pthread-fixes.c src/unix/random-getrandom.c \
 	src/unix/random-sysctl-linux.c src/unix/cygwin.c \
 	src/unix/bsd-ifaddrs.c src/unix/no-proctitle.c \
-	src/unix/posix-hrtime.c src/unix/sysinfo-loadavg.c \
-	src/unix/sysinfo-memory.c src/unix/darwin-proctitle.c \
-	src/unix/darwin-stub.h src/unix/darwin.c src/unix/fsevents.c \
-	src/unix/kqueue.c src/unix/proctitle.c \
-	src/unix/random-getentropy.c src/unix/bsd-proctitle.c \
-	src/unix/freebsd.c src/unix/haiku.c src/unix/linux-syscalls.h \
+	src/unix/posix-hrtime.c src/unix/procfs-exepath.c \
+	src/unix/sysinfo-loadavg.c src/unix/sysinfo-memory.c \
+	src/unix/darwin-proctitle.c src/unix/darwin-stub.h \
+	src/unix/darwin.c src/unix/fsevents.c src/unix/kqueue.c \
+	src/unix/proctitle.c src/unix/random-getentropy.c \
+	src/unix/bsd-proctitle.c src/unix/freebsd.c src/unix/haiku.c \
+	src/unix/linux-core.c src/unix/linux-inotify.c \
+	src/unix/linux-syscalls.c src/unix/linux-syscalls.h \
 	src/unix/netbsd.c src/unix/openbsd.c src/unix/sunos.c \
 	src/unix/os390.c src/unix/os390-syscalls.c
 am__dirstamp = $(am__leading_dot)dirstamp
@@ -498,10 +494,6 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @OS400_TRUE@	src/unix/libuv_la-posix-poll.lo \
 @OS400_TRUE@	src/unix/libuv_la-no-fsevents.lo
 @ANDROID_TRUE@am__objects_5 = src/unix/libuv_la-android-ifaddrs.lo \
-@ANDROID_TRUE@	src/unix/libuv_la-linux-core.lo \
-@ANDROID_TRUE@	src/unix/libuv_la-linux-inotify.lo \
-@ANDROID_TRUE@	src/unix/libuv_la-linux-syscalls.lo \
-@ANDROID_TRUE@	src/unix/libuv_la-procfs-exepath.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-pthread-fixes.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-random-getrandom.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo
@@ -635,9 +627,9 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-platform-output.c test/test-poll.c \
 	test/test-poll-close.c \
 	test/test-poll-close-doesnt-corrupt-stack.c \
-	test/test-poll-closesocket.c test/test-poll-oob.c \
-	test/test-process-priority.c test/test-process-title.c \
-	test/test-process-title-threadsafe.c \
+	test/test-poll-closesocket.c test/test-poll-multiple-handles.c \
+	test/test-poll-oob.c test/test-process-priority.c \
+	test/test-process-title.c test/test-process-title-threadsafe.c \
 	test/test-queue-foreach-delete.c test/test-random.c \
 	test/test-ref.c test/test-run-nowait.c test/test-run-once.c \
 	test/test-semaphore.c test/test-shutdown-close.c \
@@ -767,6 +759,7 @@ am_test_run_tests_OBJECTS = test/run_tests-blackhole-server.$(OBJEXT) \
 	test/run_tests-test-poll-close.$(OBJEXT) \
 	test/run_tests-test-poll-close-doesnt-corrupt-stack.$(OBJEXT) \
 	test/run_tests-test-poll-closesocket.$(OBJEXT) \
+	test/run_tests-test-poll-multiple-handles.$(OBJEXT) \
 	test/run_tests-test-poll-oob.$(OBJEXT) \
 	test/run_tests-test-process-priority.$(OBJEXT) \
 	test/run_tests-test-process-title.$(OBJEXT) \
@@ -1038,6 +1031,7 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	test/$(DEPDIR)/run_tests-test-poll-close-doesnt-corrupt-stack.Po \
 	test/$(DEPDIR)/run_tests-test-poll-close.Po \
 	test/$(DEPDIR)/run_tests-test-poll-closesocket.Po \
+	test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Po \
 	test/$(DEPDIR)/run_tests-test-poll-oob.Po \
 	test/$(DEPDIR)/run_tests-test-poll.Po \
 	test/$(DEPDIR)/run_tests-test-process-priority.Po \
@@ -1427,9 +1421,9 @@ test_run_tests_SOURCES = test/blackhole-server.c test/dns-server.c \
 	test/test-platform-output.c test/test-poll.c \
 	test/test-poll-close.c \
 	test/test-poll-close-doesnt-corrupt-stack.c \
-	test/test-poll-closesocket.c test/test-poll-oob.c \
-	test/test-process-priority.c test/test-process-title.c \
-	test/test-process-title-threadsafe.c \
+	test/test-poll-closesocket.c test/test-poll-multiple-handles.c \
+	test/test-poll-oob.c test/test-process-priority.c \
+	test/test-process-title.c test/test-process-title-threadsafe.c \
 	test/test-queue-foreach-delete.c test/test-random.c \
 	test/test-ref.c test/test-run-nowait.c test/test-run-once.c \
 	test/test-semaphore.c test/test-shutdown-close.c \
@@ -1695,14 +1689,6 @@ src/unix/libuv_la-no-fsevents.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-android-ifaddrs.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
-src/unix/libuv_la-linux-core.lo: src/unix/$(am__dirstamp) \
-	src/unix/$(DEPDIR)/$(am__dirstamp)
-src/unix/libuv_la-linux-inotify.lo: src/unix/$(am__dirstamp) \
-	src/unix/$(DEPDIR)/$(am__dirstamp)
-src/unix/libuv_la-linux-syscalls.lo: src/unix/$(am__dirstamp) \
-	src/unix/$(DEPDIR)/$(am__dirstamp)
-src/unix/libuv_la-procfs-exepath.lo: src/unix/$(am__dirstamp) \
-	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-pthread-fixes.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-random-getrandom.lo: src/unix/$(am__dirstamp) \
@@ -1716,6 +1702,8 @@ src/unix/libuv_la-bsd-ifaddrs.lo: src/unix/$(am__dirstamp) \
 src/unix/libuv_la-no-proctitle.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-posix-hrtime.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-procfs-exepath.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-sysinfo-loadavg.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
@@ -1738,6 +1726,12 @@ src/unix/libuv_la-bsd-proctitle.lo: src/unix/$(am__dirstamp) \
 src/unix/libuv_la-freebsd.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-haiku.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-linux-core.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-linux-inotify.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-linux-syscalls.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-netbsd.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
@@ -1922,6 +1916,8 @@ test/run_tests-test-poll-close-doesnt-corrupt-stack.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-poll-closesocket.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-poll-multiple-handles.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-poll-oob.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-process-priority.$(OBJEXT): test/$(am__dirstamp) \
@@ -2274,6 +2270,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-poll-close-doesnt-corrupt-stack.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-poll-close.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-poll-closesocket.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-poll-oob.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-poll.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-process-priority.Po@am__quote@ # am--include-marker
@@ -2793,34 +2790,6 @@ src/unix/libuv_la-android-ifaddrs.lo: src/unix/android-ifaddrs.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-android-ifaddrs.lo `test -f 'src/unix/android-ifaddrs.c' || echo '$(srcdir)/'`src/unix/android-ifaddrs.c
 
-src/unix/libuv_la-linux-core.lo: src/unix/linux-core.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-linux-core.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-linux-core.Tpo -c -o src/unix/libuv_la-linux-core.lo `test -f 'src/unix/linux-core.c' || echo '$(srcdir)/'`src/unix/linux-core.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-linux-core.Tpo src/unix/$(DEPDIR)/libuv_la-linux-core.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/linux-core.c' object='src/unix/libuv_la-linux-core.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-linux-core.lo `test -f 'src/unix/linux-core.c' || echo '$(srcdir)/'`src/unix/linux-core.c
-
-src/unix/libuv_la-linux-inotify.lo: src/unix/linux-inotify.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-linux-inotify.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-linux-inotify.Tpo -c -o src/unix/libuv_la-linux-inotify.lo `test -f 'src/unix/linux-inotify.c' || echo '$(srcdir)/'`src/unix/linux-inotify.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-linux-inotify.Tpo src/unix/$(DEPDIR)/libuv_la-linux-inotify.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/linux-inotify.c' object='src/unix/libuv_la-linux-inotify.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-linux-inotify.lo `test -f 'src/unix/linux-inotify.c' || echo '$(srcdir)/'`src/unix/linux-inotify.c
-
-src/unix/libuv_la-linux-syscalls.lo: src/unix/linux-syscalls.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-linux-syscalls.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-linux-syscalls.Tpo -c -o src/unix/libuv_la-linux-syscalls.lo `test -f 'src/unix/linux-syscalls.c' || echo '$(srcdir)/'`src/unix/linux-syscalls.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-linux-syscalls.Tpo src/unix/$(DEPDIR)/libuv_la-linux-syscalls.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/linux-syscalls.c' object='src/unix/libuv_la-linux-syscalls.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-linux-syscalls.lo `test -f 'src/unix/linux-syscalls.c' || echo '$(srcdir)/'`src/unix/linux-syscalls.c
-
-src/unix/libuv_la-procfs-exepath.lo: src/unix/procfs-exepath.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-procfs-exepath.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-procfs-exepath.Tpo -c -o src/unix/libuv_la-procfs-exepath.lo `test -f 'src/unix/procfs-exepath.c' || echo '$(srcdir)/'`src/unix/procfs-exepath.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-procfs-exepath.Tpo src/unix/$(DEPDIR)/libuv_la-procfs-exepath.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/procfs-exepath.c' object='src/unix/libuv_la-procfs-exepath.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-procfs-exepath.lo `test -f 'src/unix/procfs-exepath.c' || echo '$(srcdir)/'`src/unix/procfs-exepath.c
-
 src/unix/libuv_la-pthread-fixes.lo: src/unix/pthread-fixes.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-pthread-fixes.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-pthread-fixes.Tpo -c -o src/unix/libuv_la-pthread-fixes.lo `test -f 'src/unix/pthread-fixes.c' || echo '$(srcdir)/'`src/unix/pthread-fixes.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-pthread-fixes.Tpo src/unix/$(DEPDIR)/libuv_la-pthread-fixes.Plo
@@ -2869,6 +2838,13 @@ src/unix/libuv_la-posix-hrtime.lo: src/unix/posix-hrtime.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/posix-hrtime.c' object='src/unix/libuv_la-posix-hrtime.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-posix-hrtime.lo `test -f 'src/unix/posix-hrtime.c' || echo '$(srcdir)/'`src/unix/posix-hrtime.c
+
+src/unix/libuv_la-procfs-exepath.lo: src/unix/procfs-exepath.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-procfs-exepath.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-procfs-exepath.Tpo -c -o src/unix/libuv_la-procfs-exepath.lo `test -f 'src/unix/procfs-exepath.c' || echo '$(srcdir)/'`src/unix/procfs-exepath.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-procfs-exepath.Tpo src/unix/$(DEPDIR)/libuv_la-procfs-exepath.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/procfs-exepath.c' object='src/unix/libuv_la-procfs-exepath.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-procfs-exepath.lo `test -f 'src/unix/procfs-exepath.c' || echo '$(srcdir)/'`src/unix/procfs-exepath.c
 
 src/unix/libuv_la-sysinfo-loadavg.lo: src/unix/sysinfo-loadavg.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-sysinfo-loadavg.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-sysinfo-loadavg.Tpo -c -o src/unix/libuv_la-sysinfo-loadavg.lo `test -f 'src/unix/sysinfo-loadavg.c' || echo '$(srcdir)/'`src/unix/sysinfo-loadavg.c
@@ -2946,6 +2922,27 @@ src/unix/libuv_la-haiku.lo: src/unix/haiku.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/haiku.c' object='src/unix/libuv_la-haiku.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-haiku.lo `test -f 'src/unix/haiku.c' || echo '$(srcdir)/'`src/unix/haiku.c
+
+src/unix/libuv_la-linux-core.lo: src/unix/linux-core.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-linux-core.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-linux-core.Tpo -c -o src/unix/libuv_la-linux-core.lo `test -f 'src/unix/linux-core.c' || echo '$(srcdir)/'`src/unix/linux-core.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-linux-core.Tpo src/unix/$(DEPDIR)/libuv_la-linux-core.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/linux-core.c' object='src/unix/libuv_la-linux-core.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-linux-core.lo `test -f 'src/unix/linux-core.c' || echo '$(srcdir)/'`src/unix/linux-core.c
+
+src/unix/libuv_la-linux-inotify.lo: src/unix/linux-inotify.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-linux-inotify.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-linux-inotify.Tpo -c -o src/unix/libuv_la-linux-inotify.lo `test -f 'src/unix/linux-inotify.c' || echo '$(srcdir)/'`src/unix/linux-inotify.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-linux-inotify.Tpo src/unix/$(DEPDIR)/libuv_la-linux-inotify.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/linux-inotify.c' object='src/unix/libuv_la-linux-inotify.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-linux-inotify.lo `test -f 'src/unix/linux-inotify.c' || echo '$(srcdir)/'`src/unix/linux-inotify.c
+
+src/unix/libuv_la-linux-syscalls.lo: src/unix/linux-syscalls.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-linux-syscalls.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-linux-syscalls.Tpo -c -o src/unix/libuv_la-linux-syscalls.lo `test -f 'src/unix/linux-syscalls.c' || echo '$(srcdir)/'`src/unix/linux-syscalls.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-linux-syscalls.Tpo src/unix/$(DEPDIR)/libuv_la-linux-syscalls.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/linux-syscalls.c' object='src/unix/libuv_la-linux-syscalls.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-linux-syscalls.lo `test -f 'src/unix/linux-syscalls.c' || echo '$(srcdir)/'`src/unix/linux-syscalls.c
 
 src/unix/libuv_la-netbsd.lo: src/unix/netbsd.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-netbsd.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-netbsd.Tpo -c -o src/unix/libuv_la-netbsd.lo `test -f 'src/unix/netbsd.c' || echo '$(srcdir)/'`src/unix/netbsd.c
@@ -4129,6 +4126,20 @@ test/run_tests-test-poll-closesocket.obj: test/test-poll-closesocket.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-poll-closesocket.c' object='test/run_tests-test-poll-closesocket.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-poll-closesocket.obj `if test -f 'test/test-poll-closesocket.c'; then $(CYGPATH_W) 'test/test-poll-closesocket.c'; else $(CYGPATH_W) '$(srcdir)/test/test-poll-closesocket.c'; fi`
+
+test/run_tests-test-poll-multiple-handles.o: test/test-poll-multiple-handles.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-poll-multiple-handles.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Tpo -c -o test/run_tests-test-poll-multiple-handles.o `test -f 'test/test-poll-multiple-handles.c' || echo '$(srcdir)/'`test/test-poll-multiple-handles.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Tpo test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-poll-multiple-handles.c' object='test/run_tests-test-poll-multiple-handles.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-poll-multiple-handles.o `test -f 'test/test-poll-multiple-handles.c' || echo '$(srcdir)/'`test/test-poll-multiple-handles.c
+
+test/run_tests-test-poll-multiple-handles.obj: test/test-poll-multiple-handles.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-poll-multiple-handles.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Tpo -c -o test/run_tests-test-poll-multiple-handles.obj `if test -f 'test/test-poll-multiple-handles.c'; then $(CYGPATH_W) 'test/test-poll-multiple-handles.c'; else $(CYGPATH_W) '$(srcdir)/test/test-poll-multiple-handles.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Tpo test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-poll-multiple-handles.c' object='test/run_tests-test-poll-multiple-handles.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-poll-multiple-handles.obj `if test -f 'test/test-poll-multiple-handles.c'; then $(CYGPATH_W) 'test/test-poll-multiple-handles.c'; else $(CYGPATH_W) '$(srcdir)/test/test-poll-multiple-handles.c'; fi`
 
 test/run_tests-test-poll-oob.o: test/test-poll-oob.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-poll-oob.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-poll-oob.Tpo -c -o test/run_tests-test-poll-oob.o `test -f 'test/test-poll-oob.c' || echo '$(srcdir)/'`test/test-poll-oob.c
@@ -5909,6 +5920,7 @@ distclean: distclean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-poll-close-doesnt-corrupt-stack.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-poll-close.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-poll-closesocket.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-poll-oob.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-poll.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-process-priority.Po
@@ -6207,6 +6219,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-poll-close-doesnt-corrupt-stack.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-poll-close.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-poll-closesocket.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-poll-multiple-handles.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-poll-oob.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-poll.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-process-priority.Po
