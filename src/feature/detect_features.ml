@@ -155,6 +155,9 @@ let () =
   bool "process_windows_hide_console" (version >= 24);
   bool "process_windows_hide_gui" (version >= 24);
 
+  bool "open_osfhandle" (version >= 23);
+  bool "uv_os_priority" (version >= 23);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

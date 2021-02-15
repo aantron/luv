@@ -212,3 +212,19 @@
     #define UV_PROCESS_WINDOWS_HIDE_CONSOLE 0
     #define UV_PROCESS_WINDOWS_HIDE_GUI 0
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 23
+    static int uv_open_osfhandle(uv_os_fd_t os_fd)
+    {
+        return (int)os_fd;
+    }
+
+    static int uv_os_getpriority(uv_pid_t pid, int *priority)
+    {
+        return ENOSYS;
+    }
+    static int uv_os_setpriority(uv_pid_t pid, int priority)
+    {
+        return ENOSYS;
+    }
+#endif
