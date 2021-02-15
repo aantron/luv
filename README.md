@@ -150,19 +150,21 @@ Once you get the REPL prompt, try running `Luv.Env.environ ();;`
 
 <br/>
 
-## Future
+## External libuv
 
-- [ ] A "post-compose" functor that applies a transformation to the whole API,
-for globally converting callbacks to promises, changing the error handling
-strategy, etc. Prototype was [here][postcompose].
-- [ ] Integration with [Lwt][lwt]. There was an old [example][lwt-integration]
-that used the early post-compose functor and a [Luv-based Lwt event
-loop][lwt-loop].
-- [ ] Luv could make multithreaded event-driven programming very easy by lazily
-initializing a loop for each thread, and storing the reference to it in a TLS
-key that Luv uses internally. This could be especially powerful once OCaml has a
-genuine multicore runtime.
-- [ ] [`let*` operators][let] for convenient chaining of callbacks.
+You can tell Luv to ignore its vendored libuv, and build against an external one
+by setting `LUV_USE_SYSTEM_LIBUV=yes` during the build. This requires libuv to
+be findable by `-luv`, `uv.h` to be in the header path, and the Luv version to
+be at least 0.5.7.
+
+The external libuv can be considerably older than what Luv vendors &mdash; at
+the moment, Luv supports compilation against libuv versions all the way down to
+1.3.0, using a bunch of [shims][shims].
+
+If you use an older libuv, you may want to look at the feature tests exposed by
+Luv in auto-generated module [`Luv.Require`][require]. The one posted online was
+generated for Luv's vendored libuv, so everything is present. If you use an
+older libuv, some of the features will have type `_false feature`.
 
 <br/>
 
@@ -205,7 +207,5 @@ Luv has several pieces, with slightly different permissive licenses:
 [delay.ml]: https://github.com/aantron/luv/blob/master/example/delay.ml
 [example/dune]: https://github.com/aantron/luv/blob/master/example/dune
 [utop]: https://github.com/ocaml-community/utop
-[postcompose]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/src/promisify_signatures.ml
-[lwt-integration]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/example/http_get_lwt/http_get_lwt.ml
-[lwt-loop]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/src/lwt/luv_lwt.ml
-[let]: https://github.com/aantron/luv/blob/0eae7f30ef99157bda77c62e0cb82169410de583/src/syntax/syntax.mli#L6-L15
+[shims]: https://github.com/aantron/luv/blob/master/src/c/shims.h
+[require]: https://aantron.github.io/luv/luv/Luv/Require/index.html

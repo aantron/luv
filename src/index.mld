@@ -93,3 +93,4 @@ presented in the user guide.
 - {!Luv.Check} — post-I/O callbacks
 - {!Luv.Idle} — per-iteration callbacks
 - {!Luv.Version} — libuv version
+- {!Luv.Require} — feature checks
