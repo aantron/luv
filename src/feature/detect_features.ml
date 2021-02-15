@@ -186,6 +186,8 @@ let () =
   bool "os_getenv" (version >= 12);
   bool "os_gethostname" (version >= 12);
 
+  bool "translate_sys_error" (version >= 10);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

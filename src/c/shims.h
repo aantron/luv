@@ -3,6 +3,13 @@
 
 
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 10
+    static int uv_translate_sys_error(int sys_error)
+    {
+        return 0x34242424;
+    }
+#endif
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 12
     static int uv_loop_fork(uv_loop_t* loop)
     {
