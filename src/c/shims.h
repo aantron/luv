@@ -261,3 +261,69 @@
     #define UV_FS_COPYFILE_FICLONE 0
     #define UV_FS_COPYFILE_FICLONE_FORCE 0
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 19
+    static uv_loop_t* uv_handle_get_loop(const uv_handle_t *handle)
+    {
+        return handle->loop;
+    }
+    static void* uv_handle_get_data(const uv_handle_t *handle)
+    {
+        return handle->data;
+    }
+    static void* uv_handle_set_data(uv_handle_t *handle, void *data)
+    {
+        handle->data = data;
+        return data;
+    }
+
+    static void* uv_req_get_data(const uv_req_t *request)
+    {
+        return request->data;
+    }
+    static void* uv_req_set_data(uv_req_t *request, void *data)
+    {
+        request->data = data;
+        return data;
+    }
+    static const char* uv_req_type_name(uv_req_type type)
+    {
+        return NULL;
+    }
+
+    static size_t uv_stream_get_write_queue_size(const uv_stream_t *stream)
+    {
+        return stream->write_queue_size;
+    }
+
+    static size_t uv_udp_get_send_queue_size(const uv_udp_t *udp)
+    {
+        return udp->send_queue_size;
+    }
+    static size_t uv_udp_get_send_queue_count(const uv_udp_t *udp)
+    {
+        return udp->send_queue_count;
+    }
+
+    static uv_pid_t uv_process_get_pid(const uv_process_t *process)
+    {
+        return process->pid;
+    }
+
+    static ssize_t uv_fs_get_result(const uv_fs_t *request)
+    {
+        return request->result;
+    }
+    static void* uv_fs_get_ptr(const uv_fs_t *request)
+    {
+        return request->ptr;
+    }
+    static const char* uv_fs_get_path(const uv_fs_t *request)
+    {
+        return request->path;
+    }
+    static uv_stat_t* uv_fs_get_statbuf(uv_fs_t *request)
+    {
+        return &request->statbuf;
+    }
+#endif
