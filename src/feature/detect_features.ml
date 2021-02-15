@@ -136,6 +136,10 @@ let () =
   bool "tcp_close_reset" (version >= 32);
   bool "udp_set_source_membership" (version >= 32);
 
+  bool "fs_o_filemap" (version >= 31);
+  bool "fs_statfs" (version >= 31);
+  bool "os_environ" (version >= 31);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

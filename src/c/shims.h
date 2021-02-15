@@ -99,3 +99,32 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 31
+    #define UV_FS_O_FILEMAP 0
+
+    typedef struct {
+        uint64_t f_type;
+        uint64_t f_bsize;
+        uint64_t f_blocks;
+        uint64_t f_bfree;
+        uint64_t f_bavail;
+        uint64_t f_files;
+        uint64_t f_ffree;
+        uint64_t f_spare[4];
+    } uv_statfs_t;
+    static int uv_fs_statfs(
+        uv_loop_t *loop, uv_fs_t *request, const char* path, uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+
+    typedef struct {char *name; char *value;} uv_env_item_t;
+    static int uv_os_environ(uv_env_item_t **items, int *count)
+    {
+        return ENOSYS;
+    }
+    static void uv_os_free_environ(uv_env_item_t *items, int count)
+    {
+    }
+#endif
