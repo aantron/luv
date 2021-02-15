@@ -24,9 +24,11 @@ val init :
     Binds {{:http://docs.libuv.org/en/v1.x/udp.html#c.uv_udp_init_ex}
     [uv_udp_init_ex]}.
 
-    [?domain] requires libuv 1.7.0.
+    On libuv prior to 1.7.0, using [?domain] causes this function to return
+    [Error `ENOSYS] ("Function not implemented").
 
-    [?recvmmsg] is requires Luv 0.5.2 and libuv 1.37.0.
+    [?recvmmsg] is requires Luv 0.5.2 and libuv 1.37.0. Passing it with earlier
+    libuv has no effect.
 
     {{!Luv.Require} Feature checks}:
 

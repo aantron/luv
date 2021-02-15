@@ -31,8 +31,8 @@ val init :
     The stream is not yet connected or listening. See {!Luv.TCP.bind},
     {!Luv.Stream.listen}, and {!Luv.Stream.connect}.
 
-    On libuv prior to 1.7.0, [?domain] is ignored, and the function behaves as
-    {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_init} [uv_tcp_init]}.
+    On libuv prior to 1.7.0, using [?domain] causes this function to return
+    [Error `ENOSYS] ("Function not implemented").
 
     {{!Luv.Require} Feature check}: [Luv.Require.(has tcp_init_ex)] *)
 

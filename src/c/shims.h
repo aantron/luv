@@ -19,12 +19,18 @@
     static int uv_tcp_init_ex(
         uv_loop_t *loop, uv_tcp_t *tcp, unsigned int flags)
     {
+        if (flags != 0)
+            return ENOSYS;
+
         return uv_tcp_init(loop, tcp);
     }
 
     static int uv_udp_init_ex(
         uv_loop_t *loop, uv_udp_t *udp, unsigned int flags)
     {
+        if (flags & 0xFF != 0)
+            return ENOSYS;
+
         return uv_udp_init(loop, udp);
     }
 #endif
@@ -83,7 +89,7 @@
 
     static uv_os_fd_t uv_get_osfhandle(int fd)
     {
-        return fd;
+        return (uv_os_fd_t)-1;
     }
 
     static int uv_os_getenv(const char *name, char *buffer, size_t *size)
@@ -265,7 +271,7 @@
     typedef int uv_pid_t;
     static uv_pid_t uv_os_getppid()
     {
-        return 0;
+        return (uv_pid_t)-1;
     }
 
     static int uv_if_indextoname(
@@ -283,7 +289,7 @@
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 18
     static uv_pid_t uv_os_getpid()
     {
-        return 0;
+        return (uv_pid_t)-1;
     }
 #endif
 
@@ -374,14 +380,14 @@
     static char* uv_strerror_r(int error, char *buffer, size_t length)
     {
         strncpy(buffer, uv_strerror(error), length - 1);
-        buffer[length] = 0;
+        buffer[length - 1] = 0;
         return buffer;
     }
 
     static char* uv_err_name_r(int error, char *buffer, size_t length)
     {
         strncpy(buffer, uv_err_name(error), length - 1);
-        buffer[length] = 0;
+        buffer[length - 1] = 0;
         return buffer;
     }
 #endif
@@ -389,7 +395,7 @@
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 23
     static int uv_open_osfhandle(uv_os_fd_t os_fd)
     {
-        return (int)os_fd;
+        return (int)-1;
     }
 
     static int uv_os_getpriority(uv_pid_t pid, int *priority)
