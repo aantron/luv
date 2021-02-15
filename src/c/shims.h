@@ -3,6 +3,31 @@
 
 
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 9
+    #define UV_DISCONNECT 0
+
+    static int uv_os_tmpdir(char *buffer, size_t *size)
+    {
+        return ENOSYS;
+    }
+
+    typedef struct {
+        char *username;
+        long uid;
+        long gid;
+        char *shell;
+        char *homedir;
+    } uv_passwd_t;
+
+    static int uv_os_get_passwd(uv_passwd_t *passwd)
+    {
+        return ENOSYS;
+    }
+    static void uv_os_free_passwd(uv_passwd_t *passwd)
+    {
+    }
+#endif
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 10
     static int uv_translate_sys_error(int sys_error)
     {

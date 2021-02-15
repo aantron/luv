@@ -188,6 +188,10 @@ let () =
 
   bool "translate_sys_error" (version >= 10);
 
+  bool "disconnect" (version >= 9);
+  bool "os_tmpdir" (version >= 9);
+  bool "os_get_passwd" (version >= 9);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;
