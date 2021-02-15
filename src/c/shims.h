@@ -3,6 +3,18 @@
 
 
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 14
+    #define UV_PRIORITIZED 0
+
+    #define UV_FS_COPYFILE_EXCL 0
+    static int uv_fs_copyfile(
+        uv_loop_t *loop, uv_fs_t *request, const char *path,
+        const char *new_path, int flags, uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+#endif
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 15
     static int uv_mutex_init_recursive(uv_mutex_t *mutex)
     {
