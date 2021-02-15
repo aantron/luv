@@ -160,3 +160,15 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 27
+    static int uv_udp_connect(uv_udp_t *udp, const struct sockaddr *addr)
+    {
+        return ENOSYS;
+    }
+    static int uv_udp_getpeername(
+        const uv_udp_t *udp, struct sockaddr *name, int *namelen)
+    {
+        return ENOSYS;
+    }
+#endif
