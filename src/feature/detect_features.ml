@@ -180,6 +180,12 @@ let () =
   bool "prioritized" (version >= 14);
   bool "fs_copyfile" (version >= 14);
 
+  bool "loop_fork" (version >= 12);
+  bool "signal_start_oneshot" (version >= 12);
+  bool "get_osfhandle" (version >= 12);
+  bool "os_getenv" (version >= 12);
+  bool "os_gethostname" (version >= 12);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

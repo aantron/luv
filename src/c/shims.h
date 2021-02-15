@@ -3,6 +3,42 @@
 
 
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 12
+    static int uv_loop_fork(uv_loop_t* loop)
+    {
+        return ENOSYS;
+    }
+
+    static int uv_signal_start_oneshot(
+        uv_signal_t *signal, uv_signal_cb callback, int number)
+    {
+        return ENOSYS;
+    }
+
+    static uv_os_fd_t uv_get_osfhandle(int fd)
+    {
+        return fd;
+    }
+
+    static int uv_os_getenv(const char *name, char *buffer, size_t *size)
+    {
+        return ENOSYS;
+    }
+    static int uv_os_setenv(const char *name, const char *value)
+    {
+        return ENOSYS;
+    }
+    static int uv_os_unsetenv(const char *name)
+    {
+        return ENOSYS;
+    }
+
+    static int uv_os_gethostname(char *buffer, size_t *size)
+    {
+        return ENOSYS;
+    }
+#endif
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 14
     #define UV_PRIORITIZED 0
 
