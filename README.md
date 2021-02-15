@@ -5,7 +5,7 @@
 [ci]: https://github.com/aantron/luv/actions
 [ci-img]: https://img.shields.io/github/workflow/status/aantron/luv/ci/master?label=ci
 
-[**Luv**][luv] is an OCaml/ReasonML binding to [libuv][libuv], the
+[**Luv**][luv] is a neatly-packaged OCaml/Reason binding to [libuv][libuv], the
 cross-platform C library that does asynchronous I/O in Node.js and runs Node's
 main loop.
 
@@ -53,18 +53,20 @@ fairly thin binding, inherits these properties.
 Luv takes care of the tricky parts of dealing with libuv from OCaml:
 
 - **Memory management** &mdash; Luv keeps track of OCaml objects that have been
-  passed to libuv, and are otherwise referenced only by C callbacks.
-- **The OCaml runtime lock** &mdash; multithreaded Luv programs are safe.
+  passed to libuv, so that they don't get collected too early by the GC.
+- **The runtime lock** &mdash; multithreaded Luv programs don't wreck the OCaml
+  runtime.
 - **API problems** &mdash; where libuv is forced to offer difficult APIs due to
   the limitations of C, Luv provides more natural APIs.
-- **The build** &mdash; when Luv is installed, it builds libuv, so users don't
-  have to figure out how to do it.
+- **The build** &mdash; when Luv is installed, it internally builds libuv, so
+  users don't have to figure out how to do it.
 - **Linking** &mdash; a specific release of libuv is statically linked into
   your  program together with Luv, and there is no dependency on a system
   installation of libuv.
 
-Basically, when wrapped in Luv, libuv looks like any normal OCaml library, with
-the kind of usage functional programmers expect.
+Basically, when wrapped in Luv, libuv looks like any normal OCaml library you
+might install from opam or using esy. In a loose sense, libuv is just an
+implementation detail of Luv &mdash; though, indeed, a very powerful one.
 
 <br/>
 
@@ -72,7 +74,7 @@ One of the design goals of Luv is to be easy to integrate into larger libraries,
 such as [Lwt][lwt]. To that end, Luv is...
 
 - **Minimalist** &mdash; Luv only takes care of inherent libuv headaches, such
-  as memory management, building as little else as possible over libuv.
+  as memory management, adding as little else as possible over libuv.
 - **Unopinionated** &mdash; Luv avoids committing to design decisions beyond
   those dictated by libuv and OCaml.
 - **Maintainable** &mdash; Luv uses [Ctypes][ctypes] to minimize the amount of C
