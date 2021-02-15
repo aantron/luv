@@ -197,6 +197,8 @@ let () =
   bool "tcp_init_ex" (version >= 7);
   bool "udp_init_ex" (version >= 7);
 
+  bool "os_homedir" (version >= 6);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

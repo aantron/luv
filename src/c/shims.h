@@ -3,6 +3,13 @@
 
 
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 6
+    static int uv_os_homedir(char *buffer, size_t *size)
+    {
+        return ENOSYS;
+    }
+#endif
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 7
     #define UV_VERSION_HEX \
         ((UV_VERSION_MAJOR << 16) | \
