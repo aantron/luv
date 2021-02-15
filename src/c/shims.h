@@ -3,6 +3,25 @@
 
 
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 7
+    #define UV_VERSION_HEX \
+        ((UV_VERSION_MAJOR << 16) | \
+         (UV_VERSION_MINOR <<  8) | \
+         (UV_VERSION_PATCH))
+
+    static int uv_tcp_init_ex(
+        uv_loop_t *loop, uv_tcp_t *tcp, unsigned int flags)
+    {
+        return uv_tcp_init(loop, tcp);
+    }
+
+    static int uv_udp_init_ex(
+        uv_loop_t *loop, uv_udp_t *udp, unsigned int flags)
+    {
+        return uv_udp_init(loop, udp);
+    }
+#endif
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 8
     static int uv_fs_realpath(
         uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback)
