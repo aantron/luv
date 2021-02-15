@@ -172,3 +172,25 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 26
+    typedef struct {
+        enum {
+            UV_THREAD_NO_FLAGS = 0x00,
+            UV_THREAD_HAS_STACK_SIZE = 0x01
+        } flags;
+        size_t stack_size;
+    } uv_thread_options_t;
+    static int uv_thread_create_ex(
+        uv_thread_t *id, const uv_thread_options_t *options, uv_thread_cb entry,
+        void* argument)
+    {
+        return uv_thread_create(id, entry, argument);
+    }
+
+    #ifdef MAXHOSTNAMELEN
+        #define UV_MAXHOSTNAMESIZE (MAXHOSTNAMELEN + 1)
+    #else
+        #define UV_MAXHOSTNAMESIZE 256
+    #endif
+#endif
