@@ -7,55 +7,66 @@ let ground_numbers max_int buffer =
   let p fmt = Printf.bprintf buffer fmt in
   p "type 'p s\n";
   p "\n";
-  p "type __0\n";
+  p "type ___0\n";
   for i = 0 to max_int - 1 do
-    p "type __%i = __%i s\n" (i + 1) i
+    p "type ___%i = ___%i s\n" (i + 1) i
   done;
-  p "type __inf = __%i\n" max_int
+  p "type ___inf = ___%i s\n" max_int
+
+let feature_numbers max_int buffer =
+  let p fmt = Printf.bprintf buffer fmt in
+  for i = 0 to max_int do
+    p "type _%i = int * ___%i\n" i i
+  done;
+  p "type _inf = int * ___inf\n"
 
 let unification_numbers max_int buffer =
   let p fmt = Printf.bprintf buffer fmt in
-  p "type 'u _0 = 'u\n";
+  p "type 'u __0 = 'u\n";
   for i = 0 to max_int - 1 do
-    p "type 'u _%i = 'u _%i s\n" (i + 1) i
+    p "type 'u __%i = 'u __%i s\n" (i + 1) i
   done
 
 (* TODO Allow custom docs at the top of the .mli. *)
 (* TODO Docs for the visible values. *)
 let fixed_mli max_int buffer =
   let p fmt = Printf.bprintf buffer fmt in
-  p "(**/*)\n";
+  p "(**/**)\n";
   p "\n";
   ground_numbers max_int buffer;
+  p "\n";
+  feature_numbers max_int buffer;
   p "\n";
   unification_numbers max_int buffer;
   p "\n";
   p "type 'compile_time_value number\n";
   p "\n";
   for i = 0 to max_int do
-    p "val _%i : 'u _%i number\n" i i
+    p "val _%i : 'u __%i number\n" i i
   done;
   p "%s" {|
-type _true
-type _false
+type __true
+type __false
 
-(**/*)
+type _true = bool * __true
+type _false = bool * __false
 
-type ('run_time_value, 'compile_time_value) feature
+(**/**)
 
-val run_time_check : ('run_time_value, _) feature -> 'run_time_value
+type 'a feature
+  constraint 'a = 'run_time * 'compile_time
 
-val at_least :
-  (_, 'compile_time_value) feature -> 'compile_time_value number -> unit
-val (>=) :
-  (_, 'compile_time_value) feature -> 'compile_time_value number -> unit
-val present :
-  (_, _true) feature -> unit
+val get : ('run_time * _) feature -> 'run_time
+
+val (>=) : (int * 'compile_time) feature -> 'compile_time number -> unit
+val has : _true feature -> unit
 |}
 
 let fixed_ml max_int buffer =
   let p fmt = Printf.bprintf buffer fmt in
   ground_numbers max_int buffer;
+  p "\n";
+  feature_numbers max_int buffer;
   p "\n";
   unification_numbers max_int buffer;
   p "\n";
@@ -65,37 +76,38 @@ let fixed_ml max_int buffer =
     p "let _%i = ()\n" i
   done;
     p "%s" {|
-type _true
-type _false
+type __true
+type __false
 
-type ('run_time_value, 'compile_time_value) feature = 'run_time_value
+type _true = bool * __true
+type _false = bool * __false
 
-let run_time_check feature =
+type 'a feature = 'run_time
+  constraint 'a = 'run_time * _
+
+let get feature =
   feature
-
-let at_least _ _ =
-  ()
 
 let (>=) _ _ =
   ()
 
-let present _ =
+let has _ =
   ()
 |}
 
 (* TODO Allow docstrings. *)
 let int (mli, ml) name value =
-  Printf.bprintf mli "\nval %s : (int, __%i) feature\n" name value;
+  Printf.bprintf mli "\nval %s : _%i feature\n" name value;
   Printf.bprintf ml "\nlet %s = %i\n" name value
 
 let bool (mli, ml) name value =
-  Printf.bprintf mli "\nval %s : (bool, _%b) feature\n" name value;
+  Printf.bprintf mli "\nval %s : _%b feature\n" name value;
   Printf.bprintf ml "\nlet %s = %b\n" name value
 
 let () =
-  let mli = "feature.mli" in
-  let ml = "feature.ml" in
-  let max_int = 99 in
+  let mli = Sys.argv.(1) ^ "i" in
+  let ml = Sys.argv.(1) in
+  let max_int = int_of_string Sys.argv.(2) in
 
   let mli_buffer = Buffer.create 4096 in
   fixed_mli max_int mli_buffer;
@@ -103,101 +115,102 @@ let () =
   let ml_buffer = Buffer.create 4096 in
   fixed_ml max_int ml_buffer;
 
+  let version = Luv_c_types.Version.minor in
+
   let context = mli_buffer, ml_buffer in
   let int = int context in
-  let bool = bool context in
-
-  let version = Luv_c_types.Version.minor in
 
   int "libuv1" version;
   int "luv05" 7;
 
-  bool "udp_mmsg_free" (version >= 40);
-  bool "timer_get_due_in" (version >= 40);
+  let needs min name = bool context name (version >= min) in
 
-  bool "metrics_idle_time" (version >= 39);
-  bool "udp_using_recvmmsg" (version >= 39);
+  needs 40 "udp_mmsg_free";
+  needs 40 "timer_get_due_in";
 
-  bool "library_shutdown" (version >= 38);
+  needs 39 "metrics_idle_time";
+  needs 39 "udp_using_recvmmsg";
 
-  bool "udp_recvmmsg" (version >= 37);
+  needs 38 "library_shutdown";
 
-  bool "fs_lutime" (version >= 36);
+  needs 37 "udp_recvmmsg";
 
-  bool "udp_mmsg_chunk" (version >= 35);
+  needs 36 "fs_lutime";
 
-  bool "fs_mkstemp" (version >= 34);
-  bool "sleep" (version >= 34);
+  needs 35 "udp_mmsg_chunk";
 
-  bool "random" (version >= 33);
-  bool "tty_vterm_state" (version >= 33);
+  needs 34 "fs_mkstemp";
+  needs 34 "sleep";
 
-  bool "eilseq" (version >= 32);
-  bool "tcp_close_reset" (version >= 32);
-  bool "udp_set_source_membership" (version >= 32);
+  needs 33 "random";
+  needs 33 "tty_vterm_state";
 
-  bool "fs_o_filemap" (version >= 31);
-  bool "fs_statfs" (version >= 31);
-  bool "os_environ" (version >= 31);
+  needs 32 "eilseq";
+  needs 32 "tcp_close_reset";
+  needs 32 "udp_set_source_membership";
 
-  bool "get_constrained_memory" (version >= 29);
+  needs 31 "fs_o_filemap";
+  needs 31 "fs_statfs";
+  needs 31 "os_environ";
 
-  bool "gettimeofday" (version >= 28);
-  bool "readdir" (version >= 28);
+  needs 29 "get_constrained_memory";
 
-  bool "udp_connect" (version >= 27);
+  needs 28 "gettimeofday";
+  needs 28 "readdir";
 
-  bool "thread_stack_size" (version >= 26);
-  bool "maxhostnamesize" (version >= 26);
+  needs 27 "udp_connect";
 
-  bool "os_uname" (version >= 25);
+  needs 26 "thread_stack_size";
+  needs 26 "maxhostnamesize";
 
-  bool "process_windows_hide_console" (version >= 24);
-  bool "process_windows_hide_gui" (version >= 24);
+  needs 25 "os_uname";
 
-  bool "open_osfhandle" (version >= 23);
-  bool "uv_os_priority" (version >= 23);
+  needs 24 "process_windows_hide_console";
+  needs 24 "process_windows_hide_gui";
 
-  bool "strerror_r" (version >= 22);
-  bool "err_name_r" (version >= 22);
+  needs 23 "open_osfhandle";
+  needs 23 "uv_os_priority";
 
-  bool "eftype" (version >= 21);
-  bool "overlapped_pipe" (version >= 21);
-  bool "fs_lchown" (version >= 21);
+  needs 22 "strerror_r";
+  needs 22 "err_name_r";
 
-  bool "fs_copyfile_ficlone" (version >= 20);
+  needs 21 "eftype";
+  needs 21 "overlapped_pipe";
+  needs 21 "fs_lchown";
 
-  bool "os_getpid" (version >= 18);
+  needs 20 "fs_copyfile_ficlone";
 
-  bool "enotty" (version >= 16);
-  bool "pipe_chmod" (version >= 16);
-  bool "os_getppid" (version >= 16);
-  bool "if_indextoname" (version >= 16);
-  bool "if_indextoiid" (version >= 16);
+  needs 18 "os_getpid";
 
-  bool "mutex_init_recursive" (version >= 15);
+  needs 16 "enotty";
+  needs 16 "pipe_chmod";
+  needs 16 "os_getppid";
+  needs 16 "if_indextoname";
+  needs 16 "if_indextoiid";
 
-  bool "prioritized" (version >= 14);
-  bool "fs_copyfile" (version >= 14);
+  needs 15 "mutex_init_recursive";
 
-  bool "loop_fork" (version >= 12);
-  bool "signal_start_oneshot" (version >= 12);
-  bool "get_osfhandle" (version >= 12);
-  bool "os_getenv" (version >= 12);
-  bool "os_gethostname" (version >= 12);
+  needs 14 "prioritized";
+  needs 14 "fs_copyfile";
 
-  bool "translate_sys_error" (version >= 10);
+  needs 12 "loop_fork";
+  needs 12 "signal_start_oneshot";
+  needs 12 "get_osfhandle";
+  needs 12 "os_getenv";
+  needs 12 "os_gethostname";
 
-  bool "disconnect" (version >= 9);
-  bool "os_tmpdir" (version >= 9);
-  bool "os_get_passwd" (version >= 9);
+  needs 10 "translate_sys_error";
 
-  bool "fs_realpath" (version >= 8);
+  needs  9 "disconnect";
+  needs  9 "os_tmpdir";
+  needs  9 "os_get_passwd";
 
-  bool "tcp_init_ex" (version >= 7);
-  bool "udp_init_ex" (version >= 7);
+  needs  8 "fs_realpath";
 
-  bool "os_homedir" (version >= 6);
+  needs  7 "tcp_init_ex";
+  needs  7 "udp_init_ex";
+
+  needs  6 "os_homedir";
 
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;

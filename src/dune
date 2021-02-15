@@ -5,8 +5,8 @@
  (flags (:standard -w -49 -open Result)))
 
 (rule
- (targets feature.mli feature.ml)
+ (targets require.mli require.ml)
  (action
-  (run feature/detect_features.exe)))
+  (run feature/detect_features.exe require.ml 99)))
 
 (documentation)
