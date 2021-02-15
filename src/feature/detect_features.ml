@@ -270,6 +270,7 @@ let () =
   needs 28 "readdir" ~doc:"See {!Luv.File.readdir}.";
   needs 12 "signal_start_oneshot" ~doc:"See {!Luv.Signal.start_oneshot}.";
   needs 34 "sleep" ~doc:"See {!Luv.Time.sleep}.";
+  needs 41 "socketpair" ~doc:"See {!Luv.TCP.socketpair}.";
   needs 22 "strerror_r" ~doc:"See {!Luv.Error.strerror}.";
   needs 32 "tcp_close_reset" ~doc:"See {!Luv.TCP.close_reset}.";
   needs  7 "tcp_init_ex" ~doc:"See {!Luv.TCP.init}.";

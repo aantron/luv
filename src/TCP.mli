@@ -42,6 +42,34 @@ val open_ : t -> Os_fd.Socket.t -> (unit, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_open}
     [uv_tcp_open]}. *)
 
+(** Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe}
+    [UV_NONBLOCK_PIPE]}. *)
+module Flag :
+sig
+  type t = [
+    | `NONBLOCK
+  ]
+end
+
+val socketpair :
+    ?fst_flags:Flag.t list ->
+    ?snd_flags:Flag.t list ->
+    Sockaddr.Socket_type.t ->
+    int ->
+      (Os_fd.Socket.t * Os_fd.Socket.t, Error.t) result
+(** Creates a pair of connected sockets.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_socketpair}
+    [uv_socketpair]}.
+
+    See {!Luv.Pipe.pipe} for an explanation of the optional arguments.
+
+    The integer argument is the protocol number.
+
+    Requires Luv 0.5.7 and libuv 1.41.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has socketpair)] *)
+
 val nodelay : t -> bool -> (unit, Error.t) result
 (** Sets [TCP_NODELAY].
 

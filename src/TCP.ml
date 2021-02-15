@@ -22,6 +22,29 @@ let open_ tcp socket =
   C.Functions.TCP.open_ tcp socket
   |> Error.to_result ()
 
+module Flag =
+struct
+  type t = [
+    `NONBLOCK
+  ]
+end
+
+let socketpair
+    ?(fst_flags = [`NONBLOCK]) ?(snd_flags = [`NONBLOCK]) type_ protocol =
+  let convert_flags = function
+    | [] -> 0
+    | _ -> C.Types.Process.Redirection.overlapped_pipe
+  in
+  let sockets = Ctypes.allocate_n C.Types.Os_socket.t ~count:2 in
+  C.Functions.TCP.socketpair
+    (Sockaddr.Socket_type.to_c type_)
+    protocol
+    sockets
+    (convert_flags fst_flags)
+    (convert_flags snd_flags)
+  |> Error.to_result_lazy Ctypes.(fun () ->
+    !@ sockets, !@ (sockets +@ 1))
+
 let nodelay tcp enable =
   C.Functions.TCP.nodelay tcp enable
   |> Error.to_result ()

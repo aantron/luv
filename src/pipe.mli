@@ -37,17 +37,8 @@ val open_ : t -> File.t -> (unit, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_open}
     [uv_pipe_open]}. *)
 
-(** Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe}
-    [UV_NONBLOCK_PIPE]}. *)
-module Flag :
-sig
-  type t = [
-    | `NONBLOCK
-  ]
-end
-
 val pipe :
-  ?read_flags:Flag.t list -> ?write_flags:Flag.t list -> unit ->
+  ?read_flags:TCP.Flag.t list -> ?write_flags:TCP.Flag.t list -> unit ->
     (File.t * File.t, Error.t) result
 (** Creates a pair of connected pipes.
 

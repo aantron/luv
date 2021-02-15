@@ -512,5 +512,34 @@ let tests = [
         ignore @@ Luv.Handle.fileno tcp
       end
     end;
+
+    "socketpair", `Quick, begin fun () ->
+      let wrap os_socket =
+        let socket = Luv.TCP.init () |> check_success_result "init" in
+        Luv.TCP.open_ socket os_socket |> check_success_result "open_";
+        socket
+      in
+      let fst_socket, snd_socket =
+        Luv.TCP.socketpair `STREAM 0 |> check_success_result "socketpair" in
+      let fst_socket = wrap fst_socket in
+      let snd_socket = wrap snd_socket in
+
+      Luv.Stream.write fst_socket [Luv.Buffer.from_string "x"] (fun _ _ -> ());
+      Luv.Handle.close fst_socket ignore;
+
+      let read = ref false in
+
+      Luv.Stream.read_start snd_socket begin fun result ->
+        check_success_result "read_start" result
+        |> Luv.Buffer.to_string
+        |> Alcotest.(check string) "byte" "x";
+        read := true;
+        Luv.Handle.close snd_socket ignore
+      end;
+
+      run ();
+
+      Alcotest.(check bool) "read" true !read
+    end;
   ]
 ]

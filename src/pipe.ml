@@ -22,13 +22,6 @@ let init ?loop ?(for_handle_passing = false) () =
   C.Functions.Pipe.init (Loop.or_default loop) pipe for_handle_passing
   |> Error.to_result pipe
 
-module Flag =
-struct
-  type t = [
-    `NONBLOCK
-  ]
-end
-
 let pipe ?(read_flags = [`NONBLOCK]) ?(write_flags = [`NONBLOCK]) () =
   let convert_flags = function
     | [] -> 0

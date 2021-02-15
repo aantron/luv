@@ -630,4 +630,11 @@
     {
         return ENOSYS;
     }
+
+    static int uv_socketpair(
+        int type, int protocol, uv_os_sock_t sockets[2], int fst_flags,
+        int snd_flags)
+    {
+        return ENOSYS;
+    }
 #endif

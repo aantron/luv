@@ -932,6 +932,11 @@ struct
       foreign "uv_tcp_open"
         (ptr t @-> Types.Os_socket.t @-> returning error_code)
 
+    let socketpair =
+      foreign "uv_socketpair"
+        (int @-> int @-> ptr Types.Os_socket.t @-> int @-> int @->
+          returning error_code)
+
     let nodelay =
       foreign "uv_tcp_nodelay"
         (ptr t @-> bool @-> returning error_code)
