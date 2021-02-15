@@ -1,6 +1,6 @@
 (* -*- tuareg -*- *)
 
-let foreign_archives, uv_library_flag, include_dirs =
+let foreign_archives, uv_library_flag, include_dirs, i_option =
   let use_system_libuv =
     match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
     | "yes" -> true
@@ -9,9 +9,15 @@ let foreign_archives, uv_library_flag, include_dirs =
   in
 
   if use_system_libuv then
-    "", "-luv", ""
+    "",
+    "-luv",
+    "",
+    ""
   else
-    "(foreign_archives uv)", "", "(include_dirs vendor/libuv/include)"
+    "(foreign_archives uv)",
+    "",
+    "(include_dirs vendor/libuv/include)",
+    "-I vendor/libuv/include"
 
 let () = Jbuild_plugin.V1.send @@ {|
 
@@ -113,7 +119,7 @@ let () = Jbuild_plugin.V1.send @@ {|
   %{cc} %{c} \
   -I '%{lib:ctypes:.}' \
   -I %{ocaml_where} \
-  -I vendor/libuv/include -o %{targets}")))
+  |}^ i_option ^{| -o %{targets}")))
 
 (rule
  (with-stdout-to luv_c_generated_types.ml
