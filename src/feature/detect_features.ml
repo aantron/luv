@@ -165,6 +165,8 @@ let () =
   bool "overlapped_pipe" (version >= 21);
   bool "fs_lchown" (version >= 21);
 
+  bool "fs_copyfile_ficlone" (version >= 20);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

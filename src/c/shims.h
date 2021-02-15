@@ -256,3 +256,8 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 20
+    #define UV_FS_COPYFILE_FICLONE 0
+    #define UV_FS_COPYFILE_FICLONE_FORCE 0
+#endif
