@@ -135,3 +135,28 @@
         return 0;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 28
+    typedef struct {int64_t tv_sec; int32_t tv_usec;} uv_timeval64_t;
+    static int uv_gettimeofday(uv_timeval64_t *tv)
+    {
+        return ENOSYS;
+    }
+
+    typedef struct {uv_dirent_t *dirents; size_t nentries;} uv_dir_t;
+    static int uv_fs_opendir(
+        uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+    static int uv_fs_closedir(
+        uv_loop_t *loop, uv_fs_t *request, uv_dir_t *dir, uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+    static int uv_fs_readdir(
+        uv_loop_t *loop, uv_fs_t *request, uv_dir_t* dir, uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+#endif
