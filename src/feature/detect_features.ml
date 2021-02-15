@@ -167,6 +167,8 @@ let () =
 
   bool "fs_copyfile_ficlone" (version >= 20);
 
+  bool "os_getpid" (version >= 18);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

@@ -327,3 +327,10 @@
         return &request->statbuf;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 18
+    static uv_pid_t uv_os_getpid()
+    {
+        return 0;
+    }
+#endif
