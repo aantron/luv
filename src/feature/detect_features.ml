@@ -161,6 +161,10 @@ let () =
   bool "strerror_r" (version >= 22);
   bool "err_name_r" (version >= 22);
 
+  bool "eftype" (version >= 21);
+  bool "overlapped_pipe" (version >= 21);
+  bool "fs_lchown" (version >= 21);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

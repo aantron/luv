@@ -244,3 +244,15 @@
         return buffer;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 21
+    #define UV_EFTYPE 0x14242424
+    #define UV_OVERLAPPED_PIPE 0
+
+    static int uv_fs_lchown(
+        uv_loop_t *loop, uv_fs_t *request, const char *path, uv_uid_t user,
+        uv_gid_t group, uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+#endif
