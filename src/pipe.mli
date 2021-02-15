@@ -42,7 +42,8 @@ val pipe :
     (File.t * File.t, Error.t) result
 (** Creates a pair of connected pipes.
 
-    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe} [uv_pipe]}.
+    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe} [uv_pipe]}. See
+    {{:https://www.man7.org/linux/man-pages/man3/pipe.3p.html} [pipe(3p)]}.
 
     In case of success, in the value [(read_pipe, write_pipe)], data written
     to [write_pipe] can be read from [read_pipe].

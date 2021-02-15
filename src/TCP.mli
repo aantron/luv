@@ -60,7 +60,9 @@ val socketpair :
 (** Creates a pair of connected sockets.
 
     Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_socketpair}
-    [uv_socketpair]}.
+    [uv_socketpair]}. See
+    {{:https://www.man7.org/linux/man-pages/man3/socketpair.3p.html}
+    [socketpair(3p)]}.
 
     See {!Luv.Pipe.pipe} for an explanation of the optional arguments.
 
