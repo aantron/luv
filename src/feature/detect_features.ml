@@ -192,6 +192,8 @@ let () =
   bool "os_tmpdir" (version >= 9);
   bool "os_get_passwd" (version >= 9);
 
+  bool "fs_realpath" (version >= 8);
+
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;
   close_out_noerr mli_channel;

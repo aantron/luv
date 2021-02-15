@@ -3,6 +3,14 @@
 
 
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 8
+    static int uv_fs_realpath(
+        uv_loop_t *loop, uv_fs_t *request, const char *path, uv_fs_cb callback)
+    {
+        return ENOSYS;
+    }
+#endif
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 9
     #define UV_DISCONNECT 0
 
