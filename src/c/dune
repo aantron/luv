@@ -1,6 +1,6 @@
 (* -*- tuareg -*- *)
 
-let foreign_archives, uv_library_flag, include_dirs, i_option =
+let foreign_archives, uv_library_flag, include_dirs, i_option, install_h =
   let use_system_libuv =
     match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
     | "yes" -> true
@@ -12,12 +12,14 @@ let foreign_archives, uv_library_flag, include_dirs, i_option =
     "",
     "-luv",
     "",
-    ""
+    "",
+    false
   else
     "(foreign_archives uv)",
     "",
     "(include_dirs vendor/libuv/include)",
-    "-I vendor/libuv/include"
+    "-I vendor/libuv/include",
+    true
 
 let () = Jbuild_plugin.V1.send @@ {|
 
@@ -34,6 +36,8 @@ let () = Jbuild_plugin.V1.send @@ {|
   |}^ include_dirs ^{|)
  |}^ foreign_archives ^{|
  (c_library_flags |}^ uv_library_flag ^{| (:include extra_libs.sexp)))
+
+|}^ (if not install_h then "" else {|
 
 (install
  (section lib)
@@ -55,6 +59,8 @@ let () = Jbuild_plugin.V1.send @@ {|
   (vendor/libuv/include/uv/unix.h as uv/unix.h)
   (vendor/libuv/include/uv/version.h as uv/version.h)
   (vendor/libuv/include/uv/win.h as uv/win.h)))
+
+|}) ^{|
 
 
 
