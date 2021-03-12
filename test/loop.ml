@@ -101,9 +101,8 @@ let tests = [
     "now", `Quick, begin fun () ->
       with_loop begin fun loop ->
         Luv.Loop.now loop
-        |> Unsigned.UInt64.to_int
         |> fun time ->
-          if time <= 0 then
+          if Unsigned.UInt64.(compare time zero) <= 0 then
             Alcotest.fail "libuv time not positive"
       end
     end;
