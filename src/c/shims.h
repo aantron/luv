@@ -3,6 +3,11 @@
 
 
 
+// Shims must be declared in increasing order of version, because some shims
+// define functions or constants then used by later shims.
+
+
+
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 6
     static int uv_os_homedir(char *buffer, size_t *size)
     {

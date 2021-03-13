@@ -63,7 +63,7 @@ let at_least_doc = {|(** Triggers a compile-time check of an [int] feature.
     triggers a type error. If that is too severe, you can relax to a run-time
     check by doing [Luv.Require.(get libuv1) >= 33] instead.
 
-    The compile-time numbers [_0] — [_99] are defined for use in with
+    The compile-time numbers [_0] — [_99] are defined for use with
     [Luv.Require.(>=)]. They are hidden from this documentation to reduce visual
     noise.
 
