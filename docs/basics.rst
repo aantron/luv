@@ -258,6 +258,7 @@ Here are all the exposed request types in Luv:
 - :api:`Luv.File.Request <File/Request/index.html>`
 - :api:`Luv.DNS.Addr_info.Request <DNS/Addr_info/Request/index.html>`
 - :api:`Luv.DNS.Name_info.Request <DNS/Name_info/Request/index.html>`
+- :api:`Luv.Random.Request <Random/Request/index.html>`
 - :api:`Luv.Thread_pool.Request <Thread_pool/Request/index.html>`
 
 Everything else
