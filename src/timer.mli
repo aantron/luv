@@ -29,7 +29,14 @@ val start :
 (** Starts a timer.
 
     Binds {{:http://docs.libuv.org/en/v1.x/timer.html#c.uv_timer_start}
-    [uv_timer_start]}. *)
+    [uv_timer_start]}.
+
+    As of Luv 0.5.7 and libuv 1.41.0 (March 2021), this function can fail only
+    if the timer handle is currently closing, i.e.
+
+    {[
+      Luv.Handle.is_closing timer = true
+    ]} *)
 
 val stop : t -> (unit, Error.t) result
 (** Stops a timer.
