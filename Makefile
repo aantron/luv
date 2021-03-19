@@ -40,7 +40,8 @@ examples :
 	_build/default/example/delay.exe
 	_build/default/example/print_using_file.exe
 	_build/default/example/print_using_pipe.exe
-	_build/default/example/print_using_tty.exe
+	bash -c "[ A$$TRAVIS == Atrue ]" || \
+	  _build/default/example/print_using_tty.exe
 	_build/default/example/idle.exe
 	_build/default/example/cat.exe LICENSE.md
 	(_build/default/example/onchange.exe false LICENSE.md || true) & \
