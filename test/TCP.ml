@@ -294,7 +294,8 @@ let tests = [
       with_tcp begin fun tcp ->
         let called = ref false in
 
-        Luv.Stream.write tcp [] begin fun result count ->
+        Luv.Stream.write tcp [Luv.Buffer.from_string ""]
+            begin fun result count ->
           check_error_results "write" [`EBADF; `EPIPE] result;
           Alcotest.(check int) "count" 0 count;
           called := true
@@ -307,7 +308,8 @@ let tests = [
     "write: sync error leak", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
         no_memory_leak begin fun _ ->
-          Luv.Stream.write tcp [] (fun _ -> make_callback ())
+          Luv.Stream.write tcp [Luv.Buffer.from_string ""] (fun _ ->
+            make_callback ())
         end
       end
     end;
@@ -392,7 +394,7 @@ let tests = [
 
     "try_write: error", `Quick, begin fun () ->
       with_tcp begin fun tcp ->
-        Luv.Stream.try_write tcp []
+        Luv.Stream.try_write tcp [Luv.Buffer.from_string ""]
         |> check_error_results "try_write" [`EBADF; `EPIPE]
       end
     end;
