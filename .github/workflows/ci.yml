@@ -29,7 +29,7 @@ jobs:
           ocaml-version: ${{ matrix.ocaml }}
       - run: opam depext -y conf-pkg-config
       - run: opam install -y --deps-only .
-      - run: opam exec -- dune build -p luv
+      - run: opam exec -- dune build -p luv,luv_unix
 
   # Disabled until https://github.com/esy/esy/issues/1282 or esy is able to skip
   # --with-doc dependencies.
