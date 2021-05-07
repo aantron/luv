@@ -316,7 +316,7 @@ struct
 
     type storage = [ `Sockaddr_storage ] structure
     let storage : storage typ = structure "sockaddr_storage"
-    let family = field storage "ss_family" short
+    let family = field storage "ss_family" int8_t
     let () = seal storage
   end
 

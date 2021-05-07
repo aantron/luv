@@ -18,6 +18,9 @@ let with_sender_and_receiver ~receiver_logic ~sender_logic =
 
   let receiver = Luv.UDP.init () |> check_success_result "receiver init" in
   Luv.UDP.bind receiver address |> check_success_result "bind";
+  let sockaddr = Luv.UDP.getsockname receiver |> check_success_result "getsockname" in
+  if Luv.Sockaddr.to_string sockaddr = None then failwith "Luv.Sockaddr.to_string returned None";
+  if Luv.Sockaddr.port sockaddr = None then failwith "Luv.Sockaddr.port returned None";
 
   let sender = Luv.UDP.init () |> check_success_result "sender init" in
 

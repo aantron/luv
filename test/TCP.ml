@@ -23,6 +23,9 @@ let with_server_and_client ~server_logic ~client_logic =
 
   let server = Luv.TCP.init () |> check_success_result "server init" in
   Luv.TCP.bind server address |> check_success_result "bind";
+  let sockaddr = Luv.TCP.getsockname server |> check_success_result "getsockname" in
+  if Luv.Sockaddr.to_string sockaddr = None then failwith "Luv.Sockaddr.to_string returned None";
+  if Luv.Sockaddr.port sockaddr = None then failwith "Luv.Sockaddr.port returned None";
   Luv.Stream.listen server begin fun result ->
     check_success_result "listen" result;
     let client = Luv.TCP.init () |> check_success_result "remote client init" in
