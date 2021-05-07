@@ -1644,6 +1644,10 @@ struct
     let ntohs =
       foreign "ntohs"
         (ushort @-> returning ushort)
+
+    let sa_family_to_int =
+      foreign "luv_sa_family_to_int"
+        (Types.Address_family.t @-> returning int)
   end
 
   module Resource =

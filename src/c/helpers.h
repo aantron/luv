@@ -221,6 +221,11 @@ int luv_spawn(
 int luv_is_invalid_handle_value(uv_os_fd_t handle);
 int luv_is_invalid_socket_value(uv_os_sock_t socket);
 
+// sa_family_t has different size on different platforms, so we use a helper for
+// casting it to an int on the C side. See
+//   https://github.com/aantron/luv/pull/112
+int luv_sa_family_to_int(sa_family_t family);
+
 
 
 #endif // #ifndef LUV_HELPERS_H_

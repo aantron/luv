@@ -89,6 +89,7 @@ let finish_to_string c_function coerce storage =
 let to_string storage =
   let family =
     Ctypes.getf storage C.Types.Sockaddr.family
+    |> C.Functions.Sockaddr.sa_family_to_int
     |> Address_family.from_c
   in
   if family = `INET then
@@ -104,6 +105,7 @@ let finish_to_port network_order_port =
 let port storage =
   let family =
     Ctypes.getf storage C.Types.Sockaddr.family
+    |> C.Functions.Sockaddr.sa_family_to_int
     |> Address_family.from_c
   in
   if family = `INET then

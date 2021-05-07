@@ -666,3 +666,8 @@ int luv_is_invalid_socket_value(uv_os_sock_t socket)
     else
         return 0;
 }
+
+int luv_sa_family_to_int(sa_family_t family)
+{
+    return family;
+}

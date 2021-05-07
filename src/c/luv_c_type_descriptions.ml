@@ -298,6 +298,17 @@ struct
     end
   end
 
+  module Address_family =
+  struct
+    let unspec = constant "AF_UNSPEC" int
+    let inet = constant "AF_INET" int
+    let inet6 = constant "AF_INET6" int
+
+    type t = [ `Address_family ] structure
+    let t : t typ = typedef (structure "`Address_family") "sa_family_t"
+    let () = seal t
+  end
+
   module Sockaddr =
   struct
     type t = [ `Sockaddr ] structure
@@ -316,15 +327,8 @@ struct
 
     type storage = [ `Sockaddr_storage ] structure
     let storage : storage typ = structure "sockaddr_storage"
-    let family = field storage "ss_family" short
+    let family = field storage "ss_family" Address_family.t
     let () = seal storage
-  end
-
-  module Address_family =
-  struct
-    let unspec = constant "AF_UNSPEC" int
-    let inet = constant "AF_INET" int
-    let inet6 = constant "AF_INET6" int
   end
 
   module Socket_type =
