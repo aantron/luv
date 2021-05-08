@@ -214,7 +214,7 @@ RELEASE := luv-$(VERSION)
 release : check-ejected-build clean
 	rm -rf $(RELEASE) $(RELEASE).tar $(RELEASE).tar.gz _release
 	mkdir $(RELEASE)
-	cp -r dune-project LICENSE.md luv.opam README.md src $(RELEASE)
+	cp -r dune-project LICENSE.md luv.opam luv_unix.opam README.md src $(RELEASE)
 	rm -rf $(RELEASE)/src/c/vendor/libuv/docs
 	rm -rf $(RELEASE)/src/c/vendor/libuv/img
 	rm -rf $(RELEASE)/src/c/vendor/libuv/test
