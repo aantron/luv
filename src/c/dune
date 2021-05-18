@@ -1,41 +1,78 @@
 (* -*- tuareg -*- *)
 
-let foreign_archives, uv_library_flag, include_dirs, i_option, install_h =
-  let use_system_libuv =
-    match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
-    | "yes" -> true
-    | _ -> false
-    | exception Not_found -> false
-  in
+let libuv_resolve =
+  match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
+  | "pkg_config" | "pkg-config" -> `pkg_config
+  | "yes" -> `system_luv
+  | _ -> `vendored
+  | exception Not_found -> `vendored
 
-  if use_system_libuv then
-    "",
-    "-luv",
-    "",
-    "",
-    false
-  else
-    "(foreign_archives uv)",
-    "",
-    "(include_dirs vendor/libuv/include)",
-    "-I vendor/libuv/include",
-    true
+let build_flags_resolver_stanza =
+  match libuv_resolve with
+  | `pkg_config -> "(build_flags_resolver (pkg_config))"
+  | `vendored ->
+    {|(build_flags_resolver
+       (vendored
+         (c_flags (-I vendor/libuv/include -I src/c/vendor/libuv/include))
+         (c_library_flags ())))|}
+  | `system_luv ->
+    (* older, non-pkg-config way of using the system luv *)
+    {|(build_flags_resolver
+       (vendored
+         (c_flags ())
+         (c_library_flags (-luv))))|}
+
+let foreign_archives_stanza =
+  match libuv_resolve with
+  | `vendored -> "(foreign_archives uv)"
+  | `pkg_config -> ""
+  | `system_luv -> ""
+
+let include_dirs_stanza =
+  match libuv_resolve with
+  | `vendored -> "(include_dirs vendor/libuv/include)"
+  | `pkg_config -> ""
+  | `system_luv -> ""
+
+let install_h =
+  match libuv_resolve with
+  | `vendored -> true
+  | `pkg_config -> false
+  | `system_luv -> false
 
 let () = Jbuild_plugin.V1.send @@ {|
-
-; The final FFI module, containing all the OCaml bits, and linked with libuv.
 (library
- (name luv_c)
- (public_name luv.c)
- (wrapped false)
- (modules Luv_c_generated_functions)
- (libraries ctypes luv_c_function_descriptions threads)
- (foreign_stubs
-  (language c)
-  (names c_generated_functions helpers)
-  |}^ include_dirs ^{|)
- |}^ foreign_archives ^{|
- (c_library_flags |}^ uv_library_flag ^{| (:include extra_libs.sexp)))
+  (name luv_c)
+  (public_name luv.c)
+  (libraries threads)
+  ; ctypes code-gen produces code that warns due to backward compatibility
+  (flags (:standard -w -9-11-27))
+  (foreign_stubs
+    (language c)
+    (names helpers)|}
+    ^ include_dirs_stanza ^ {|)
+  |} ^ foreign_archives_stanza ^ {|
+  (ctypes
+    (external_library_name libuv)
+    |} ^ build_flags_resolver_stanza ^ {|
+    (type_description
+      (instance Types)
+      (functor Type_description))
+    (function_description
+      (concurrency sequential)
+      (instance Blocking)
+      (functor Blocking_function_description))
+    (function_description
+      (concurrency sequential)
+      (instance Non_blocking)
+      (functor Non_blocking_function_description))
+    (generated_entry_point C)
+    (headers (preamble "#include \"windows_version.h\"
+#include <caml/mlvalues.h>
+#include <caml/socketaddr.h>
+#include <uv.h>
+#include \"helpers.h\"
+"))))
 
 |}^ (if not install_h then "" else {|
 
@@ -61,9 +98,6 @@ let () = Jbuild_plugin.V1.send @@ {|
   (vendor/libuv/include/uv/win.h as uv/win.h)))
 
 |}) ^{|
-
-
-
 ; The vendored libuv.
 (rule
  (targets libuv.a dlluv%{ext_dll})
@@ -94,68 +128,4 @@ let () = Jbuild_plugin.V1.send @@ {|
    else \
      echo '()' > extra_libs.sexp; \
    fi"))))
-
-
-
-; Everything below is the bindings generation process using ctypes. It produces
-; two OCaml modules, Luv_c_generated_functions and Luv_c_generated_types.
-
-; Type bindings (Luv_c_generated_types).
-(library
- (name luv_c_type_descriptions)
- (public_name luv.c_type_descriptions)
- (modules Luv_c_type_descriptions)
- (libraries ctypes))
-
-(executable
- (name generate_types_start)
- (modules Generate_types_start)
- (libraries ctypes.stubs luv_c_type_descriptions))
-
-(rule
- (with-stdout-to generate_types_step_2.c
-  (run ./generate_types_start.exe)))
-
-; Based partially on
-;   https://github.com/avsm/ocaml-yaml/blob/master/types/stubgen/jbuild#L20
-(rule
- (targets generate_types_step_2.exe)
- (deps (:c generate_types_step_2.c) helpers.h shims.h)
- (action (bash "\
-  %{cc} %{c} \
-  -I '%{lib:ctypes:.}' \
-  -I %{ocaml_where} \
-  |}^ i_option ^{| -o %{targets}")))
-
-(rule
- (with-stdout-to luv_c_generated_types.ml
-  (run ./generate_types_step_2.exe)))
-
-; Function bindings.
-(library
- (name luv_c_function_descriptions)
- (public_name luv.c_function_descriptions)
- (flags (:standard -w -9-16-27))
- (wrapped false)
- (modules Luv_c_generated_types Luv_c_function_descriptions Luv_c_types)
- (libraries ctypes luv_c_type_descriptions))
-
-(executable
- (name generate_c_functions)
- (modules Generate_c_functions)
- (libraries ctypes.stubs luv_c_function_descriptions))
-
-(executable
- (name generate_ml_functions)
- (modules Generate_ml_functions)
- (libraries ctypes.stubs luv_c_function_descriptions))
-
-(rule
- (with-stdout-to c_generated_functions.c
-  (run ./generate_c_functions.exe luv_stub)))
-
-(rule
- (with-stdout-to luv_c_generated_functions.ml
-  (run ./generate_ml_functions.exe luv_stub)))
-
 |}

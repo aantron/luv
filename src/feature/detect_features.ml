@@ -215,7 +215,7 @@ let () =
   let ml_buffer = Buffer.create 4096 in
   fixed_ml max_int ml_buffer;
 
-  let version = Luv_c_types.Version.minor in
+  let version = Luv_c.C.Types.Version.minor in
 
   let context = mli_buffer, ml_buffer in
   let int = int context in

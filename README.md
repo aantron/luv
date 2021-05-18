@@ -157,7 +157,8 @@ Once you get the REPL prompt, try running `Luv.Env.environ ();;`
 You can tell Luv to ignore its vendored libuv, and build against an external one
 by setting `LUV_USE_SYSTEM_LIBUV=yes` during the build. This requires libuv to
 be findable by `-luv`, `uv.h` to be in the header path, and the Luv version to
-be at least 0.5.7.
+be at least 0.5.7.  Alternatively, to use `pkg-config` to probe for the
+appropriate build and link flags, set `LUV_USE_SYSTEM_LIBUV=pkg_config`.
 
 The external libuv can be considerably older than what Luv vendors &mdash; at
 the moment, Luv supports compilation against libuv versions all the way down to
