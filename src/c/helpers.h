@@ -31,8 +31,8 @@
 #ifndef SIGPROF
 #define SIGPROF 0
 #endif
+typedef ADDRESS_FAMILY sa_family_t;
 #endif
-
 
 
 // Callback trampolines.
