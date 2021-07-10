@@ -31,23 +31,20 @@ jobs:
       - run: opam install -y --deps-only .
       - run: opam exec -- dune build -p luv
 
-  # Disabled until https://github.com/esy/esy/issues/1282 or esy is able to skip
-  # --with-doc dependencies.
+  esy:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+      fail-fast: false
 
-  # esy:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os:
-  #         - ubuntu-latest
-  #         - macos-latest
-  #         - windows-latest
-  #     fail-fast: false
-
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         submodules: recursive
-  #     - run: npm install esy
-  #     - run: npx esy install
-  #     - run: npx esy build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - run: npm install esy
+      - run: npx esy install
+      - run: npx esy build
