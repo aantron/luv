@@ -234,7 +234,8 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @ANDROID_TRUE@am__append_25 = src/unix/android-ifaddrs.c \
 @ANDROID_TRUE@                    src/unix/pthread-fixes.c \
 @ANDROID_TRUE@                    src/unix/random-getrandom.c \
-@ANDROID_TRUE@                    src/unix/random-sysctl-linux.c
+@ANDROID_TRUE@                    src/unix/random-sysctl-linux.c \
+@ANDROID_TRUE@                    src/unix/epoll.c
 
 @CYGWIN_TRUE@am__append_26 = include/uv/posix.h
 @CYGWIN_TRUE@am__append_27 = -D_GNU_SOURCE
@@ -301,7 +302,8 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @LINUX_TRUE@                    src/unix/procfs-exepath.c \
 @LINUX_TRUE@                    src/unix/proctitle.c \
 @LINUX_TRUE@                    src/unix/random-getrandom.c \
-@LINUX_TRUE@                    src/unix/random-sysctl-linux.c
+@LINUX_TRUE@                    src/unix/random-sysctl-linux.c \
+@LINUX_TRUE@                    src/unix/epoll.c
 
 @LINUX_TRUE@am__append_47 = -lutil
 @MSYS_TRUE@am__append_48 = -D_GNU_SOURCE
@@ -439,18 +441,18 @@ am__libuv_la_SOURCES_DIST = src/fs-poll.c src/heap-inl.h src/idna.c \
 	src/unix/aix-common.c src/unix/ibmi.c src/unix/posix-poll.c \
 	src/unix/no-fsevents.c src/unix/android-ifaddrs.c \
 	src/unix/pthread-fixes.c src/unix/random-getrandom.c \
-	src/unix/random-sysctl-linux.c src/unix/cygwin.c \
-	src/unix/bsd-ifaddrs.c src/unix/no-proctitle.c \
-	src/unix/posix-hrtime.c src/unix/procfs-exepath.c \
-	src/unix/sysinfo-loadavg.c src/unix/sysinfo-memory.c \
-	src/unix/darwin-proctitle.c src/unix/darwin-stub.h \
-	src/unix/darwin.c src/unix/fsevents.c src/unix/kqueue.c \
-	src/unix/proctitle.c src/unix/random-getentropy.c \
-	src/unix/bsd-proctitle.c src/unix/freebsd.c src/unix/haiku.c \
-	src/unix/linux-core.c src/unix/linux-inotify.c \
-	src/unix/linux-syscalls.c src/unix/linux-syscalls.h \
-	src/unix/netbsd.c src/unix/openbsd.c src/unix/sunos.c \
-	src/unix/os390.c src/unix/os390-syscalls.c
+	src/unix/random-sysctl-linux.c src/unix/epoll.c \
+	src/unix/cygwin.c src/unix/bsd-ifaddrs.c \
+	src/unix/no-proctitle.c src/unix/posix-hrtime.c \
+	src/unix/procfs-exepath.c src/unix/sysinfo-loadavg.c \
+	src/unix/sysinfo-memory.c src/unix/darwin-proctitle.c \
+	src/unix/darwin-stub.h src/unix/darwin.c src/unix/fsevents.c \
+	src/unix/kqueue.c src/unix/proctitle.c \
+	src/unix/random-getentropy.c src/unix/bsd-proctitle.c \
+	src/unix/freebsd.c src/unix/haiku.c src/unix/linux-core.c \
+	src/unix/linux-inotify.c src/unix/linux-syscalls.c \
+	src/unix/linux-syscalls.h src/unix/netbsd.c src/unix/openbsd.c \
+	src/unix/sunos.c src/unix/os390.c src/unix/os390-syscalls.c
 am__dirstamp = $(am__leading_dot)dirstamp
 @WINNT_TRUE@am__objects_1 = src/win/libuv_la-async.lo \
 @WINNT_TRUE@	src/win/libuv_la-core.lo \
@@ -496,7 +498,8 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @ANDROID_TRUE@am__objects_5 = src/unix/libuv_la-android-ifaddrs.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-pthread-fixes.lo \
 @ANDROID_TRUE@	src/unix/libuv_la-random-getrandom.lo \
-@ANDROID_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo
+@ANDROID_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo \
+@ANDROID_TRUE@	src/unix/libuv_la-epoll.lo
 @CYGWIN_TRUE@am__objects_6 = src/unix/libuv_la-cygwin.lo \
 @CYGWIN_TRUE@	src/unix/libuv_la-bsd-ifaddrs.lo \
 @CYGWIN_TRUE@	src/unix/libuv_la-no-fsevents.lo \
@@ -539,7 +542,8 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @LINUX_TRUE@	src/unix/libuv_la-procfs-exepath.lo \
 @LINUX_TRUE@	src/unix/libuv_la-proctitle.lo \
 @LINUX_TRUE@	src/unix/libuv_la-random-getrandom.lo \
-@LINUX_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo
+@LINUX_TRUE@	src/unix/libuv_la-random-sysctl-linux.lo \
+@LINUX_TRUE@	src/unix/libuv_la-epoll.lo
 @MSYS_TRUE@am__objects_13 = src/unix/libuv_la-cygwin.lo \
 @MSYS_TRUE@	src/unix/libuv_la-bsd-ifaddrs.lo \
 @MSYS_TRUE@	src/unix/libuv_la-no-fsevents.lo \
@@ -615,7 +619,10 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-loop-close.c test/test-loop-stop.c \
 	test/test-loop-time.c test/test-loop-configure.c \
 	test/test-metrics.c test/test-multiple-listen.c \
-	test/test-mutexes.c test/test-osx-select.c \
+	test/test-mutexes.c \
+	test/test-not-readable-nor-writable-on-read-error.c \
+	test/test-not-readable-on-eof.c \
+	test/test-not-writable-after-shutdown.c test/test-osx-select.c \
 	test/test-pass-always.c test/test-ping-pong.c \
 	test/test-pipe-bind-error.c test/test-pipe-connect-error.c \
 	test/test-pipe-connect-multiple.c \
@@ -633,8 +640,8 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-queue-foreach-delete.c test/test-random.c \
 	test/test-ref.c test/test-run-nowait.c test/test-run-once.c \
 	test/test-semaphore.c test/test-shutdown-close.c \
-	test/test-shutdown-eof.c test/test-shutdown-twice.c \
-	test/test-signal-multiple-loops.c \
+	test/test-shutdown-eof.c test/test-shutdown-simultaneous.c \
+	test/test-shutdown-twice.c test/test-signal-multiple-loops.c \
 	test/test-signal-pending-on-close.c test/test-signal.c \
 	test/test-socket-buffer-size.c test/test-spawn.c \
 	test/test-stdio-over-pipes.c test/test-strscpy.c \
@@ -740,6 +747,9 @@ am_test_run_tests_OBJECTS = test/run_tests-blackhole-server.$(OBJEXT) \
 	test/run_tests-test-metrics.$(OBJEXT) \
 	test/run_tests-test-multiple-listen.$(OBJEXT) \
 	test/run_tests-test-mutexes.$(OBJEXT) \
+	test/run_tests-test-not-readable-nor-writable-on-read-error.$(OBJEXT) \
+	test/run_tests-test-not-readable-on-eof.$(OBJEXT) \
+	test/run_tests-test-not-writable-after-shutdown.$(OBJEXT) \
 	test/run_tests-test-osx-select.$(OBJEXT) \
 	test/run_tests-test-pass-always.$(OBJEXT) \
 	test/run_tests-test-ping-pong.$(OBJEXT) \
@@ -772,6 +782,7 @@ am_test_run_tests_OBJECTS = test/run_tests-blackhole-server.$(OBJEXT) \
 	test/run_tests-test-semaphore.$(OBJEXT) \
 	test/run_tests-test-shutdown-close.$(OBJEXT) \
 	test/run_tests-test-shutdown-eof.$(OBJEXT) \
+	test/run_tests-test-shutdown-simultaneous.$(OBJEXT) \
 	test/run_tests-test-shutdown-twice.$(OBJEXT) \
 	test/run_tests-test-signal-multiple-loops.$(OBJEXT) \
 	test/run_tests-test-signal-pending-on-close.$(OBJEXT) \
@@ -884,6 +895,7 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	src/unix/$(DEPDIR)/libuv_la-darwin-proctitle.Plo \
 	src/unix/$(DEPDIR)/libuv_la-darwin.Plo \
 	src/unix/$(DEPDIR)/libuv_la-dl.Plo \
+	src/unix/$(DEPDIR)/libuv_la-epoll.Plo \
 	src/unix/$(DEPDIR)/libuv_la-freebsd.Plo \
 	src/unix/$(DEPDIR)/libuv_la-fs.Plo \
 	src/unix/$(DEPDIR)/libuv_la-fsevents.Plo \
@@ -1013,6 +1025,9 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	test/$(DEPDIR)/run_tests-test-metrics.Po \
 	test/$(DEPDIR)/run_tests-test-multiple-listen.Po \
 	test/$(DEPDIR)/run_tests-test-mutexes.Po \
+	test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Po \
+	test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Po \
+	test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Po \
 	test/$(DEPDIR)/run_tests-test-osx-select.Po \
 	test/$(DEPDIR)/run_tests-test-pass-always.Po \
 	test/$(DEPDIR)/run_tests-test-ping-pong.Po \
@@ -1045,6 +1060,7 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	test/$(DEPDIR)/run_tests-test-semaphore.Po \
 	test/$(DEPDIR)/run_tests-test-shutdown-close.Po \
 	test/$(DEPDIR)/run_tests-test-shutdown-eof.Po \
+	test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Po \
 	test/$(DEPDIR)/run_tests-test-shutdown-twice.Po \
 	test/$(DEPDIR)/run_tests-test-signal-multiple-loops.Po \
 	test/$(DEPDIR)/run_tests-test-signal-pending-on-close.Po \
@@ -1409,7 +1425,10 @@ test_run_tests_SOURCES = test/blackhole-server.c test/dns-server.c \
 	test/test-loop-close.c test/test-loop-stop.c \
 	test/test-loop-time.c test/test-loop-configure.c \
 	test/test-metrics.c test/test-multiple-listen.c \
-	test/test-mutexes.c test/test-osx-select.c \
+	test/test-mutexes.c \
+	test/test-not-readable-nor-writable-on-read-error.c \
+	test/test-not-readable-on-eof.c \
+	test/test-not-writable-after-shutdown.c test/test-osx-select.c \
 	test/test-pass-always.c test/test-ping-pong.c \
 	test/test-pipe-bind-error.c test/test-pipe-connect-error.c \
 	test/test-pipe-connect-multiple.c \
@@ -1427,8 +1446,8 @@ test_run_tests_SOURCES = test/blackhole-server.c test/dns-server.c \
 	test/test-queue-foreach-delete.c test/test-random.c \
 	test/test-ref.c test/test-run-nowait.c test/test-run-once.c \
 	test/test-semaphore.c test/test-shutdown-close.c \
-	test/test-shutdown-eof.c test/test-shutdown-twice.c \
-	test/test-signal-multiple-loops.c \
+	test/test-shutdown-eof.c test/test-shutdown-simultaneous.c \
+	test/test-shutdown-twice.c test/test-signal-multiple-loops.c \
 	test/test-signal-pending-on-close.c test/test-signal.c \
 	test/test-socket-buffer-size.c test/test-spawn.c \
 	test/test-stdio-over-pipes.c test/test-strscpy.c \
@@ -1695,6 +1714,8 @@ src/unix/libuv_la-random-getrandom.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-random-sysctl-linux.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-epoll.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-cygwin.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-bsd-ifaddrs.lo: src/unix/$(am__dirstamp) \
@@ -1878,6 +1899,12 @@ test/run_tests-test-multiple-listen.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-mutexes.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-not-readable-nor-writable-on-read-error.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-not-readable-on-eof.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-not-writable-after-shutdown.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-osx-select.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-pass-always.$(OBJEXT): test/$(am__dirstamp) \
@@ -1942,6 +1969,8 @@ test/run_tests-test-shutdown-close.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-shutdown-eof.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-shutdown-simultaneous.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-shutdown-twice.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-signal-multiple-loops.$(OBJEXT):  \
@@ -2123,6 +2152,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-darwin-proctitle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-darwin.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-dl.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-epoll.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-freebsd.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-fs.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-fsevents.Plo@am__quote@ # am--include-marker
@@ -2252,6 +2282,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-metrics.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-multiple-listen.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-mutexes.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-osx-select.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-pass-always.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-ping-pong.Po@am__quote@ # am--include-marker
@@ -2284,6 +2317,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-semaphore.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-shutdown-close.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-shutdown-eof.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-shutdown-twice.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-signal-multiple-loops.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-signal-pending-on-close.Po@am__quote@ # am--include-marker
@@ -2810,6 +2844,13 @@ src/unix/libuv_la-random-sysctl-linux.lo: src/unix/random-sysctl-linux.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/random-sysctl-linux.c' object='src/unix/libuv_la-random-sysctl-linux.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-random-sysctl-linux.lo `test -f 'src/unix/random-sysctl-linux.c' || echo '$(srcdir)/'`src/unix/random-sysctl-linux.c
+
+src/unix/libuv_la-epoll.lo: src/unix/epoll.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-epoll.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-epoll.Tpo -c -o src/unix/libuv_la-epoll.lo `test -f 'src/unix/epoll.c' || echo '$(srcdir)/'`src/unix/epoll.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-epoll.Tpo src/unix/$(DEPDIR)/libuv_la-epoll.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/epoll.c' object='src/unix/libuv_la-epoll.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-epoll.lo `test -f 'src/unix/epoll.c' || echo '$(srcdir)/'`src/unix/epoll.c
 
 src/unix/libuv_la-cygwin.lo: src/unix/cygwin.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-cygwin.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-cygwin.Tpo -c -o src/unix/libuv_la-cygwin.lo `test -f 'src/unix/cygwin.c' || echo '$(srcdir)/'`src/unix/cygwin.c
@@ -3861,6 +3902,48 @@ test/run_tests-test-mutexes.obj: test/test-mutexes.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-mutexes.obj `if test -f 'test/test-mutexes.c'; then $(CYGPATH_W) 'test/test-mutexes.c'; else $(CYGPATH_W) '$(srcdir)/test/test-mutexes.c'; fi`
 
+test/run_tests-test-not-readable-nor-writable-on-read-error.o: test/test-not-readable-nor-writable-on-read-error.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-not-readable-nor-writable-on-read-error.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Tpo -c -o test/run_tests-test-not-readable-nor-writable-on-read-error.o `test -f 'test/test-not-readable-nor-writable-on-read-error.c' || echo '$(srcdir)/'`test/test-not-readable-nor-writable-on-read-error.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Tpo test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-not-readable-nor-writable-on-read-error.c' object='test/run_tests-test-not-readable-nor-writable-on-read-error.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-not-readable-nor-writable-on-read-error.o `test -f 'test/test-not-readable-nor-writable-on-read-error.c' || echo '$(srcdir)/'`test/test-not-readable-nor-writable-on-read-error.c
+
+test/run_tests-test-not-readable-nor-writable-on-read-error.obj: test/test-not-readable-nor-writable-on-read-error.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-not-readable-nor-writable-on-read-error.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Tpo -c -o test/run_tests-test-not-readable-nor-writable-on-read-error.obj `if test -f 'test/test-not-readable-nor-writable-on-read-error.c'; then $(CYGPATH_W) 'test/test-not-readable-nor-writable-on-read-error.c'; else $(CYGPATH_W) '$(srcdir)/test/test-not-readable-nor-writable-on-read-error.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Tpo test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-not-readable-nor-writable-on-read-error.c' object='test/run_tests-test-not-readable-nor-writable-on-read-error.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-not-readable-nor-writable-on-read-error.obj `if test -f 'test/test-not-readable-nor-writable-on-read-error.c'; then $(CYGPATH_W) 'test/test-not-readable-nor-writable-on-read-error.c'; else $(CYGPATH_W) '$(srcdir)/test/test-not-readable-nor-writable-on-read-error.c'; fi`
+
+test/run_tests-test-not-readable-on-eof.o: test/test-not-readable-on-eof.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-not-readable-on-eof.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Tpo -c -o test/run_tests-test-not-readable-on-eof.o `test -f 'test/test-not-readable-on-eof.c' || echo '$(srcdir)/'`test/test-not-readable-on-eof.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Tpo test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-not-readable-on-eof.c' object='test/run_tests-test-not-readable-on-eof.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-not-readable-on-eof.o `test -f 'test/test-not-readable-on-eof.c' || echo '$(srcdir)/'`test/test-not-readable-on-eof.c
+
+test/run_tests-test-not-readable-on-eof.obj: test/test-not-readable-on-eof.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-not-readable-on-eof.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Tpo -c -o test/run_tests-test-not-readable-on-eof.obj `if test -f 'test/test-not-readable-on-eof.c'; then $(CYGPATH_W) 'test/test-not-readable-on-eof.c'; else $(CYGPATH_W) '$(srcdir)/test/test-not-readable-on-eof.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Tpo test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-not-readable-on-eof.c' object='test/run_tests-test-not-readable-on-eof.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-not-readable-on-eof.obj `if test -f 'test/test-not-readable-on-eof.c'; then $(CYGPATH_W) 'test/test-not-readable-on-eof.c'; else $(CYGPATH_W) '$(srcdir)/test/test-not-readable-on-eof.c'; fi`
+
+test/run_tests-test-not-writable-after-shutdown.o: test/test-not-writable-after-shutdown.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-not-writable-after-shutdown.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Tpo -c -o test/run_tests-test-not-writable-after-shutdown.o `test -f 'test/test-not-writable-after-shutdown.c' || echo '$(srcdir)/'`test/test-not-writable-after-shutdown.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Tpo test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-not-writable-after-shutdown.c' object='test/run_tests-test-not-writable-after-shutdown.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-not-writable-after-shutdown.o `test -f 'test/test-not-writable-after-shutdown.c' || echo '$(srcdir)/'`test/test-not-writable-after-shutdown.c
+
+test/run_tests-test-not-writable-after-shutdown.obj: test/test-not-writable-after-shutdown.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-not-writable-after-shutdown.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Tpo -c -o test/run_tests-test-not-writable-after-shutdown.obj `if test -f 'test/test-not-writable-after-shutdown.c'; then $(CYGPATH_W) 'test/test-not-writable-after-shutdown.c'; else $(CYGPATH_W) '$(srcdir)/test/test-not-writable-after-shutdown.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Tpo test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-not-writable-after-shutdown.c' object='test/run_tests-test-not-writable-after-shutdown.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-not-writable-after-shutdown.obj `if test -f 'test/test-not-writable-after-shutdown.c'; then $(CYGPATH_W) 'test/test-not-writable-after-shutdown.c'; else $(CYGPATH_W) '$(srcdir)/test/test-not-writable-after-shutdown.c'; fi`
+
 test/run_tests-test-osx-select.o: test/test-osx-select.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-osx-select.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-osx-select.Tpo -c -o test/run_tests-test-osx-select.o `test -f 'test/test-osx-select.c' || echo '$(srcdir)/'`test/test-osx-select.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-osx-select.Tpo test/$(DEPDIR)/run_tests-test-osx-select.Po
@@ -4308,6 +4391,20 @@ test/run_tests-test-shutdown-eof.obj: test/test-shutdown-eof.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-shutdown-eof.c' object='test/run_tests-test-shutdown-eof.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-shutdown-eof.obj `if test -f 'test/test-shutdown-eof.c'; then $(CYGPATH_W) 'test/test-shutdown-eof.c'; else $(CYGPATH_W) '$(srcdir)/test/test-shutdown-eof.c'; fi`
+
+test/run_tests-test-shutdown-simultaneous.o: test/test-shutdown-simultaneous.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-shutdown-simultaneous.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Tpo -c -o test/run_tests-test-shutdown-simultaneous.o `test -f 'test/test-shutdown-simultaneous.c' || echo '$(srcdir)/'`test/test-shutdown-simultaneous.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Tpo test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-shutdown-simultaneous.c' object='test/run_tests-test-shutdown-simultaneous.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-shutdown-simultaneous.o `test -f 'test/test-shutdown-simultaneous.c' || echo '$(srcdir)/'`test/test-shutdown-simultaneous.c
+
+test/run_tests-test-shutdown-simultaneous.obj: test/test-shutdown-simultaneous.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-shutdown-simultaneous.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Tpo -c -o test/run_tests-test-shutdown-simultaneous.obj `if test -f 'test/test-shutdown-simultaneous.c'; then $(CYGPATH_W) 'test/test-shutdown-simultaneous.c'; else $(CYGPATH_W) '$(srcdir)/test/test-shutdown-simultaneous.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Tpo test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-shutdown-simultaneous.c' object='test/run_tests-test-shutdown-simultaneous.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-shutdown-simultaneous.obj `if test -f 'test/test-shutdown-simultaneous.c'; then $(CYGPATH_W) 'test/test-shutdown-simultaneous.c'; else $(CYGPATH_W) '$(srcdir)/test/test-shutdown-simultaneous.c'; fi`
 
 test/run_tests-test-shutdown-twice.o: test/test-shutdown-twice.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-shutdown-twice.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-shutdown-twice.Tpo -c -o test/run_tests-test-shutdown-twice.o `test -f 'test/test-shutdown-twice.c' || echo '$(srcdir)/'`test/test-shutdown-twice.c
@@ -5773,6 +5870,7 @@ distclean: distclean-am
 	-rm -f src/unix/$(DEPDIR)/libuv_la-darwin-proctitle.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-darwin.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-dl.Plo
+	-rm -f src/unix/$(DEPDIR)/libuv_la-epoll.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-freebsd.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-fs.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-fsevents.Plo
@@ -5902,6 +6000,9 @@ distclean: distclean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-metrics.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-multiple-listen.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-mutexes.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-osx-select.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-pass-always.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-ping-pong.Po
@@ -5934,6 +6035,7 @@ distclean: distclean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-semaphore.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-shutdown-close.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-shutdown-eof.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-shutdown-twice.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-signal-multiple-loops.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-signal-pending-on-close.Po
@@ -6072,6 +6174,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/unix/$(DEPDIR)/libuv_la-darwin-proctitle.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-darwin.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-dl.Plo
+	-rm -f src/unix/$(DEPDIR)/libuv_la-epoll.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-freebsd.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-fs.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-fsevents.Plo
@@ -6201,6 +6304,9 @@ maintainer-clean: maintainer-clean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-metrics.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-multiple-listen.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-mutexes.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-not-readable-nor-writable-on-read-error.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-not-readable-on-eof.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-not-writable-after-shutdown.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-osx-select.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-pass-always.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-ping-pong.Po
@@ -6233,6 +6339,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-semaphore.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-shutdown-close.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-shutdown-eof.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-shutdown-simultaneous.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-shutdown-twice.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-signal-multiple-loops.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-signal-pending-on-close.Po
