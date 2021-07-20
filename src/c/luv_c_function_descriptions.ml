@@ -899,6 +899,10 @@ struct
       foreign "uv_try_write"
         (ptr t @-> ptr Types.Buf.t @-> uint @-> returning error_code)
 
+    let try_write2 =
+      foreign "uv_try_write2"
+        (ptr t @-> ptr Types.Buf.t @-> uint @-> ptr t @-> returning error_code)
+
     let is_readable =
       foreign "uv_is_readable"
         (ptr t @-> returning bool)

@@ -131,6 +131,19 @@ val try_write : _ t -> Buffer.t list -> (int, Error.t) result
     Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_try_write}
     [uv_try_write]}. *)
 
+val try_write2 :
+  [< `Pipe ] t -> Buffer.t list -> send_handle:[< `TCP | `Pipe ] t ->
+    (int, Error.t) result
+(** Like {!Luv.Stream.write2}, but only attempts to perform the write operation
+    immediately.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/stream.html#c.uv_try_write2}
+    [uv_try_write2]}.
+
+    Requires Luv 0.5.9 and libuv 1.42.0.
+
+    {{!Luv.Requre} Feature check}: [Luv.Require.(has try_write2)] *)
+
 val is_readable : _ t -> bool
 (** Indicates whether the given stream is readable (has data).
 

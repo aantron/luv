@@ -174,6 +174,25 @@ let try_write stream buffers =
 
   Error.to_result result result
 
+(* TODO Get rid of the code duplication with try_write. *)
+let try_write2 stream buffers ~send_handle =
+  let count = List.length buffers in
+  let iovecs = Helpers.Buf.bigstrings_to_iovecs buffers count in
+
+  let result =
+    C.Functions.Stream.try_write2
+      (coerce stream)
+      (Ctypes.CArray.start iovecs)
+      (Unsigned.UInt.of_int count)
+      (coerce send_handle)
+  in
+
+  let module Sys = Compatibility.Sys in
+  ignore (Sys.opaque_identity buffers);
+  ignore (Sys.opaque_identity iovecs);
+
+  Error.to_result result result
+
 let is_readable stream =
   C.Functions.Stream.is_readable (coerce stream)
 

@@ -281,6 +281,7 @@ let () =
   needs 40 "timer_get_due_in" "See {!Luv.Timer.get_due_in}.";
   needs 26 "thread_stack_size" "See {!Luv.Thread.create}.";
   needs 10 "translate_sys_error" "See {!Luv.Error.translate_sys_error}.";
+  needs 42 "try_write2" "See {!Luv.Stream.try_write2}.";
   needs 33 "tty_vterm_state" "See {!Luv.TTY.set_vterm_state}.";
   needs 27 "udp_connect" "See {!Luv.UDP.Connected}.";
   needs  7 "udp_init_ex" "See {!Luv.UDP.init}.";
