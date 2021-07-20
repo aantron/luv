@@ -83,6 +83,7 @@ struct
     let erange = constant "UV_ERANGE" int
     let erofs = constant "UV_EROFS" int
     let eshutdown = constant "UV_ESHUTDOWN" int
+    let esocktnosupport = constant "UV_ESOCKTNOSUPPORT" int
     let espipe = constant "UV_ESPIPE" int
     let esrch = constant "UV_ESRCH" int
     let etimedout = constant "UV_ETIMEDOUT" int

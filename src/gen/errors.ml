@@ -68,6 +68,7 @@ let errors = [
   "UV_ERANGE";
   "UV_EROFS";
   "UV_ESHUTDOWN";
+  "UV_ESOCKTNOSUPPORT";
   "UV_ESPIPE";
   "UV_ESRCH";
   "UV_ETIMEDOUT";

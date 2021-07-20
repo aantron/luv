@@ -82,6 +82,7 @@ let tests = [
     t "ERANGE" "result too large" `ERANGE;
     t "EROFS" "read-only file system" `EROFS;
     t "ESHUTDOWN" "cannot send after transport endpoint shutdown" `ESHUTDOWN;
+    t "ESOCKTNOSUPPORT" "socket type not supported" `ESOCKTNOSUPPORT;
     t "ESPIPE" "invalid seek" `ESPIPE;
     t "ESRCH" "no such process" `ESRCH;
     t "ETIMEDOUT" "connection timed out" `ETIMEDOUT;
@@ -172,6 +173,7 @@ let tests = [
     t "ERANGE" `ERANGE;
     t "EROFS" `EROFS;
     t "ESHUTDOWN" `ESHUTDOWN;
+    t "ESOCKTNOSUPPORT" `ESOCKTNOSUPPORT;
     t "ESPIPE" `ESPIPE;
     t "ESRCH" `ESRCH;
     t "ETIMEDOUT" `ETIMEDOUT;

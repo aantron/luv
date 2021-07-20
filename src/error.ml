@@ -73,6 +73,7 @@ type t = [
   | `ERANGE
   | `EROFS
   | `ESHUTDOWN
+  | `ESOCKTNOSUPPORT
   | `ESPIPE
   | `ESRCH
   | `ETIMEDOUT
@@ -154,6 +155,7 @@ let to_c = let open C.Types.Error in function
   | `ERANGE -> erange
   | `EROFS -> erofs
   | `ESHUTDOWN -> eshutdown
+  | `ESOCKTNOSUPPORT -> esocktnosupport
   | `ESPIPE -> espipe
   | `ESRCH -> esrch
   | `ETIMEDOUT -> etimedout
@@ -234,6 +236,7 @@ let from_c = let open C.Types.Error in function
   | e when e = erange -> `ERANGE
   | e when e = erofs -> `EROFS
   | e when e = eshutdown -> `ESHUTDOWN
+  | e when e = esocktnosupport -> `ESOCKTNOSUPPORT
   | e when e = espipe -> `ESPIPE
   | e when e = esrch -> `ESRCH
   | e when e = etimedout -> `ETIMEDOUT
