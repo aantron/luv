@@ -59,6 +59,7 @@ let errors = [
   "UV_ENOTSOCK";
   "UV_ENOTSUP";
   "UV_ENOTTY";
+  "UV_EOVERFLOW";
   "UV_EPERM";
   "UV_EPIPE";
   "UV_EPROTO";

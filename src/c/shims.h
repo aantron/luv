@@ -643,3 +643,7 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 42
+    #define UV_EOVERFLOW 0x34242424
+#endif

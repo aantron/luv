@@ -64,6 +64,7 @@ type t = [
   | `ENOTSOCK
   | `ENOTSUP
   | `ENOTTY
+  | `EOVERFLOW
   | `EPERM
   | `EPIPE
   | `EPROTO
@@ -144,6 +145,7 @@ let to_c = let open C.Types.Error in function
   | `ENOTSOCK -> enotsock
   | `ENOTSUP -> enotsup
   | `ENOTTY -> enotty
+  | `EOVERFLOW -> eoverflow
   | `EPERM -> eperm
   | `EPIPE -> epipe
   | `EPROTO -> eproto
@@ -223,6 +225,7 @@ let from_c = let open C.Types.Error in function
   | e when e = enotsock -> `ENOTSOCK
   | e when e = enotsup -> `ENOTSUP
   | e when e = enotty -> `ENOTTY
+  | e when e = eoverflow -> `EOVERFLOW
   | e when e = eperm -> `EPERM
   | e when e = epipe -> `EPIPE
   | e when e = eproto -> `EPROTO

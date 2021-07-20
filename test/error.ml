@@ -73,6 +73,7 @@ let tests = [
     t "ENOTSOCK" "socket operation on non-socket" `ENOTSOCK;
     t "ENOTSUP" "operation not supported on socket" `ENOTSUP;
     t "ENOTTY" "inappropriate ioctl for device" `ENOTTY;
+    t "EOVERFLOW" "value too large for defined data type" `EOVERFLOW;
     t "EPERM" "operation not permitted" `EPERM;
     t "EPIPE" "broken pipe" `EPIPE;
     t "EPROTO" "protocol error" `EPROTO;
@@ -161,6 +162,7 @@ let tests = [
     t "ENOTEMPTY" `ENOTEMPTY;
     t "ENOTSOCK" `ENOTSOCK;
     t "ENOTSUP" `ENOTSUP;
+    t "EOVERFLOW" `EOVERFLOW;
     t "ENOTTY" `ENOTTY;
     t "EPERM" `EPERM;
     t "EPIPE" `EPIPE;

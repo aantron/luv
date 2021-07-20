@@ -71,6 +71,7 @@ type t = [
   | `ENOTSOCK
   | `ENOTSUP
   | `ENOTTY
+  | `EOVERFLOW
   | `EPERM
   | `EPIPE
   | `EPROTO
@@ -102,11 +103,14 @@ type t = [
 
     [`EILSEQ] is available since libuv 1.32.0.
 
+    [`EOVERFLOW] is available since Luv 0.5.9 and libuv 1.42.0.
+
     {{!Luv.Require} Feature checks}:
 
     - [Luv.Require.(has eftype)]
     - [Luv.Require.(has enotty)]
-    - [Luv.Require.(has eilseq)] *)
+    - [Luv.Require.(has eilseq)]
+    - [Luv.Require.(has eoverflow)] *)
 
 val strerror : t -> string
 (** Returns the error message corresponding to the given error code.

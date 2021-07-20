@@ -74,6 +74,7 @@ struct
     let enotsock = constant "UV_ENOTSOCK" int
     let enotsup = constant "UV_ENOTSUP" int
     let enotty = constant "UV_ENOTTY" int
+    let eoverflow = constant "UV_EOVERFLOW" int
     let eperm = constant "UV_EPERM" int
     let epipe = constant "UV_EPIPE" int
     let eproto = constant "UV_EPROTO" int
