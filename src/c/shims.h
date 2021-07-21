@@ -647,4 +647,11 @@
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 42
     #define UV_EOVERFLOW 0x34242424
     #define UV_ESOCKTNOSUPPORT 0x44242424
+
+    static int uv_try_write2(
+        uv_stream_t *stream, const uv_buf_t *bufs, unsigned int nbufs,
+        uv_stream_t *send_handle)
+    {
+        return ENOSYS;
+    }
 #endif
