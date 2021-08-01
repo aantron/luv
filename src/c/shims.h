@@ -76,7 +76,7 @@
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 10
     static int uv_translate_sys_error(int sys_error)
     {
-        return 0x34242424;
+        return 0x3242424;
     }
 #endif
 
@@ -136,7 +136,7 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 16
-    #define UV_ENOTTY 0x24242424
+    #define UV_ENOTTY 0x2242424
 
     // UV_FS_O_* flag definitions directly taken from uv/unix.h and uv/win.h as
     // of libuv 1.41.0.
@@ -370,7 +370,7 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 21
-    #define UV_EFTYPE 0x14242424
+    #define UV_EFTYPE 0x1242424
     #define UV_OVERLAPPED_PIPE 0
 
     static int uv_fs_lchown(
@@ -534,7 +534,7 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 32
-    #define UV_EILSEQ 0x04242424
+    #define UV_EILSEQ 0x0242424
 
     static int uv_tcp_close_reset(uv_tcp_t *handle, uv_close_cb close_callback)
     {
@@ -645,8 +645,8 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 42
-    #define UV_EOVERFLOW 0x34242424
-    #define UV_ESOCKTNOSUPPORT 0x44242424
+    #define UV_EOVERFLOW 0x4242424
+    #define UV_ESOCKTNOSUPPORT 0x5242424
 
     static int uv_try_write2(
         uv_stream_t *stream, const uv_buf_t *bufs, unsigned int nbufs,
