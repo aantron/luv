@@ -122,10 +122,17 @@ let () = Jbuild_plugin.V1.send @@ {|
  (targets generate_types_step_2.exe)
  (deps (:c generate_types_step_2.c) helpers.h shims.h)
  (action (bash "\
-  %{cc} %{c} \
-  -I '%{lib:ctypes:.}' \
-  -I %{ocaml_where} \
-  |}^ i_option ^{| -o %{targets}")))
+  if [ '%{ocaml-config:ccomp_type}' = 'msvc' ]; then \
+    %{cc} %{c} \
+    -I '%{lib:ctypes:.}' \
+    -I %{ocaml_where} \
+    |}^ i_option ^{| /Fe\"%{targets}\"; \
+  else \
+    %{cc} %{c} \
+    -I '%{lib:ctypes:.}' \
+    -I %{ocaml_where} \
+    |}^ i_option ^{| -o %{targets}; \
+  fi")))
 
 (rule
  (with-stdout-to luv_c_generated_types.ml
