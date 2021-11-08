@@ -653,7 +653,7 @@ int luv_spawn(
 
 int luv_is_invalid_handle_value(uv_os_fd_t handle)
 {
-    if (handle == -1)
+    if (handle == (uv_os_fd_t)-1)
         return 1;
     else
         return 0;
