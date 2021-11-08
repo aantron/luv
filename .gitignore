@@ -12,3 +12,4 @@ _esy/
 *esy.lock/
 node_modules/
 libuv-scratch/
+.vscode/
