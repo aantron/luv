@@ -13,7 +13,7 @@ let build_flags_resolver_stanza =
   | `vendored ->
     {|(build_flags_resolver
        (vendored
-         (c_flags (-I vendor/libuv/include -I src/c/vendor/libuv/include))
+         (c_flags (-fPIC -I vendor/libuv/include -I src/c/vendor/libuv/include))
          (c_library_flags ())))|}
   | `system_luv ->
     (* older, non-pkg-config way of using the system luv *)
@@ -59,7 +59,7 @@ let () = Jbuild_plugin.V1.send @@ {|
       (instance Types)
       (functor Type_description))
     (function_description
-      (concurrency sequential)
+      (concurrency unlocked)
       (instance Blocking)
       (functor Blocking_function_description))
     (function_description
