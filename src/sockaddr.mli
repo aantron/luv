@@ -65,10 +65,11 @@ val ipv6 : string -> int -> (t, Error.t) result
 val to_string : t -> string option
 (** Converts a network address to a string.
 
-    Binds either {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip4_name}
+    Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip4_name}
     [uv_ip4_name]} and
-    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip6_name}
-    [uv_ip6_name]}. *)
+    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip6_name} [uv_ip6_name]}.
+    This function is equivalent to
+    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_ip_name} [uv_ip_name]}. *)
 
 val port : t -> int option
 (** Extracts the port in a network address. *)

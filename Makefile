@@ -93,8 +93,8 @@ LATEST_TAG := \
 
 .PHONY : upgrade-libuv
 upgrade-libuv :
-	(cd src/c/vendor/libuv && git fetch)
-	(cd src/c/vendor/libuv && git checkout `$(LATEST_TAG)`)
+	# (cd src/c/vendor/libuv && git fetch)
+	# (cd src/c/vendor/libuv && git checkout `$(LATEST_TAG)`)
 	make clean
 	make eject-build
 	ocaml src/gen/headers.ml
