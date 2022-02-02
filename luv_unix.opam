@@ -14,8 +14,9 @@ dev-repo: "git+https://github.com/aantron/luv.git"
 
 depends: [
   "base-unix"
+  "ctypes" {>= "0.14.0"}  # Ctypes.CArray.of_string.
   "dune" {>= "2.0.0"}
-  "luv" {>= "0.5.7"}  # uv.h.
+  "luv" {>= "0.5.8"}
   "ocaml" {>= "4.02.0"}
   "result"
 ]
