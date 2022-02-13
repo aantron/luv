@@ -1,0 +1,12 @@
+(executable
+ (name discover)
+ (libraries dune-configurator str))
+
+(rule
+ (targets uv_lib.sexp uv_include.sexp compile_c.sh)
+ (deps
+  (env_var LUV_USE_SYSTEM_LIBUV)
+  (env_var LUV_LIB_LIBUV_DEFAULT)
+  (env_var LUV_INCLUDE_LIBUV_DEFAULT))
+ (action
+  (run ./discover.exe -context %{context_name})))
