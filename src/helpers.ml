@@ -50,7 +50,7 @@ struct
       let base = Ctypes.(bigarray_start array1) bigstring in
       let length = Bigarray.Array1.dim bigstring in
       Ctypes.setf iovec C.Types.Buf.base base;
-      Ctypes.setf iovec C.Types.Buf.len (Unsigned.UInt.of_int length)
+      Ctypes.setf iovec C.Types.Buf.len (Unsigned.ULong.of_int length)
     end;
     iovecs
 end
