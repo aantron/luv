@@ -1,17 +1,39 @@
 ; The final FFI module, containing all the OCaml bits, and linked with libuv.
+
 (library
  (name luv_c)
  (public_name luv.c)
- (wrapped false)
- (modules Luv_c_generated_functions)
- (libraries ctypes luv_c_function_descriptions threads)
+ ;(modules Generated_entry_point)
+ (libraries
+  ctypes
+  ;luv_c_function_descriptions
+  threads)
  (foreign_stubs
   (language c)
-  (names c_generated_functions helpers)
-  (include_dirs vendor/libuv/include)
-  )
+  (names helpers)
+  (include_dirs vendor/libuv/include))
  (foreign_archives uv)
- (c_library_flags (:include extra_libs.sexp)))
+ (ctypes
+  (build_flags_resolver
+   (vendored
+    (c_library_flags
+     :standard
+     (:include extra_libs.sexp))
+    (c_flags :standard -I vendor/libuv/include -I .)))
+  (external_library_name libuv)
+  (type_description
+   (instance Luv_c_types)
+   (functor Types))
+  (function_description
+   (concurrency unlocked)
+   (functor Blocking)
+   (instance Blocking_inst))
+  (function_description
+   (functor Non_blocking)
+   (instance Non_blocking_inst))
+  (generated_entry_point Luv_c_generated)
+  (headers
+   (include :standard uv.h helpers.h))))
 
 (install
  (section lib)
@@ -35,103 +57,104 @@
   (vendor/libuv/include/uv/win.h as uv/win.h)))
 
 ; The vendored libuv.
+
 (rule
  (targets libuv.a dlluv%{ext_dll})
- (deps (source_tree vendor))
- (action (progn
-  (bash "cp -r vendor/configure/* vendor/libuv/")
-  (chdir vendor/libuv (progn
-   (bash
-    "sh configure --host `ocamlc -config | awk '/host/ {print $NF}'` \
-      'CC=%{cc}' CFLAGS=-DNDEBUG --silent --enable-silent-rules")
-   (ignore-outputs (bash
-    "$([ '%{os_type}' = Unix ] && echo %{make} || echo make) V=0 -j 4 \
-      -o aclocal.m4 -o Makefile.in -o configure \
-      -o configure.status -o Makefile libuv.la"))
-   (ignore-outputs (bash
-    "sh libtool --silent --no-warnings --mode install cp libuv.la `pwd`"))))
-  (bash "cp vendor/libuv/libuv.a .")
-  (ignore-outputs (bash
-   "cp vendor/libuv/libuv.so.1.0.0 dlluv.so || \
-    cp vendor/libuv/libuv.1.dylib dlluv.so || \
-    cp vendor/bin/libuv-1.dll dlluv.dll")))))
+ (deps
+  (source_tree vendor))
+ (action
+  (progn
+   (bash "cp -r vendor/configure/* vendor/libuv/")
+   (chdir
+    vendor/libuv
+    (progn
+     (bash
+      "sh configure --host `ocamlc -config | awk '/host/ {print $NF}'` 'CC=%{cc}' CFLAGS=-DNDEBUG --silent --enable-silent-rules")
+     (ignore-outputs
+      (bash
+       "$([ '%{os_type}' = Unix ] && echo %{make} || echo make) V=0 -j 4 -o aclocal.m4 -o Makefile.in -o configure -o configure.status -o Makefile libuv.la"))
+     (ignore-outputs
+      (bash
+       "sh libtool --silent --no-warnings --mode install cp libuv.la `pwd`"))))
+   (bash "cp vendor/libuv/libuv.a .")
+   (ignore-outputs
+    (bash
+     "cp vendor/libuv/libuv.so.1.0.0 dlluv.so || cp vendor/libuv/libuv.1.dylib dlluv.so || cp vendor/bin/libuv-1.dll dlluv.dll")))))
+
+;
 
 (rule
  (targets extra_libs.sexp)
- (action (ignore-outputs (bash "\
-   if ocamlc -config | grep mingw; then \
-     echo '(-liphlpapi -lpsapi -luserenv)' > extra_libs.sexp; \
-   else \
-     echo '()' > extra_libs.sexp; \
-   fi"))))
-
-
+ (action
+  (ignore-outputs
+   (bash
+    "if ocamlc -config | grep mingw; then echo '(-liphlpapi -lpsapi -luserenv)' > extra_libs.sexp; else echo '()' > extra_libs.sexp; fi"))))
 
 ; Everything below is the bindings generation process using ctypes. It produces
 ; two OCaml modules, Luv_c_generated_functions and Luv_c_generated_types.
 
 ; Type bindings (Luv_c_generated_types).
-(library
- (name luv_c_type_descriptions)
- (public_name luv.c_type_descriptions)
- (modules Luv_c_type_descriptions)
- (libraries ctypes))
+;(library
+;(name luv_c_type_descriptions)
+;(public_name luv.c_type_descriptions)
+;(modules Luv_c_type_descriptions)
+;(libraries ctypes))
 
-(executable
- (name generate_types_start)
- (modules Generate_types_start)
- (libraries ctypes.stubs luv_c_type_descriptions))
+;(executable
+; (name generate_types_start)
+; (modules Generate_types_start)
+; (libraries ctypes.stubs ))
 
-(rule
- (with-stdout-to generate_types_step_2.c
-  (run ./generate_types_start.exe)))
+;(rule
+; (with-stdout-to generate_types_step_2.c
+;  (run ./generate_types_start.exe)))
 
 ; Based partially on
 ;   https://github.com/avsm/ocaml-yaml/blob/master/types/stubgen/jbuild#L20
-(rule
- (targets generate_types_step_2.exe)
- (deps (:c generate_types_step_2.c) helpers.h shims.h)
- (action (bash "\
-  if [ '%{ocaml-config:ccomp_type}' = 'msvc' ]; then \
-    %{cc} %{c} \
-    -I '%{lib:ctypes:.}' \
-    -I %{ocaml_where} \
-    -I vendor/libuv/include
-    /Fe\"%{targets}\"; \
-  else \
-    %{cc} %{c} \
-    -I '%{lib:ctypes:.}' \
-    -I %{ocaml_where} \
-    -I vendor/libuv/include -o %{targets}; \
-  fi")))
+;(rule
+; (targets generate_types_step_2.exe)
+; (deps (:c generate_types_step_2.c) helpers.h shims.h)
+; (action (bash "\
+;  if [ '%{ocaml-config:ccomp_type}' = 'msvc' ]; then \
+;    %{cc} %{c} \
+;    -I '%{lib:ctypes:.}' \
+;    -I %{ocaml_where} \
+;    -I vendor/libuv/include
+;    /Fe\"%{targets}\"; \
+;  else \
+;    %{cc} %{c} \
+;    -I '%{lib:ctypes:.}' \
+;    -I %{ocaml_where} \
+;    -I vendor/libuv/include -o %{targets}; \
+;  fi")))
 
-(rule
- (with-stdout-to luv_c_generated_types.ml
-  (run ./generate_types_step_2.exe)))
+;(rule
+; (with-stdout-to luv_c_generated_types.ml
+;  (run ./generate_types_step_2.exe)))
 
 ; Function bindings.
-(library
- (name luv_c_function_descriptions)
- (public_name luv.c_function_descriptions)
- (flags (:standard -w -9-16-27))
- (wrapped false)
- (modules Luv_c_generated_types Luv_c_function_descriptions Luv_c_types)
- (libraries ctypes luv_c_type_descriptions))
-
-(executable
- (name generate_c_functions)
- (modules Generate_c_functions)
- (libraries ctypes.stubs luv_c_function_descriptions))
-
-(executable
- (name generate_ml_functions)
- (modules Generate_ml_functions)
- (libraries ctypes.stubs luv_c_function_descriptions))
-
-(rule
- (with-stdout-to c_generated_functions.c
-  (run ./generate_c_functions.exe luv_stub)))
-
-(rule
- (with-stdout-to luv_c_generated_functions.ml
-  (run ./generate_ml_functions.exe luv_stub)))
+;(library
+; (name luv_c_function_descriptions)
+; (public_name luv.c_function_descriptions)
+; (flags (:standard -w -9-16-27))
+; (wrapped false)
+; (modules Luv_c_generated_types Luv_c_function_descriptions Luv_c_types)
+; (libraries ctypes ))
+;
+;(executable
+; (name generate_c_functions)
+; (modules Generate_c_functions)
+; (libraries ctypes.stubs luv_c_function_descriptions))
+;
+;(executable
+; (name generate_ml_functions)
+; (modules Generate_ml_functions)
+; (libraries ctypes.stubs luv_c_function_descriptions))
+;
+;(rule
+; (with-stdout-to c_generated_functions.c
+;  (run ./generate_c_functions.exe luv_stub)))
+;
+;(rule
+; (with-stdout-to luv_c_generated_functions.ml
+;  (run ./generate_ml_functions.exe luv_stub)))
