@@ -25,7 +25,7 @@ jobs:
           submodules: recursive
       - uses: ocaml/setup-ocaml@v2
         with:
-          ocaml-version: ${{ matrix.ocaml }}
+          ocaml-compiler: ${{ matrix.ocaml }}
       - run: opam depext -y conf-pkg-config
       - run: opam install -y --deps-only .
       - run: opam exec -- dune build -p luv
