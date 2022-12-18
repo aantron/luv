@@ -8,6 +8,7 @@ jobs:
         os:
           - ubuntu-latest
         ocaml:
+          - 4.14.0
           - 4.13.1
           - 4.02.3
         include:
