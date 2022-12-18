@@ -148,7 +148,7 @@ int luv_thread_create_c(
 
 // Helpers for uv_once.
 int luv_once_init(uv_once_t *guard);
-CAMLprim value luv_set_once_callback(value callback);
+CAMLprim value luv_set_once_callback(value vcallback);
 
 
 

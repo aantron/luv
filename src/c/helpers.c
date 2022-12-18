@@ -523,9 +523,9 @@ int luv_once_init(uv_once_t *guard)
     return 0;
 }
 
-CAMLprim value luv_set_once_callback(value callback)
+CAMLprim value luv_set_once_callback(value vcallback)
 {
-    uv_key_set(&luv_once_callback_key, (void*)callback);
+    uv_key_set(&luv_once_callback_key, (void*)vcallback);
     return Val_unit;
 }
 
