@@ -7,24 +7,39 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-        ocaml:
-          - 4.13.1
-          - 4.02.3
+        ocaml-compiler:
+          - 5.0.x
+          - 4.14.x
+          - 4.02.x
         include:
           - os: macos-latest
-            ocaml: 4.13.1
+            ocaml-compiler: 4.14.x
           - os: windows-latest
-            ocaml: 4.13.1
+            ocaml-compiler: 4.14.x
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
           submodules: recursive
-      - uses: ocaml/setup-ocaml@v2
+
+      - name: Use OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
+        if: runner.os != 'Windows'
         with:
-          ocaml-compiler: ${{ matrix.ocaml }}
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+
+      - name: Use OCaml ${{ matrix.ocaml-compiler }}
+        uses: ocaml/setup-ocaml@v2
+        if: runner.os == 'Windows'
+        with:
+          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          opam-repositories: |
+            opam-repository-mingw: https://github.com/ocaml-opam/opam-repository-mingw.git#sunset
+            default: https://github.com/ocaml/opam-repository.git
+
       - run: opam depext -y conf-pkg-config
       - run: opam install -y --deps-only .
       - run: opam exec -- dune build -p luv
@@ -40,7 +55,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
       - run: npm install esy
