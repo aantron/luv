@@ -12,6 +12,7 @@
 #include <unistd.h>
 #endif
 
+#define CAML_NAME_SPACE
 #include <caml/mlvalues.h>
 #include <uv.h>
 #include "shims.h"
