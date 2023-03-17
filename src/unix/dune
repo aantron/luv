@@ -1,5 +1,5 @@
 (library
  (public_name luv_unix)
  (libraries luv luv.c result unix)
- (foreign_stubs (language c) (names luv_unix))
+ (foreign_stubs (language c) (names luv_unix) (include_dirs ../c/vendor/libuv/include))
  (flags (:standard -w -49 -open Result)))

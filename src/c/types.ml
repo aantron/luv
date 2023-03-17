@@ -7,7 +7,7 @@
    proportionally in the number of files the bindings are spread over.
    https://github.com/ocaml/dune/issues/135. *)
 
-module Descriptions (F : Ctypes.TYPE) =
+module Types (F : Ctypes.TYPE) =
 struct
   open Ctypes
   open F
