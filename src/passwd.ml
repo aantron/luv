@@ -18,8 +18,8 @@ let get_passwd () =
     let module PW = C.Types.Passwd in
     let passwd = {
       username = Ctypes.getf c_passwd PW.username;
-      uid = Ctypes.getf c_passwd PW.uid |> Signed.Long.to_int;
-      gid = Ctypes.getf c_passwd PW.gid |> Signed.Long.to_int;
+      uid = Ctypes.getf c_passwd PW.uid |> Unsigned.ULong.to_int;
+      gid = Ctypes.getf c_passwd PW.gid |> Unsigned.ULong.to_int;
       shell = Ctypes.getf c_passwd PW.shell;
       homedir = Ctypes.getf c_passwd PW.homedir;
     }

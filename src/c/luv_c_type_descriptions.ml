@@ -941,8 +941,8 @@ struct
     let t : ([ `Passwd ] structure) typ =
       typedef (structure "`Passwd") "uv_passwd_t"
     let username = field t "username" string
-    let uid = field t "uid" long
-    let gid = field t "gid" long
+    let uid = field t "uid" ulong
+    let gid = field t "gid" ulong
     let shell = field t "shell" string_opt
     let homedir = field t "homedir" string
     let () = seal t

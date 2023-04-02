@@ -3,6 +3,8 @@
 
 
 
+(* TODO The representation of uid and gid was changed to unsigned long in libuv
+   1.44. The types here should probably also change. *)
 type t = {
   username : string;
   uid : int;

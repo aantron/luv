@@ -58,8 +58,8 @@
 
     typedef struct {
         char *username;
-        long uid;
-        long gid;
+        unsigned long uid;
+        unsigned long gid;
         char *shell;
         char *homedir;
     } uv_passwd_t;
