@@ -45,7 +45,6 @@ let () = Jbuild_plugin.V1.send @@ {|
  (files
   (vendor/libuv/include/uv.h as uv.h)
   (vendor/libuv/include/uv/aix.h as uv/aix.h)
-  (vendor/libuv/include/uv/android-ifaddrs.h as uv/android-ifaddrs.h)
   (vendor/libuv/include/uv/bsd.h as uv/bsd.h)
   (vendor/libuv/include/uv/darwin.h as uv/darwin.h)
   (vendor/libuv/include/uv/errno.h as uv/errno.h)

@@ -229,14 +229,11 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @OS400_TRUE@                    src/unix/posix-poll.c \
 @OS400_TRUE@                    src/unix/no-fsevents.c
 
-@ANDROID_TRUE@am__append_23 = include/uv/android-ifaddrs.h
-@ANDROID_TRUE@am__append_24 = -D_GNU_SOURCE
-@ANDROID_TRUE@am__append_25 = src/unix/android-ifaddrs.c \
-@ANDROID_TRUE@                    src/unix/pthread-fixes.c
-
-@CYGWIN_TRUE@am__append_26 = include/uv/posix.h
-@CYGWIN_TRUE@am__append_27 = -D_GNU_SOURCE
-@CYGWIN_TRUE@am__append_28 = src/unix/cygwin.c \
+@ANDROID_TRUE@am__append_23 = -D_GNU_SOURCE
+@ANDROID_TRUE@am__append_24 = src/unix/pthread-fixes.c
+@CYGWIN_TRUE@am__append_25 = include/uv/posix.h
+@CYGWIN_TRUE@am__append_26 = -D_GNU_SOURCE
+@CYGWIN_TRUE@am__append_27 = src/unix/cygwin.c \
 @CYGWIN_TRUE@                    src/unix/bsd-ifaddrs.c \
 @CYGWIN_TRUE@                    src/unix/no-fsevents.c \
 @CYGWIN_TRUE@                    src/unix/no-proctitle.c \
@@ -246,10 +243,10 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @CYGWIN_TRUE@                    src/unix/sysinfo-loadavg.c \
 @CYGWIN_TRUE@                    src/unix/sysinfo-memory.c
 
-@DARWIN_TRUE@am__append_29 = include/uv/darwin.h
-@DARWIN_TRUE@am__append_30 = -D_DARWIN_USE_64_BIT_INODE=1 \
+@DARWIN_TRUE@am__append_28 = include/uv/darwin.h
+@DARWIN_TRUE@am__append_29 = -D_DARWIN_USE_64_BIT_INODE=1 \
 @DARWIN_TRUE@	-D_DARWIN_UNLIMITED_SELECT=1
-@DARWIN_TRUE@am__append_31 = src/unix/bsd-ifaddrs.c \
+@DARWIN_TRUE@am__append_30 = src/unix/bsd-ifaddrs.c \
 @DARWIN_TRUE@                    src/unix/darwin-proctitle.c \
 @DARWIN_TRUE@                    src/unix/darwin-stub.h \
 @DARWIN_TRUE@                    src/unix/darwin.c \
@@ -258,38 +255,42 @@ check_PROGRAMS = test/run-tests$(EXEEXT)
 @DARWIN_TRUE@                    src/unix/proctitle.c \
 @DARWIN_TRUE@                    src/unix/random-getentropy.c
 
-@DARWIN_TRUE@am__append_32 = -lutil
-@DRAGONFLY_TRUE@am__append_33 = include/uv/bsd.h
-@DRAGONFLY_TRUE@am__append_34 = src/unix/bsd-ifaddrs.c \
+@DARWIN_TRUE@am__append_31 = -lutil
+@DRAGONFLY_TRUE@am__append_32 = include/uv/bsd.h
+@DRAGONFLY_TRUE@am__append_33 = src/unix/bsd-ifaddrs.c \
 @DRAGONFLY_TRUE@                    src/unix/bsd-proctitle.c \
 @DRAGONFLY_TRUE@                    src/unix/freebsd.c \
 @DRAGONFLY_TRUE@                    src/unix/kqueue.c \
 @DRAGONFLY_TRUE@                    src/unix/posix-hrtime.c
 
-@DRAGONFLY_TRUE@am__append_35 = -lutil
-@FREEBSD_TRUE@am__append_36 = include/uv/bsd.h
-@FREEBSD_TRUE@am__append_37 = src/unix/bsd-ifaddrs.c \
+@DRAGONFLY_TRUE@am__append_34 = -lutil
+@FREEBSD_TRUE@am__append_35 = include/uv/bsd.h
+@FREEBSD_TRUE@am__append_36 = src/unix/bsd-ifaddrs.c \
 @FREEBSD_TRUE@                    src/unix/bsd-proctitle.c \
 @FREEBSD_TRUE@                    src/unix/freebsd.c \
 @FREEBSD_TRUE@                    src/unix/kqueue.c \
 @FREEBSD_TRUE@                    src/unix/posix-hrtime.c \
 @FREEBSD_TRUE@                    src/unix/random-getrandom.c
 
-@FREEBSD_TRUE@am__append_38 = -lutil
-@HAIKU_TRUE@am__append_39 = include/uv/posix.h
-@HAIKU_TRUE@am__append_40 = -D_BSD_SOURCE
-@HAIKU_TRUE@am__append_41 = src/unix/bsd-ifaddrs.c \
+@FREEBSD_TRUE@am__append_37 = -lutil
+@HAIKU_TRUE@am__append_38 = include/uv/posix.h
+@HAIKU_TRUE@am__append_39 = -D_BSD_SOURCE
+@HAIKU_TRUE@am__append_40 = src/unix/bsd-ifaddrs.c \
 @HAIKU_TRUE@                    src/unix/haiku.c \
 @HAIKU_TRUE@                    src/unix/no-fsevents.c \
 @HAIKU_TRUE@                    src/unix/no-proctitle.c \
 @HAIKU_TRUE@                    src/unix/posix-hrtime.c \
 @HAIKU_TRUE@                    src/unix/posix-poll.c
 
-@HURD_TRUE@am__append_42 = include/uv/posix.h
-@HURD_TRUE@am__append_43 = src/unix/no-fsevents.c \
+@HURD_TRUE@am__append_41 = include/uv/posix.h
+@HURD_TRUE@am__append_42 = src/unix/bsd-ifaddrs.c \
+@HURD_TRUE@                    src/unix/no-fsevents.c \
+@HURD_TRUE@                    src/unix/no-proctitle.c \
 @HURD_TRUE@                    src/unix/posix-hrtime.c \
-@HURD_TRUE@                    src/unix/posix-poll.c
+@HURD_TRUE@                    src/unix/posix-poll.c \
+@HURD_TRUE@                    src/unix/hurd.c
 
+@KFREEBSD_TRUE@am__append_43 = -D_GNU_SOURCE
 @LINUX_TRUE@am__append_44 = include/uv/linux.h
 @LINUX_TRUE@am__append_45 = -D_GNU_SOURCE
 @LINUX_TRUE@am__append_46 = src/unix/linux-core.c \
@@ -417,9 +418,9 @@ am__libuv_la_SOURCES_DIST = src/fs-poll.c src/heap-inl.h src/idna.c \
 	src/idna.h src/inet.c src/queue.h src/random.c src/strscpy.c \
 	src/strscpy.h src/threadpool.c src/timer.c \
 	src/uv-data-getter-setters.c src/uv-common.c src/uv-common.h \
-	src/version.c src/win/async.c src/win/atomicops-inl.h \
-	src/win/core.c src/win/detect-wakeup.c src/win/dl.c \
-	src/win/error.c src/win/fs-event.c src/win/fs.c \
+	src/version.c src/strtok.c src/strtok.h src/win/async.c \
+	src/win/atomicops-inl.h src/win/core.c src/win/detect-wakeup.c \
+	src/win/dl.c src/win/error.c src/win/fs-event.c src/win/fs.c \
 	src/win/getaddrinfo.c src/win/getnameinfo.c src/win/handle.c \
 	src/win/handle-inl.h src/win/internal.h src/win/loop-watcher.c \
 	src/win/pipe.c src/win/poll.c src/win/process-stdio.c \
@@ -436,21 +437,20 @@ am__libuv_la_SOURCES_DIST = src/fs-poll.c src/heap-inl.h src/idna.c \
 	src/unix/spinlock.h src/unix/stream.c src/unix/tcp.c \
 	src/unix/thread.c src/unix/tty.c src/unix/udp.c src/unix/aix.c \
 	src/unix/aix-common.c src/unix/ibmi.c src/unix/posix-poll.c \
-	src/unix/no-fsevents.c src/unix/android-ifaddrs.c \
-	src/unix/pthread-fixes.c src/unix/cygwin.c \
-	src/unix/bsd-ifaddrs.c src/unix/no-proctitle.c \
-	src/unix/posix-hrtime.c src/unix/procfs-exepath.c \
-	src/unix/sysinfo-loadavg.c src/unix/sysinfo-memory.c \
-	src/unix/darwin-proctitle.c src/unix/darwin-stub.h \
-	src/unix/darwin.c src/unix/fsevents.c src/unix/kqueue.c \
-	src/unix/proctitle.c src/unix/random-getentropy.c \
-	src/unix/bsd-proctitle.c src/unix/freebsd.c \
-	src/unix/random-getrandom.c src/unix/haiku.c \
-	src/unix/linux-core.c src/unix/linux-inotify.c \
-	src/unix/linux-syscalls.c src/unix/linux-syscalls.h \
-	src/unix/random-sysctl-linux.c src/unix/epoll.c \
-	src/unix/netbsd.c src/unix/openbsd.c src/unix/sunos.c \
-	src/unix/os390.c src/unix/os390-syscalls.c
+	src/unix/no-fsevents.c src/unix/pthread-fixes.c \
+	src/unix/cygwin.c src/unix/bsd-ifaddrs.c \
+	src/unix/no-proctitle.c src/unix/posix-hrtime.c \
+	src/unix/procfs-exepath.c src/unix/sysinfo-loadavg.c \
+	src/unix/sysinfo-memory.c src/unix/darwin-proctitle.c \
+	src/unix/darwin-stub.h src/unix/darwin.c src/unix/fsevents.c \
+	src/unix/kqueue.c src/unix/proctitle.c \
+	src/unix/random-getentropy.c src/unix/bsd-proctitle.c \
+	src/unix/freebsd.c src/unix/random-getrandom.c \
+	src/unix/haiku.c src/unix/hurd.c src/unix/linux-core.c \
+	src/unix/linux-inotify.c src/unix/linux-syscalls.c \
+	src/unix/linux-syscalls.h src/unix/random-sysctl-linux.c \
+	src/unix/epoll.c src/unix/netbsd.c src/unix/openbsd.c \
+	src/unix/sunos.c src/unix/os390.c src/unix/os390-syscalls.c
 am__dirstamp = $(am__leading_dot)dirstamp
 @WINNT_TRUE@am__objects_1 = src/win/libuv_la-async.lo \
 @WINNT_TRUE@	src/win/libuv_la-core.lo \
@@ -493,8 +493,7 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @OS400_TRUE@	src/unix/libuv_la-ibmi.lo \
 @OS400_TRUE@	src/unix/libuv_la-posix-poll.lo \
 @OS400_TRUE@	src/unix/libuv_la-no-fsevents.lo
-@ANDROID_TRUE@am__objects_5 = src/unix/libuv_la-android-ifaddrs.lo \
-@ANDROID_TRUE@	src/unix/libuv_la-pthread-fixes.lo
+@ANDROID_TRUE@am__objects_5 = src/unix/libuv_la-pthread-fixes.lo
 @CYGWIN_TRUE@am__objects_6 = src/unix/libuv_la-cygwin.lo \
 @CYGWIN_TRUE@	src/unix/libuv_la-bsd-ifaddrs.lo \
 @CYGWIN_TRUE@	src/unix/libuv_la-no-fsevents.lo \
@@ -528,9 +527,12 @@ am__dirstamp = $(am__leading_dot)dirstamp
 @HAIKU_TRUE@	src/unix/libuv_la-no-proctitle.lo \
 @HAIKU_TRUE@	src/unix/libuv_la-posix-hrtime.lo \
 @HAIKU_TRUE@	src/unix/libuv_la-posix-poll.lo
-@HURD_TRUE@am__objects_11 = src/unix/libuv_la-no-fsevents.lo \
+@HURD_TRUE@am__objects_11 = src/unix/libuv_la-bsd-ifaddrs.lo \
+@HURD_TRUE@	src/unix/libuv_la-no-fsevents.lo \
+@HURD_TRUE@	src/unix/libuv_la-no-proctitle.lo \
 @HURD_TRUE@	src/unix/libuv_la-posix-hrtime.lo \
-@HURD_TRUE@	src/unix/libuv_la-posix-poll.lo
+@HURD_TRUE@	src/unix/libuv_la-posix-poll.lo \
+@HURD_TRUE@	src/unix/libuv_la-hurd.lo
 @LINUX_TRUE@am__objects_12 = src/unix/libuv_la-linux-core.lo \
 @LINUX_TRUE@	src/unix/libuv_la-linux-inotify.lo \
 @LINUX_TRUE@	src/unix/libuv_la-linux-syscalls.lo \
@@ -570,12 +572,12 @@ am_libuv_la_OBJECTS = src/libuv_la-fs-poll.lo src/libuv_la-idna.lo \
 	src/libuv_la-strscpy.lo src/libuv_la-threadpool.lo \
 	src/libuv_la-timer.lo src/libuv_la-uv-data-getter-setters.lo \
 	src/libuv_la-uv-common.lo src/libuv_la-version.lo \
-	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
-	$(am__objects_4) $(am__objects_5) $(am__objects_6) \
-	$(am__objects_7) $(am__objects_8) $(am__objects_9) \
-	$(am__objects_10) $(am__objects_11) $(am__objects_12) \
-	$(am__objects_13) $(am__objects_14) $(am__objects_15) \
-	$(am__objects_16) $(am__objects_17)
+	src/libuv_la-strtok.lo $(am__objects_1) $(am__objects_2) \
+	$(am__objects_3) $(am__objects_4) $(am__objects_5) \
+	$(am__objects_6) $(am__objects_7) $(am__objects_8) \
+	$(am__objects_9) $(am__objects_10) $(am__objects_11) \
+	$(am__objects_12) $(am__objects_13) $(am__objects_14) \
+	$(am__objects_15) $(am__objects_16) $(am__objects_17)
 libuv_la_OBJECTS = $(am_libuv_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -588,26 +590,26 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/echo-server.c test/run-tests.c test/runner.c \
 	test/runner.h test/task.h test/test-active.c test/test-async.c \
 	test/test-async-null-cb.c test/test-barrier.c \
-	test/test-callback-order.c test/test-callback-stack.c \
-	test/test-close-fd.c test/test-close-order.c \
-	test/test-condvar.c test/test-connect-unspecified.c \
-	test/test-connection-fail.c test/test-cwd-and-chdir.c \
-	test/test-default-loop-close.c test/test-delayed-accept.c \
-	test/test-dlerror.c test/test-eintr-handling.c \
-	test/test-embed.c test/test-emfile.c test/test-env-vars.c \
-	test/test-error.c test/test-fail-always.c \
-	test/test-fs-copyfile.c test/test-fs-event.c \
-	test/test-fs-poll.c test/test-fs.c test/test-fs-readdir.c \
-	test/test-fs-fd-hash.c test/test-fs-open-flags.c \
-	test/test-fork.c test/test-getters-setters.c \
-	test/test-get-currentexe.c test/test-get-loadavg.c \
-	test/test-get-memory.c test/test-get-passwd.c \
-	test/test-getaddrinfo.c test/test-gethostname.c \
-	test/test-getnameinfo.c test/test-getsockname.c \
-	test/test-gettimeofday.c test/test-handle-fileno.c \
-	test/test-homedir.c test/test-hrtime.c test/test-idle.c \
-	test/test-idna.c test/test-ip4-addr.c test/test-ip6-addr.c \
-	test/test-ip-name.c test/test-ipc-heavy-traffic-deadlock-bug.c \
+	test/test-callback-stack.c test/test-close-fd.c \
+	test/test-close-order.c test/test-condvar.c \
+	test/test-connect-unspecified.c test/test-connection-fail.c \
+	test/test-cwd-and-chdir.c test/test-default-loop-close.c \
+	test/test-delayed-accept.c test/test-dlerror.c \
+	test/test-eintr-handling.c test/test-embed.c \
+	test/test-emfile.c test/test-env-vars.c test/test-error.c \
+	test/test-fail-always.c test/test-fs-copyfile.c \
+	test/test-fs-event.c test/test-fs-poll.c test/test-fs.c \
+	test/test-fs-readdir.c test/test-fs-fd-hash.c \
+	test/test-fs-open-flags.c test/test-fork.c \
+	test/test-getters-setters.c test/test-get-currentexe.c \
+	test/test-get-loadavg.c test/test-get-memory.c \
+	test/test-get-passwd.c test/test-getaddrinfo.c \
+	test/test-gethostname.c test/test-getnameinfo.c \
+	test/test-getsockname.c test/test-gettimeofday.c \
+	test/test-handle-fileno.c test/test-homedir.c \
+	test/test-hrtime.c test/test-idle.c test/test-idna.c \
+	test/test-ip4-addr.c test/test-ip6-addr.c test/test-ip-name.c \
+	test/test-ipc-heavy-traffic-deadlock-bug.c \
 	test/test-ipc-send-recv.c test/test-ipc.c test/test-list.h \
 	test/test-loop-handles.c test/test-loop-alive.c \
 	test/test-loop-close.c test/test-loop-stop.c \
@@ -639,16 +641,18 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-signal-pending-on-close.c test/test-signal.c \
 	test/test-socket-buffer-size.c test/test-spawn.c \
 	test/test-stdio-over-pipes.c test/test-strscpy.c \
-	test/test-tcp-alloc-cb-fail.c test/test-tcp-bind-error.c \
-	test/test-tcp-bind6-error.c test/test-tcp-close-accept.c \
-	test/test-tcp-close-while-connecting.c test/test-tcp-close.c \
+	test/test-strtok.c test/test-tcp-alloc-cb-fail.c \
+	test/test-tcp-bind-error.c test/test-tcp-bind6-error.c \
+	test/test-tcp-close-accept.c \
+	test/test-tcp-close-while-connecting.c \
+	test/test-tcp-close-after-read-timeout.c test/test-tcp-close.c \
 	test/test-tcp-close-reset.c \
 	test/test-tcp-create-socket-early.c \
 	test/test-tcp-connect-error-after-write.c \
 	test/test-tcp-connect-error.c test/test-tcp-connect-timeout.c \
 	test/test-tcp-connect6-error.c test/test-tcp-flags.c \
 	test/test-tcp-open.c test/test-tcp-read-stop.c \
-	test/test-tcp-read-stop-start.c \
+	test/test-tcp-read-stop-start.c test/test-tcp-rst.c \
 	test/test-tcp-shutdown-after-write.c \
 	test/test-tcp-unexpected-read.c test/test-tcp-oob.c \
 	test/test-tcp-write-to-half-open-connection.c \
@@ -687,7 +691,6 @@ am_test_run_tests_OBJECTS = test/run_tests-blackhole-server.$(OBJEXT) \
 	test/run_tests-test-async.$(OBJEXT) \
 	test/run_tests-test-async-null-cb.$(OBJEXT) \
 	test/run_tests-test-barrier.$(OBJEXT) \
-	test/run_tests-test-callback-order.$(OBJEXT) \
 	test/run_tests-test-callback-stack.$(OBJEXT) \
 	test/run_tests-test-close-fd.$(OBJEXT) \
 	test/run_tests-test-close-order.$(OBJEXT) \
@@ -786,11 +789,13 @@ am_test_run_tests_OBJECTS = test/run_tests-blackhole-server.$(OBJEXT) \
 	test/run_tests-test-spawn.$(OBJEXT) \
 	test/run_tests-test-stdio-over-pipes.$(OBJEXT) \
 	test/run_tests-test-strscpy.$(OBJEXT) \
+	test/run_tests-test-strtok.$(OBJEXT) \
 	test/run_tests-test-tcp-alloc-cb-fail.$(OBJEXT) \
 	test/run_tests-test-tcp-bind-error.$(OBJEXT) \
 	test/run_tests-test-tcp-bind6-error.$(OBJEXT) \
 	test/run_tests-test-tcp-close-accept.$(OBJEXT) \
 	test/run_tests-test-tcp-close-while-connecting.$(OBJEXT) \
+	test/run_tests-test-tcp-close-after-read-timeout.$(OBJEXT) \
 	test/run_tests-test-tcp-close.$(OBJEXT) \
 	test/run_tests-test-tcp-close-reset.$(OBJEXT) \
 	test/run_tests-test-tcp-create-socket-early.$(OBJEXT) \
@@ -802,6 +807,7 @@ am_test_run_tests_OBJECTS = test/run_tests-blackhole-server.$(OBJEXT) \
 	test/run_tests-test-tcp-open.$(OBJEXT) \
 	test/run_tests-test-tcp-read-stop.$(OBJEXT) \
 	test/run_tests-test-tcp-read-stop-start.$(OBJEXT) \
+	test/run_tests-test-tcp-rst.$(OBJEXT) \
 	test/run_tests-test-tcp-shutdown-after-write.$(OBJEXT) \
 	test/run_tests-test-tcp-unexpected-read.$(OBJEXT) \
 	test/run_tests-test-tcp-oob.$(OBJEXT) \
@@ -875,6 +881,7 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	src/$(DEPDIR)/libuv_la-inet.Plo \
 	src/$(DEPDIR)/libuv_la-random.Plo \
 	src/$(DEPDIR)/libuv_la-strscpy.Plo \
+	src/$(DEPDIR)/libuv_la-strtok.Plo \
 	src/$(DEPDIR)/libuv_la-threadpool.Plo \
 	src/$(DEPDIR)/libuv_la-timer.Plo \
 	src/$(DEPDIR)/libuv_la-uv-common.Plo \
@@ -882,7 +889,6 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	src/$(DEPDIR)/libuv_la-version.Plo \
 	src/unix/$(DEPDIR)/libuv_la-aix-common.Plo \
 	src/unix/$(DEPDIR)/libuv_la-aix.Plo \
-	src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Plo \
 	src/unix/$(DEPDIR)/libuv_la-async.Plo \
 	src/unix/$(DEPDIR)/libuv_la-bsd-ifaddrs.Plo \
 	src/unix/$(DEPDIR)/libuv_la-bsd-proctitle.Plo \
@@ -898,6 +904,7 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	src/unix/$(DEPDIR)/libuv_la-getaddrinfo.Plo \
 	src/unix/$(DEPDIR)/libuv_la-getnameinfo.Plo \
 	src/unix/$(DEPDIR)/libuv_la-haiku.Plo \
+	src/unix/$(DEPDIR)/libuv_la-hurd.Plo \
 	src/unix/$(DEPDIR)/libuv_la-ibmi.Plo \
 	src/unix/$(DEPDIR)/libuv_la-kqueue.Plo \
 	src/unix/$(DEPDIR)/libuv_la-linux-core.Plo \
@@ -966,7 +973,6 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	test/$(DEPDIR)/run_tests-test-async-null-cb.Po \
 	test/$(DEPDIR)/run_tests-test-async.Po \
 	test/$(DEPDIR)/run_tests-test-barrier.Po \
-	test/$(DEPDIR)/run_tests-test-callback-order.Po \
 	test/$(DEPDIR)/run_tests-test-callback-stack.Po \
 	test/$(DEPDIR)/run_tests-test-close-fd.Po \
 	test/$(DEPDIR)/run_tests-test-close-order.Po \
@@ -1065,10 +1071,12 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	test/$(DEPDIR)/run_tests-test-spawn.Po \
 	test/$(DEPDIR)/run_tests-test-stdio-over-pipes.Po \
 	test/$(DEPDIR)/run_tests-test-strscpy.Po \
+	test/$(DEPDIR)/run_tests-test-strtok.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-alloc-cb-fail.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-bind-error.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-bind6-error.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-close-accept.Po \
+	test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-close-reset.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-close-while-connecting.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-close.Po \
@@ -1082,6 +1090,7 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	test/$(DEPDIR)/run_tests-test-tcp-open.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-read-stop-start.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-read-stop.Po \
+	test/$(DEPDIR)/run_tests-test-tcp-rst.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-shutdown-after-write.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-try-write-error.Po \
 	test/$(DEPDIR)/run_tests-test-tcp-try-write.Po \
@@ -1158,9 +1167,8 @@ DATA = $(pkgconfig_DATA)
 am__uvinclude_HEADERS_DIST = include/uv/errno.h \
 	include/uv/threadpool.h include/uv/version.h include/uv/win.h \
 	include/uv/tree.h include/uv/unix.h include/uv/aix.h \
-	include/uv/posix.h include/uv/android-ifaddrs.h \
-	include/uv/darwin.h include/uv/bsd.h include/uv/linux.h \
-	include/uv/sunos.h
+	include/uv/posix.h include/uv/darwin.h include/uv/bsd.h \
+	include/uv/linux.h include/uv/sunos.h
 HEADERS = $(include_HEADERS) $(uvinclude_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
@@ -1230,6 +1238,7 @@ am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_CFLAGS = @AM_CFLAGS@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
 AUTOCONF = @AUTOCONF@
@@ -1355,28 +1364,30 @@ include_HEADERS = include/uv.h
 uvincludedir = $(includedir)/uv
 uvinclude_HEADERS = include/uv/errno.h include/uv/threadpool.h \
 	include/uv/version.h $(am__append_2) $(am__append_5) \
-	$(am__append_18) $(am__append_21) $(am__append_23) \
-	$(am__append_26) $(am__append_29) $(am__append_33) \
-	$(am__append_36) $(am__append_39) $(am__append_42) \
-	$(am__append_44) $(am__append_50) $(am__append_53) \
-	$(am__append_56)
+	$(am__append_18) $(am__append_21) $(am__append_25) \
+	$(am__append_28) $(am__append_32) $(am__append_35) \
+	$(am__append_38) $(am__append_41) $(am__append_44) \
+	$(am__append_50) $(am__append_53) $(am__append_56)
 CLEANFILES = 
 lib_LTLIBRARIES = libuv.la
-libuv_la_CFLAGS = @CFLAGS@ $(am__append_1) $(am__append_17) \
-	$(am__append_20) $(am__append_24) $(am__append_27) \
-	$(am__append_30) $(am__append_40) $(am__append_45) \
-	$(am__append_48) $(am__append_57) $(am__append_59)
-libuv_la_LDFLAGS = -no-undefined -version-info 1:0:0 $(am__append_60)
+libuv_la_CFLAGS = $(AM_CFLAGS) $(am__append_1) $(am__append_17) \
+	$(am__append_20) $(am__append_23) $(am__append_26) \
+	$(am__append_29) $(am__append_39) $(am__append_43) \
+	$(am__append_45) $(am__append_48) $(am__append_57) \
+	$(am__append_59)
+libuv_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined -version-info 1:0:0 \
+	$(am__append_60)
 libuv_la_SOURCES = src/fs-poll.c src/heap-inl.h src/idna.c src/idna.h \
 	src/inet.c src/queue.h src/random.c src/strscpy.c \
 	src/strscpy.h src/threadpool.c src/timer.c \
 	src/uv-data-getter-setters.c src/uv-common.c src/uv-common.h \
-	src/version.c $(am__append_4) $(am__append_7) $(am__append_19) \
-	$(am__append_22) $(am__append_25) $(am__append_28) \
-	$(am__append_31) $(am__append_34) $(am__append_37) \
-	$(am__append_41) $(am__append_43) $(am__append_46) \
-	$(am__append_49) $(am__append_51) $(am__append_54) \
-	$(am__append_58) $(am__append_61)
+	src/version.c src/strtok.c src/strtok.h $(am__append_4) \
+	$(am__append_7) $(am__append_19) $(am__append_22) \
+	$(am__append_24) $(am__append_27) $(am__append_30) \
+	$(am__append_33) $(am__append_36) $(am__append_40) \
+	$(am__append_42) $(am__append_46) $(am__append_49) \
+	$(am__append_51) $(am__append_54) $(am__append_58) \
+	$(am__append_61)
 EXTRA_DIST = test/fixtures/empty_file \
              test/fixtures/load_error.node \
              test/fixtures/lorem_ipsum.txt \
@@ -1387,36 +1398,35 @@ EXTRA_DIST = test/fixtures/empty_file \
              LICENSE \
              README.md
 
-test_run_tests_CFLAGS = $(am__append_8) $(am__append_11) \
+test_run_tests_CFLAGS = $(AM_CFLAGS) $(am__append_8) $(am__append_11) \
 	$(am__append_12) $(am__append_13) $(am__append_14) \
 	$(am__append_15) $(am__append_16)
-test_run_tests_LDFLAGS = $(am__append_32) $(am__append_35) \
-	$(am__append_38) $(am__append_47) $(am__append_52) \
-	$(am__append_55)
+test_run_tests_LDFLAGS = $(AM_LDFLAGS) $(am__append_31) \
+	$(am__append_34) $(am__append_37) $(am__append_47) \
+	$(am__append_52) $(am__append_55)
 test_run_tests_SOURCES = test/blackhole-server.c test/echo-server.c \
 	test/run-tests.c test/runner.c test/runner.h test/task.h \
 	test/test-active.c test/test-async.c test/test-async-null-cb.c \
-	test/test-barrier.c test/test-callback-order.c \
-	test/test-callback-stack.c test/test-close-fd.c \
-	test/test-close-order.c test/test-condvar.c \
-	test/test-connect-unspecified.c test/test-connection-fail.c \
-	test/test-cwd-and-chdir.c test/test-default-loop-close.c \
-	test/test-delayed-accept.c test/test-dlerror.c \
-	test/test-eintr-handling.c test/test-embed.c \
-	test/test-emfile.c test/test-env-vars.c test/test-error.c \
-	test/test-fail-always.c test/test-fs-copyfile.c \
-	test/test-fs-event.c test/test-fs-poll.c test/test-fs.c \
-	test/test-fs-readdir.c test/test-fs-fd-hash.c \
-	test/test-fs-open-flags.c test/test-fork.c \
-	test/test-getters-setters.c test/test-get-currentexe.c \
-	test/test-get-loadavg.c test/test-get-memory.c \
-	test/test-get-passwd.c test/test-getaddrinfo.c \
-	test/test-gethostname.c test/test-getnameinfo.c \
-	test/test-getsockname.c test/test-gettimeofday.c \
-	test/test-handle-fileno.c test/test-homedir.c \
-	test/test-hrtime.c test/test-idle.c test/test-idna.c \
-	test/test-ip4-addr.c test/test-ip6-addr.c test/test-ip-name.c \
-	test/test-ipc-heavy-traffic-deadlock-bug.c \
+	test/test-barrier.c test/test-callback-stack.c \
+	test/test-close-fd.c test/test-close-order.c \
+	test/test-condvar.c test/test-connect-unspecified.c \
+	test/test-connection-fail.c test/test-cwd-and-chdir.c \
+	test/test-default-loop-close.c test/test-delayed-accept.c \
+	test/test-dlerror.c test/test-eintr-handling.c \
+	test/test-embed.c test/test-emfile.c test/test-env-vars.c \
+	test/test-error.c test/test-fail-always.c \
+	test/test-fs-copyfile.c test/test-fs-event.c \
+	test/test-fs-poll.c test/test-fs.c test/test-fs-readdir.c \
+	test/test-fs-fd-hash.c test/test-fs-open-flags.c \
+	test/test-fork.c test/test-getters-setters.c \
+	test/test-get-currentexe.c test/test-get-loadavg.c \
+	test/test-get-memory.c test/test-get-passwd.c \
+	test/test-getaddrinfo.c test/test-gethostname.c \
+	test/test-getnameinfo.c test/test-getsockname.c \
+	test/test-gettimeofday.c test/test-handle-fileno.c \
+	test/test-homedir.c test/test-hrtime.c test/test-idle.c \
+	test/test-idna.c test/test-ip4-addr.c test/test-ip6-addr.c \
+	test/test-ip-name.c test/test-ipc-heavy-traffic-deadlock-bug.c \
 	test/test-ipc-send-recv.c test/test-ipc.c test/test-list.h \
 	test/test-loop-handles.c test/test-loop-alive.c \
 	test/test-loop-close.c test/test-loop-stop.c \
@@ -1448,16 +1458,18 @@ test_run_tests_SOURCES = test/blackhole-server.c test/echo-server.c \
 	test/test-signal-pending-on-close.c test/test-signal.c \
 	test/test-socket-buffer-size.c test/test-spawn.c \
 	test/test-stdio-over-pipes.c test/test-strscpy.c \
-	test/test-tcp-alloc-cb-fail.c test/test-tcp-bind-error.c \
-	test/test-tcp-bind6-error.c test/test-tcp-close-accept.c \
-	test/test-tcp-close-while-connecting.c test/test-tcp-close.c \
+	test/test-strtok.c test/test-tcp-alloc-cb-fail.c \
+	test/test-tcp-bind-error.c test/test-tcp-bind6-error.c \
+	test/test-tcp-close-accept.c \
+	test/test-tcp-close-while-connecting.c \
+	test/test-tcp-close-after-read-timeout.c test/test-tcp-close.c \
 	test/test-tcp-close-reset.c \
 	test/test-tcp-create-socket-early.c \
 	test/test-tcp-connect-error-after-write.c \
 	test/test-tcp-connect-error.c test/test-tcp-connect-timeout.c \
 	test/test-tcp-connect6-error.c test/test-tcp-flags.c \
 	test/test-tcp-open.c test/test-tcp-read-stop.c \
-	test/test-tcp-read-stop-start.c \
+	test/test-tcp-read-stop-start.c test/test-tcp-rst.c \
 	test/test-tcp-shutdown-after-write.c \
 	test/test-tcp-unexpected-read.c test/test-tcp-oob.c \
 	test/test-tcp-write-to-half-open-connection.c \
@@ -1598,6 +1610,8 @@ src/libuv_la-uv-common.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/libuv_la-version.lo: src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/libuv_la-strtok.lo: src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/win/$(am__dirstamp):
 	@$(MKDIR_P) src/win
 	@: > src/win/$(am__dirstamp)
@@ -1704,8 +1718,6 @@ src/unix/libuv_la-posix-poll.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-no-fsevents.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
-src/unix/libuv_la-android-ifaddrs.lo: src/unix/$(am__dirstamp) \
-	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-pthread-fixes.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-cygwin.lo: src/unix/$(am__dirstamp) \
@@ -1741,6 +1753,8 @@ src/unix/libuv_la-freebsd.lo: src/unix/$(am__dirstamp) \
 src/unix/libuv_la-random-getrandom.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-haiku.lo: src/unix/$(am__dirstamp) \
+	src/unix/$(DEPDIR)/$(am__dirstamp)
+src/unix/libuv_la-hurd.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
 src/unix/libuv_la-linux-core.lo: src/unix/$(am__dirstamp) \
 	src/unix/$(DEPDIR)/$(am__dirstamp)
@@ -1786,8 +1800,6 @@ test/run_tests-test-async.$(OBJEXT): test/$(am__dirstamp) \
 test/run_tests-test-async-null-cb.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-barrier.$(OBJEXT): test/$(am__dirstamp) \
-	test/$(DEPDIR)/$(am__dirstamp)
-test/run_tests-test-callback-order.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-callback-stack.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
@@ -1985,6 +1997,8 @@ test/run_tests-test-stdio-over-pipes.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-strscpy.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-strtok.$(OBJEXT): test/$(am__dirstamp) \
+	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-tcp-alloc-cb-fail.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-tcp-bind-error.$(OBJEXT): test/$(am__dirstamp) \
@@ -1994,6 +2008,8 @@ test/run_tests-test-tcp-bind6-error.$(OBJEXT): test/$(am__dirstamp) \
 test/run_tests-test-tcp-close-accept.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-tcp-close-while-connecting.$(OBJEXT):  \
+	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-tcp-close-after-read-timeout.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-tcp-close.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
@@ -2017,6 +2033,8 @@ test/run_tests-test-tcp-read-stop.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-tcp-read-stop-start.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-tcp-rst.$(OBJEXT): test/$(am__dirstamp) \
+	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-tcp-shutdown-after-write.$(OBJEXT):  \
 	test/$(am__dirstamp) test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-tcp-unexpected-read.$(OBJEXT):  \
@@ -2136,6 +2154,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libuv_la-inet.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libuv_la-random.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libuv_la-strscpy.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libuv_la-strtok.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libuv_la-threadpool.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libuv_la-timer.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libuv_la-uv-common.Plo@am__quote@ # am--include-marker
@@ -2143,7 +2162,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/libuv_la-version.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-aix-common.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-aix.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-async.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-bsd-ifaddrs.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-bsd-proctitle.Plo@am__quote@ # am--include-marker
@@ -2159,6 +2177,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-getaddrinfo.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-getnameinfo.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-haiku.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-hurd.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-ibmi.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-kqueue.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/unix/$(DEPDIR)/libuv_la-linux-core.Plo@am__quote@ # am--include-marker
@@ -2227,7 +2246,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-async-null-cb.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-async.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-barrier.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-callback-order.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-callback-stack.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-close-fd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-close-order.Po@am__quote@ # am--include-marker
@@ -2326,10 +2344,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-spawn.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-stdio-over-pipes.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-strscpy.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-strtok.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-alloc-cb-fail.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-bind-error.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-bind6-error.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-close-accept.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-close-reset.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-close-while-connecting.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-close.Po@am__quote@ # am--include-marker
@@ -2343,6 +2363,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-open.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-read-stop-start.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-read-stop.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-rst.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-shutdown-after-write.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-try-write-error.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-tcp-try-write.Po@am__quote@ # am--include-marker
@@ -2488,6 +2509,13 @@ src/libuv_la-version.lo: src/version.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/version.c' object='src/libuv_la-version.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/libuv_la-version.lo `test -f 'src/version.c' || echo '$(srcdir)/'`src/version.c
+
+src/libuv_la-strtok.lo: src/strtok.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/libuv_la-strtok.lo -MD -MP -MF src/$(DEPDIR)/libuv_la-strtok.Tpo -c -o src/libuv_la-strtok.lo `test -f 'src/strtok.c' || echo '$(srcdir)/'`src/strtok.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/libuv_la-strtok.Tpo src/$(DEPDIR)/libuv_la-strtok.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/strtok.c' object='src/libuv_la-strtok.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/libuv_la-strtok.lo `test -f 'src/strtok.c' || echo '$(srcdir)/'`src/strtok.c
 
 src/win/libuv_la-async.lo: src/win/async.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/win/libuv_la-async.lo -MD -MP -MF src/win/$(DEPDIR)/libuv_la-async.Tpo -c -o src/win/libuv_la-async.lo `test -f 'src/win/async.c' || echo '$(srcdir)/'`src/win/async.c
@@ -2818,13 +2846,6 @@ src/unix/libuv_la-no-fsevents.lo: src/unix/no-fsevents.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-no-fsevents.lo `test -f 'src/unix/no-fsevents.c' || echo '$(srcdir)/'`src/unix/no-fsevents.c
 
-src/unix/libuv_la-android-ifaddrs.lo: src/unix/android-ifaddrs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-android-ifaddrs.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Tpo -c -o src/unix/libuv_la-android-ifaddrs.lo `test -f 'src/unix/android-ifaddrs.c' || echo '$(srcdir)/'`src/unix/android-ifaddrs.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Tpo src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/android-ifaddrs.c' object='src/unix/libuv_la-android-ifaddrs.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-android-ifaddrs.lo `test -f 'src/unix/android-ifaddrs.c' || echo '$(srcdir)/'`src/unix/android-ifaddrs.c
-
 src/unix/libuv_la-pthread-fixes.lo: src/unix/pthread-fixes.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-pthread-fixes.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-pthread-fixes.Tpo -c -o src/unix/libuv_la-pthread-fixes.lo `test -f 'src/unix/pthread-fixes.c' || echo '$(srcdir)/'`src/unix/pthread-fixes.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-pthread-fixes.Tpo src/unix/$(DEPDIR)/libuv_la-pthread-fixes.Plo
@@ -2950,6 +2971,13 @@ src/unix/libuv_la-haiku.lo: src/unix/haiku.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/haiku.c' object='src/unix/libuv_la-haiku.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-haiku.lo `test -f 'src/unix/haiku.c' || echo '$(srcdir)/'`src/unix/haiku.c
+
+src/unix/libuv_la-hurd.lo: src/unix/hurd.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-hurd.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-hurd.Tpo -c -o src/unix/libuv_la-hurd.lo `test -f 'src/unix/hurd.c' || echo '$(srcdir)/'`src/unix/hurd.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/unix/$(DEPDIR)/libuv_la-hurd.Tpo src/unix/$(DEPDIR)/libuv_la-hurd.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unix/hurd.c' object='src/unix/libuv_la-hurd.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -c -o src/unix/libuv_la-hurd.lo `test -f 'src/unix/hurd.c' || echo '$(srcdir)/'`src/unix/hurd.c
 
 src/unix/libuv_la-linux-core.lo: src/unix/linux-core.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libuv_la_CFLAGS) $(CFLAGS) -MT src/unix/libuv_la-linux-core.lo -MD -MP -MF src/unix/$(DEPDIR)/libuv_la-linux-core.Tpo -c -o src/unix/libuv_la-linux-core.lo `test -f 'src/unix/linux-core.c' || echo '$(srcdir)/'`src/unix/linux-core.c
@@ -3132,20 +3160,6 @@ test/run_tests-test-barrier.obj: test/test-barrier.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-barrier.c' object='test/run_tests-test-barrier.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-barrier.obj `if test -f 'test/test-barrier.c'; then $(CYGPATH_W) 'test/test-barrier.c'; else $(CYGPATH_W) '$(srcdir)/test/test-barrier.c'; fi`
-
-test/run_tests-test-callback-order.o: test/test-callback-order.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-callback-order.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-callback-order.Tpo -c -o test/run_tests-test-callback-order.o `test -f 'test/test-callback-order.c' || echo '$(srcdir)/'`test/test-callback-order.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-callback-order.Tpo test/$(DEPDIR)/run_tests-test-callback-order.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-callback-order.c' object='test/run_tests-test-callback-order.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-callback-order.o `test -f 'test/test-callback-order.c' || echo '$(srcdir)/'`test/test-callback-order.c
-
-test/run_tests-test-callback-order.obj: test/test-callback-order.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-callback-order.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-callback-order.Tpo -c -o test/run_tests-test-callback-order.obj `if test -f 'test/test-callback-order.c'; then $(CYGPATH_W) 'test/test-callback-order.c'; else $(CYGPATH_W) '$(srcdir)/test/test-callback-order.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-callback-order.Tpo test/$(DEPDIR)/run_tests-test-callback-order.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-callback-order.c' object='test/run_tests-test-callback-order.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-callback-order.obj `if test -f 'test/test-callback-order.c'; then $(CYGPATH_W) 'test/test-callback-order.c'; else $(CYGPATH_W) '$(srcdir)/test/test-callback-order.c'; fi`
 
 test/run_tests-test-callback-stack.o: test/test-callback-stack.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-callback-stack.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-callback-stack.Tpo -c -o test/run_tests-test-callback-stack.o `test -f 'test/test-callback-stack.c' || echo '$(srcdir)/'`test/test-callback-stack.c
@@ -4519,6 +4533,20 @@ test/run_tests-test-strscpy.obj: test/test-strscpy.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-strscpy.obj `if test -f 'test/test-strscpy.c'; then $(CYGPATH_W) 'test/test-strscpy.c'; else $(CYGPATH_W) '$(srcdir)/test/test-strscpy.c'; fi`
 
+test/run_tests-test-strtok.o: test/test-strtok.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-strtok.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-strtok.Tpo -c -o test/run_tests-test-strtok.o `test -f 'test/test-strtok.c' || echo '$(srcdir)/'`test/test-strtok.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-strtok.Tpo test/$(DEPDIR)/run_tests-test-strtok.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-strtok.c' object='test/run_tests-test-strtok.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-strtok.o `test -f 'test/test-strtok.c' || echo '$(srcdir)/'`test/test-strtok.c
+
+test/run_tests-test-strtok.obj: test/test-strtok.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-strtok.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-strtok.Tpo -c -o test/run_tests-test-strtok.obj `if test -f 'test/test-strtok.c'; then $(CYGPATH_W) 'test/test-strtok.c'; else $(CYGPATH_W) '$(srcdir)/test/test-strtok.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-strtok.Tpo test/$(DEPDIR)/run_tests-test-strtok.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-strtok.c' object='test/run_tests-test-strtok.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-strtok.obj `if test -f 'test/test-strtok.c'; then $(CYGPATH_W) 'test/test-strtok.c'; else $(CYGPATH_W) '$(srcdir)/test/test-strtok.c'; fi`
+
 test/run_tests-test-tcp-alloc-cb-fail.o: test/test-tcp-alloc-cb-fail.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-tcp-alloc-cb-fail.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-tcp-alloc-cb-fail.Tpo -c -o test/run_tests-test-tcp-alloc-cb-fail.o `test -f 'test/test-tcp-alloc-cb-fail.c' || echo '$(srcdir)/'`test/test-tcp-alloc-cb-fail.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-tcp-alloc-cb-fail.Tpo test/$(DEPDIR)/run_tests-test-tcp-alloc-cb-fail.Po
@@ -4588,6 +4616,20 @@ test/run_tests-test-tcp-close-while-connecting.obj: test/test-tcp-close-while-co
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-close-while-connecting.c' object='test/run_tests-test-tcp-close-while-connecting.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-tcp-close-while-connecting.obj `if test -f 'test/test-tcp-close-while-connecting.c'; then $(CYGPATH_W) 'test/test-tcp-close-while-connecting.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-close-while-connecting.c'; fi`
+
+test/run_tests-test-tcp-close-after-read-timeout.o: test/test-tcp-close-after-read-timeout.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-tcp-close-after-read-timeout.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Tpo -c -o test/run_tests-test-tcp-close-after-read-timeout.o `test -f 'test/test-tcp-close-after-read-timeout.c' || echo '$(srcdir)/'`test/test-tcp-close-after-read-timeout.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Tpo test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-close-after-read-timeout.c' object='test/run_tests-test-tcp-close-after-read-timeout.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-tcp-close-after-read-timeout.o `test -f 'test/test-tcp-close-after-read-timeout.c' || echo '$(srcdir)/'`test/test-tcp-close-after-read-timeout.c
+
+test/run_tests-test-tcp-close-after-read-timeout.obj: test/test-tcp-close-after-read-timeout.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-tcp-close-after-read-timeout.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Tpo -c -o test/run_tests-test-tcp-close-after-read-timeout.obj `if test -f 'test/test-tcp-close-after-read-timeout.c'; then $(CYGPATH_W) 'test/test-tcp-close-after-read-timeout.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-close-after-read-timeout.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Tpo test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-close-after-read-timeout.c' object='test/run_tests-test-tcp-close-after-read-timeout.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-tcp-close-after-read-timeout.obj `if test -f 'test/test-tcp-close-after-read-timeout.c'; then $(CYGPATH_W) 'test/test-tcp-close-after-read-timeout.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-close-after-read-timeout.c'; fi`
 
 test/run_tests-test-tcp-close.o: test/test-tcp-close.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-tcp-close.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-tcp-close.Tpo -c -o test/run_tests-test-tcp-close.o `test -f 'test/test-tcp-close.c' || echo '$(srcdir)/'`test/test-tcp-close.c
@@ -4742,6 +4784,20 @@ test/run_tests-test-tcp-read-stop-start.obj: test/test-tcp-read-stop-start.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-read-stop-start.c' object='test/run_tests-test-tcp-read-stop-start.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-tcp-read-stop-start.obj `if test -f 'test/test-tcp-read-stop-start.c'; then $(CYGPATH_W) 'test/test-tcp-read-stop-start.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-read-stop-start.c'; fi`
+
+test/run_tests-test-tcp-rst.o: test/test-tcp-rst.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-tcp-rst.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-tcp-rst.Tpo -c -o test/run_tests-test-tcp-rst.o `test -f 'test/test-tcp-rst.c' || echo '$(srcdir)/'`test/test-tcp-rst.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-tcp-rst.Tpo test/$(DEPDIR)/run_tests-test-tcp-rst.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-rst.c' object='test/run_tests-test-tcp-rst.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-tcp-rst.o `test -f 'test/test-tcp-rst.c' || echo '$(srcdir)/'`test/test-tcp-rst.c
+
+test/run_tests-test-tcp-rst.obj: test/test-tcp-rst.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-tcp-rst.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-tcp-rst.Tpo -c -o test/run_tests-test-tcp-rst.obj `if test -f 'test/test-tcp-rst.c'; then $(CYGPATH_W) 'test/test-tcp-rst.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-rst.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-tcp-rst.Tpo test/$(DEPDIR)/run_tests-test-tcp-rst.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-tcp-rst.c' object='test/run_tests-test-tcp-rst.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-tcp-rst.obj `if test -f 'test/test-tcp-rst.c'; then $(CYGPATH_W) 'test/test-tcp-rst.c'; else $(CYGPATH_W) '$(srcdir)/test/test-tcp-rst.c'; fi`
 
 test/run_tests-test-tcp-shutdown-after-write.o: test/test-tcp-shutdown-after-write.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-tcp-shutdown-after-write.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-tcp-shutdown-after-write.Tpo -c -o test/run_tests-test-tcp-shutdown-after-write.o `test -f 'test/test-tcp-shutdown-after-write.c' || echo '$(srcdir)/'`test/test-tcp-shutdown-after-write.c
@@ -5869,6 +5925,7 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/libuv_la-inet.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-random.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-strscpy.Plo
+	-rm -f src/$(DEPDIR)/libuv_la-strtok.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-threadpool.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-timer.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-uv-common.Plo
@@ -5876,7 +5933,6 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/libuv_la-version.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-aix-common.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-aix.Plo
-	-rm -f src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-async.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-bsd-ifaddrs.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-bsd-proctitle.Plo
@@ -5892,6 +5948,7 @@ distclean: distclean-am
 	-rm -f src/unix/$(DEPDIR)/libuv_la-getaddrinfo.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-getnameinfo.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-haiku.Plo
+	-rm -f src/unix/$(DEPDIR)/libuv_la-hurd.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-ibmi.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-kqueue.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-linux-core.Plo
@@ -5960,7 +6017,6 @@ distclean: distclean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-async-null-cb.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-async.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-barrier.Po
-	-rm -f test/$(DEPDIR)/run_tests-test-callback-order.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-callback-stack.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-close-fd.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-close-order.Po
@@ -6059,10 +6115,12 @@ distclean: distclean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-spawn.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-stdio-over-pipes.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-strscpy.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-strtok.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-alloc-cb-fail.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-bind-error.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-bind6-error.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close-accept.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close-reset.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close-while-connecting.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close.Po
@@ -6076,6 +6134,7 @@ distclean: distclean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-open.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-read-stop-start.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-read-stop.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-tcp-rst.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-shutdown-after-write.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-try-write-error.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-try-write.Po
@@ -6174,6 +6233,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/libuv_la-inet.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-random.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-strscpy.Plo
+	-rm -f src/$(DEPDIR)/libuv_la-strtok.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-threadpool.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-timer.Plo
 	-rm -f src/$(DEPDIR)/libuv_la-uv-common.Plo
@@ -6181,7 +6241,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/libuv_la-version.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-aix-common.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-aix.Plo
-	-rm -f src/unix/$(DEPDIR)/libuv_la-android-ifaddrs.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-async.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-bsd-ifaddrs.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-bsd-proctitle.Plo
@@ -6197,6 +6256,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/unix/$(DEPDIR)/libuv_la-getaddrinfo.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-getnameinfo.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-haiku.Plo
+	-rm -f src/unix/$(DEPDIR)/libuv_la-hurd.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-ibmi.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-kqueue.Plo
 	-rm -f src/unix/$(DEPDIR)/libuv_la-linux-core.Plo
@@ -6265,7 +6325,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-async-null-cb.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-async.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-barrier.Po
-	-rm -f test/$(DEPDIR)/run_tests-test-callback-order.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-callback-stack.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-close-fd.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-close-order.Po
@@ -6364,10 +6423,12 @@ maintainer-clean: maintainer-clean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-spawn.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-stdio-over-pipes.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-strscpy.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-strtok.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-alloc-cb-fail.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-bind-error.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-bind6-error.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close-accept.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close-after-read-timeout.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close-reset.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close-while-connecting.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-close.Po
@@ -6381,6 +6442,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-open.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-read-stop-start.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-read-stop.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-tcp-rst.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-shutdown-after-write.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-try-write-error.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-tcp-try-write.Po
