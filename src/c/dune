@@ -1,6 +1,6 @@
 (* -*- tuareg -*- *)
 
-let foreign_archives, uv_library_flag, include_dirs, i_option, install_h =
+let foreign_archives, include_dirs, install_h =
   let use_system_libuv =
     match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
     | "yes" -> true
@@ -10,15 +10,11 @@ let foreign_archives, uv_library_flag, include_dirs, i_option, install_h =
 
   if use_system_libuv then
     "",
-    "-luv",
-    "",
     "",
     false
   else
     "(foreign_archives uv)",
-    "",
     "(include_dirs vendor/libuv/include)",
-    "-I vendor/libuv/include",
     true
 
 let () = Jbuild_plugin.V1.send @@ {|
@@ -33,9 +29,10 @@ let () = Jbuild_plugin.V1.send @@ {|
  (foreign_stubs
   (language c)
   (names c_generated_functions helpers)
+  (flags :standard (:include config/uv_include.sexp))
   |}^ include_dirs ^{|)
  |}^ foreign_archives ^{|
- (c_library_flags |}^ uv_library_flag ^{| (:include extra_libs.sexp)))
+ (c_library_flags (:include config/uv_lib.sexp) (:include extra_libs.sexp)))
 
 |}^ (if not install_h then "" else {|
 
@@ -119,20 +116,9 @@ let () = Jbuild_plugin.V1.send @@ {|
 ; Based partially on
 ;   https://github.com/avsm/ocaml-yaml/blob/master/types/stubgen/jbuild#L20
 (rule
- (targets generate_types_step_2.exe)
- (deps (:c generate_types_step_2.c) helpers.h shims.h)
- (action (bash "\
-  if [ '%{ocaml-config:ccomp_type}' = 'msvc' ]; then \
-    %{cc} %{c} \
-    -I '%{lib:ctypes:.}' \
-    -I %{ocaml_where} \
-    |}^ i_option ^{| /Fe\"%{targets}\"; \
-  else \
-    %{cc} %{c} \
-    -I '%{lib:ctypes:.}' \
-    -I %{ocaml_where} \
-    |}^ i_option ^{| -o %{targets}; \
-  fi")))
+ (target generate_types_step_2.exe)
+ (deps (:c generate_types_step_2.c) (:compile_c config/compile_c.sh) helpers.h shims.h)
+ (action (run bash %{compile_c} "%{c}" "%{lib:ctypes:.}" "%{target}" %{cc})))
 
 (rule
  (with-stdout-to luv_c_generated_types.ml

@@ -1,4 +1,4 @@
 (executable
  (name headers)
  (libraries luv)
- (foreign_stubs (language c) (names headers)))
+ (foreign_stubs (language c) (names headers) (flags :standard (:include ../../src/c/config/uv_include.sexp))))
