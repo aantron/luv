@@ -1082,7 +1082,9 @@ sig
       (unit, Error.t) result
   (** Synchronous version of {!Luv.File.lutime}.
 
-      @since Luv 0.5.2 (libuv 1.36.0) *)
+      Requires Luv 0.5.2 and libuv 1.36.0.
+
+      {{!Luv.Require} Feature check}: [Luv.Require.(has fs_lutime)] *)
 
   val link :
     string -> link:string ->

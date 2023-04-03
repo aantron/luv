@@ -142,7 +142,7 @@ val try_write2 :
 
     Requires Luv 0.5.9 and libuv 1.42.0.
 
-    {{!Luv.Requre} Feature check}: [Luv.Require.(has try_write2)] *)
+    {{!Luv.Require} Feature check}: [Luv.Require.(has try_write2)] *)
 
 val is_readable : _ t -> bool
 (** Indicates whether the given stream is readable (has data).

@@ -8,7 +8,9 @@ val available_parallelism : unit -> int
     {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_available_parallelism}
     [uv_available_parallelism]}.
 
-    @since Luv 0.5.12 (libuv 1.44.0) *)
+    Requires Luv 0.5.12 and libuv 1.44.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has available_parallelism)] *)
 
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info_t}
     [uv_cpu_info_t]}. *)

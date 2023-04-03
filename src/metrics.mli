@@ -6,9 +6,7 @@
 (** Metrics.
 
     See {{:http://docs.libuv.org/en/v1.x/metrics.html} {i Metrics operations}}
-    in libuv.
-
-    @since Luv 0.5.5 (libuv 1.39.0) *)
+    in libuv. *)
 
 val idle_time : Loop.t -> Unsigned.UInt64.t
 (** Retrieves the amount of time the loop has been blocked waiting in the
