@@ -1082,7 +1082,7 @@ sig
       (unit, Error.t) result
   (** Synchronous version of {!Luv.File.lutime}.
 
-      @since Luv 0.5.2 (libuv 1.36.0). *)
+      @since Luv 0.5.2 (libuv 1.36.0) *)
 
   val link :
     string -> link:string ->
