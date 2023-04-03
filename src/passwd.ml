@@ -5,8 +5,8 @@
 
 type t = {
   username : string;
-  uid : int;
-  gid : int;
+  uid : Unsigned.ulong;
+  gid : Unsigned.ulong;
   shell : string option;
   homedir : string;
 }
@@ -18,8 +18,8 @@ let get_passwd () =
     let module PW = C.Types.Passwd in
     let passwd = {
       username = Ctypes.getf c_passwd PW.username;
-      uid = Ctypes.getf c_passwd PW.uid |> Unsigned.ULong.to_int;
-      gid = Ctypes.getf c_passwd PW.gid |> Unsigned.ULong.to_int;
+      uid = Ctypes.getf c_passwd PW.uid;
+      gid = Ctypes.getf c_passwd PW.gid;
       shell = Ctypes.getf c_passwd PW.shell;
       homedir = Ctypes.getf c_passwd PW.homedir;
     }
