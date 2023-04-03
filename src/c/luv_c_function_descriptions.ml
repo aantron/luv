@@ -1708,6 +1708,10 @@ struct
   struct
     let t = Types.CPU_info.t
 
+    let available_parallelism =
+      foreign "uv_available_parallelism"
+        (void @-> returning int)
+
     let cpu_info =
       foreign "uv_cpu_info"
         (ptr (ptr t) @-> ptr int @-> returning error_code)

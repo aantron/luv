@@ -3,6 +3,9 @@
 
 
 
+let available_parallelism =
+  C.Functions.CPU_info.available_parallelism
+
 module CPU_info =
 struct
   type times = {

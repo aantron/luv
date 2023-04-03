@@ -3,6 +3,13 @@
 
 
 
+val available_parallelism : unit -> int
+(** Binds
+    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_available_parallelism}
+    [uv_available_parallelism]}.
+
+    @since Luv 0.5.12 (libuv 1.44.0) *)
+
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info_t}
     [uv_cpu_info_t]}. *)
 module CPU_info :
