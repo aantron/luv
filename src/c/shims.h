@@ -655,3 +655,10 @@
         return ENOSYS;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 44
+    static int uv_available_parallelism()
+    {
+        return 1;
+    }
+#endif
