@@ -144,7 +144,7 @@ struct
     type t = [ `Buf ] structure
     let t : t typ = typedef (structure "`Buf") "uv_buf_t"
     let base = field t "base" (ptr char)
-    let len = field t "len" ulong
+    let len = field t "len" size_t
     let () = seal t
   end
 
