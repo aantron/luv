@@ -5,6 +5,7 @@
 
 let () =
   print_endline "#include \"windows_version.h\"";
+  print_endline "#define CAML_NAME_SPACE";
   print_endline "#include <caml/mlvalues.h>";
   print_endline "#include <caml/socketaddr.h>";
   print_endline "#include <uv.h>";
