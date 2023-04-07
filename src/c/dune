@@ -71,7 +71,7 @@ let () = Jbuild_plugin.V1.send @@ {|
   (bash "cp -r vendor/configure/* vendor/libuv/")
   (chdir vendor/libuv (progn
    (bash
-    "sh configure --host `ocamlc -config | awk '/host/ {print $NF}'` \
+    "sh configure --host `ocamlc -config | awk '/^host:/ {print $NF}'` \
       'CC=%{cc}' CFLAGS=-DNDEBUG --silent --enable-silent-rules")
    (ignore-outputs (bash
     "$([ '%{os_type}' = Unix ] && echo %{make} || echo make) V=0 -j 4 \
