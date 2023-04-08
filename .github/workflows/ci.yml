@@ -9,7 +9,7 @@ jobs:
           - ubuntu-latest
         ocaml:
           - 4.13.1
-          - 4.02.3
+          - 4.03.0
         include:
           - os: macos-latest
             ocaml: 4.13.1

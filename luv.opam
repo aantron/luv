@@ -15,7 +15,7 @@ depends: [
   "base-unix" {build}
   "ctypes" {>= "0.14.0"}
   "dune" {>= "2.0.0"}
-  "ocaml" {>= "4.02.0"}
+  "ocaml" {>= "4.03.0"}
   "result"
 
   "alcotest" {with-test & >= "0.8.1"}
