@@ -199,8 +199,10 @@ stage-docs : api-docs luvbook
 	cp -r docs/_build/* $(DOCS)
 	cd $(DOCS) && mv _static static
 	cd $(DOCS) && mv _sources sources
+	cd $(DOCS) && mv _odoc_support odoc_support
 	cd $(DOCS) && ls *.html | xargs -L1 sed -i 's#_static/#static/#g'
 	cd $(DOCS) && ls *.html | xargs -L1 sed -i 's#_sources/#sources/#g'
+	cd $(DOCS) && find -name '*.html' | xargs -L1 sed -i 's#_odoc_support/#odoc_support/#g'
 	cd $(DOCS) && git add -A && git commit --amend --no-edit --reset-author
 
 .PHONY : publish-docs
