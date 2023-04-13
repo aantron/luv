@@ -97,14 +97,14 @@ let close_trampoline =
 
 let close_reset tcp callback =
   if Handle.is_closing tcp then
-    callback (Result.Ok ())
+    callback (Ok ())
   else begin
     Handle.set_reference
       ~index:C.Types.Handle.close_callback_index
       tcp
       (fun () ->
         Handle.release tcp;
-        Error.catch_exceptions callback (Result.Ok ()));
+        Error.catch_exceptions callback (Ok ()));
     let immediate_result = C.Functions.TCP.close_reset tcp close_trampoline in
     if immediate_result < 0 then
       callback (Error.result_from_c immediate_result)

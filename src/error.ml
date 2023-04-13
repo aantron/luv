@@ -249,7 +249,7 @@ let from_c = let open C.Types.Error in function
   | _ -> `UNKNOWN
 
 let result_from_c error_code =
-  Result.Error (from_c error_code)
+  Error (from_c error_code)
 
 let translate_sys_error sys_error_code =
   C.Functions.Error.translate_sys_error sys_error_code
@@ -290,15 +290,15 @@ let catch_exceptions f v =
 
 let to_result success_value error_code =
   if error_code >= 0 then
-    Result.Ok success_value
+    Ok success_value
   else
-    Result.Error (from_c error_code)
+    Error (from_c error_code)
 
 let to_result_lazy get_success_value error_code =
   if error_code >= 0 then
-    Result.Ok (get_success_value ())
+    Ok (get_success_value ())
   else
-    Result.Error (from_c error_code)
+    Error (from_c error_code)
 
 let clamp code =
   if code >= 0 then

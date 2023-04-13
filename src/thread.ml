@@ -42,7 +42,7 @@ let create ?stack_size f =
     Error.result_from_c result
   end
   else
-    Result.Ok thread
+    Ok thread
 
 let create_c ?stack_size ?(argument = Nativeint.zero) f =
   let thread = Ctypes.addr (Ctypes.make C.Types.Thread.t) in

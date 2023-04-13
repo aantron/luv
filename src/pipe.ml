@@ -62,7 +62,7 @@ let rec generic_getname ?(buffer_size = 128) c_function pipe =
   let result = c_function pipe (Ctypes.ocaml_bytes_start buffer) length_cell in
   let final_length = Unsigned.Size_t.to_int (Ctypes.(!@) length_cell) in
   if result >= 0 then
-    Result.Ok (Bytes.sub_string buffer 0 final_length)
+    Ok (Bytes.sub_string buffer 0 final_length)
   else
     if result = C.Types.Error.enobufs then
       generic_getname ~buffer_size:final_length c_function pipe

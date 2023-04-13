@@ -39,7 +39,7 @@ struct
       count_or_error
       |> PosixTypes.Ssize.to_int64
       |> Unsigned.Size_t.of_int64
-      |> fun n -> Result.Ok n
+      |> fun n -> Ok n
     else
       count_or_error
       |> PosixTypes.Ssize.to_int
@@ -803,14 +803,14 @@ module Request = Request_
 
 let get_osfhandle file =
   let handle = C.Functions.Os_fd.get_osfhandle file in
-  Result.Ok handle
+  Ok handle
 
 let open_osfhandle handle =
   let file = C.Functions.Os_fd.open_osfhandle handle in
   if file = -1 then
-    Result.Error `EBADF
+    Error `EBADF
   else
-    Result.Ok file
+    Ok file
 
 let to_int file =
   file
