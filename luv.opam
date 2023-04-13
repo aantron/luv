@@ -19,7 +19,7 @@ depends: [
 
   "alcotest" {with-test & >= "0.8.1"}
   "base-unix" {with-test}
-  "odoc" {with-doc & = "2.2.0"}
+  "odoc" {with-doc & = "2.1.1"}
 ]
 
 build: [
