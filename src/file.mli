@@ -39,7 +39,7 @@
     the main thread by manually running them in a worker. This can be done in
     several ways:
 
-    - Directly using the {{!Luv.Thread.Pool} libuv thread pool}.
+    - Directly using the {{!Luv.Thread_pool} libuv thread pool}.
     - By creating a thread manually with {!Luv.Thread.create}.
     - By creating a thread manually with OCaml's standard
       {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Thread.html}

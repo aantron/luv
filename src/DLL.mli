@@ -17,8 +17,8 @@ val open_ : string -> t option
     Binds {{:http://docs.libuv.org/en/v1.x/dll.html#c.uv_dlopen} [uv_dlopen]}.
     See {{:http://man7.org/linux/man-pages/man3/dlopen.3p.html} [dlopen(3p)]}.
 
-    Evaluates to [None] on failure. In that case, call {!Luv.DLL.last_error} to
-    get the error message. *)
+    Evaluates to [None] on failure. In that case, call {!Luv.DLL.error} to get
+    the error message. *)
 
 val close : t -> unit
 (** Closes a shared library.
@@ -33,8 +33,8 @@ val sym : t -> string -> nativeint option
     Binds {{:http://docs.libuv.org/en/v1.x/dll.html#c.uv_dlsym} [uv_dlsym]}. See
     {{:http://man7.org/linux/man-pages/man3/dlsym.3p.html} [dlsym(3p)]}.
 
-    Evaluates to [None] on failure. In that case, call {!Luv.DLL.last_error} to
-    get the error message. *)
+    Evaluates to [None] on failure. In that case, call {!Luv.DLL.error} to get
+    the error message. *)
 
 val error : t -> string
 (** Retrieves the last error message from {!Luv.DLL.open_} or {!Luv.DLL.sym}.

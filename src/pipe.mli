@@ -107,7 +107,7 @@ val receive_handle :
     calls its callback, there may be file descriptors in the pipe, in addition
     to the ordinary data provided to the callback.
 
-    To check, call this function {!Luv.Pipe.recieve_handle} in a loop until it
+    To check, call this function {!Luv.Pipe.receive_handle} in a loop until it
     returns [`None]. Each time it returns [`TCP receive] or [`Pipe receive],
     create an appropriate [handle] using either {!Luv.TCP.init} or
     {!Luv.Pipe.init}, and call [receive handle] to receive the file descriptor
