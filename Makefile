@@ -240,4 +240,4 @@ release : check-ejected-build clean
 .PHONY : clean
 clean :
 	dune clean
-	rm -rf docs/_build luv-* *.tar *.tar.gz _release *.install echo-pipe
+	rm -rf _build docs/_build luv-* *.tar *.tar.gz _release *.install echo-pipe
