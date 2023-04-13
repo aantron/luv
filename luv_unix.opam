@@ -2,7 +2,6 @@ opam-version: "2.0"
 
 synopsis: "Helpers for interfacing Luv and Unix"
 
-version: "0.5.0"
 license: "MIT"
 homepage: "https://github.com/aantron/luv"
 doc: "https://aantron.github.io/luv"
@@ -16,8 +15,8 @@ depends: [
   "base-unix"
   "ctypes" {>= "0.14.0"}  # Ctypes.CArray.of_string.
   "dune" {>= "2.0.0"}
-  "luv" {>= "0.5.8"}
-  "ocaml" {>= "4.02.0"}
+  "luv" {>= "0.5.8"}  # uv.h.
+  "ocaml" {>= "4.03.0"}
 ]
 
 build: [
