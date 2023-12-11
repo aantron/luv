@@ -232,6 +232,7 @@ release : check-ejected-build clean
 	opam pin add -y --no-action luv _release/$(RELEASE) --kind=path
 	opam reinstall -y --verbose luv
 	cd test/installation && dune exec ./user.exe --root .
+	cd test/headers && dune exec ./headers.exe --root .
 	opam remove -y luv
 	opam pin remove -y luv
 	md5sum $(RELEASE).tar.gz
