@@ -662,3 +662,10 @@
         return 1;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 44
+    static int uv_cpumask_size()
+    {
+        return ENOSYS;
+    }
+#endif

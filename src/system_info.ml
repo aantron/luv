@@ -60,6 +60,10 @@ let cpu_info () =
     cpu_times
   end
 
+let cpumask_size () =
+  let size = C.Functions.Thread.cpumask_size () in
+  Error.to_result size size
+
 module Uname =
 struct
   type t = {

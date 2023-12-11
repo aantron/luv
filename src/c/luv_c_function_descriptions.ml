@@ -1465,6 +1465,10 @@ struct
     let equal =
       foreign "uv_thread_equal"
         (ptr t @-> ptr t @-> returning bool)
+
+    let cpumask_size =
+      foreign "uv_cpumask_size"
+        (void @-> returning int)
   end
 
   module TLS =

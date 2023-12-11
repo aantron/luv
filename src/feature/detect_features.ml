@@ -230,6 +230,7 @@ let () =
 
   let parallelism = "available_parallelism" in
   needs 44 parallelism "See {!Luv.System_info.available_parallelism}.";
+  needs 45 "cpumask_size" "See {!Luv.System_info.cpumask_size}.";
   needs  9 "disconnect" "See [`DISCONNECT] in {!Luv.Poll.Event.t}.";
   needs 21 "eftype" "See [`EFTYPE] in {!Luv.Error.t}.";
   needs 32 "eilseq" "See [`EILSEQ] in {!Luv.Error.t}.";
