@@ -1,7 +1,4 @@
-# Luv &nbsp;&nbsp; [![libuv][libuv-version]][libuv-releases]
-
-[libuv-releases]: https://github.com/libuv/libuv/releases
-[libuv-version]: https://img.shields.io/badge/libuv-1.44.2-blue.svg
+# Luv
 
 [**Luv**][luv] is a neatly-packaged OCaml/Reason binding to [libuv][libuv], the
 cross-platform C library that does asynchronous I/O in Node.js and runs Node's
