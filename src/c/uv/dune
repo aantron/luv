@@ -5,7 +5,6 @@
 (rule (copy ../vendor/libuv/include/uv/linux.h linux.h))
 (rule (copy ../vendor/libuv/include/uv/os390.h os390.h))
 (rule (copy ../vendor/libuv/include/uv/posix.h posix.h))
-(rule (copy ../vendor/libuv/include/uv/stdint-msvc2008.h stdint-msvc2008.h))
 (rule (copy ../vendor/libuv/include/uv/sunos.h sunos.h))
 (rule (copy ../vendor/libuv/include/uv/threadpool.h threadpool.h))
 (rule (copy ../vendor/libuv/include/uv/tree.h tree.h))

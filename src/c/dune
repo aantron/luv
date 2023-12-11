@@ -55,7 +55,6 @@ let () = Jbuild_plugin.V1.send @@ {|
   (uv/linux.h as uv/linux.h)
   (uv/os390.h as uv/os390.h)
   (uv/posix.h as uv/posix.h)
-  (uv/stdint-msvc2008.h as uv/stdint-msvc2008.h)
   (uv/sunos.h as uv/sunos.h)
   (uv/threadpool.h as uv/threadpool.h)
   (uv/tree.h as uv/tree.h)
