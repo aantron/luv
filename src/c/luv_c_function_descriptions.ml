@@ -1469,6 +1469,14 @@ struct
     let cpumask_size =
       foreign "uv_cpumask_size"
         (void @-> returning int)
+
+    let setaffinity =
+      foreign "uv_thread_setaffinity"
+        (ptr t @-> ptr char @-> ptr char @-> size_t @-> returning error_code)
+
+    let getaffinity =
+      foreign "uv_thread_getaffinity"
+        (ptr t @-> ptr char @-> size_t @-> returning error_code)
   end
 
   module TLS =

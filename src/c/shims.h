@@ -663,8 +663,20 @@
     }
 #endif
 
-#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 44
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 45
     static int uv_cpumask_size()
+    {
+        return ENOSYS;
+    }
+
+    static int uv_thread_setaffinity(
+        uv_thread_t *id, char *mask, char *old_mask, size_t mask_size)
+    {
+        return ENOSYS;
+    }
+
+    static int uv_thread_getaffinity(
+        uv_thread_t *id, char *mask, size_t mask_size)
     {
         return ENOSYS;
     }
