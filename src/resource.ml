@@ -19,11 +19,19 @@ let loadavg () =
   let open Ctypes in
   (!@ averages, !@ (averages +@ 1), !@ (averages +@ 2))
 
-let free_memory =
-  C.Functions.Resource.free_memory
+let free_memory () =
+  let result = C.Functions.Resource.free_memory () in
+  if Unsigned.UInt64.(equal result zero) then
+    None
+  else
+    Some result
 
-let total_memory =
-  C.Functions.Resource.total_memory
+let total_memory () =
+  let result = C.Functions.Resource.total_memory () in
+  if Unsigned.UInt64.(equal result zero) then
+    None
+  else
+    Some result
 
 let constrained_memory () =
   let result = C.Functions.Resource.constrained_memory () in
