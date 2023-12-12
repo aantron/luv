@@ -32,9 +32,9 @@ import os
 extensions = ['sphinx.ext.extlinks']
 
 extlinks = {
-    'api': ('https://aantron.github.io/luv/luv/Luv/%s', None),
-    'example': ('https://github.com/aantron/luv/blob/master/example/%s', ''),
-    'man': ('http://man7.org/linux/man-pages/man%s.html', None)
+    'api': ('https://aantron.github.io/luv/luv/Luv/%s', '%s'),
+    'example': ('https://github.com/aantron/luv/blob/master/example/%s', '%s'),
+    'man': ('http://man7.org/linux/man-pages/man%s.html', '%s')
 }
 
 # Add any paths that contain templates here, relative to this directory.
