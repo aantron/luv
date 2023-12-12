@@ -51,6 +51,7 @@ type t = [
   | `ENETUNREACH
   | `ENFILE
   | `ENOBUFS
+  | `ENODATA
   | `ENODEV
   | `ENOENT
   | `ENOMEM
@@ -133,6 +134,7 @@ let to_c = let open C.Types.Error in function
   | `ENETUNREACH -> enetunreach
   | `ENFILE -> enfile
   | `ENOBUFS -> enobufs
+  | `ENODATA -> enodata
   | `ENODEV -> enodev
   | `ENOENT -> enoent
   | `ENOMEM -> enomem

@@ -60,6 +60,7 @@ let tests = [
     t "ENETUNREACH" "network is unreachable" `ENETUNREACH;
     t "ENFILE" "file table overflow" `ENFILE;
     t "ENOBUFS" "no buffer space available" `ENOBUFS;
+    t "ENODATA" "no data available" `ENODATA;
     t "ENODEV" "no such device" `ENODEV;
     t "ENOENT" "no such file or directory" `ENOENT;
     t "ENOMEM" "not enough memory" `ENOMEM;
@@ -151,6 +152,7 @@ let tests = [
     t "ENETUNREACH" `ENETUNREACH;
     t "ENFILE" `ENFILE;
     t "ENOBUFS" `ENOBUFS;
+    t "ENODATA" `ENODATA;
     t "ENODEV" `ENODEV;
     t "ENOENT" `ENOENT;
     t "ENOMEM" `ENOMEM;

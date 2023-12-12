@@ -58,6 +58,7 @@ type t = [
   | `ENETUNREACH
   | `ENFILE
   | `ENOBUFS
+  | `ENODATA
   | `ENODEV
   | `ENOENT
   | `ENOMEM

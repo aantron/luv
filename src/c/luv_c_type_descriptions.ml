@@ -61,6 +61,7 @@ struct
     let enetunreach = constant "UV_ENETUNREACH" int
     let enfile = constant "UV_ENFILE" int
     let enobufs = constant "UV_ENOBUFS" int
+    let enodata = constant "UV_ENODATA" int
     let enodev = constant "UV_ENODEV" int
     let enoent = constant "UV_ENOENT" int
     let enomem = constant "UV_ENOMEM" int
