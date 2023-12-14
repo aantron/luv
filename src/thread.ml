@@ -75,3 +75,7 @@ let getaffinity thread =
     let mask_size = Unsigned.Size_t.of_int mask_size in
     C.Functions.Thread.getaffinity thread (c cpu_mask) mask_size
     |> Error.to_result cpu_mask
+
+let getcpu () =
+  let cpu = C.Functions.Thread.getcpu () in
+  Error.to_result cpu cpu

@@ -1477,6 +1477,10 @@ struct
     let getaffinity =
       foreign "uv_thread_getaffinity"
         (ptr t @-> ptr char @-> size_t @-> returning error_code)
+
+    let getcpu =
+      foreign "uv_thread_getcpu"
+        (void @-> returning int)
   end
 
   module TLS =

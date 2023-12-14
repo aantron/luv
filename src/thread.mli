@@ -96,3 +96,13 @@ val getaffinity : t -> (bytes, Error.t) result
     Requires Luv 0.5.13 and libuv 1.45.0.
 
     {{!Luv.Require} Feature check}: [Luv.Require.(has getaffinity)] *)
+
+val getcpu : unit -> (int, Error.t) result
+(** Returns the number of the CPU on which the calling thread is running.
+
+    Binds {{:https://docs.libuv.org/en/v1.x/threading.html#c.uv_thread_getcpu}
+    [uv_thread_getcpu]}.
+
+    Requires Luv 0.5.13 and libuv 1.45.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has getcpu)] *)

@@ -685,4 +685,9 @@
     {
         return ENOSYS;
     }
+
+    static int uv_thread_getcpu()
+    {
+        return ENOSYS;
+    }
 #endif

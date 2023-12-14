@@ -249,6 +249,7 @@ let () =
   needs 29 "get_constrained_memory" "See {!Luv.Resource.constrained_memory}.";
   needs 12 "get_osfhandle" "See {!Luv.File.get_osfhandle}.";
   needs 45 "getaffinity" "See {!Luv.Thread.getaffinity}";
+  needs 45 "getcpu" "See {!Luv.Thread.getcpu}.";
   needs 28 "gettimeofday" "See {!Luv.Time.gettimeofday}.";
   needs 16 "if_indextoiid" "See {!Luv.Network.if_indextoiid}.";
   needs 16 "if_indextoname" "See {!Luv.Network.if_indextoname}.";
