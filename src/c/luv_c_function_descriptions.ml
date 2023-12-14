@@ -1867,5 +1867,9 @@ struct
     let idle_time =
       foreign "uv_metrics_idle_time"
         (ptr Types.Loop.t @-> returning uint64_t)
+
+    let info =
+      foreign "uv_metrics_info"
+        (ptr Types.Loop.t @-> ptr Types.Metrics.t @-> returning int)
   end
 end

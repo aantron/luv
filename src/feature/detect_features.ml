@@ -256,6 +256,7 @@ let () =
   needs 12 "loop_fork" "See {!Luv.Loop.fork}.";
   needs 26 "maxhostnamesize" "Used internally.";
   needs 39 "metrics_idle_time" "See {!Luv.Metrics.idle_time}.";
+  needs 45 "metrics_info" "See {!Luv.Metrics.info}.";
   needs 15 "mutex_init_recursive" "See {!Luv.Mutex.init}.";
   needs 23 "open_osfhandle" "See {!Luv.File.open_osfhandle}.";
   needs 31 "os_environ" "See {!Luv.Env.environ}.";

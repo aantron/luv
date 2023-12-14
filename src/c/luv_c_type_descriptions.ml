@@ -140,6 +140,16 @@ struct
     let () = seal t
   end
 
+  module Metrics =
+  struct
+    type t = [ `Metrics ] structure
+    let t : t typ = typedef (structure "`Metrics") "uv_metrics_t"
+    let loop_count = field t "loop_count" uint64_t
+    let events = field t "events" uint64_t
+    let events_waiting = field t "events_waiting" uint64_t
+    let () = seal t
+  end
+
   module Buf =
   struct
     type t = [ `Buf ] structure

@@ -680,4 +680,9 @@
     {
         return ENOSYS;
     }
+
+    static int uv_metrics_info(uv_loop_t *loop, void *metrics)
+    {
+        return ENOSYS;
+    }
 #endif
