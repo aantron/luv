@@ -690,4 +690,9 @@
     {
         return ENOSYS;
     }
+
+    static uint64_t uv_get_available_memory()
+    {
+        return 0;
+    }
 #endif

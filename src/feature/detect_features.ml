@@ -246,6 +246,7 @@ let () =
   needs 31 "fs_o_filemap" "See [`FILEMAP] {!Luv.File.Open_flag.t}.";
   needs  8 "fs_realpath" "See {!Luv.File.realpath}.";
   needs 31 "fs_statfs" "See {!Luv.File.statfs}.";
+  needs 45 "get_available_memory" "See {!Luv.Resource.available_memory}.";
   needs 29 "get_constrained_memory" "See {!Luv.Resource.constrained_memory}.";
   needs 12 "get_osfhandle" "See {!Luv.File.get_osfhandle}.";
   needs 45 "getaffinity" "See {!Luv.Thread.getaffinity}";

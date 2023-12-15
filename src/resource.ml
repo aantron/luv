@@ -40,6 +40,13 @@ let constrained_memory () =
   else
     Some result
 
+let available_memory () =
+  let result = C.Functions.Resource.available_memory () in
+  if result = Unsigned.UInt64.zero then
+    None
+  else
+    Some result
+
 module Priority = C.Types.Resource.Priority
 
 let getpriority pid =
