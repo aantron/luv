@@ -11,9 +11,13 @@ type t = {
   homedir : string;
 }
 
-let get_passwd () =
+let get_passwd ?uid () =
   let c_passwd = Ctypes.make C.Types.Passwd.t in
-  C.Functions.Passwd.get_passwd (Ctypes.addr c_passwd)
+  let pointer = Ctypes.addr c_passwd in
+  begin match uid with
+  | None -> C.Functions.Passwd.get_passwd pointer
+  | Some uid -> C.Functions.Passwd.get_passwd2 pointer uid
+  end
   |> Error.to_result_lazy begin fun () ->
     let module PW = C.Types.Passwd in
     let passwd = {
@@ -24,6 +28,6 @@ let get_passwd () =
       homedir = Ctypes.getf c_passwd PW.homedir;
     }
     in
-    C.Functions.Passwd.free (Ctypes.addr c_passwd);
+    C.Functions.Passwd.free_passwd pointer;
     passwd
   end

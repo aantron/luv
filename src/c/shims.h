@@ -695,4 +695,9 @@
     {
         return 0;
     }
+
+    static int uv_os_get_passwd2(uv_passwd_t *passwd, unsigned long uid)
+    {
+        return ENOSYS;
+    }
 #endif

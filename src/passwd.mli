@@ -13,8 +13,8 @@ type t = {
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_passwd_t}
     [uv_passwd_t]}. *)
 
-val get_passwd : unit -> (t, Error.t) result
-(** Gets passwd entry for the current user.
+val get_passwd : ?uid:Unsigned.ulong -> unit -> (t, Error.t) result
+(** Gets passwd entry for the current user or the user with the given uid.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_os_get_passwd}
     [uv_os_get_passwd]}. See
@@ -23,4 +23,8 @@ val get_passwd : unit -> (t, Error.t) result
 
     Requires libuv 1.9.0.
 
-    {{!Luv.Require} Feature check}: [Luv.Require.(has os_get_passwd)] *)
+    {{!Luv.Require} Feature check}: [Luv.Require.(has os_get_passwd)]
+
+    The [?uid] argument requires Luv 0.5.13 and libuv 1.45.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has os_get_passwd_uid)] *)

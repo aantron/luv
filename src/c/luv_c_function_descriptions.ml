@@ -1796,7 +1796,11 @@ struct
       foreign "uv_os_get_passwd"
         (ptr t @-> returning error_code)
 
-    let free =
+    let get_passwd2 =
+      foreign "uv_os_get_passwd2"
+        (ptr t @-> ulong @-> returning error_code)
+
+    let free_passwd =
       foreign "uv_os_free_passwd"
         (ptr t @-> returning void)
   end
