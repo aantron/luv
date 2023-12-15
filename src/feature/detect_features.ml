@@ -263,6 +263,7 @@ let () =
   needs 23 "open_osfhandle" "See {!Luv.File.open_osfhandle}.";
   needs 31 "os_environ" "See {!Luv.Env.environ}.";
   needs  6 "os_homedir" "See {!Luv.Path.homedir}.";
+  needs 45 "os_get_group" "See {!Luv.Passwd.get_group}.";
   needs  9 "os_get_passwd" "See {!Luv.Passwd.get_passwd}.";
   needs 45 "os_get_passwd_uid" "See {!Luv.Passwd.get_passwd}.";
   needs 12 "os_getenv" "See {!Luv.Env.getenv}.";

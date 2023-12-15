@@ -1803,6 +1803,14 @@ struct
     let free_passwd =
       foreign "uv_os_free_passwd"
         (ptr t @-> returning void)
+
+    let get_group =
+      foreign "uv_os_get_group"
+        (ptr Types.Passwd.group @-> ulong @-> returning error_code)
+
+    let free_group =
+      foreign "uv_os_free_group"
+        (ptr Types.Passwd.group @-> returning void)
   end
 
   module Env =

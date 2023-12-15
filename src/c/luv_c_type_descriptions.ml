@@ -957,6 +957,13 @@ struct
     let shell = field t "shell" string_opt
     let homedir = field t "homedir" string
     let () = seal t
+
+    let group : ([ `Group ] structure) typ =
+      typedef (structure "`Group") "uv_group_t"
+    let groupname = field group "groupname" string
+    let group_gid = field group "gid" ulong
+    let members = field group "members" (ptr (ptr char))
+    let () = seal group
   end
 
   module Time =

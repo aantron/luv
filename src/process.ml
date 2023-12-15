@@ -80,7 +80,7 @@ let null_callback =
 let c_string_array strings =
   (* The array-of-pointers doesn't hold a reference to the individual string
      pointers, so we need to allocate and return them so the consumer can ensure
-     they stayed referenced to avoid the GC cleaning them up early. *)
+     they stay referenced to avoid the GC cleaning them up early. *)
   let c_string_ptrs = strings @ [""]
     |> List.map Ctypes.(CArray.of_string)
     |> List.map Ctypes.CArray.start

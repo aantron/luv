@@ -700,4 +700,18 @@
     {
         return ENOSYS;
     }
+
+    typedef struct {
+        char *groupname;
+        unsigned long gid;
+        char **members;
+    } uv_group_t;
+
+    static int uv_os_get_group(uv_group_t *group, unsigned long gid)
+    {
+        return ENOSYS;
+    }
+    static void uv_os_free_group(uv_passwd_t *group)
+    {
+    }
 #endif
