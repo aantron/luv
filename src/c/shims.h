@@ -714,4 +714,14 @@
     static void uv_os_free_group(uv_passwd_t *group)
     {
     }
+
+    typedef struct {
+        int64_t tv_sec;
+        int32_t tv_nsec;
+    } uv_timespec64_t;
+
+    static int uv_clock_gettime(int clock_id, uv_timespec64_t *time)
+    {
+        return ENOSYS;
+    }
 #endif

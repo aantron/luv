@@ -976,6 +976,18 @@ struct
       let usec = field t "tv_usec" int32_t
       let () = seal t
     end
+
+    module Timespec =
+    struct
+      let t : ([ `Timespec ] structure) typ =
+        typedef (structure "`Timespec64") "uv_timespec64_t"
+      let sec = field t "tv_sec" int64_t
+      let nsec = field t "tv_nsec" int32_t
+      let () = seal t
+
+      let monotonic = constant "UV_CLOCK_MONOTONIC" int
+      let real_time = constant "UV_CLOCK_REALTIME" int
+    end
   end
 
   module Env_item =

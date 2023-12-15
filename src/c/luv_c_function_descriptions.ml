@@ -1852,6 +1852,10 @@ struct
     let hrtime =
       foreign "uv_hrtime"
         (void @-> returning uint64_t)
+
+    let clock_gettime =
+      foreign "uv_clock_gettime"
+        (int @-> ptr Types.Time.Timespec.t @-> returning error_code)
   end
 
   module Random =
