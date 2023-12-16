@@ -1009,6 +1009,16 @@ struct
          Stream.Connect_request.trampoline @->
           returning void)
 
+    let connect2 =
+      foreign "uv_pipe_connect2"
+        (ptr Types.Stream.Connect_request.t @->
+         ptr t @->
+         ocaml_string @->
+         size_t @->
+         int @->
+         Stream.Connect_request.trampoline @->
+          returning void)
+
     let getsockname =
       foreign "uv_pipe_getsockname"
         (ptr t @-> ocaml_bytes @-> ptr size_t @-> returning error_code)

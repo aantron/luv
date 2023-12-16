@@ -277,6 +277,7 @@ let () =
   needs 21 "overlapped_pipe" "See {!Luv.Process.to_parent_pipe}.";
   needs 41 "pipe" "See {!Luv.Pipe.pipe}";
   needs 46 "pipe_bind2" "See {!Luv.Pipe.bind}.";
+  needs 46 "pipe_connect2" "See {!Luv.Pipe.connect}.";
   needs 16 "pipe_chmod" "See {!Luv.Pipe.chmod}.";
   needs 14 "prioritized" "See [`PRIORITIZED] in {!Luv.Poll.Event.t}.";
   needs 24 "process_windows_hide_console" "See {!Luv.Process.spawn}.";

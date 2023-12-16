@@ -54,17 +54,34 @@ let bind ?(no_truncate = false) pipe name =
   end
   |> Error.to_result ()
 
-let connect pipe name_or_path callback =
+let connect ?(no_truncate = false) pipe name_or_path callback =
   let request = Stream.Connect_request.make () in
   let callback result =
     Error.catch_exceptions callback (Error.to_result () result)
   in
   Request.set_callback request callback;
-  C.Functions.Pipe.connect
-    request
-    pipe
-    (Ctypes.ocaml_string_start name_or_path)
-    Stream.Connect_request.trampoline
+  let use_connect2 =
+    match name_or_path.[0] with
+    | '\x00' -> true
+    | _ | exception Invalid_argument _ -> no_truncate
+  in
+  let c_name_or_path = Ctypes.ocaml_string_start name_or_path in
+  if use_connect2 then
+    let length = String.length name_or_path |> Unsigned.Size_t.of_int in
+    let no_truncate = if no_truncate then C.Types.Pipe.no_truncate else 0 in
+    C.Functions.Pipe.connect2
+      request
+      pipe
+      c_name_or_path
+      length
+      no_truncate
+      Stream.Connect_request.trampoline
+  else
+    C.Functions.Pipe.connect
+      request
+      pipe
+      c_name_or_path
+      Stream.Connect_request.trampoline
 
 let rec generic_getname ?(buffer_size = 128) c_function pipe =
   let length_cell =
