@@ -681,6 +681,8 @@
         return ENOSYS;
     }
 
+    #define UV_ENODATA 0x6242424
+
     static int uv_metrics_info(uv_loop_t *loop, void *metrics)
     {
         return ENOSYS;
@@ -724,7 +726,9 @@
     {
         return ENOSYS;
     }
+#endif
 
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 46
     #define UV_PIPE_NO_TRUNCATE 0
 
     static int uv_pipe_bind2(
