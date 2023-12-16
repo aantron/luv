@@ -10,6 +10,10 @@ watch :
 test :
 	dune runtest --no-buffer --force
 
+.PHONY : test-watch
+test-watch :
+	dune runtest --no-buffer --force --watch
+
 .PHONY : examples
 examples :
 	dune build \
