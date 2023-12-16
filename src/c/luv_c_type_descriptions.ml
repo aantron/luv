@@ -564,6 +564,8 @@ struct
 
     let t : ([ `Pipe ] Stream.t) typ = typedef (structure "`Pipe") "uv_pipe_t"
     let () = seal t
+
+    let no_truncate = constant "UV_PIPE_NO_TRUNCATE" int
   end
 
   module TTY =

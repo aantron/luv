@@ -724,4 +724,12 @@
     {
         return ENOSYS;
     }
+
+    #define UV_PIPE_NO_TRUNCATE 0
+
+    static int uv_pipe_bind2(
+        uv_pipe_t *pipe, const char *name, size_t namelen, unsigned int flags)
+    {
+        return ENOSYS;
+    }
 #endif

@@ -32,12 +32,19 @@ struct
         (ptr Types.Loop.t @-> Types.Loop.Run_mode.t @-> returning bool)
   end
 
-  (* See https://github.com/ocsigen/lwt/issues/230. *)
+  (* bind is potentially a blocking call, because the filesystem may block the
+     calling process indefinitely when creating a file for Unix domain socket or
+     similar. *)
   module Pipe =
   struct
     let bind =
       foreign "uv_pipe_bind"
         (ptr Types.Pipe.t @-> string @-> returning error_code)
+
+    let bind2 =
+      foreign "uv_pipe_bind2"
+        (ptr Types.Pipe.t @-> string @-> size_t @-> int @->
+          returning error_code)
   end
 
   (* Synchronous (callback = NULL) calls to these functions are blocking, so we

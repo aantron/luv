@@ -57,12 +57,20 @@ val pipe :
 
     {{!Luv.Require} Feature check}: [Luv.Require.(has pipe)] *)
 
-val bind : t -> string -> (unit, Error.t) result
+val bind : ?no_truncate:bool -> t -> string -> (unit, Error.t) result
 (** Assigns a pipe a name or an address.
 
-    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_bind}
-    [uv_pipe_bind]}. See {{:http://man7.org/linux/man-pages/man3/bind.3p.html}
-    [bind(3p)]}. *)
+    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_bind2}
+    [uv_pipe_bind2]}. See {{:http://man7.org/linux/man-pages/man3/bind.3p.html}
+    [bind(3p)]}.
+
+    [?no_truncate] binds [UV_PIPE_NO_TRUNCATE], which causes this function to
+    return [EINVAL] rather than truncating the path, if the path is too long.
+
+    [?no_truncate] and Linux abstract namespace sockets require Luv 0.5.13 and
+    libuv 1.46.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has pipe_bind2)] *)
 
 val connect : t -> string -> ((unit, Error.t) result -> unit) -> unit
 (** Connects to the pipe at the given name or address.

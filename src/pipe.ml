@@ -39,8 +39,19 @@ let open_ pipe file =
   C.Functions.Pipe.open_ pipe (File.to_int file)
   |> Error.to_result ()
 
-let bind pipe name =
-  C.Blocking.Pipe.bind pipe name
+let bind ?(no_truncate = false) pipe name =
+  let use_bind2 =
+    match name.[0] with
+    | '\x00' -> true
+    | _ | exception Invalid_argument _ -> no_truncate
+  in
+  begin if use_bind2 then
+    let length = String.length name |> Unsigned.Size_t.of_int in
+    let no_truncate = if no_truncate then C.Types.Pipe.no_truncate else 0 in
+    C.Blocking.Pipe.bind2 pipe name length no_truncate
+  else
+    C.Blocking.Pipe.bind pipe name
+  end
   |> Error.to_result ()
 
 let connect pipe name_or_path callback =
