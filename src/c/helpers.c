@@ -142,10 +142,14 @@ static void luv_fs_event_trampoline(
 {
     caml_acquire_runtime_system();
     CAMLparam0();
-    CAMLlocal1(callback);
+    CAMLlocal2(callback, option);
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
+    if (filename == NULL)
+        option = Val_none;
+    else
+        option = caml_alloc_some(caml_copy_string(filename));
     caml_callback3(
-        callback, caml_copy_string(filename), Val_int(events), Val_int(status));
+        callback, option, Val_int(events), Val_int(status));
     CAMLdrop;
     caml_release_runtime_system();
 }

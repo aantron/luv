@@ -43,7 +43,7 @@ val start :
   ?recursive:bool ->
   t ->
   string ->
-  ((string * (Event.t list), Error.t) result -> unit) ->
+  ((string option * (Event.t list), Error.t) result -> unit) ->
     unit
 (** Starts the handle and watches the given path for changes.
 
