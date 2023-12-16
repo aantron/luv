@@ -79,6 +79,7 @@ type t = [
   | `ESRCH
   | `ETIMEDOUT
   | `ETXTBSY
+  | `EUNATCH
   | `EXDEV
   | `UNKNOWN
   | `EOF
@@ -162,6 +163,7 @@ let to_c = let open C.Types.Error in function
   | `ESRCH -> esrch
   | `ETIMEDOUT -> etimedout
   | `ETXTBSY -> etxtbsy
+  | `EUNATCH -> eunatch
   | `EXDEV -> exdev
   | `UNKNOWN -> unknown
   | `EOF -> eof

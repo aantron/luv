@@ -86,6 +86,7 @@ type t = [
   | `ESRCH
   | `ETIMEDOUT
   | `ETXTBSY
+  | `EUNATCH
   | `EXDEV
   | `UNKNOWN
   | `EOF

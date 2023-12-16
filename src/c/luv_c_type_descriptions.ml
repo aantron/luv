@@ -89,6 +89,7 @@ struct
     let esrch = constant "UV_ESRCH" int
     let etimedout = constant "UV_ETIMEDOUT" int
     let etxtbsy = constant "UV_ETXTBSY" int
+    let eunatch = constant "UV_EUNATCH" int
     let exdev = constant "UV_EXDEV" int
     let unknown = constant "UV_UNKNOWN" int
     let eof = constant "UV_EOF" int

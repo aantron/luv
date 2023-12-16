@@ -743,4 +743,6 @@
     {
         return ENOSYS;
     }
+
+    #define UV_EUNATCH 0x7242424
 #endif
