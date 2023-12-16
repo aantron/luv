@@ -2,6 +2,10 @@
 build :
 	dune build -p luv
 
+.PHONY : watch
+watch :
+	dune build -p luv -w
+
 .PHONY : test
 test :
 	dune runtest --no-buffer --force
