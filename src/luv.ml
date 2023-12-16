@@ -64,5 +64,6 @@ module Env = Env
 module Time = Time
 module Random = Random
 module Metrics = Metrics
+module String = String_
 module Require = Require
 module Unix = Luv_unix

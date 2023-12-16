@@ -1913,4 +1913,31 @@ struct
       foreign "uv_metrics_info"
         (ptr Types.Loop.t @-> ptr Types.Metrics.t @-> returning int)
   end
+
+  module String_ =
+  struct
+    let utf16_length_as_wtf8 =
+      foreign "luv_utf16_length_as_wtf8"
+        (string @-> PosixTypes.ssize_t @-> returning size_t)
+
+    let utf16_to_wtf8 =
+      foreign "luv_utf16_to_wtf8"
+        (string @->
+         PosixTypes.ssize_t @->
+         ptr (ptr char) @->
+         ptr size_t @->
+          returning error_code)
+
+    let wtf8_length_as_utf16 =
+      foreign "uv_wtf8_length_as_utf16"
+        (string @-> returning PosixTypes.ssize_t)
+
+    let wtf8_to_utf16 =
+      foreign "uv_wtf8_to_utf16"
+        (string @-> ptr uint16_t @-> size_t @-> returning void)
+
+    let free =
+      foreign "free"
+        (ptr void @-> returning void)
+  end
 end

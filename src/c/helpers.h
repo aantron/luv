@@ -188,6 +188,20 @@ int luv_os_uname(char *buffer);
 
 
 
+// String conversion functions. These are wrapped because it is convenient to
+// use Ctypes to pass OCaml strings directly to C code, but the Ctypes type
+// combinator for that purpose only compiles against C arguments of types such
+// as char*, and not uint16_t*. So these helpers add the necessary casts to
+// satisfy Ctypes.
+
+size_t luv_utf16_length_as_wtf8(const char *utf16, ssize_t utf16_len);
+
+int luv_utf16_to_wtf8(
+    const char *utf16, ssize_t utf16_len, char **wtf8_ptr,
+    size_t *wtf8_len_ptr);
+
+
+
 // Miscellaneous helpers - other things that are easiest to do in C.
 
 // Ctypes.constant can't bind a char*, so we return it instead.

@@ -746,3 +746,27 @@
 
     #define UV_EUNATCH 0x7242424
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 47
+    size_t uv_utf16_length_as_wtf8(const uint16_t *utf16, ssize_t utf16_len)
+    {
+        return ENOSYS;
+    }
+
+    int uv_utf16_to_wtf8(
+        const uint16_t *utf16, ssize_t utf16_len, char **wtf8_ptr,
+        size_t *wtf8_len_ptr)
+    {
+        return ENOSYS;
+    }
+
+    ssize_t uv_wtf8_length_as_utf16(const char *wtf8)
+    {
+        return ENOSYS;
+    }
+
+    void uv_wtf8_to_utf16(const char *utf8, uint16_t *utf16, size_t utf16_len)
+    {
+        abort();
+    }
+#endif

@@ -303,6 +303,7 @@ let () =
   needs 37 "udp_recvmmsg" "See {!Luv.UDP.init}.";
   needs 32 "udp_set_source_membership" "See {!Luv.UDP.set_source_membership}.";
   needs 39 "udp_using_recvmmsg" "See {!Luv.UDP.using_recvmmsg}.";
+  needs 47 "utf_16" "See {!Luv.String}.";
 
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;

@@ -92,5 +92,6 @@ presented in the user guide.
 - {!Luv.Prepare} — pre-I/O callbacks
 - {!Luv.Check} — post-I/O callbacks
 - {!Luv.Idle} — per-iteration callbacks
+- {!Luv.String} — UTF-16 manipulation for Windows
 - {!Luv.Version} — libuv version
 - {!Luv.Require} — feature checks
