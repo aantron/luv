@@ -16,7 +16,8 @@ let info loop =
    let module M = C.Types.Metrics in
    let c_metrics = Ctypes.make M.t in
    C.Functions.Metrics.info loop (Ctypes.addr c_metrics)
-   |> Error.to_result_f @@ fun () -> {
+   |> Error.to_result_f @@ fun () ->
+   {
      loop_count = Ctypes.getf c_metrics M.loop_count;
      events = Ctypes.getf c_metrics M.events;
      events_waiting = Ctypes.getf c_metrics M.events_waiting;

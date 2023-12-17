@@ -30,31 +30,30 @@ let interface_addresses () =
   let count = Ctypes.(allocate int) 0 in
 
   C.Functions.Network.interface_addresses interfaces count
-  |> Error.to_result_f begin fun () ->
-    let interfaces = Ctypes.(!@) interfaces in
-    let count = Ctypes.(!@) count in
+  |> Error.to_result_f @@ fun () ->
+  let interfaces = Ctypes.(!@) interfaces in
+  let count = Ctypes.(!@) count in
 
-    let rec convert index =
-      if index >= count then
-        []
-      else begin
-        let c_interface = Ctypes.(!@ (interfaces +@ index)) in
-        let physical = Ctypes.getf c_interface IA.phys_addr in
-        let interface = Interface_address.{
-          name = Ctypes.getf c_interface IA.name;
-          is_internal = Ctypes.getf c_interface IA.is_internal;
-          physical = String.init 6 (Ctypes.CArray.get physical);
-          address = load_address (Ctypes.getf c_interface IA.address4);
-          netmask = load_address (Ctypes.getf c_interface IA.netmask4);
-        }
-        in
-        interface::(convert (index + 1))
-      end
-    in
-    let converted_interfaces = convert 0 in
-    C.Functions.Network.free_interface_addresses interfaces count;
-    converted_interfaces
-  end
+  let rec convert index =
+    if index >= count then
+      []
+    else begin
+      let c_interface = Ctypes.(!@ (interfaces +@ index)) in
+      let physical = Ctypes.getf c_interface IA.phys_addr in
+      let interface = Interface_address.{
+        name = Ctypes.getf c_interface IA.name;
+        is_internal = Ctypes.getf c_interface IA.is_internal;
+        physical = String.init 6 (Ctypes.CArray.get physical);
+        address = load_address (Ctypes.getf c_interface IA.address4);
+        netmask = load_address (Ctypes.getf c_interface IA.netmask4);
+      }
+      in
+      interface::(convert (index + 1))
+    end
+  in
+  let converted_interfaces = convert 0 in
+  C.Functions.Network.free_interface_addresses interfaces count;
+  converted_interfaces
 
 let generic_toname c_function index =
   let length = C.Types.Network.if_namesize in
@@ -63,10 +62,9 @@ let generic_toname c_function index =
     (Unsigned.UInt.of_int index)
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_f begin fun () ->
-    let length = Bytes.index buffer '\000' in
-    Bytes.sub_string buffer 0 length
-  end
+  |> Error.to_result_f @@ fun () ->
+  let length = Bytes.index buffer '\000' in
+  Bytes.sub_string buffer 0 length
 
 let if_indextoname = generic_toname C.Functions.Network.if_indextoname
 let if_indextoiid = generic_toname C.Functions.Network.if_indextoiid
@@ -77,7 +75,6 @@ let gethostname () =
   C.Functions.Network.gethostname
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_f begin fun () ->
-    let length = Bytes.index buffer '\000' in
-    Bytes.sub_string buffer 0 length
-  end
+  |> Error.to_result_f @@ fun () ->
+  let length = Bytes.index buffer '\000' in
+  Bytes.sub_string buffer 0 length

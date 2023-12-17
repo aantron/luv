@@ -91,25 +91,24 @@ let load_timeval c_timeval =
 let getrusage () =
   let c_rusage = Ctypes.make C.Types.Resource.Rusage.t in
   C.Functions.Resource.getrusage (Ctypes.addr c_rusage)
-  |> Error.to_result_f begin fun () ->
-    let module RU = C.Types.Resource.Rusage in
-    let field name = Ctypes.getf c_rusage name in
-    {
-      utime = field RU.utime |> load_timeval;
-      stime = field RU.stime |> load_timeval;
-      maxrss = field RU.maxrss;
-      ixrss = field RU.ixrss;
-      idrss = field RU.idrss;
-      isrss = field RU.isrss;
-      minflt = field RU.minflt;
-      majflt = field RU.majflt;
-      nswap = field RU.nswap;
-      inblock = field RU.inblock;
-      oublock = field RU.oublock;
-      msgsnd = field RU.msgsnd;
-      msgrcv = field RU.msgrcv;
-      nsignals = field RU.nsignals;
-      nvcsw = field RU.nvcsw;
-      nivcsw = field RU.nivcsw;
-    }
-  end
+  |> Error.to_result_f @@ fun () ->
+  let module RU = C.Types.Resource.Rusage in
+  let field name = Ctypes.getf c_rusage name in
+  {
+    utime = field RU.utime |> load_timeval;
+    stime = field RU.stime |> load_timeval;
+    maxrss = field RU.maxrss;
+    ixrss = field RU.ixrss;
+    idrss = field RU.idrss;
+    isrss = field RU.isrss;
+    minflt = field RU.minflt;
+    majflt = field RU.majflt;
+    nswap = field RU.nswap;
+    inblock = field RU.inblock;
+    oublock = field RU.oublock;
+    msgsnd = field RU.msgsnd;
+    msgrcv = field RU.msgrcv;
+    nsignals = field RU.nsignals;
+    nvcsw = field RU.nvcsw;
+    nivcsw = field RU.nivcsw;
+  }

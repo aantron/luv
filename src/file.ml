@@ -402,17 +402,17 @@ struct
 
   let returns_directory_entries = {
     from_request = (fun request ->
-      Error.to_result_f
-        (fun () ->
-          let dirents =
-            Dir.from_request request
-            |> Ctypes.(!@)
-            |> fun dir -> Ctypes.getf dir C.Types.File.Dir.dirents
-          in
-          Array.init
-            (Request_.int_result request)
-            (fun index ->
-              Dirent.from_c Ctypes.(!@ (dirents +@ index))))
+      Error.to_result_f begin fun () ->
+        let dirents =
+          Dir.from_request request
+          |> Ctypes.(!@)
+          |> fun dir -> Ctypes.getf dir C.Types.File.Dir.dirents
+        in
+        Array.init
+          (Request_.int_result request)
+          (fun index ->
+            Dirent.from_c Ctypes.(!@ (dirents +@ index)))
+        end
         (Request_.result request));
       immediate_error = Error.result_from_c;
       clean_up_request_on_success = true;

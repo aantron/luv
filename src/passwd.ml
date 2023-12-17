@@ -20,19 +20,18 @@ let get_passwd ?uid () =
   | None -> C.Functions.Passwd.get_passwd pointer
   | Some uid -> C.Functions.Passwd.get_passwd2 pointer uid
   end
-  |> Error.to_result_f begin fun () ->
-    let module PW = C.Types.Passwd in
-    let passwd = {
-      username = Ctypes.getf c_passwd PW.username;
-      uid = Ctypes.getf c_passwd PW.uid;
-      gid = Ctypes.getf c_passwd PW.gid;
-      shell = Ctypes.getf c_passwd PW.shell;
-      homedir = Ctypes.getf c_passwd PW.homedir;
-    }
-    in
-    C.Functions.Passwd.free_passwd pointer;
-    passwd
-  end
+  |> Error.to_result_f @@ fun () ->
+  let module PW = C.Types.Passwd in
+  let passwd = {
+    username = Ctypes.getf c_passwd PW.username;
+    uid = Ctypes.getf c_passwd PW.uid;
+    gid = Ctypes.getf c_passwd PW.gid;
+    shell = Ctypes.getf c_passwd PW.shell;
+    homedir = Ctypes.getf c_passwd PW.homedir;
+  }
+  in
+  C.Functions.Passwd.free_passwd pointer;
+  passwd
 
 type group = {
   groupname : string;
@@ -64,14 +63,13 @@ let string_list_from_c c_strings =
 let get_group gid =
   let c_group = Ctypes.make C.Types.Passwd.group in
   C.Functions.Passwd.get_group (Ctypes.addr c_group) gid
-  |> Error.to_result_f begin fun () ->
-    let module G = C.Types.Passwd in
-    let group = {
-      groupname = Ctypes.getf c_group G.groupname;
-      gid = Ctypes.getf c_group G.group_gid;
-      members = Ctypes.getf c_group G.members |> string_list_from_c;
-    }
-    in
-    C.Functions.Passwd.free_group (Ctypes.addr c_group);
-    group
-  end
+  |> Error.to_result_f @@ fun () ->
+  let module G = C.Types.Passwd in
+  let group = {
+    groupname = Ctypes.getf c_group G.groupname;
+    gid = Ctypes.getf c_group G.group_gid;
+    members = Ctypes.getf c_group G.members |> string_list_from_c;
+  }
+  in
+  C.Functions.Passwd.free_group (Ctypes.addr c_group);
+  group
