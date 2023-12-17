@@ -54,6 +54,7 @@ let tests = [
     t "EISDIR" "illegal operation on a directory" `EISDIR;
     t "ELOOP" "too many symbolic links encountered" `ELOOP;
     t "EMFILE" "too many open files" `EMFILE;
+    t "EMLINK" "too many links" `EMLINK;
     t "EMSGSIZE" "message too long" `EMSGSIZE;
     t "ENAMETOOLONG" "name too long" `ENAMETOOLONG;
     t "ENETDOWN" "network is down" `ENETDOWN;
@@ -74,6 +75,8 @@ let tests = [
     t "ENOTSOCK" "socket operation on non-socket" `ENOTSOCK;
     t "ENOTSUP" "operation not supported on socket" `ENOTSUP;
     t "ENOTTY" "inappropriate ioctl for device" `ENOTTY;
+    t "ENXIO" "no such device or address" `ENXIO;
+    t "EOF" "end of file" `EOF;
     t "EOVERFLOW" "value too large for defined data type" `EOVERFLOW;
     t "EPERM" "operation not permitted" `EPERM;
     t "EPIPE" "broken pipe" `EPIPE;
@@ -91,9 +94,6 @@ let tests = [
     t "EUNATCH" "protocol driver not attached" `EUNATCH;
     t "EXDEV" "cross-device link not permitted" `EXDEV;
     t "UNKNOWN" "unknown error" `UNKNOWN;
-    t "EOF" "end of file" `EOF;
-    t "ENXIO" "no such device or address" `ENXIO;
-    t "EMLINK" "too many links" `EMLINK;
   ]);
 
 
@@ -147,6 +147,7 @@ let tests = [
     t "EISDIR" `EISDIR;
     t "ELOOP" `ELOOP;
     t "EMFILE" `EMFILE;
+    t "EMLINK" `EMLINK;
     t "EMSGSIZE" `EMSGSIZE;
     t "ENAMETOOLONG" `ENAMETOOLONG;
     t "ENETDOWN" `ENETDOWN;
@@ -166,6 +167,8 @@ let tests = [
     t "ENOTEMPTY" `ENOTEMPTY;
     t "ENOTSOCK" `ENOTSOCK;
     t "ENOTSUP" `ENOTSUP;
+    t "ENXIO" `ENXIO;
+    t "EOF" `EOF;
     t "EOVERFLOW" `EOVERFLOW;
     t "ENOTTY" `ENOTTY;
     t "EPERM" `EPERM;
@@ -184,8 +187,5 @@ let tests = [
     t "EUNATCH" `EUNATCH;
     t "EXDEV" `EXDEV;
     t "UNKNOWN" `UNKNOWN;
-    t "EOF" `EOF;
-    t "ENXIO" `ENXIO;
-    t "EMLINK" `EMLINK;
   ]);
 ]

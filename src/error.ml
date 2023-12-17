@@ -45,6 +45,7 @@ type t = [
   | `EISDIR
   | `ELOOP
   | `EMFILE
+  | `EMLINK
   | `EMSGSIZE
   | `ENAMETOOLONG
   | `ENETDOWN
@@ -65,6 +66,8 @@ type t = [
   | `ENOTSOCK
   | `ENOTSUP
   | `ENOTTY
+  | `ENXIO
+  | `EOF
   | `EOVERFLOW
   | `EPERM
   | `EPIPE
@@ -82,9 +85,6 @@ type t = [
   | `EUNATCH
   | `EXDEV
   | `UNKNOWN
-  | `EOF
-  | `ENXIO
-  | `EMLINK
 ]
 
 let to_c = let open C.Types.Error in function
@@ -129,6 +129,7 @@ let to_c = let open C.Types.Error in function
   | `EISDIR -> eisdir
   | `ELOOP -> eloop
   | `EMFILE -> emfile
+  | `EMLINK -> emlink
   | `EMSGSIZE -> emsgsize
   | `ENAMETOOLONG -> enametoolong
   | `ENETDOWN -> enetdown
@@ -149,6 +150,8 @@ let to_c = let open C.Types.Error in function
   | `ENOTSOCK -> enotsock
   | `ENOTSUP -> enotsup
   | `ENOTTY -> enotty
+  | `ENXIO -> enxio
+  | `EOF -> eof
   | `EOVERFLOW -> eoverflow
   | `EPERM -> eperm
   | `EPIPE -> epipe
@@ -166,9 +169,6 @@ let to_c = let open C.Types.Error in function
   | `EUNATCH -> eunatch
   | `EXDEV -> exdev
   | `UNKNOWN -> unknown
-  | `EOF -> eof
-  | `ENXIO -> enxio
-  | `EMLINK -> emlink
 
 let from_c = let open C.Types.Error in function
   | e when e = e2big -> `E2BIG
@@ -212,6 +212,7 @@ let from_c = let open C.Types.Error in function
   | e when e = eisdir -> `EISDIR
   | e when e = eloop -> `ELOOP
   | e when e = emfile -> `EMFILE
+  | e when e = emlink -> `EMLINK
   | e when e = emsgsize -> `EMSGSIZE
   | e when e = enametoolong -> `ENAMETOOLONG
   | e when e = enetdown -> `ENETDOWN
@@ -231,6 +232,8 @@ let from_c = let open C.Types.Error in function
   | e when e = enotsock -> `ENOTSOCK
   | e when e = enotsup -> `ENOTSUP
   | e when e = enotty -> `ENOTTY
+  | e when e = enxio -> `ENXIO
+  | e when e = eof -> `EOF
   | e when e = eoverflow -> `EOVERFLOW
   | e when e = eperm -> `EPERM
   | e when e = epipe -> `EPIPE
@@ -247,9 +250,6 @@ let from_c = let open C.Types.Error in function
   | e when e = etxtbsy -> `ETXTBSY
   | e when e = exdev -> `EXDEV
   | e when e = unknown -> `UNKNOWN
-  | e when e = eof -> `EOF
-  | e when e = enxio -> `ENXIO
-  | e when e = emlink -> `EMLINK
   | _ -> `UNKNOWN
 
 let result_from_c error_code =

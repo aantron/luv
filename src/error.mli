@@ -52,6 +52,7 @@ type t = [
   | `EISDIR
   | `ELOOP
   | `EMFILE
+  | `EMLINK
   | `EMSGSIZE
   | `ENAMETOOLONG
   | `ENETDOWN
@@ -72,6 +73,8 @@ type t = [
   | `ENOTSOCK
   | `ENOTSUP
   | `ENOTTY
+  | `ENXIO
+  | `EOF
   | `EOVERFLOW
   | `EPERM
   | `EPIPE
@@ -89,9 +92,6 @@ type t = [
   | `EUNATCH
   | `EXDEV
   | `UNKNOWN
-  | `EOF
-  | `ENXIO
-  | `EMLINK
 ]
 (** Error codes returned by libuv functions.
 
