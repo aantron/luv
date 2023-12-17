@@ -54,7 +54,7 @@ let tests = [
         Luv.FS_event.start event Filename.current_dir_name begin fun result ->
           Luv.FS_event.stop event |> check_success_result "stop";
           let filename', events = check_success_result "start" result in
-          Alcotest.(check string) "filename" filename filename';
+          Alcotest.(check (option string)) "filename" (Some filename) filename';
           Alcotest.(check bool) "rename" true (List.mem `RENAME events);
           Alcotest.(check bool) "change" false (List.mem `CHANGE events);
           occurred := true
@@ -77,7 +77,7 @@ let tests = [
         Luv.FS_event.start event filename begin fun result ->
           Luv.FS_event.stop event |> check_success_result "stop";
           let filename', events = check_success_result "start" result in
-          Alcotest.(check string) "filename" filename filename';
+          Alcotest.(check (option string)) "filename" (Some filename) filename';
           Alcotest.(check bool) "rename" false (List.mem `RENAME events);
           Alcotest.(check bool) "change" true (List.mem `CHANGE events);
           occurred := true
