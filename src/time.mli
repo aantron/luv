@@ -4,8 +4,8 @@
 
 
 type timeval = {
-  tv_sec : int64;
-  tv_usec : int32;
+  sec : int64;
+  usec : int32;
 }
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_timeval64_t}
     [uv_timeval64_t]}. *)

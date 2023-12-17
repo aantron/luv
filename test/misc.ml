@@ -34,8 +34,8 @@ let tests = [
         Luv.Time.gettimeofday () |> check_success_result "gettimeofday" in
       let uv_time =
         let open Luv.Time in
-        (Int64.to_float timeval.tv_sec) +.
-          (Int32.to_float timeval.tv_usec) *. 1e-6
+        (Int64.to_float timeval.sec) +.
+          (Int32.to_float timeval.usec) *. 1e-6
       in
       let ocaml_time = Unix.gettimeofday () in
 

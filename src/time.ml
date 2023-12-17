@@ -4,8 +4,8 @@
 
 
 type timeval = {
-  tv_sec : int64;
-  tv_usec : int32;
+  sec : int64;
+  usec : int32;
 }
 
 type t = timeval
@@ -15,8 +15,8 @@ let gettimeofday () =
   C.Functions.Time.gettimeofday (Ctypes.addr timeval)
   |> Error.to_result_lazy begin fun () ->
     {
-      tv_sec = Ctypes.getf timeval C.Types.Time.Timeval.sec;
-      tv_usec = Ctypes.getf timeval C.Types.Time.Timeval.usec;
+      sec = Ctypes.getf timeval C.Types.Time.Timeval.sec;
+      usec = Ctypes.getf timeval C.Types.Time.Timeval.usec;
     }
   end
 
