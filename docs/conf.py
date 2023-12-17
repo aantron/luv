@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Luv'
-copyright = '2012-2016, Nikhil Marathe, 2014-2020 libuv contributors, 2020-2021 Anton Bachin'
+copyright = '2012-2016, Nikhil Marathe, 2014-2020 libuv contributors, 2020-2023 Anton Bachin'
 author = 'Nikhil Marathe, libuv contributors, and Anton Bachin'
 
 # The version info for the project you're documenting, acts as replacement for
