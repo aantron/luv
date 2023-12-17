@@ -181,7 +181,7 @@ val set_on_unhandled_exception : (exn -> unit) -> unit
 
 val result_from_c : int -> (_, t) result
 val to_result : 'a -> int -> ('a, t) result
-val to_result_lazy : (unit -> 'a) -> int -> ('a, t) result
+val to_result_f : (unit -> 'a) -> int -> ('a, t) result
 val clamp : int -> int
 
 val catch_exceptions : ('a -> unit) -> ('a -> unit)

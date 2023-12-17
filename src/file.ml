@@ -376,7 +376,7 @@ struct
 
   let returns_path = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Request_.path request) (Request_.result request));
     immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
@@ -384,7 +384,7 @@ struct
 
   let returns_path_and_file = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Request_.path request, (Request_.int_result request))
         (Request_.result request));
     immediate_error = Error.result_from_c;
@@ -393,7 +393,7 @@ struct
 
   let returns_directory_handle = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Dir.from_request request)
         (Request_.result request));
     immediate_error = Error.result_from_c;
@@ -402,7 +402,7 @@ struct
 
   let returns_directory_entries = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () ->
           let dirents =
             Dir.from_request request
@@ -420,7 +420,7 @@ struct
 
   let returns_directory_scan = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Directory_scan.start request) (Request_.result request));
     immediate_error = Error.result_from_c;
     clean_up_request_on_success = false;
@@ -428,7 +428,7 @@ struct
 
   let returns_stat = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Stat.from_request request) (Request_.result request));
     immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
@@ -436,7 +436,7 @@ struct
 
   let returns_statfs = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Statfs.from_request request) (Request_.result request));
     immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
@@ -444,7 +444,7 @@ struct
 
   let returns_string = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> C.Blocking.File.get_ptr_as_string request)
         (Request_.result request));
     immediate_error = Error.result_from_c;

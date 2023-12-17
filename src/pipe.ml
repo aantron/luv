@@ -32,7 +32,7 @@ let pipe ?(read_flags = [`NONBLOCK]) ?(write_flags = [`NONBLOCK]) () =
     fds
     (convert_flags read_flags)
     (convert_flags write_flags)
-  |> Error.to_result_lazy Ctypes.(fun () ->
+  |> Error.to_result_f Ctypes.(fun () ->
     File.from_int (!@ fds), File.from_int (!@ (fds +@ 1)))
 
 let open_ pipe file =

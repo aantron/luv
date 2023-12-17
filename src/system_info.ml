@@ -29,7 +29,7 @@ let cpu_info () =
   let count = Ctypes.(allocate int) 0 in
 
   C.Functions.CPU_info.cpu_info info count
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     let info = Ctypes.(!@) info in
     let count = Ctypes.(!@) count in
 
@@ -89,7 +89,7 @@ struct
   let uname () =
     let buffer = Bytes.create (Uname.field_length * 4) in
     C.Functions.Uname.uname (Ctypes.ocaml_bytes_start buffer)
-    |> Error.to_result_lazy begin fun () ->
+    |> Error.to_result_f begin fun () ->
       Uname.{
         sysname = extract_field buffer 0;
         release = extract_field buffer 1;

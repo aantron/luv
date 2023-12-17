@@ -20,7 +20,7 @@ let get_passwd ?uid () =
   | None -> C.Functions.Passwd.get_passwd pointer
   | Some uid -> C.Functions.Passwd.get_passwd2 pointer uid
   end
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     let module PW = C.Types.Passwd in
     let passwd = {
       username = Ctypes.getf c_passwd PW.username;
@@ -64,7 +64,7 @@ let string_list_from_c c_strings =
 let get_group gid =
   let c_group = Ctypes.make C.Types.Passwd.group in
   C.Functions.Passwd.get_group (Ctypes.addr c_group) gid
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     let module G = C.Types.Passwd in
     let group = {
       groupname = Ctypes.getf c_group G.groupname;

@@ -10,7 +10,7 @@ let getenv variable =
     (Ctypes.ocaml_string_start variable)
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     let length = Bytes.index buffer '\000' in
     Bytes.sub_string buffer 0 length
   end
@@ -28,7 +28,7 @@ let environ () =
   let env_items = Ctypes.(allocate_n (ptr C.Types.Env_item.t) ~count:1) in
   let count = Ctypes.(allocate_n int ~count:1) in
   C.Functions.Env.environ env_items count
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     let env_items = Ctypes.(!@) env_items in
     let count = Ctypes.(!@) count in
     let converted_env_items =

@@ -30,7 +30,7 @@ let interface_addresses () =
   let count = Ctypes.(allocate int) 0 in
 
   C.Functions.Network.interface_addresses interfaces count
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     let interfaces = Ctypes.(!@) interfaces in
     let count = Ctypes.(!@) count in
 
@@ -63,7 +63,7 @@ let generic_toname c_function index =
     (Unsigned.UInt.of_int index)
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     let length = Bytes.index buffer '\000' in
     Bytes.sub_string buffer 0 length
   end
@@ -77,7 +77,7 @@ let gethostname () =
   C.Functions.Network.gethostname
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     let length = Bytes.index buffer '\000' in
     Bytes.sub_string buffer 0 length
   end

@@ -42,7 +42,7 @@ let socketpair
     sockets
     (convert_flags fst_flags)
     (convert_flags snd_flags)
-  |> Error.to_result_lazy Ctypes.(fun () ->
+  |> Error.to_result_f Ctypes.(fun () ->
     !@ sockets, !@ (sockets +@ 1))
 
 let nodelay tcp enable =

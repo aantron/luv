@@ -13,7 +13,7 @@ type t = timeval
 let gettimeofday () =
   let timeval = Ctypes.make C.Types.Time.Timeval.t in
   C.Functions.Time.gettimeofday (Ctypes.addr timeval)
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     {
       sec = Ctypes.getf timeval C.Types.Time.Timeval.sec;
       usec = Ctypes.getf timeval C.Types.Time.Timeval.usec;
@@ -36,7 +36,7 @@ let clock_gettime clock =
     | `Real_time -> C.Types.Time.Timespec.real_time
   in
   C.Functions.Time.clock_gettime clock (Ctypes.addr timespec)
-  |> Error.to_result_lazy begin fun () ->
+  |> Error.to_result_f begin fun () ->
     {
       sec = Ctypes.getf timespec C.Types.Time.Timespec.sec;
       nsec = Ctypes.getf timespec C.Types.Time.Timespec.nsec;

@@ -298,7 +298,7 @@ let to_result success_value error_code =
   else
     Error (from_c error_code)
 
-let to_result_lazy get_success_value error_code =
+let to_result_f get_success_value error_code =
   if error_code >= 0 then
     Ok (get_success_value ())
   else

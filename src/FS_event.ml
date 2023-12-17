@@ -47,7 +47,7 @@ let start
   in
   Handle.set_reference event begin fun filename events result ->
     let result =
-      Error.to_result_lazy (fun () ->
+      Error.to_result_f (fun () ->
         filename, Helpers.Bit_field.c_to_list Event.to_c Event.all events)
         result
     in
