@@ -20,11 +20,22 @@
 
 // Trampolines.
 
-// CAMLlocal is (probably?) not needed here, because there is already a gc root
-// pointing to the callback.
+// If the trampoline will hold a reference to the callback across a potentially
+// -allocating call into the OCaml runtime, it must declare it with:
+//
+//   CAMLparam0();
+//   CAMLlocal1(callback);
+//
+//   ...
+//
+//   CAMLdrop;
+//
+// Otherwise, it can declare it as:
+//
+//   value callback;
 #define GET_REFERENCES(callback_index) \
     value reference_array = *gc_root; \
-    value callback = Field(reference_array, callback_index);
+    callback = Field(reference_array, callback_index);
 
 #define GET_HANDLE_CALLBACK(callback_index) \
     value *gc_root = uv_handle_get_data((uv_handle_t*)c_handle); \
@@ -37,6 +48,7 @@
 static void luv_after_work_trampoline(uv_work_t *c_request, int status)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -47,6 +59,7 @@ static void luv_alloc_trampoline(
 {
     caml_acquire_runtime_system();
 
+    value callback;
     GET_HANDLE_CALLBACK(LUV_ALLOCATE_CALLBACK);
 
     value bigstring = caml_callback(callback, Val_int((int)suggested_size));
@@ -60,6 +73,7 @@ static void luv_alloc_trampoline(
 static void luv_async_trampoline(uv_async_t *c_handle)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
@@ -68,6 +82,7 @@ static void luv_async_trampoline(uv_async_t *c_handle)
 static void luv_check_trampoline(uv_check_t *c_handle)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
@@ -76,6 +91,7 @@ static void luv_check_trampoline(uv_check_t *c_handle)
 static void luv_close_trampoline(uv_handle_t *c_handle)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_CLOSE_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
@@ -84,6 +100,7 @@ static void luv_close_trampoline(uv_handle_t *c_handle)
 static void luv_connect_trampoline(uv_connect_t *c_request, int status)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -92,6 +109,7 @@ static void luv_connect_trampoline(uv_connect_t *c_request, int status)
 static void luv_connection_trampoline(uv_stream_t *c_handle, int status)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_CONNECTION_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -101,15 +119,19 @@ static void luv_exit_trampoline(
     uv_process_t *c_handle, int64_t exit_status, int term_signal)
 {
     caml_acquire_runtime_system();
+    CAMLparam0();
+    CAMLlocal1(callback);
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback2(
         callback, caml_copy_int64(exit_status), Val_int(term_signal));
+    CAMLdrop;
     caml_release_runtime_system();
 }
 
 static void luv_fs_trampoline(uv_fs_t *c_request)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
@@ -119,9 +141,16 @@ static void luv_fs_event_trampoline(
     uv_fs_event_t *c_handle, char *filename, int events, int status)
 {
     caml_acquire_runtime_system();
+    CAMLparam0();
+    CAMLlocal2(callback, option);
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
+    if (filename == NULL)
+        option = Val_none;
+    else
+        option = caml_alloc_some(caml_copy_string(filename));
     caml_callback3(
-        callback, caml_copy_string(filename), Val_int(events), Val_int(status));
+        callback, option, Val_int(events), Val_int(status));
+    CAMLdrop;
     caml_release_runtime_system();
 }
 
@@ -129,10 +158,13 @@ static void luv_fs_poll_trampoline(
     uv_fs_poll_t *c_handle, int status, uv_stat_t *prev, uv_stat_t *curr)
 {
     caml_acquire_runtime_system();
+    CAMLparam0();
+    CAMLlocal1(callback);
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback3(
         callback, Val_int(status), caml_copy_nativeint((intnat)prev),
         caml_copy_nativeint((intnat)curr));
+    CAMLdrop;
     caml_release_runtime_system();
 }
 
@@ -140,6 +172,7 @@ static void luv_getaddrinfo_trampoline(
     uv_getaddrinfo_t *c_request, int status, struct addrinfo *res)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -149,6 +182,7 @@ static void luv_getnameinfo_trampoline(
     uv_getnameinfo_t *c_request, int status, char *hostname, char *service)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -157,6 +191,7 @@ static void luv_getnameinfo_trampoline(
 static void luv_idle_trampoline(uv_idle_t *c_handle)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
@@ -173,6 +208,7 @@ static void luv_once_trampoline()
 static void luv_poll_trampoline(uv_poll_t *c_handle, int status, int event)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback2(callback, Val_int(status), Val_int(event));
     caml_release_runtime_system();
@@ -181,6 +217,7 @@ static void luv_poll_trampoline(uv_poll_t *c_handle, int status, int event)
 static void luv_prepare_trampoline(uv_prepare_t *c_handle)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
@@ -190,6 +227,7 @@ static void luv_random_trampoline(
     uv_random_t *c_request, int status, void *buffer, size_t length)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -199,6 +237,7 @@ static void luv_read_trampoline(
     uv_stream_t *c_handle, ssize_t nread, uv_buf_t *buffer)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int((int)nread));
     caml_release_runtime_system();
@@ -209,16 +248,20 @@ static void luv_recv_trampoline(
     unsigned int flags)
 {
     caml_acquire_runtime_system();
+    CAMLparam0();
+    CAMLlocal1(callback);
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback3(
         callback, Val_int((int)nread), caml_copy_nativeint((intnat)addr),
         Val_int(flags));
+    CAMLdrop;
     caml_release_runtime_system();
 }
 
 static void luv_send_trampoline(uv_udp_send_t *c_request, int status)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -227,6 +270,7 @@ static void luv_send_trampoline(uv_udp_send_t *c_request, int status)
 static void luv_shutdown_trampoline(uv_shutdown_t *c_request, int status)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -235,6 +279,7 @@ static void luv_shutdown_trampoline(uv_shutdown_t *c_request, int status)
 static void luv_signal_trampoline(uv_signal_t *c_handle, int signum)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
@@ -263,6 +308,7 @@ static void luv_thread_trampoline(void *argument)
 static void luv_timer_trampoline(uv_timer_t *c_handle)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_unit);
     caml_release_runtime_system();
@@ -278,6 +324,7 @@ static void luv_work_trampoline(uv_work_t *c_request)
     caml_c_thread_register();
     caml_acquire_runtime_system();
 
+    value callback;
     GET_REQUEST_CALLBACK(LUV_WORK_FUNCTION);
     caml_callback(callback, Val_unit);
 
@@ -288,6 +335,7 @@ static void luv_work_trampoline(uv_work_t *c_request)
 static void luv_write_trampoline(uv_write_t *c_request, int status)
 {
     caml_acquire_runtime_system();
+    value callback;
     GET_REQUEST_CALLBACK(LUV_GENERIC_CALLBACK);
     caml_callback(callback, Val_int(status));
     caml_release_runtime_system();
@@ -593,6 +641,22 @@ int luv_udp_recv_start(
 int luv_os_uname(char *buffer)
 {
     return uv_os_uname((uv_utsname_t*)buffer);
+}
+
+
+
+// String conversion functions.
+
+size_t luv_utf16_length_as_wtf8(const char *utf16, ssize_t utf16_len)
+{
+    return uv_utf16_length_as_wtf8((const uint16_t*)utf16, utf16_len);
+}
+
+int luv_utf16_to_wtf8(
+    const char *utf16, ssize_t utf16_len, char **wtf8_ptr,
+    size_t *wtf8_len_ptr)
+{
+    uv_utf16_to_wtf8((const uint16_t*)utf16, utf16_len, wtf8_ptr, wtf8_len_ptr);
 }
 
 

@@ -42,7 +42,7 @@ let create ?stack_size f =
     Error.result_from_c result
   end
   else
-    Result.Ok thread
+    Ok thread
 
 let create_c ?stack_size ?(argument = Nativeint.zero) f =
   let thread = Ctypes.addr (Ctypes.make C.Types.Thread.t) in
@@ -52,3 +52,30 @@ let create_c ?stack_size ?(argument = Nativeint.zero) f =
 let join thread =
   C.Blocking.Thread.join thread
   |> Error.to_result ()
+
+let c mask =
+  mask
+  |> Bytes.unsafe_to_string
+  |> Ctypes.CArray.of_string
+  |> Ctypes.CArray.start
+
+let setaffinity thread cpu_mask =
+  let mask_size = Bytes.length cpu_mask in
+  let old_mask = Bytes.create mask_size in
+  let mask_size = Unsigned.Size_t.of_int mask_size in
+  C.Functions.Thread.setaffinity thread (c cpu_mask) (c old_mask) mask_size
+  |> Error.to_result old_mask
+
+let getaffinity thread =
+  match System_info.cpumask_size () with
+  | Error _ as error ->
+    error
+  | Ok mask_size ->
+    let cpu_mask = Bytes.create mask_size in
+    let mask_size = Unsigned.Size_t.of_int mask_size in
+    C.Functions.Thread.getaffinity thread (c cpu_mask) mask_size
+    |> Error.to_result cpu_mask
+
+let getcpu () =
+  let cpu = C.Functions.Thread.getcpu () in
+  Error.to_result cpu cpu

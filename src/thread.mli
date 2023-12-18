@@ -62,3 +62,47 @@ val join : t -> (unit, Error.t) result
     [uv_thread_join]}. See
     {{:http://man7.org/linux/man-pages/man3/pthread_join.3p.html}
     [pthread_join(3p)]}. *)
+
+val setaffinity : t -> bytes -> (bytes, Error.t) result
+(** Sets the thread's processor affinity mask.
+
+    Binds
+    {{:https://docs.libuv.org/en/v1.x/threading.html#c.uv_thread_setaffinity}
+    [uv_thread_setaffinity]}. See
+    {{:https://man7.org/linux/man-pages/man3/pthread_setaffinity_np.3.html}
+    [pthread_setaffinity_np(3)]} and
+    {{:https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setprocessaffinitymask}
+    [SetProcessAffinityMask]}.
+
+    See {!Luv.System_info.cpumask_size}.
+
+    Requires Luv 0.5.13 and libuv 1.45.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has setaffinity)] *)
+
+val getaffinity : t -> (bytes, Error.t) result
+(** Gets the thread's processor affinity mask.
+
+    Binds
+    {{:https://docs.libuv.org/en/v1.x/threading.html#c.uv_thread_getaffinity}
+    [uv_thread_getaffinity]}. See
+    {{:https://man7.org/linux/man-pages/man3/pthread_getaffinity_np.3.html}
+    [pthread_setaffinity_np(3)]} and
+    {{:https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprocessaffinitymask}
+    [GetProcessAffinityMask]}.
+
+    See {!Luv.System_info.cpumask_size}.
+
+    Requires Luv 0.5.13 and libuv 1.45.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has getaffinity)] *)
+
+val getcpu : unit -> (int, Error.t) result
+(** Returns the number of the CPU on which the calling thread is running.
+
+    Binds {{:https://docs.libuv.org/en/v1.x/threading.html#c.uv_thread_getcpu}
+    [uv_thread_getcpu]}.
+
+    Requires Luv 0.5.13 and libuv 1.45.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has getcpu)] *)

@@ -32,12 +32,19 @@ struct
         (ptr Types.Loop.t @-> Types.Loop.Run_mode.t @-> returning bool)
   end
 
-  (* See https://github.com/ocsigen/lwt/issues/230. *)
+  (* bind is potentially a blocking call, because the filesystem may block the
+     calling process indefinitely when creating a file for Unix domain socket or
+     similar. *)
   module Pipe =
   struct
     let bind =
       foreign "uv_pipe_bind"
         (ptr Types.Pipe.t @-> string @-> returning error_code)
+
+    let bind2 =
+      foreign "uv_pipe_bind2"
+        (ptr Types.Pipe.t @-> string @-> size_t @-> int @->
+          returning error_code)
   end
 
   (* Synchronous (callback = NULL) calls to these functions are blocking, so we
@@ -1002,6 +1009,16 @@ struct
          Stream.Connect_request.trampoline @->
           returning void)
 
+    let connect2 =
+      foreign "uv_pipe_connect2"
+        (ptr Types.Stream.Connect_request.t @->
+         ptr t @->
+         ocaml_string @->
+         size_t @->
+         int @->
+         Stream.Connect_request.trampoline @->
+          returning void)
+
     let getsockname =
       foreign "uv_pipe_getsockname"
         (ptr t @-> ocaml_bytes @-> ptr size_t @-> returning error_code)
@@ -1465,6 +1482,22 @@ struct
     let equal =
       foreign "uv_thread_equal"
         (ptr t @-> ptr t @-> returning bool)
+
+    let cpumask_size =
+      foreign "uv_cpumask_size"
+        (void @-> returning int)
+
+    let setaffinity =
+      foreign "uv_thread_setaffinity"
+        (ptr t @-> ptr char @-> ptr char @-> size_t @-> returning error_code)
+
+    let getaffinity =
+      foreign "uv_thread_getaffinity"
+        (ptr t @-> ptr char @-> size_t @-> returning error_code)
+
+    let getcpu =
+      foreign "uv_thread_getcpu"
+        (void @-> returning int)
   end
 
   module TLS =
@@ -1680,6 +1713,10 @@ struct
       foreign "uv_get_constrained_memory"
         (void @-> returning uint64_t)
 
+    let available_memory =
+      foreign "uv_get_available_memory"
+        (void @-> returning uint64_t)
+
     let getpriority =
       foreign "uv_os_getpriority"
         (int @-> ptr int @-> returning error_code)
@@ -1776,9 +1813,21 @@ struct
       foreign "uv_os_get_passwd"
         (ptr t @-> returning error_code)
 
-    let free =
+    let get_passwd2 =
+      foreign "uv_os_get_passwd2"
+        (ptr t @-> ulong @-> returning error_code)
+
+    let free_passwd =
       foreign "uv_os_free_passwd"
         (ptr t @-> returning void)
+
+    let get_group =
+      foreign "uv_os_get_group"
+        (ptr Types.Passwd.group @-> ulong @-> returning error_code)
+
+    let free_group =
+      foreign "uv_os_free_group"
+        (ptr Types.Passwd.group @-> returning void)
   end
 
   module Env =
@@ -1820,6 +1869,10 @@ struct
     let hrtime =
       foreign "uv_hrtime"
         (void @-> returning uint64_t)
+
+    let clock_gettime =
+      foreign "uv_clock_gettime"
+        (int @-> ptr Types.Time.Timespec.t @-> returning error_code)
   end
 
   module Random =
@@ -1855,5 +1908,36 @@ struct
     let idle_time =
       foreign "uv_metrics_idle_time"
         (ptr Types.Loop.t @-> returning uint64_t)
+
+    let info =
+      foreign "uv_metrics_info"
+        (ptr Types.Loop.t @-> ptr Types.Metrics.t @-> returning int)
+  end
+
+  module String_ =
+  struct
+    let utf16_length_as_wtf8 =
+      foreign "luv_utf16_length_as_wtf8"
+        (string @-> PosixTypes.ssize_t @-> returning size_t)
+
+    let utf16_to_wtf8 =
+      foreign "luv_utf16_to_wtf8"
+        (string @->
+         PosixTypes.ssize_t @->
+         ptr (ptr char) @->
+         ptr size_t @->
+          returning error_code)
+
+    let wtf8_length_as_utf16 =
+      foreign "uv_wtf8_length_as_utf16"
+        (string @-> returning PosixTypes.ssize_t)
+
+    let wtf8_to_utf16 =
+      foreign "uv_wtf8_to_utf16"
+        (string @-> ptr uint16_t @-> size_t @-> returning void)
+
+    let free =
+      foreign "free"
+        (ptr void @-> returning void)
   end
 end

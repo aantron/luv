@@ -39,7 +39,7 @@ struct
       count_or_error
       |> PosixTypes.Ssize.to_int64
       |> Unsigned.Size_t.of_int64
-      |> fun n -> Result.Ok n
+      |> fun n -> Ok n
     else
       count_or_error
       |> PosixTypes.Ssize.to_int
@@ -376,7 +376,7 @@ struct
 
   let returns_path = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Request_.path request) (Request_.result request));
     immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
@@ -384,7 +384,7 @@ struct
 
   let returns_path_and_file = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Request_.path request, (Request_.int_result request))
         (Request_.result request));
     immediate_error = Error.result_from_c;
@@ -393,7 +393,7 @@ struct
 
   let returns_directory_handle = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Dir.from_request request)
         (Request_.result request));
     immediate_error = Error.result_from_c;
@@ -402,17 +402,17 @@ struct
 
   let returns_directory_entries = {
     from_request = (fun request ->
-      Error.to_result_lazy
-        (fun () ->
-          let dirents =
-            Dir.from_request request
-            |> Ctypes.(!@)
-            |> fun dir -> Ctypes.getf dir C.Types.File.Dir.dirents
-          in
-          Array.init
-            (Request_.int_result request)
-            (fun index ->
-              Dirent.from_c Ctypes.(!@ (dirents +@ index))))
+      Error.to_result_f begin fun () ->
+        let dirents =
+          Dir.from_request request
+          |> Ctypes.(!@)
+          |> fun dir -> Ctypes.getf dir C.Types.File.Dir.dirents
+        in
+        Array.init
+          (Request_.int_result request)
+          (fun index ->
+            Dirent.from_c Ctypes.(!@ (dirents +@ index)))
+        end
         (Request_.result request));
       immediate_error = Error.result_from_c;
       clean_up_request_on_success = true;
@@ -420,7 +420,7 @@ struct
 
   let returns_directory_scan = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Directory_scan.start request) (Request_.result request));
     immediate_error = Error.result_from_c;
     clean_up_request_on_success = false;
@@ -428,7 +428,7 @@ struct
 
   let returns_stat = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Stat.from_request request) (Request_.result request));
     immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
@@ -436,7 +436,7 @@ struct
 
   let returns_statfs = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> Statfs.from_request request) (Request_.result request));
     immediate_error = Error.result_from_c;
     clean_up_request_on_success = true;
@@ -444,7 +444,7 @@ struct
 
   let returns_string = {
     from_request = (fun request ->
-      Error.to_result_lazy
+      Error.to_result_f
         (fun () -> C.Blocking.File.get_ptr_as_string request)
         (Request_.result request));
     immediate_error = Error.result_from_c;
@@ -803,14 +803,14 @@ module Request = Request_
 
 let get_osfhandle file =
   let handle = C.Functions.Os_fd.get_osfhandle file in
-  Result.Ok handle
+  Ok handle
 
 let open_osfhandle handle =
   let file = C.Functions.Os_fd.open_osfhandle handle in
   if file = -1 then
-    Result.Error `EBADF
+    Error `EBADF
   else
-    Result.Ok file
+    Ok file
 
 let to_int file =
   file

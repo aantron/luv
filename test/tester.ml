@@ -24,4 +24,5 @@ let () =
     DNS.tests;
     Thread_.tests;
     Misc.tests;
+    String_.tests;
   ])

@@ -35,6 +35,14 @@ val cpu_info : unit -> (CPU_info.t list, Error.t) result
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_cpu_info}
     [uv_cpu_info]}. *)
 
+val cpumask_size : unit -> (int, Error.t) result
+(** Binds {{:https://docs.libuv.org/en/v1.x/misc.html#c.uv_cpumask_size}
+    [uv_cpumask_size]}.
+
+    Requires Luv 0.5.13 and libuv 1.45.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has cpumask_size)] *)
+
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_utsname_t}
     [uv_utsname_t]}. *)
 module Uname :

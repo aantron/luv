@@ -29,7 +29,7 @@ val init :
     [uv_tcp_init_ex]}.
 
     The stream is not yet connected or listening. See {!Luv.TCP.bind},
-    {!Luv.Stream.listen}, and {!Luv.Stream.connect}.
+    {!Luv.Stream.listen}, and {!Luv.TCP.connect}.
 
     On libuv prior to 1.7.0, using [?domain] causes this function to return
     [Error `ENOSYS] ("Function not implemented").

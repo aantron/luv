@@ -18,7 +18,7 @@ let foreign_archives, uv_library_flag, include_dirs, i_option, install_h =
     "(foreign_archives uv)",
     "",
     "(include_dirs vendor/libuv/include)",
-    "-I vendor/libuv/include",
+    "-I .",
     true
 
 let () = Jbuild_plugin.V1.send @@ {|
@@ -39,25 +39,28 @@ let () = Jbuild_plugin.V1.send @@ {|
 
 |}^ (if not install_h then "" else {|
 
+(rule
+ (deps (glob_files uv/*.h))
+ (action (copy vendor/libuv/include/uv.h uv.h)))
+
 (install
  (section lib)
  (package luv)
  (files
-  (vendor/libuv/include/uv.h as uv.h)
-  (vendor/libuv/include/uv/aix.h as uv/aix.h)
-  (vendor/libuv/include/uv/bsd.h as uv/bsd.h)
-  (vendor/libuv/include/uv/darwin.h as uv/darwin.h)
-  (vendor/libuv/include/uv/errno.h as uv/errno.h)
-  (vendor/libuv/include/uv/linux.h as uv/linux.h)
-  (vendor/libuv/include/uv/os390.h as uv/os390.h)
-  (vendor/libuv/include/uv/posix.h as uv/posix.h)
-  (vendor/libuv/include/uv/stdint-msvc2008.h as uv/stdint-msvc2008.h)
-  (vendor/libuv/include/uv/sunos.h as uv/sunos.h)
-  (vendor/libuv/include/uv/threadpool.h as uv/threadpool.h)
-  (vendor/libuv/include/uv/tree.h as uv/tree.h)
-  (vendor/libuv/include/uv/unix.h as uv/unix.h)
-  (vendor/libuv/include/uv/version.h as uv/version.h)
-  (vendor/libuv/include/uv/win.h as uv/win.h)))
+  (uv.h as uv.h)
+  (uv/aix.h as uv/aix.h)
+  (uv/bsd.h as uv/bsd.h)
+  (uv/darwin.h as uv/darwin.h)
+  (uv/errno.h as uv/errno.h)
+  (uv/linux.h as uv/linux.h)
+  (uv/os390.h as uv/os390.h)
+  (uv/posix.h as uv/posix.h)
+  (uv/sunos.h as uv/sunos.h)
+  (uv/threadpool.h as uv/threadpool.h)
+  (uv/tree.h as uv/tree.h)
+  (uv/unix.h as uv/unix.h)
+  (uv/version.h as uv/version.h)
+  (uv/win.h as uv/win.h)))
 
 |}) ^{|
 
@@ -71,7 +74,7 @@ let () = Jbuild_plugin.V1.send @@ {|
   (bash "cp -r vendor/configure/* vendor/libuv/")
   (chdir vendor/libuv (progn
    (bash
-    "sh configure --host `ocamlc -config | awk '/host/ {print $NF}'` \
+    "sh configure --host `ocamlc -config | awk '/^host:/ {print $NF}'` \
       'CC=%{cc}' CFLAGS=-DNDEBUG --silent --enable-silent-rules")
    (ignore-outputs (bash
     "$([ '%{os_type}' = Unix ] && echo %{make} || echo make) V=0 -j 4 \

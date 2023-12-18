@@ -20,9 +20,9 @@ struct
       let storage = Ctypes.(raw_address_of_ptr (to_voidp (addr os_fd))) in
       from_unix_helper unix_fd storage;
       if C.Functions.Os_fd.is_invalid_handle_value os_fd then
-        Result.Error `EBADF
+        Error `EBADF
       else
-        Result.Ok os_fd
+        Ok os_fd
 
     external to_unix_helper : nativeint -> Unix.file_descr =
       "luv_os_fd_to_unix_fd"
@@ -43,9 +43,9 @@ struct
       let storage = Ctypes.(raw_address_of_ptr (to_voidp (addr os_socket))) in
       from_unix_helper unix_fd storage;
       if C.Functions.Os_fd.is_invalid_socket_value os_socket then
-        Result.Error `EBADF
+        Error `EBADF
       else
-        Result.Ok os_socket
+        Ok os_socket
 
     external to_unix_helper : nativeint -> Unix.file_descr =
       "luv_os_socket_to_unix_fd"

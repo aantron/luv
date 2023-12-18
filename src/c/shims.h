@@ -662,3 +662,111 @@
         return 1;
     }
 #endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 45
+    static int uv_cpumask_size()
+    {
+        return ENOSYS;
+    }
+
+    static int uv_thread_setaffinity(
+        uv_thread_t *id, char *mask, char *old_mask, size_t mask_size)
+    {
+        return ENOSYS;
+    }
+
+    static int uv_thread_getaffinity(
+        uv_thread_t *id, char *mask, size_t mask_size)
+    {
+        return ENOSYS;
+    }
+
+    #define UV_ENODATA 0x6242424
+
+    static int uv_metrics_info(uv_loop_t *loop, void *metrics)
+    {
+        return ENOSYS;
+    }
+
+    static int uv_thread_getcpu()
+    {
+        return ENOSYS;
+    }
+
+    static uint64_t uv_get_available_memory()
+    {
+        return 0;
+    }
+
+    static int uv_os_get_passwd2(uv_passwd_t *passwd, unsigned long uid)
+    {
+        return ENOSYS;
+    }
+
+    typedef struct {
+        char *groupname;
+        unsigned long gid;
+        char **members;
+    } uv_group_t;
+
+    static int uv_os_get_group(uv_group_t *group, unsigned long gid)
+    {
+        return ENOSYS;
+    }
+    static void uv_os_free_group(uv_passwd_t *group)
+    {
+    }
+
+    typedef struct {
+        int64_t tv_sec;
+        int32_t tv_nsec;
+    } uv_timespec64_t;
+
+    static int uv_clock_gettime(int clock_id, uv_timespec64_t *time)
+    {
+        return ENOSYS;
+    }
+#endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 46
+    #define UV_PIPE_NO_TRUNCATE 0
+
+    static int uv_pipe_bind2(
+        uv_pipe_t *pipe, const char *name, size_t namelen, unsigned int flags)
+    {
+        return ENOSYS;
+    }
+
+    static int uv_pipe_connect2(
+        uv_connect_t *request, uv_pipe_t *pipe, const char *name,
+        size_t namelen, unsigned int flags, uv_connect_cb callback)
+    {
+        return ENOSYS;
+    }
+
+    #define UV_EUNATCH 0x7242424
+#endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 47
+    size_t uv_utf16_length_as_wtf8(const uint16_t *utf16, ssize_t utf16_len)
+    {
+        return ENOSYS;
+    }
+
+    int uv_utf16_to_wtf8(
+        const uint16_t *utf16, ssize_t utf16_len, char **wtf8_ptr,
+        size_t *wtf8_len_ptr)
+    {
+        return ENOSYS;
+    }
+
+    ssize_t uv_wtf8_length_as_utf16(const char *wtf8)
+    {
+        return ENOSYS;
+    }
+
+    void uv_wtf8_to_utf16(const char *utf8, uint16_t *utf16, size_t utf16_len)
+    {
+        abort();
+    }
+#endif

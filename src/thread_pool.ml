@@ -58,7 +58,7 @@ let queue_c_work
     C.Functions.Work.add_c_function_and_argument request f argument in
   if not result then begin
     Request.release request;
-    callback (Result.Error `ENOMEM)
+    callback (Error `ENOMEM)
   end
 
   else begin
@@ -81,8 +81,8 @@ module Request = Request_
 let set_size ?(if_not_already_set = false) thread_count =
   let already_set =
     match Env.getenv "UV_THREADPOOL_SIZE" with
-    | Result.Ok _ -> true
-    | Result.Error _ -> false
+    | Ok _ -> true
+    | Error _ -> false
   in
   if already_set && if_not_already_set then
     ()

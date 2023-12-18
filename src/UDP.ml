@@ -189,7 +189,7 @@ let recv_start ?(allocate = Buffer.create) udp callback =
         |> convert_flag C.Types.UDP.Flag.mmsg_chunk `MMSG_CHUNK
         |> convert_flag C.Types.UDP.Flag.mmsg_free `MMSG_FREE
       in
-      Error.catch_exceptions callback (Result.Ok (buffer, sockaddr, flags))
+      Error.catch_exceptions callback (Ok (buffer, sockaddr, flags))
     end
   end;
 

@@ -60,6 +60,7 @@ let tests = [
     t "ENETUNREACH" "network is unreachable" `ENETUNREACH;
     t "ENFILE" "file table overflow" `ENFILE;
     t "ENOBUFS" "no buffer space available" `ENOBUFS;
+    t "ENODATA" "no data available" `ENODATA;
     t "ENODEV" "no such device" `ENODEV;
     t "ENOENT" "no such file or directory" `ENOENT;
     t "ENOMEM" "not enough memory" `ENOMEM;
@@ -87,6 +88,7 @@ let tests = [
     t "ESRCH" "no such process" `ESRCH;
     t "ETIMEDOUT" "connection timed out" `ETIMEDOUT;
     t "ETXTBSY" "text file is busy" `ETXTBSY;
+    t "EUNATCH" "protocol driver not attached" `EUNATCH;
     t "EXDEV" "cross-device link not permitted" `EXDEV;
     t "UNKNOWN" "unknown error" `UNKNOWN;
     t "EOF" "end of file" `EOF;
@@ -151,6 +153,7 @@ let tests = [
     t "ENETUNREACH" `ENETUNREACH;
     t "ENFILE" `ENFILE;
     t "ENOBUFS" `ENOBUFS;
+    t "ENODATA" `ENODATA;
     t "ENODEV" `ENODEV;
     t "ENOENT" `ENOENT;
     t "ENOMEM" `ENOMEM;
@@ -178,6 +181,7 @@ let tests = [
     t "ESRCH" `ESRCH;
     t "ETIMEDOUT" `ETIMEDOUT;
     t "ETXTBSY" `ETXTBSY;
+    t "EUNATCH" `EUNATCH;
     t "EXDEV" `EXDEV;
     t "UNKNOWN" `UNKNOWN;
     t "EOF" `EOF;

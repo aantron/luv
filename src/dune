@@ -1,8 +1,8 @@
 (library
  (name luv)
  (public_name luv)
- (libraries luv.c result)
- (flags (:standard -w -49 -open Result)))
+ (libraries luv.c)
+ (flags (:standard -w -49)))
 
 (rule
  (targets require.mli require.ml)

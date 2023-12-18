@@ -154,7 +154,7 @@ struct
     let callback = Error.catch_exceptions callback in
     Request.set_callback request begin fun result ->
       result
-      |> Error.to_result_lazy begin fun () ->
+      |> Error.to_result_f begin fun () ->
         let addrinfos =
           Ctypes.(getf (!@ request)) C.Types.DNS.Addr_info.Request.addrinfo in
         let result = addrinfo_list_to_ocaml addrinfos in
@@ -199,7 +199,7 @@ struct
     let callback = Error.catch_exceptions callback in
     Request.set_callback request begin fun result ->
       result
-      |> Error.to_result_lazy begin fun () ->
+      |> Error.to_result_f begin fun () ->
         let module NI = C.Types.DNS.Name_info in
         let host = load_string request NI.host NI.maxhost in
         let service = load_string request NI.service NI.maxserv in

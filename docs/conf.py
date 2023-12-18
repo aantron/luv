@@ -32,9 +32,9 @@ import os
 extensions = ['sphinx.ext.extlinks']
 
 extlinks = {
-    'api': ('https://aantron.github.io/luv/luv/Luv/%s', None),
-    'example': ('https://github.com/aantron/luv/blob/master/example/%s', ''),
-    'man': ('http://man7.org/linux/man-pages/man%s.html', None)
+    'api': ('https://aantron.github.io/luv/luv/Luv/%s', '%s'),
+    'example': ('https://github.com/aantron/luv/blob/master/example/%s', '%s'),
+    'man': ('http://man7.org/linux/man-pages/man%s.html', '%s')
 }
 
 # Add any paths that contain templates here, relative to this directory.
@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Luv'
-copyright = '2012-2016, Nikhil Marathe, 2014-2020 libuv contributors, 2020-2021 Anton Bachin'
+copyright = '2012-2016, Nikhil Marathe, 2014-2020 libuv contributors, 2020-2023 Anton Bachin'
 author = 'Nikhil Marathe, libuv contributors, and Anton Bachin'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -114,7 +114,7 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'nature'
+html_theme = 'furo'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

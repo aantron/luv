@@ -1,5 +1,5 @@
-#include <caml/mlvalues.h>
 #include <uv.h>
+#include <caml/mlvalues.h>
 
 CAMLprim value retrieve_constant(value unit)
 {

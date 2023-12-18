@@ -34,7 +34,7 @@ struct
     (* If [Handle.is_active handle], then [uv_*_start] will not overwrite the
        handle's callback. We need to emulate this behavior in the wrapper. *)
     if Handle.is_active handle then
-      Result.Ok ()
+      Ok ()
     else begin
       Handle.set_reference handle (Error.catch_exceptions callback);
       Kind.start handle trampoline

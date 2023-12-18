@@ -9,10 +9,9 @@ let exepath () =
   C.Functions.Path.exepath
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_lazy begin fun () ->
-    let length = Bytes.index buffer '\000' in
-    Bytes.sub_string buffer 0 length
-  end
+  |> Error.to_result_f @@ fun () ->
+  let length = Bytes.index buffer '\000' in
+  Bytes.sub_string buffer 0 length
 
 let cwd () =
   let length = 4096 in
@@ -20,10 +19,9 @@ let cwd () =
   C.Functions.Path.cwd
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_lazy begin fun () ->
-    let length = Bytes.index buffer '\000' in
-    Bytes.sub_string buffer 0 length
-  end
+  |> Error.to_result_f @@ fun () ->
+  let length = Bytes.index buffer '\000' in
+  Bytes.sub_string buffer 0 length
 
 let chdir path =
   C.Functions.Path.chdir (Ctypes.ocaml_string_start path)
@@ -35,10 +33,9 @@ let homedir () =
   C.Functions.Path.homedir
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_lazy begin fun () ->
-    let length = Bytes.index buffer '\000' in
-    Bytes.sub_string buffer 0 length
-  end
+  |> Error.to_result_f @@ fun () ->
+  let length = Bytes.index buffer '\000' in
+  Bytes.sub_string buffer 0 length
 
 let tmpdir () =
   let length = 1024 in
@@ -46,7 +43,6 @@ let tmpdir () =
   C.Functions.Path.tmpdir
     (Ctypes.ocaml_bytes_start buffer)
     (Ctypes.(allocate size_t) (Unsigned.Size_t.of_int length))
-  |> Error.to_result_lazy begin fun () ->
-    let length = Bytes.index buffer '\000' in
-    Bytes.sub_string buffer 0 length
-  end
+  |> Error.to_result_f @@ fun () ->
+  let length = Bytes.index buffer '\000' in
+  Bytes.sub_string buffer 0 length

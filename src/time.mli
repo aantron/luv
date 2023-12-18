@@ -3,14 +3,18 @@
 
 
 
-type t = {
-  tv_sec : int64;
-  tv_usec : int32;
+type timeval = {
+  sec : int64;
+  usec : int32;
 }
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_timeval64_t}
     [uv_timeval64_t]}. *)
 
-val gettimeofday : unit -> (t, Error.t) result
+(**/**)
+type t = timeval
+(**/**)
+
+val gettimeofday : unit -> (timeval, Error.t) result
 (** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_gettimeofday}
     [uv_gettimeofday]}. See
     {{:http://man7.org/linux/man-pages/man3/gettimeofday.3p.html}
@@ -27,6 +31,25 @@ val hrtime : unit -> Unsigned.uint64
     [uv_hrtime]}. See
     {{:http://man7.org/linux/man-pages/man3/clock_gettime.3p.html}
     [clock_gettime(3p)]}. *)
+
+type timespec = {
+  sec : int64;
+  nsec : int32;
+}
+(** Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_timespec64_t}
+    [uv_timespec64_t]}. *)
+
+val clock_gettime : [< `Monotonic | `Real_time ] -> (timespec, Error.t) result
+(** Samples one of the high-resolution timers.
+
+    Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_clock_gettime}
+    [uv_clock_gettime]}. See
+    {{:http://man7.org/linux/man-pages/man3/clock_gettime.3p.html}
+    [clock_gettime(3p)]}.
+
+    Requires Luv 0.5.13 and libuv 1.45.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has clock_gettime)] *)
 
 val sleep : int -> unit
 (** Suspends the calling thread for at least the given number of milliseconds.

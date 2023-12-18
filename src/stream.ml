@@ -78,7 +78,7 @@ let read_start ?(allocate = Buffer.create) stream callback =
           else
             Buffer.sub buffer ~offset:0 ~length
         in
-        Result.Ok buffer
+        Ok buffer
       end
       else begin
         last_allocated_buffer := None;

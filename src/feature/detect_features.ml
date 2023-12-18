@@ -230,6 +230,8 @@ let () =
 
   let parallelism = "available_parallelism" in
   needs 44 parallelism "See {!Luv.System_info.available_parallelism}.";
+  needs 45 "clock_gettime" "See {!Luv.Time.clock_gettime}.";
+  needs 45 "cpumask_size" "See {!Luv.System_info.cpumask_size}.";
   needs  9 "disconnect" "See [`DISCONNECT] in {!Luv.Poll.Event.t}.";
   needs 21 "eftype" "See [`EFTYPE] in {!Luv.Error.t}.";
   needs 32 "eilseq" "See [`EILSEQ] in {!Luv.Error.t}.";
@@ -245,8 +247,11 @@ let () =
   needs 31 "fs_o_filemap" "See [`FILEMAP] {!Luv.File.Open_flag.t}.";
   needs  8 "fs_realpath" "See {!Luv.File.realpath}.";
   needs 31 "fs_statfs" "See {!Luv.File.statfs}.";
+  needs 45 "get_available_memory" "See {!Luv.Resource.available_memory}.";
   needs 29 "get_constrained_memory" "See {!Luv.Resource.constrained_memory}.";
   needs 12 "get_osfhandle" "See {!Luv.File.get_osfhandle}.";
+  needs 45 "getaffinity" "See {!Luv.Thread.getaffinity}";
+  needs 45 "getcpu" "See {!Luv.Thread.getcpu}.";
   needs 28 "gettimeofday" "See {!Luv.Time.gettimeofday}.";
   needs 16 "if_indextoiid" "See {!Luv.Network.if_indextoiid}.";
   needs 16 "if_indextoname" "See {!Luv.Network.if_indextoname}.";
@@ -254,11 +259,14 @@ let () =
   needs 12 "loop_fork" "See {!Luv.Loop.fork}.";
   needs 26 "maxhostnamesize" "Used internally.";
   needs 39 "metrics_idle_time" "See {!Luv.Metrics.idle_time}.";
+  needs 45 "metrics_info" "See {!Luv.Metrics.info}.";
   needs 15 "mutex_init_recursive" "See {!Luv.Mutex.init}.";
   needs 23 "open_osfhandle" "See {!Luv.File.open_osfhandle}.";
   needs 31 "os_environ" "See {!Luv.Env.environ}.";
   needs  6 "os_homedir" "See {!Luv.Path.homedir}.";
+  needs 45 "os_get_group" "See {!Luv.Passwd.get_group}.";
   needs  9 "os_get_passwd" "See {!Luv.Passwd.get_passwd}.";
+  needs 45 "os_get_passwd_uid" "See {!Luv.Passwd.get_passwd}.";
   needs 12 "os_getenv" "See {!Luv.Env.getenv}.";
   needs 12 "os_gethostname" "See {!Luv.Network.gethostname}.";
   needs 18 "os_getpid" "See {!Luv.Pid.getpid}.";
@@ -268,12 +276,15 @@ let () =
   needs 25 "os_uname" "See {!Luv.System_info.uname}.";
   needs 21 "overlapped_pipe" "See {!Luv.Process.to_parent_pipe}.";
   needs 41 "pipe" "See {!Luv.Pipe.pipe}";
+  needs 46 "pipe_bind2" "See {!Luv.Pipe.bind}.";
+  needs 46 "pipe_connect2" "See {!Luv.Pipe.connect}.";
   needs 16 "pipe_chmod" "See {!Luv.Pipe.chmod}.";
   needs 14 "prioritized" "See [`PRIORITIZED] in {!Luv.Poll.Event.t}.";
   needs 24 "process_windows_hide_console" "See {!Luv.Process.spawn}.";
   needs 24 "process_windows_hide_gui" "See {!Luv.Process.spawn}.";
   needs 33 "random" "See {!Luv.Random.random}.";
   needs 28 "readdir" "See {!Luv.File.readdir}.";
+  needs 45 "setaffinity" "See {!Luv.Thread.setaffinity}";
   needs 12 "signal_start_oneshot" "See {!Luv.Signal.start_oneshot}.";
   needs 34 "sleep" "See {!Luv.Time.sleep}.";
   needs 41 "socketpair" "See {!Luv.TCP.socketpair}.";
@@ -292,6 +303,7 @@ let () =
   needs 37 "udp_recvmmsg" "See {!Luv.UDP.init}.";
   needs 32 "udp_set_source_membership" "See {!Luv.UDP.set_source_membership}.";
   needs 39 "udp_using_recvmmsg" "See {!Luv.UDP.using_recvmmsg}.";
+  needs 47 "utf_16" "See {!Luv.String}.";
 
   let mli_channel = open_out mli in
   Buffer.contents mli_buffer |> output_string mli_channel;

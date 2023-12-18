@@ -17,14 +17,14 @@ val loadavg : unit -> float * float * float
     [uv_loadavg]}. See {{:http://man7.org/linux/man-pages/man2/sysinfo.2.html}
     [sysinfo(2)]}. *)
 
-val free_memory : unit -> Unsigned.uint64
+val free_memory : unit -> Unsigned.uint64 option
 (** Evaluates to the amount of free memory, in bytes.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_free_memory}
     [uv_get_free_memory]}. See
     {{:http://man7.org/linux/man-pages/man2/sysinfo.2.html} [sysinfo(2)]}. *)
 
-val total_memory : unit -> Unsigned.uint64
+val total_memory : unit -> Unsigned.uint64 option
 (** Evaluates to the total amount of memory, in bytes.
 
     Binds {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_total_memory}
@@ -33,12 +33,22 @@ val total_memory : unit -> Unsigned.uint64
 
 val constrained_memory : unit -> Unsigned.uint64 option
 (** Binds
-    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_constrained_memory}}.
+    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_constrained_memory}
+    [uv_get_contrained_memory]}.
 
     Requires libuv 1.29.0.
 
     {{!Luv.Require} Feature check}:
     [Luv.Require.(has get_constrained_memory)] *)
+
+val available_memory : unit -> Unsigned.uint64 option
+(** Binds
+    {{:http://docs.libuv.org/en/v1.x/misc.html#c.uv_get_available_memory}
+    [uv_get_available_memory]}.
+
+    Requires Luv 0.5.13 and libuv 1.45.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has get_available_memory)] *)
 
 (** Priority constants. *)
 module Priority :

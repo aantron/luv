@@ -24,7 +24,7 @@ let start ?(interval = 2000) poll path callback =
   let callback = Error.catch_exceptions callback in
   Handle.set_reference poll begin fun result previous_stat current_stat ->
     result
-    |> Error.to_result_lazy (fun () ->
+    |> Error.to_result_f (fun () ->
       (stat_ptr_to_ocaml previous_stat, stat_ptr_to_ocaml current_stat))
     |> callback
   end;

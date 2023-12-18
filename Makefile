@@ -2,9 +2,17 @@
 build :
 	dune build -p luv
 
+.PHONY : watch
+watch :
+	dune build -p luv -w
+
 .PHONY : test
 test :
 	dune runtest --no-buffer --force
+
+.PHONY : test-watch
+test-watch :
+	dune runtest --no-buffer --force --watch
 
 .PHONY : examples
 examples :
@@ -199,8 +207,10 @@ stage-docs : api-docs luvbook
 	cp -r docs/_build/* $(DOCS)
 	cd $(DOCS) && mv _static static
 	cd $(DOCS) && mv _sources sources
+	cd $(DOCS) && mv _odoc_support odoc_support
 	cd $(DOCS) && ls *.html | xargs -L1 sed -i 's#_static/#static/#g'
 	cd $(DOCS) && ls *.html | xargs -L1 sed -i 's#_sources/#sources/#g'
+	cd $(DOCS) && find -name '*.html' | xargs -L1 sed -i 's#_odoc_support/#odoc_support/#g'
 	cd $(DOCS) && git add -A && git commit --amend --no-edit --reset-author
 
 .PHONY : publish-docs
@@ -229,7 +239,8 @@ release : check-ejected-build clean
 	(cd _release && tar xf $(RELEASE).tar.gz)
 	opam pin add -y --no-action luv _release/$(RELEASE) --kind=path
 	opam reinstall -y --verbose luv
-	cd test/installation && dune exec ./user.exe
+	cd test/installation && dune exec ./user.exe --root .
+	cd test/headers && dune exec ./headers.exe --root .
 	opam remove -y luv
 	opam pin remove -y luv
 	md5sum $(RELEASE).tar.gz
@@ -238,4 +249,4 @@ release : check-ejected-build clean
 .PHONY : clean
 clean :
 	dune clean
-	rm -rf docs/_build luv-* *.tar *.tar.gz _release *.install echo-pipe
+	rm -rf _build docs/_build luv-* *.tar *.tar.gz _release *.install echo-pipe

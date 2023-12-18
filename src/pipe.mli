@@ -57,19 +57,36 @@ val pipe :
 
     {{!Luv.Require} Feature check}: [Luv.Require.(has pipe)] *)
 
-val bind : t -> string -> (unit, Error.t) result
+val bind : ?no_truncate:bool -> t -> string -> (unit, Error.t) result
 (** Assigns a pipe a name or an address.
 
-    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_bind}
-    [uv_pipe_bind]}. See {{:http://man7.org/linux/man-pages/man3/bind.3p.html}
-    [bind(3p)]}. *)
+    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_bind2}
+    [uv_pipe_bind2]}. See {{:http://man7.org/linux/man-pages/man3/bind.3p.html}
+    [bind(3p)]}.
 
-val connect : t -> string -> ((unit, Error.t) result -> unit) -> unit
+    [?no_truncate] binds [UV_PIPE_NO_TRUNCATE], which causes this function to
+    return [EINVAL] rather than truncating the path, if the path is too long.
+
+    [?no_truncate] and Linux abstract namespace sockets require Luv 0.5.13 and
+    libuv 1.46.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has pipe_bind2)] *)
+
+val connect :
+  ?no_truncate:bool -> t -> string -> ((unit, Error.t) result -> unit) -> unit
 (** Connects to the pipe at the given name or address.
 
-    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_connect}
-    [uv_pipe_connect]}. See
-    {{:http://man7.org/linux/man-pages/man3/connect.3p.html} [connect(3p)]}. *)
+    Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_connect2}
+    [uv_pipe_connect2]}. See
+    {{:http://man7.org/linux/man-pages/man3/connect.3p.html} [connect(3p)]}.
+
+    [?no_truncate] binds [UV_PIPE_NO_TRUNCATE], which causes this function to
+    return [EINVAL] rather than truncating the path, if the path is too long.
+
+    [?no_truncate] and Linux abstract namespace sockets require Luv 0.5.13 and
+    libuv 1.46.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has pipe_connect2)] *)
 
 val getsockname : t -> (string, Error.t) result
 (** Retrieves the name or address assigned to the given pipe.
@@ -107,7 +124,7 @@ val receive_handle :
     calls its callback, there may be file descriptors in the pipe, in addition
     to the ordinary data provided to the callback.
 
-    To check, call this function {!Luv.Pipe.recieve_handle} in a loop until it
+    To check, call this function {!Luv.Pipe.receive_handle} in a loop until it
     returns [`None]. Each time it returns [`TCP receive] or [`Pipe receive],
     create an appropriate [handle] using either {!Luv.TCP.init} or
     {!Luv.Pipe.init}, and call [receive handle] to receive the file descriptor

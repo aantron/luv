@@ -61,6 +61,7 @@ struct
     let enetunreach = constant "UV_ENETUNREACH" int
     let enfile = constant "UV_ENFILE" int
     let enobufs = constant "UV_ENOBUFS" int
+    let enodata = constant "UV_ENODATA" int
     let enodev = constant "UV_ENODEV" int
     let enoent = constant "UV_ENOENT" int
     let enomem = constant "UV_ENOMEM" int
@@ -88,6 +89,7 @@ struct
     let esrch = constant "UV_ESRCH" int
     let etimedout = constant "UV_ETIMEDOUT" int
     let etxtbsy = constant "UV_ETXTBSY" int
+    let eunatch = constant "UV_EUNATCH" int
     let exdev = constant "UV_EXDEV" int
     let unknown = constant "UV_UNKNOWN" int
     let eof = constant "UV_EOF" int
@@ -139,12 +141,22 @@ struct
     let () = seal t
   end
 
+  module Metrics =
+  struct
+    type t = [ `Metrics ] structure
+    let t : t typ = typedef (structure "`Metrics") "uv_metrics_t"
+    let loop_count = field t "loop_count" uint64_t
+    let events = field t "events" uint64_t
+    let events_waiting = field t "events_waiting" uint64_t
+    let () = seal t
+  end
+
   module Buf =
   struct
     type t = [ `Buf ] structure
     let t : t typ = typedef (structure "`Buf") "uv_buf_t"
     let base = field t "base" (ptr char)
-    let len = field t "len" uint
+    let len = field t "len" size_t
     let () = seal t
   end
 
@@ -553,6 +565,8 @@ struct
 
     let t : ([ `Pipe ] Stream.t) typ = typedef (structure "`Pipe") "uv_pipe_t"
     let () = seal t
+
+    let no_truncate = constant "UV_PIPE_NO_TRUNCATE" int
   end
 
   module TTY =
@@ -946,6 +960,13 @@ struct
     let shell = field t "shell" string_opt
     let homedir = field t "homedir" string
     let () = seal t
+
+    let group : ([ `Group ] structure) typ =
+      typedef (structure "`Group") "uv_group_t"
+    let groupname = field group "groupname" string
+    let group_gid = field group "gid" ulong
+    let members = field group "members" (ptr (ptr char))
+    let () = seal group
   end
 
   module Time =
@@ -957,6 +978,18 @@ struct
       let sec = field t "tv_sec" int64_t
       let usec = field t "tv_usec" int32_t
       let () = seal t
+    end
+
+    module Timespec =
+    struct
+      let t : ([ `Timespec ] structure) typ =
+        typedef (structure "`Timespec64") "uv_timespec64_t"
+      let sec = field t "tv_sec" int64_t
+      let nsec = field t "tv_nsec" int32_t
+      let () = seal t
+
+      let monotonic = constant "UV_CLOCK_MONOTONIC" int
+      let real_time = constant "UV_CLOCK_REALTIME" int
     end
   end
 
