@@ -45,7 +45,7 @@ typedef ADDRESS_FAMILY sa_family_t;
 // that is passed to them by libuv, and call it.
 
 // Not declared by libuv.
-typedef void (*luv_once_cb)();
+typedef void (*luv_once_cb)(void);
 
 // Differ from libuv declarations in const-ness of arguments. See "Warning
 // suppression" below.
@@ -64,36 +64,36 @@ typedef void (*luv_udp_recv_cb)(
     uv_udp_t *handle, ssize_t nread, uv_buf_t *buf, struct sockaddr *addr,
     unsigned int flags);
 
-uv_after_work_cb luv_get_after_work_trampoline();
-uv_alloc_cb luv_get_alloc_trampoline();
-uv_async_cb luv_get_async_trampoline();
-uv_check_cb luv_get_check_trampoline();
-uv_close_cb luv_get_close_trampoline();
-uv_connect_cb luv_get_connect_trampoline();
-uv_connection_cb luv_get_connection_trampoline();
-uv_exit_cb luv_get_exit_trampoline();
-uv_exit_cb luv_null_exit_trampoline();
-uv_fs_cb luv_get_fs_trampoline();
-uv_fs_cb luv_null_fs_callback_pointer();
-luv_fs_event_cb luv_get_fs_event_trampoline();
-luv_fs_poll_cb luv_get_fs_poll_trampoline();
-uv_getaddrinfo_cb luv_get_getaddrinfo_trampoline();
-luv_getnameinfo_cb luv_get_getnameinfo_trampoline();
-uv_idle_cb luv_get_idle_trampoline();
-luv_once_cb luv_get_once_trampoline();
-uv_poll_cb luv_get_poll_trampoline();
-uv_prepare_cb luv_get_prepare_trampoline();
-uv_random_cb luv_get_random_trampoline();
-uv_random_cb luv_null_random_trampoline();
-luv_read_cb luv_get_read_trampoline();
-luv_udp_recv_cb luv_get_recv_trampoline();
-uv_udp_send_cb luv_get_send_trampoline();
-uv_shutdown_cb luv_get_shutdown_trampoline();
-uv_signal_cb luv_get_signal_trampoline();
-uv_thread_cb luv_get_thread_trampoline();
-uv_timer_cb luv_get_timer_trampoline();
-uv_work_cb luv_get_work_trampoline();
-uv_write_cb luv_get_write_trampoline();
+uv_after_work_cb luv_get_after_work_trampoline(void);
+uv_alloc_cb luv_get_alloc_trampoline(void);
+uv_async_cb luv_get_async_trampoline(void);
+uv_check_cb luv_get_check_trampoline(void);
+uv_close_cb luv_get_close_trampoline(void);
+uv_connect_cb luv_get_connect_trampoline(void);
+uv_connection_cb luv_get_connection_trampoline(void);
+uv_exit_cb luv_get_exit_trampoline(void);
+uv_exit_cb luv_null_exit_trampoline(void);
+uv_fs_cb luv_get_fs_trampoline(void);
+uv_fs_cb luv_null_fs_callback_pointer(void);
+luv_fs_event_cb luv_get_fs_event_trampoline(void);
+luv_fs_poll_cb luv_get_fs_poll_trampoline(void);
+uv_getaddrinfo_cb luv_get_getaddrinfo_trampoline(void);
+luv_getnameinfo_cb luv_get_getnameinfo_trampoline(void);
+uv_idle_cb luv_get_idle_trampoline(void);
+luv_once_cb luv_get_once_trampoline(void);
+uv_poll_cb luv_get_poll_trampoline(void);
+uv_prepare_cb luv_get_prepare_trampoline(void);
+uv_random_cb luv_get_random_trampoline(void);
+uv_random_cb luv_null_random_trampoline(void);
+luv_read_cb luv_get_read_trampoline(void);
+luv_udp_recv_cb luv_get_recv_trampoline(void);
+uv_udp_send_cb luv_get_send_trampoline(void);
+uv_shutdown_cb luv_get_shutdown_trampoline(void);
+uv_signal_cb luv_get_signal_trampoline(void);
+uv_thread_cb luv_get_thread_trampoline(void);
+uv_timer_cb luv_get_timer_trampoline(void);
+uv_work_cb luv_get_work_trampoline(void);
+uv_write_cb luv_get_write_trampoline(void);
 
 // Handles can have multiple outstanding callbacks, so the corresponding OCaml
 // closures are stored in an array. These are the indices into that array for
@@ -137,8 +137,8 @@ enum {
 // Helpers for setting up uv_queue_work requests that call a C function.
 int luv_add_c_function_and_argument(
     uv_work_t *c_request, intnat function, intnat argument);
-uv_after_work_cb luv_get_after_c_work_trampoline();
-uv_work_cb luv_get_c_work_trampoline();
+uv_after_work_cb luv_get_after_c_work_trampoline(void);
+uv_work_cb luv_get_c_work_trampoline(void);
 
 // Helper for calling uv_thread_create with the address of a C function.
 int luv_thread_create_c(
@@ -160,7 +160,7 @@ CAMLprim value luv_set_once_callback(value callback);
 // Ctypes is unable to emit the correct cv-qualifiers, so binding the libuv
 // functions directly with Ctypes results in noisy warnings. These wrappers
 // suppress the warnings by performing const_casts.
-char* luv_version_string();
+char* luv_version_string(void);
 char* luv_req_type_name(uv_req_type type);
 char* luv_fs_get_path(const uv_fs_t *req);
 char* luv_dlerror(const uv_lib_t *lib);
@@ -205,7 +205,7 @@ int luv_utf16_to_wtf8(
 // Miscellaneous helpers - other things that are easiest to do in C.
 
 // Ctypes.constant can't bind a char*, so we return it instead.
-char* luv_version_suffix();
+char* luv_version_suffix(void);
 
 // The arguments to uv_spawn involve complex-enough C data, that it is easiest
 // to create a wrapper function that takes simple arguments, and create the

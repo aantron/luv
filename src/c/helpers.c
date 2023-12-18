@@ -201,7 +201,7 @@ static void luv_idle_trampoline(uv_idle_t *c_handle)
 
 uv_key_t luv_once_callback_key;
 
-static void luv_once_trampoline()
+static void luv_once_trampoline(void)
 {
     value callback = (value)uv_key_get(&luv_once_callback_key);
     caml_callback(callback, Val_unit);
@@ -343,152 +343,152 @@ static void luv_write_trampoline(uv_write_t *c_request, int status)
     caml_release_runtime_system();
 }
 
-uv_after_work_cb luv_get_after_work_trampoline()
+uv_after_work_cb luv_get_after_work_trampoline(void)
 {
     return luv_after_work_trampoline;
 }
 
-uv_alloc_cb luv_get_alloc_trampoline()
+uv_alloc_cb luv_get_alloc_trampoline(void)
 {
     return luv_alloc_trampoline;
 }
 
-uv_async_cb luv_get_async_trampoline()
+uv_async_cb luv_get_async_trampoline(void)
 {
     return luv_async_trampoline;
 }
 
-uv_check_cb luv_get_check_trampoline()
+uv_check_cb luv_get_check_trampoline(void)
 {
     return luv_check_trampoline;
 }
 
-uv_close_cb luv_get_close_trampoline()
+uv_close_cb luv_get_close_trampoline(void)
 {
     return luv_close_trampoline;
 }
 
-uv_connect_cb luv_get_connect_trampoline()
+uv_connect_cb luv_get_connect_trampoline(void)
 {
     return luv_connect_trampoline;
 }
 
-uv_connection_cb luv_get_connection_trampoline()
+uv_connection_cb luv_get_connection_trampoline(void)
 {
     return luv_connection_trampoline;
 }
 
-uv_exit_cb luv_get_exit_trampoline()
+uv_exit_cb luv_get_exit_trampoline(void)
 {
     return luv_exit_trampoline;
 }
 
-uv_exit_cb luv_null_exit_trampoline()
+uv_exit_cb luv_null_exit_trampoline(void)
 {
     return NULL;
 }
 
-uv_fs_cb luv_get_fs_trampoline()
+uv_fs_cb luv_get_fs_trampoline(void)
 {
     return luv_fs_trampoline;
 }
 
-uv_fs_cb luv_null_fs_callback_pointer()
+uv_fs_cb luv_null_fs_callback_pointer(void)
 {
     return NULL;
 }
 
-luv_fs_event_cb luv_get_fs_event_trampoline()
+luv_fs_event_cb luv_get_fs_event_trampoline(void)
 {
     return luv_fs_event_trampoline;
 }
 
-luv_fs_poll_cb luv_get_fs_poll_trampoline()
+luv_fs_poll_cb luv_get_fs_poll_trampoline(void)
 {
     return luv_fs_poll_trampoline;
 }
 
-uv_getaddrinfo_cb luv_get_getaddrinfo_trampoline()
+uv_getaddrinfo_cb luv_get_getaddrinfo_trampoline(void)
 {
     return luv_getaddrinfo_trampoline;
 }
 
-luv_getnameinfo_cb luv_get_getnameinfo_trampoline()
+luv_getnameinfo_cb luv_get_getnameinfo_trampoline(void)
 {
     return luv_getnameinfo_trampoline;
 }
 
-uv_idle_cb luv_get_idle_trampoline()
+uv_idle_cb luv_get_idle_trampoline(void)
 {
     return luv_idle_trampoline;
 }
 
-luv_once_cb luv_get_once_trampoline()
+luv_once_cb luv_get_once_trampoline(void)
 {
     return luv_once_trampoline;
 }
 
-uv_poll_cb luv_get_poll_trampoline()
+uv_poll_cb luv_get_poll_trampoline(void)
 {
     return luv_poll_trampoline;
 }
 
-uv_prepare_cb luv_get_prepare_trampoline()
+uv_prepare_cb luv_get_prepare_trampoline(void)
 {
     return luv_prepare_trampoline;
 }
 
-uv_random_cb luv_get_random_trampoline()
+uv_random_cb luv_get_random_trampoline(void)
 {
     return luv_random_trampoline;
 }
 
-uv_random_cb luv_null_random_trampoline()
+uv_random_cb luv_null_random_trampoline(void)
 {
     return NULL;
 }
 
-luv_read_cb luv_get_read_trampoline()
+luv_read_cb luv_get_read_trampoline(void)
 {
     return luv_read_trampoline;
 }
 
-luv_udp_recv_cb luv_get_recv_trampoline()
+luv_udp_recv_cb luv_get_recv_trampoline(void)
 {
     return luv_recv_trampoline;
 }
 
-uv_udp_send_cb luv_get_send_trampoline()
+uv_udp_send_cb luv_get_send_trampoline(void)
 {
     return luv_send_trampoline;
 }
 
-uv_shutdown_cb luv_get_shutdown_trampoline()
+uv_shutdown_cb luv_get_shutdown_trampoline(void)
 {
     return luv_shutdown_trampoline;
 }
 
-uv_signal_cb luv_get_signal_trampoline()
+uv_signal_cb luv_get_signal_trampoline(void)
 {
     return luv_signal_trampoline;
 }
 
-uv_thread_cb luv_get_thread_trampoline()
+uv_thread_cb luv_get_thread_trampoline(void)
 {
     return luv_thread_trampoline;
 }
 
-uv_timer_cb luv_get_timer_trampoline()
+uv_timer_cb luv_get_timer_trampoline(void)
 {
     return luv_timer_trampoline;
 }
 
-uv_work_cb luv_get_work_trampoline()
+uv_work_cb luv_get_work_trampoline(void)
 {
     return luv_work_trampoline;
 }
 
-uv_write_cb luv_get_write_trampoline()
+uv_write_cb luv_get_write_trampoline(void)
 {
     return luv_write_trampoline;
 }
@@ -536,12 +536,12 @@ static void luv_c_work_trampoline(uv_work_t *c_request)
     function(argument);
 }
 
-uv_after_work_cb luv_get_after_c_work_trampoline()
+uv_after_work_cb luv_get_after_c_work_trampoline(void)
 {
     return luv_after_c_work_trampoline;
 }
 
-uv_work_cb luv_get_c_work_trampoline()
+uv_work_cb luv_get_c_work_trampoline(void)
 {
     return luv_c_work_trampoline;
 }
@@ -585,7 +585,7 @@ CAMLprim value luv_set_once_callback(value callback)
 
 // Warning-suppressing wrappers.
 
-char* luv_version_string()
+char* luv_version_string(void)
 {
     return (char*)uv_version_string();
 }
@@ -667,7 +667,7 @@ int luv_utf16_to_wtf8(
 
 // Other helpers.
 
-char* luv_version_suffix()
+char* luv_version_suffix(void)
 {
     return UV_VERSION_SUFFIX;
 }
