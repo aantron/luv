@@ -658,7 +658,9 @@ int luv_utf16_to_wtf8(
     const char *utf16, ssize_t utf16_len, char **wtf8_ptr,
     size_t *wtf8_len_ptr)
 {
-    uv_utf16_to_wtf8((const uint16_t*)utf16, utf16_len, wtf8_ptr, wtf8_len_ptr);
+    return
+        uv_utf16_to_wtf8(
+            (const uint16_t*)utf16, utf16_len, wtf8_ptr, wtf8_len_ptr);
 }
 
 
