@@ -43,7 +43,8 @@ let bind ?(no_truncate = false) pipe name =
   let use_bind2 =
     match name.[0] with
     | '\x00' -> true
-    | _ | exception Invalid_argument _ -> no_truncate
+    | _ -> no_truncate
+    | exception Invalid_argument _ -> no_truncate
   in
   begin if use_bind2 then
     let length = String.length name |> Unsigned.Size_t.of_int in
@@ -63,7 +64,8 @@ let connect ?(no_truncate = false) pipe name_or_path callback =
   let use_connect2 =
     match name_or_path.[0] with
     | '\x00' -> true
-    | _ | exception Invalid_argument _ -> no_truncate
+    | _ -> no_truncate
+    | exception Invalid_argument _ -> no_truncate
   in
   let c_name_or_path = Ctypes.ocaml_string_start name_or_path in
   if use_connect2 then

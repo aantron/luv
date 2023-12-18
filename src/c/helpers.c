@@ -145,9 +145,11 @@ static void luv_fs_event_trampoline(
     CAMLlocal2(callback, option);
     GET_HANDLE_CALLBACK(LUV_GENERIC_CALLBACK);
     if (filename == NULL)
-        option = Val_none;
-    else
-        option = caml_alloc_some(caml_copy_string(filename));
+        option = Val_int(0);
+    else {
+        option = caml_alloc_small(1, 0);
+        Field(option, 0) = caml_copy_string(filename);
+    }
     caml_callback3(
         callback, option, Val_int(events), Val_int(status));
     CAMLdrop;
