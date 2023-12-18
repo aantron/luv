@@ -7,35 +7,32 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-        ocaml-compiler:
-          - 5.0.x
+        ocaml:
+          - 5.1.x
           - 4.14.x
-          - 4.02.x
+          - 4.03.x
         include:
           - os: macos-latest
-            ocaml-compiler: 4.14.x
+            ocaml: 4.14.x
           - os: windows-latest
-            ocaml-compiler: 4.14.x
+            ocaml: 4.14.x
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Use OCaml ${{ matrix.ocaml-compiler }}
-        uses: ocaml/setup-ocaml@v2
+      - uses: ocaml/setup-ocaml@v2
         if: runner.os != 'Windows'
         with:
-          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          ocaml-compiler: ${{ matrix.ocaml }}
 
-      - name: Use OCaml ${{ matrix.ocaml-compiler }}
-        uses: ocaml/setup-ocaml@v2
+      - uses: ocaml/setup-ocaml@v2
         if: runner.os == 'Windows'
         with:
-          ocaml-compiler: ${{ matrix.ocaml-compiler }}
+          ocaml-compiler: ${{ matrix.ocaml }}
           opam-repositories: |
             opam-repository-mingw: https://github.com/ocaml-opam/opam-repository-mingw.git#sunset
             default: https://github.com/ocaml/opam-repository.git
@@ -55,7 +52,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - run: npm install esy
