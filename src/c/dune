@@ -129,7 +129,6 @@ let () = Jbuild_plugin.V1.send @@ {|
     |}^ i_option ^{| /Fe\"%{targets}\"; \
   else \
     %{cc} %{c} \
-    -Wall -Wextra -Werror=implicit-int -Werror=implicit-function-declaration -Werror=int-conversion -Werror=strict-prototypes -Werror=old-style-definition \
     -I '%{lib:ctypes:.}' \
     -I %{ocaml_where} \
     |}^ i_option ^{| -o %{targets}; \
