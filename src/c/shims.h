@@ -33,7 +33,7 @@
     static int uv_udp_init_ex(
         uv_loop_t *loop, uv_udp_t *udp, unsigned int flags)
     {
-        if (flags & 0xFF != 0)
+        if ((flags & 0xFF) != 0)
             return ENOSYS;
 
         return uv_udp_init(loop, udp);
@@ -683,7 +683,14 @@
 
     #define UV_ENODATA 0x6242424
 
-    static int uv_metrics_info(uv_loop_t *loop, void *metrics)
+    typedef struct {
+        uint64_t loop_count;
+        uint64_t events;
+        uint64_t events_waiting;
+        uint64_t* reserved[13];
+    } uv_metrics_t;
+
+    static int uv_metrics_info(uv_loop_t *loop, uv_metrics_t *metrics)
     {
         return ENOSYS;
     }
@@ -722,6 +729,9 @@
         int32_t tv_nsec;
     } uv_timespec64_t;
 
+    #define UV_CLOCK_MONOTONIC 0
+    #define UV_CLOCK_REALTIME 0
+
     static int uv_clock_gettime(int clock_id, uv_timespec64_t *time)
     {
         return ENOSYS;
@@ -748,24 +758,26 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 47
-    size_t uv_utf16_length_as_wtf8(const uint16_t *utf16, ssize_t utf16_len)
+    static size_t uv_utf16_length_as_wtf8(
+        const uint16_t *utf16, ssize_t utf16_len)
     {
         return ENOSYS;
     }
 
-    int uv_utf16_to_wtf8(
+    static int uv_utf16_to_wtf8(
         const uint16_t *utf16, ssize_t utf16_len, char **wtf8_ptr,
         size_t *wtf8_len_ptr)
     {
         return ENOSYS;
     }
 
-    ssize_t uv_wtf8_length_as_utf16(const char *wtf8)
+    static ssize_t uv_wtf8_length_as_utf16(const char *wtf8)
     {
         return ENOSYS;
     }
 
-    void uv_wtf8_to_utf16(const char *utf8, uint16_t *utf16, size_t utf16_len)
+    static void uv_wtf8_to_utf16(
+        const char *utf8, uint16_t *utf16, size_t utf16_len)
     {
         abort();
     }
