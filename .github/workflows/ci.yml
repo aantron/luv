@@ -44,6 +44,34 @@ jobs:
       - run: opam install -y --deps-only .
       - run: opam exec -- dune build -p luv
 
+  old-libuv:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 4.14.x
+      - run: opam install -y --deps-only .
+      - run: git clone https://github.com/libuv/libuv.git
+        working-directory: ..
+      - run: |
+          git checkout v1.3.0
+          ./autogen.sh
+          sh configure
+          make
+          sh libtool --mode install cp libuv.la $(pwd)
+        working-directory: ../libuv
+      - run: opam exec -- dune build -p luv
+        env:
+          LUV_USE_SYSTEM_LIBUV: yes
+          C_INCLUDE_PATH: ${{ github.workspace }}/../libuv/include
+          LIBRARY_PATH: ${{ github.workspace }}/../libuv
+
   # esy builds are broken due to an upstream bug that is not worth working
   # around in luv, but should be fixed in esy:
   #
