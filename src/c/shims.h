@@ -274,7 +274,7 @@
     }
 
     typedef int uv_pid_t;
-    static uv_pid_t uv_os_getppid()
+    static uv_pid_t uv_os_getppid(void)
     {
         return (uv_pid_t)-1;
     }
@@ -292,7 +292,7 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 18
-    static uv_pid_t uv_os_getpid()
+    static uv_pid_t uv_os_getpid(void)
     {
         return (uv_pid_t)-1;
     }
@@ -498,7 +498,7 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 29
-    static uint64_t uv_get_constrained_memory()
+    static uint64_t uv_get_constrained_memory(void)
     {
         return 0;
     }
@@ -602,7 +602,7 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 38
-    static void uv_library_shutdown()
+    static void uv_library_shutdown(void)
     {
     }
 #endif
@@ -657,14 +657,14 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 44
-    static int uv_available_parallelism()
+    static int uv_available_parallelism(void)
     {
         return 1;
     }
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 45
-    static int uv_cpumask_size()
+    static int uv_cpumask_size(void)
     {
         return ENOSYS;
     }
@@ -695,12 +695,12 @@
         return ENOSYS;
     }
 
-    static int uv_thread_getcpu()
+    static int uv_thread_getcpu(void)
     {
         return ENOSYS;
     }
 
-    static uint64_t uv_get_available_memory()
+    static uint64_t uv_get_available_memory(void)
     {
         return 0;
     }
