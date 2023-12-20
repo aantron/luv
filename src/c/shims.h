@@ -720,7 +720,7 @@
     {
         return ENOSYS;
     }
-    static void uv_os_free_group(uv_passwd_t *group)
+    static void uv_os_free_group(uv_group_t *group)
     {
     }
 
