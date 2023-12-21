@@ -121,6 +121,15 @@ let spawn
       null_callback
   in
 
+  let env_has_equals =
+    match environment with
+    | None -> false
+    | Some e -> e |> List.exists (fun (key, _) -> String.contains key '=')
+  in
+  if env_has_equals then
+    Error `EINVAL
+  else
+
   let env, env_count, set_env =
     match environment with
     | Some env ->
