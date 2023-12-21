@@ -5,10 +5,10 @@
 
 (** Pipes.
 
-    See {{:https://aantron.github.io/luv/processes.html#child-process-i-o} {i
-    Child process I/O}} and {{:https://aantron.github.io/luv/processes.html#ipc}
-    {i IPC}} in the user guide, and {{:http://docs.libuv.org/en/v1.x/pipe.html}
-    [uv_pipe_t] {i — Pipe handle}} in libuv. *)
+    See {{:../../../processes.html#child-process-i-o} {i Child process I/O}} and
+    {{:../../../processes.html#ipc} {i IPC}} in the user guide, and
+    {{:http://docs.libuv.org/en/v1.x/pipe.html} [uv_pipe_t] {i — Pipe handle}}
+    in libuv. *)
 
 type t = [ `Pipe ] Stream.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/pipe.html#c.uv_pipe_t} [uv_pipe_t]}.

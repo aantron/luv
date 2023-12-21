@@ -5,10 +5,9 @@
 
 (** Thread pool.
 
-    See {{:https://aantron.github.io/luv/threads.html#libuv-thread-pool} {i
-    libuv thread pool}} in the user guide and
-    {{:http://docs.libuv.org/en/v1.x/threadpool.html} {i Thread pool work
-    scheduling}} in libuv. *)
+    See {{:../../../threads.html#libuv-thread-pool} {i libuv thread pool}} in
+    the user guide and {{:http://docs.libuv.org/en/v1.x/threadpool.html} {i
+    Thread pool work scheduling}} in libuv. *)
 
 (** Optional request objects for canceling thread pool requests. Binds
     {{:http://docs.libuv.org/en/v1.x/threadpool.html#c.uv_work_t}

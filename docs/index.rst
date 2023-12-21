@@ -14,7 +14,7 @@ See also:
 .. _Luv: https://github.com/aantron/luv
 .. _Project page: https://github.com/aantron/luv
 .. _libuv: https://github.com/libuv/libuv
-.. _API reference: https://aantron.github.io/luv/luv/index.html#api-reference
+.. _API reference: luv/index.html#api-reference
 .. _libuv manual: http://docs.libuv.org/en/v1.x/
 
 .. rubric:: Table of contents

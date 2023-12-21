@@ -32,7 +32,7 @@ import os
 extensions = ['sphinx.ext.extlinks']
 
 extlinks = {
-    'api': ('https://aantron.github.io/luv/luv/Luv/%s', '%s'),
+    'api': ('luv/Luv/%s', '%s'),
     'example': ('https://github.com/aantron/luv/blob/master/example/%s', '%s'),
     'man': ('http://man7.org/linux/man-pages/man%s.html', '%s')
 }

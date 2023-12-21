@@ -5,9 +5,8 @@
 
 (** Inter-loop communication.
 
-    See
-    {{:https://aantron.github.io/luv/threads.html#inter-thread-communication} {i
-    Inter-thread communication}} in the user guide and
+    See {{:../../../threads.html#inter-thread-communication} {i Inter-thread
+    communication}} in the user guide and
     {{:http://docs.libuv.org/en/v1.x/async.html} [uv_async_t] {i — Async
     handle}} in libuv. *)
 

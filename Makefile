@@ -165,8 +165,14 @@ check-ejected-build :
 install-autotools :
 	sudo apt install automake libtool
 
+DOCS := docs/_build
+
 .PHONY : docs
-docs : api-docs luvbook
+docs : luvbook api-docs
+	mkdir -p $(DOCS)
+	cp -r _build/default/_doc/_html/luv $(DOCS)
+	cp -r _build/default/_doc/_html/odoc.support $(DOCS)
+	@echo See $(DOCS)/index.html
 
 .PHONY : api-docs
 api-docs :
@@ -174,48 +180,37 @@ api-docs :
 
 .PHONY : luvbook
 luvbook :
-	sphinx-build -b html docs docs/_build
+	sphinx-build -b html docs $(DOCS)
 
 .PHONY : watch-api-docs
 watch-api-docs : api-docs
 	inotifywait -mr -e modify --format '%f' src \
-	  | xargs -L1 -I X make api-docs
+	  | xargs -L1 -I X make docs
 
 .PHONY : watch-luvbook
 watch-luvbook : luvbook
 	inotifywait -mr -e modify docs/conf.py docs/*.rst example \
-	  | xargs -L1 -I X make luvbook
+	  | xargs -L1 -I X make docs
 
 .PHONY : install-sphinx
 install-sphinx :
 	sudo apt install python3-pip
 	pip3 install -U sphinx
 
-# make watch-api-docs &
-# make watch-luvbook &
-# open _build/default/_doc/_html/index.html
-# open docs/_build/index.html
-
-DOCS := ../gh-pages
+PAGES := ../gh-pages
 
 .PHONY : stage-docs
-stage-docs : api-docs luvbook
-	[ -d $(DOCS) ] || git clone git@github.com:aantron/luv.git $(DOCS)
-	cd $(DOCS) && git checkout gh-pages
-	rm -rf $(DOCS)/*
-	cp -r _build/default/_doc/_html/* $(DOCS)
-	cp -r docs/_build/* $(DOCS)
-	cd $(DOCS) && mv _static static
-	cd $(DOCS) && mv _sources sources
-	cd $(DOCS) && mv _odoc_support odoc_support
-	cd $(DOCS) && ls *.html | xargs -L1 sed -i 's#_static/#static/#g'
-	cd $(DOCS) && ls *.html | xargs -L1 sed -i 's#_sources/#sources/#g'
-	cd $(DOCS) && find -name '*.html' | xargs -L1 sed -i 's#_odoc_support/#odoc_support/#g'
-	cd $(DOCS) && git add -A && git commit --amend --no-edit --reset-author
+stage-docs : docs
+	[ -d $(PAGES) ] || git clone git@github.com:aantron/luv.git $(PAGES)
+	cd $(PAGES) && git checkout gh-pages
+	rm -rf $(PAGES)/*
+	cp -r $(DOCS)/* $(PAGES)
+	touch $(PAGES)/.nojekyll
+	cd $(PAGES) && git add -A && git commit --amend --no-edit --reset-author
 
 .PHONY : publish-docs
 publish-docs : stage-docs
-	cd $(DOCS) && git push --force-with-lease
+	cd $(PAGES) && git push --force-with-lease
 
 VERSION := $(shell git describe --abbrev=0)
 RELEASE := luv-$(VERSION)

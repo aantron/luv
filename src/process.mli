@@ -5,9 +5,9 @@
 
 (** Subprocesses.
 
-    See {{:https://aantron.github.io/luv/processes.html} {i Processes}} in the
-    user guide and {{:http://docs.libuv.org/en/v1.x/process.html} [uv_process_t]
-    {i — Process handle}} in libuv. *)
+    See {{:../../../processes.html} {i Processes}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/process.html} [uv_process_t] {i — Process
+    handle}} in libuv. *)
 
 type t = [ `Process ] Handle.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/process.html#c.uv_process_t}

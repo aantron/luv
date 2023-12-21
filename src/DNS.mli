@@ -5,10 +5,9 @@
 
 (** DNS queries.
 
-    See {{:https://aantron.github.io/luv/networking.html#querying-dns} {i
-    Querying DNS}} in the user guide and
-    {{:http://docs.libuv.org/en/v1.x/dns.html} {i DNS utility functions}} in
-    libuv.
+    See {{:../../../networking.html#querying-dns} {i Querying DNS}} in the user
+    guide and {{:http://docs.libuv.org/en/v1.x/dns.html} {i DNS utility
+    functions}} in libuv.
 
     This module exposes two main functions, {!Luv.DNS.getaddrinfo} and
     {!Luv.DNS.getnameinfo}. Both take an optional request object. By default,

@@ -5,9 +5,8 @@
 
 (** Mutexes.
 
-    See
-    {{:https://aantron.github.io/luv/threads.html#synchronization-primitives} {i
-    Synchronization primitives}} in the user guide and
+    See {{:../../../threads.html#synchronization-primitives} {i Synchronization
+    primitives}} in the user guide and
     {{:http://docs.libuv.org/en/v1.x/threading.html#mutex-locks} {i Mutex
     locks}} in libuv. *)
 

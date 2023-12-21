@@ -5,8 +5,8 @@
 
 (** Threads.
 
-    See {{:https://aantron.github.io/luv/threads.html} {i Threads}} in the user
-    guide and {{:http://docs.libuv.org/en/v1.x/threading.html} {i Threading and
+    See {{:../../../threads.html} {i Threads}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/threading.html} {i Threading and
     synchronization utilities}} in libuv. *)
 
 type t

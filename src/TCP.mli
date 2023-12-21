@@ -5,9 +5,9 @@
 
 (** TCP sockets.
 
-    See {{:https://aantron.github.io/luv/networking.html#tcp} {i TCP}} in the
-    user guide and {{:http://docs.libuv.org/en/v1.x/tcp.html} [uv_tcp_t] {i —
-    TCP handle}} in libuv. *)
+    See {{:../../../networking.html#tcp} {i TCP}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/tcp.html} [uv_tcp_t] {i — TCP handle}} in
+    libuv. *)
 
 type t = [ `TCP ] Stream.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/tcp.html#c.uv_tcp_t} [uv_tcp_t]}.

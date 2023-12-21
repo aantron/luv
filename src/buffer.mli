@@ -3,7 +3,9 @@
 
 
 
-(** Data buffers. *)
+(** Data buffers.
+
+    See {{:../../../basics.html#buffers} {i Buffers}} in the user guide. *)
 
 
 

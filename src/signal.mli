@@ -5,9 +5,9 @@
 
 (** Signals.
 
-    See {{:https://aantron.github.io/luv/processes.html#signals} {i Signals}} in
-    the user guide and {{:http://docs.libuv.org/en/v1.x/signal.html}
-    [uv_signal_t] {i — Signal handle}} in libuv. *)
+    See {{:../../../processes.html#signals} {i Signals}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/signal.html} [uv_signal_t] {i — Signal
+    handle}} in libuv. *)
 
 
 

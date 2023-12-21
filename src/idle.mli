@@ -5,9 +5,9 @@
 
 (** Per-iteration callback.
 
-    See {{:https://aantron.github.io/luv/basics.html#example} {i Example}} in
-    the user guide and {{:http://docs.libuv.org/en/v1.x/idle.html} [uv_idle_t]
-    {i — Idle handle}} in libuv. *)
+    See {{:../../../basics.html#example} {i Example}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/idle.html} [uv_idle_t] {i — Idle handle}}
+    in libuv. *)
 
 type t = [ `Idle ] Handle.t
 (** Binds {{:http://docs.libuv.org/en/v1.x/idle.html#c.uv_idle_t} [uv_idle_t]}.

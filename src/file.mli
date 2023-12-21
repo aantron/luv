@@ -5,9 +5,9 @@
 
 (** File operations.
 
-    See {{:https://aantron.github.io/luv/filesystem.html} {i Filesystem}} in the
-    user guide and  {{:http://docs.libuv.org/en/v1.x/fs.html} {i File system
-    operations}} in libuv.
+    See {{:../../../filesystem.html} {i Filesystem}} in the user guide and
+    {{:http://docs.libuv.org/en/v1.x/fs.html} {i File system operations}} in
+    libuv.
 
     This module exposes all the filesystem operations of libuv with an
     asynchronous (callback) interface. There is an additional submodule,
