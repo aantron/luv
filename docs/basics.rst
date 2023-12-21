@@ -284,12 +284,10 @@ compatible with at least the following bigstring libraries:
 - Bigarray_ from OCaml's standard library
 - Lwt_bytes_ from Lwt
 - bigstringaf_
-- ocaml-bigstring_
 
 .. _Bigarray: https://caml.inria.fr/pub/docs/manual-ocaml/libref/Bigarray.Array1.html
 .. _Lwt_bytes: https://ocsigen.org/lwt/dev/api/Lwt_bytes
 .. _bigstringaf: https://github.com/inhabitedtype/bigstringaf
-.. _ocaml-bigstring: https://github.com/c-cube/ocaml-bigstring
 
 System calls are usually able to work with part of a buffer, by taking a pointer
 to the buffer, an offset into the buffer, and a length of space, starting at the

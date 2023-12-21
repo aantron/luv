@@ -22,8 +22,7 @@ type t = (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
     - {{:https://caml.inria.fr/pub/docs/manual-ocaml/libref/Bigarray.Array1.html}
       [Bigarray]} from OCaml's standard library
     - {{:https://ocsigen.org/lwt/dev/api/Lwt_bytes} [Lwt_bytes]} from Lwt
-    - {{:https://github.com/inhabitedtype/bigstringaf} bigstringaf}
-    - {{:https://github.com/c-cube/ocaml-bigstring} ocaml-bigstring} *)
+    - {{:https://github.com/inhabitedtype/bigstringaf} bigstringaf} *)
 
 val create : int -> t
 (** Allocates a fresh buffer of the given size. *)
