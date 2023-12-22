@@ -101,6 +101,8 @@ type t = [
 
     [`EFTYPE] is available since Luv 0.5.5 and libuv 1.21.0.
 
+    [`ENODATA] is available since Luv 0.5.13 and libuv 1.45.0.
+
     [`ENOTTY] is available since Luv 0.5.5 and libuv 1.16.0.
 
     [`EILSEQ] is available since libuv 1.32.0.
@@ -108,13 +110,17 @@ type t = [
     [`EOVERFLOW] and [`ESOCKTNOSUPPORT] are available since Luv 0.5.9 and libuv
     1.42.0.
 
+    [`EUNATCH] is available since Luv 0.5.13 and libuv 1.46.0.
+
     {{!Luv.Require} Feature checks}:
 
     - [Luv.Require.(has eftype)]
     - [Luv.Require.(has enotty)]
+    - [Luv.Require.(has enodata)]
     - [Luv.Require.(has eilseq)]
     - [Luv.Require.(has eoverflow)]
-    - [Luv.Require.(has esocktnosupport)] *)
+    - [Luv.Require.(has esocktnosupport)]
+    - [Luv.Require.(has eunatch)] *)
 
 val strerror : t -> string
 (** Returns the error message corresponding to the given error code.
