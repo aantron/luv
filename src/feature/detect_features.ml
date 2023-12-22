@@ -238,8 +238,8 @@ let () =
   needs 45 "enodata" "See [`ENODATA] in {!Luv.Error.t}.";
   needs 16 "enotty" "See [`ENOTTY] in {!Luv.Error.t}.";
   needs 42 "eoverflow" "See [`EOVERFLOW] in {!Luv.Error.t}.";
-  needs 42 "esocktnosupport" "See [`ESOCKTNOSUPPORT] in {!Luv.Error.t}.";
   needs 22 "err_name_r" "See {!Luv.Error.err_name}.";
+  needs 42 "esocktnosupport" "See [`ESOCKTNOSUPPORT] in {!Luv.Error.t}.";
   needs 46 "eunatch" "See [`EUNATCH] in {!Luv.Error.t}.";
   needs 14 "fs_copyfile" "See {!Luv.File.copyfile}.";
   needs 20 "fs_copyfile_ficlone" "See signature of {!Luv.File.copyfile}.";
