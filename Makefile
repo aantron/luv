@@ -178,8 +178,15 @@ docs : luvbook api-docs
 api-docs :
 	dune build @doc -p luv
 
+SPHINX=7.2.6
+
 .PHONY : luvbook
 luvbook :
+	@if [ "$$(sphinx-build --version)" != "sphinx-build $(SPHINX)" ]; \
+	then \
+		echo Please install Sphinx $(SPHINX); \
+		exit 1; \
+	fi
 	sphinx-build -b html docs $(DOCS)
 
 .PHONY : watch-api-docs
