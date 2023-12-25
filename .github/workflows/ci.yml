@@ -40,7 +40,6 @@ jobs:
             opam-repository-mingw: https://github.com/ocaml-opam/opam-repository-mingw.git#sunset
             default: https://github.com/ocaml/opam-repository.git
 
-      - run: opam depext -y conf-pkg-config
       - run: opam install -y --deps-only .
       - run: opam exec -- dune build -p luv
 
