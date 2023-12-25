@@ -1,5 +1,13 @@
 (* -*- tuareg -*- *)
 
+(* To make this build verbose:
+
+   1. dune build -p luv -j 1 --verbose --no-buffer
+   2. Remove --silent and --enable-silent-rules from sh configure
+   3. Pass V=1 instead of V=0 to make
+   4. Remove --silent --no-warnings from sh libtool
+   5. Unwrap all the commands from (ignore-outputs ...) *)
+
 let foreign_archives, uv_library_flag, include_dirs, i_option, install_h =
   let use_system_libuv =
     match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
