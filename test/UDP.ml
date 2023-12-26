@@ -163,10 +163,6 @@ let tests = [
     end;
 
     "multicast", `Quick, begin fun () ->
-      (* This test is not working in Travis for reasons not yet known to me. *)
-      if in_travis then
-        ()
-      else begin
         let group = "239.0.0.128" in
 
         let receiver_finished = ref false in
@@ -203,8 +199,7 @@ let tests = [
 
         Alcotest.(check bool) "receiver finished" true !receiver_finished;
         Alcotest.(check bool) "sender finished" true !sender_finished
-      end
-    end;
+      end;
 
     (* This is a compilation test. If the type constraints in handle.mli are
        wrong, there will be a type error in this test. *)

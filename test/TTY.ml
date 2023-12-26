@@ -17,11 +17,7 @@ let with_tty f =
   run ()
 
 let tests = [
-  "tty",
-  (* There is no TTY when running in Travis, at least under macOS. *)
-  if in_travis || Sys.win32 then
-    []
-  else [
+  "tty", [
       "tty", `Quick, begin fun () ->
         with_tty begin fun tty ->
           let width, height =

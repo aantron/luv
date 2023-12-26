@@ -33,5 +33,3 @@ type event
 val event : unit -> event
 val defer : event -> (unit -> unit) -> unit
 val proceed : event -> unit
-
-val in_travis : bool

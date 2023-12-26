@@ -199,9 +199,3 @@ let proceed p =
   match !p with
   | `Deferred f -> f ()
   | `Proceed -> ()
-
-let in_travis =
-  match Sys.getenv "TRAVIS" with
-  | "true" -> true
-  | _ -> false
-  | exception Not_found -> false
