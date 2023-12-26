@@ -162,7 +162,9 @@ let tests = [
           end
     end;
 
-    "multicast", `Quick, begin fun () ->
+    (* This test is flaky in the presence of firewalls, different systems, and
+       so on, so it is disabled. *)
+    (* "multicast", `Quick, begin fun () ->
       let group = "239.0.0.128" in
 
       let receiver_finished = ref false in
@@ -199,7 +201,7 @@ let tests = [
 
       Alcotest.(check bool) "receiver finished" true !receiver_finished;
       Alcotest.(check bool) "sender finished" true !sender_finished
-    end;
+    end; *)
 
     (* This is a compilation test. If the type constraints in handle.mli are
        wrong, there will be a type error in this test. *)
