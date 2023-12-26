@@ -163,43 +163,43 @@ let tests = [
     end;
 
     "multicast", `Quick, begin fun () ->
-        let group = "239.0.0.128" in
+      let group = "239.0.0.128" in
 
-        let receiver_finished = ref false in
-        let sender_finished = ref false in
+      let receiver_finished = ref false in
+      let sender_finished = ref false in
 
-        with_sender_and_receiver
-          ~receiver_logic:
-            begin fun receiver ->
-              Luv.UDP.set_membership
-                receiver ~group ~interface:"127.0.0.1" `JOIN_GROUP
-              |> check_success_result "set_membership 1";
+      with_sender_and_receiver
+        ~receiver_logic:
+          begin fun receiver ->
+            Luv.UDP.set_membership
+              receiver ~group ~interface:"127.0.0.1" `JOIN_GROUP
+            |> check_success_result "set_membership 1";
 
-              expect receiver "foo" begin fun () ->
-                Luv.Handle.close receiver ignore;
-                receiver_finished := true
-              end
+            expect receiver "foo" begin fun () ->
+              Luv.Handle.close receiver ignore;
+              receiver_finished := true
             end
-          ~sender_logic:
-            begin fun sender address ->
-              let port =
-                match Luv.Sockaddr.port address with
-                | Some port -> port
-                | None -> Alcotest.fail "port"
-              in
-              let address =
-                Luv.Sockaddr.ipv4 group port
-                |> check_success_result "group address"
-              in
-              Luv.UDP.try_send sender [Luv.Buffer.from_string "foo"] address
-              |> check_success_result "try_send";
-              Luv.Handle.close sender ignore;
-              sender_finished := true
-            end;
+          end
+        ~sender_logic:
+          begin fun sender address ->
+            let port =
+              match Luv.Sockaddr.port address with
+              | Some port -> port
+              | None -> Alcotest.fail "port"
+            in
+            let address =
+              Luv.Sockaddr.ipv4 group port
+              |> check_success_result "group address"
+            in
+            Luv.UDP.try_send sender [Luv.Buffer.from_string "foo"] address
+            |> check_success_result "try_send";
+            Luv.Handle.close sender ignore;
+            sender_finished := true
+          end;
 
-        Alcotest.(check bool) "receiver finished" true !receiver_finished;
-        Alcotest.(check bool) "sender finished" true !sender_finished
-      end;
+      Alcotest.(check bool) "receiver finished" true !receiver_finished;
+      Alcotest.(check bool) "sender finished" true !sender_finished
+    end;
 
     (* This is a compilation test. If the type constraints in handle.mli are
        wrong, there will be a type error in this test. *)

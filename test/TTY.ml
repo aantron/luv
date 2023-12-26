@@ -18,23 +18,23 @@ let with_tty f =
 
 let tests = [
   "tty", [
-      "tty", `Quick, begin fun () ->
-        with_tty begin fun tty ->
-          let width, height =
-            Luv.TTY.get_winsize tty |> check_success_result "get_winsize" in
-          if width <= 0 then
-            Alcotest.failf "width <= 0: %i" width;
-          if height <= 0 then
-            Alcotest.failf "height <= 0: %i" height
-        end
-      end;
+    "tty", `Quick, begin fun () ->
+      with_tty begin fun tty ->
+        let width, height =
+          Luv.TTY.get_winsize tty |> check_success_result "get_winsize" in
+        if width <= 0 then
+          Alcotest.failf "width <= 0: %i" width;
+        if height <= 0 then
+          Alcotest.failf "height <= 0: %i" height
+      end
+    end;
 
-      (* This is a compilation test. If the type constraints in handle.mli are
-         wrong, there will be a type error in this test. *)
-      "handle functions", `Quick, begin fun () ->
-        with_tty begin fun tty ->
-          ignore @@ Luv.Handle.fileno tty
-        end
-      end;
-    ]
+    (* This is a compilation test. If the type constraints in handle.mli are
+       wrong, there will be a type error in this test. *)
+    "handle functions", `Quick, begin fun () ->
+      with_tty begin fun tty ->
+        ignore @@ Luv.Handle.fileno tty
+      end
+    end;
+  ]
 ]
