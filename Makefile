@@ -14,6 +14,10 @@ test :
 test-watch :
 	dune runtest --no-buffer --force --watch
 
+.PHONY : promote
+promote :
+	dune promote
+
 .PHONY : examples
 examples :
 	dune build \

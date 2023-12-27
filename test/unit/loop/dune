@@ -1,0 +1,35 @@
+(cram
+ (deps
+   trivial.exe
+   configure.exe
+   configure_invalid.exe
+   default.exe
+   run_empty_default.exe
+   run_empty_once.exe
+   run_empty_nowait.exe
+   alive.exe
+   stop.exe
+   backend_fd.exe
+   backend_timeout.exe
+   now.exe
+   update_time.exe
+ ))
+
+(executables
+ (names
+   trivial
+   configure
+   configure_invalid
+   default
+   run_empty_default
+   run_empty_once
+   run_empty_nowait
+   alive
+   stop
+   backend_fd
+   backend_timeout
+   now
+   update_time
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))
