@@ -1,0 +1,10 @@
+(cram
+ (deps
+   version.exe
+ ))
+
+(executables
+ (names
+   version
+ )
+ (libraries luv))
