@@ -100,7 +100,7 @@ let () = Jbuild_plugin.V1.send @@ {|
  (targets extra_libs.sexp)
  (action (ignore-outputs (bash "\
    if ocamlc -config | grep mingw; then \
-     echo '(-liphlpapi -lpsapi -luserenv)' > extra_libs.sexp; \
+     echo '(-ldbghelp -liphlpapi -lole32 -lpsapi -luserenv)' > extra_libs.sexp; \
    else \
      echo '()' > extra_libs.sexp; \
    fi"))))
