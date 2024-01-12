@@ -1,0 +1,39 @@
+(cram
+ (deps
+   trivial.exe
+   loop.exe
+   start.exe
+   double_start.exe
+   repeated_start_leak.exe
+   stop.exe
+   again.exe
+   close_leak.exe
+   double_close.exe
+   multithreading.exe
+   busywait_deadlock.exe
+   exception.exe
+   is_active.exe
+   is_closing.exe
+   ref.exe
+ ))
+
+(executables
+ (names
+   trivial
+   loop
+   start
+   double_start
+   repeated_start_leak
+   stop
+   again
+   close_leak
+   double_close
+   multithreading
+   busywait_deadlock
+   exception
+   is_active
+   is_closing
+   ref
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))
