@@ -1,10 +1,12 @@
 (cram
  (deps
    version.exe
+   error.exe
  ))
 
 (executables
  (names
    version
+   error
  )
  (libraries luv))
