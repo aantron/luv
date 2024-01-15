@@ -1,4 +1,3 @@
 let () =
-  Helpers.with_loop @@ fun loop ->
-  ignore loop;
+  Helpers.with_loop ignore;
   print_endline "Ok"
