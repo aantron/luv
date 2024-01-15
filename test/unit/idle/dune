@@ -1,0 +1,39 @@
+(cram
+ (deps
+   idle_trivial.exe
+   idle_loop.exe
+   idle_start_stop.exe
+   idle_double_start.exe
+   idle_exception.exe
+   check_trivial.exe
+   check_loop.exe
+   check_start_stop.exe
+   check_double_start.exe
+   check_exception.exe
+   prepare_trivial.exe
+   prepare_loop.exe
+   prepare_start_stop.exe
+   prepare_double_start.exe
+   prepare_exception.exe
+ ))
+
+(executables
+ (names
+   idle_trivial
+   idle_loop
+   idle_start_stop
+   idle_double_start
+   idle_exception
+   check_trivial
+   check_loop
+   check_start_stop
+   check_double_start
+   check_exception
+   prepare_trivial
+   prepare_loop
+   prepare_start_stop
+   prepare_double_start
+   prepare_exception
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))
