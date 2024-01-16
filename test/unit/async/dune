@@ -1,0 +1,17 @@
+(cram
+ (deps
+   trivial.exe
+   send.exe
+   multithreading.exe
+   exception.exe
+ ))
+
+(executables
+ (names
+   trivial
+   send
+   multithreading
+   exception
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))

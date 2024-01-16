@@ -14,4 +14,4 @@ let () =
   Luv.Loop.run () |> ignore;
   let elapsed = Unix.gettimeofday () -. start_time in
 
-  Printf.printf "%b\n" (elapsed < 2.5)
+  Printf.printf "%b\n" (elapsed < 0.5)
