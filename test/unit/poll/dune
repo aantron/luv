@@ -1,0 +1,17 @@
+(cram
+ (deps
+   trivial.exe
+   writable.exe
+   exception.exe
+   fileno.exe
+ ))
+
+(executables
+ (names
+   trivial
+   writable
+   exception
+   fileno
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))
