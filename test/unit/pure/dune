@@ -1,4 +1,5 @@
 (cram
+ (alias runtest-windows)
  (deps
    version.exe
    error.exe

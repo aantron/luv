@@ -1,4 +1,5 @@
 (cram
+ (alias runtest-windows)
  (deps
    idle_trivial.exe
    idle_loop.exe

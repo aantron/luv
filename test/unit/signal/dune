@@ -1,0 +1,27 @@
+; Have not found a programmatic way to send signals to the process under test
+; that are received by libuv code on Windows, neither from OCaml nor from the
+; shell.
+
+(cram
+ (deps
+   trivial.exe
+   start.exe
+   stop.exe
+   oneshot.exe
+   signum.exe
+   start_exception.exe
+   oneshot_exception.exe
+ ))
+
+(executables
+ (names
+   trivial
+   start
+   stop
+   oneshot
+   signum
+   start_exception
+   oneshot_exception
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))
