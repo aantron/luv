@@ -1,0 +1,38 @@
+(cram
+ (alias runtest-windows)
+ (deps
+   trivial.exe
+   nodelay.exe
+   keepalive.exe
+   accepts.exe
+   bind.exe
+   getsockname.exe
+   econnrefused.exe
+   connect_gc.exe
+   connect_leak.exe
+   connect_sync_error.exe
+   connect_sync_error_leak.exe
+   connect_cancel.exe
+   listen_accept.exe
+   getpeername.exe
+ ))
+
+(executables
+ (names
+   trivial
+   nodelay
+   keepalive
+   accepts
+   bind
+   getsockname
+   econnrefused
+   connect_gc
+   connect_leak
+   connect_sync_error
+   connect_sync_error_leak
+   connect_cancel
+   listen_accept
+   getpeername
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))
