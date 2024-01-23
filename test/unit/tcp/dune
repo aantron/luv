@@ -15,6 +15,24 @@
    connect_cancel.exe
    listen_accept.exe
    getpeername.exe
+   listen_exception.exe
+   connect_exception.exe
+   read_write.exe
+   eof.exe
+   write_sync_error.exe
+   write_sync_error_leak.exe
+   read_exception.exe
+   write_exception.exe
+   try_write.exe
+   try_write_error.exe
+   shutdown.exe
+   shutdown_sync_error.exe
+   shutdown_sync_error_leak.exe
+   shutdown_exception.exe
+   close_reset_sync_error.exe
+   close_reset.exe
+   handle.exe
+   socketpair.exe
  ))
 
 (executables
@@ -33,6 +51,24 @@
    connect_cancel
    listen_accept
    getpeername
+   listen_exception
+   connect_exception
+   read_write
+   eof
+   write_sync_error
+   write_sync_error_leak
+   read_exception
+   write_exception
+   try_write
+   try_write_error
+   shutdown
+   shutdown_sync_error
+   shutdown_sync_error_leak
+   shutdown_exception
+   close_reset_sync_error
+   close_reset
+   handle
+   socketpair
  )
  (libraries luv unit_helpers)
  (flags -open Unit_helpers))

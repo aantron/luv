@@ -5,7 +5,7 @@
 
 let show_error step error =
   Printf.printf
-    "%s: %s (%s)" step (Luv.Error.err_name error) (Luv.Error.strerror error)
+    "%s: %s (%s)\n" step (Luv.Error.err_name error) (Luv.Error.strerror error)
 
 let ok step f result =
   match result with

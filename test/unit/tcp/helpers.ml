@@ -18,8 +18,9 @@ let with_server_and_client ~port ~server ~client =
 
   Luv.TCP.init () |> ok "client init" @@ fun client_tcp ->
   Luv.TCP.connect client_tcp address begin fun result ->
-    result |> ok "connect" @@ fun () ->
-    client client_tcp address
+    match result with
+    | Ok () | Error `ECONNRESET -> client client_tcp address
+    | _ -> result |> ok "connect" ignore
   end;
 
   Luv.Loop.run () |> ignore

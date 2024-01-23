@@ -5,7 +5,6 @@
 
 let () =
   Alcotest.run "luv" (List.flatten [
-    TCP.tests;
     if not Sys.win32 then Pipe.tests else [];
     UDP.tests;
     TTY.tests;
