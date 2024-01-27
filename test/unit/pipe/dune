@@ -1,0 +1,32 @@
+(cram
+ (alias runtest-windows)
+ (deps
+   trivial.exe
+   bind.exe
+   listen_accept.exe
+   getsockname.exe
+   getpeername.exe
+   connect_exception.exe
+   read_write.exe
+   receive_handle.exe
+   chmod.exe
+   chmod_error.exe
+   handle.exe
+ ))
+
+(executables
+ (names
+   trivial
+   bind
+   listen_accept
+   getsockname
+   getpeername
+   connect_exception
+   read_write
+   receive_handle
+   chmod
+   chmod_error
+   handle
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))
