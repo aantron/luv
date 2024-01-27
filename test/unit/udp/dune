@@ -1,0 +1,38 @@
+(cram
+ (alias runtest-windows)
+ (deps
+   trivial.exe
+   bind.exe
+   getsockname.exe
+   send_recv.exe
+   try_send.exe
+   send_exception.exe
+   recv_exception.exe
+   empty.exe
+   connect_getpeername.exe
+   double_connect.exe
+   initial_disconnect.exe
+   connected_send.exe
+   connected_try_send.exe
+   handle.exe
+ ))
+
+(executables
+ (names
+   trivial
+   bind
+   getsockname
+   send_recv
+   try_send
+   send_exception
+   recv_exception
+   empty
+   connect_getpeername
+   double_connect
+   initial_disconnect
+   connected_send
+   connected_try_send
+   handle
+ )
+ (libraries luv unit_helpers)
+ (flags -open Unit_helpers))
