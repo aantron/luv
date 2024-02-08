@@ -254,6 +254,7 @@ let () =
   needs 12 "get_osfhandle" "See {!Luv.File.get_osfhandle}.";
   needs 45 "getaffinity" "See {!Luv.Thread.getaffinity}";
   needs 45 "getcpu" "See {!Luv.Thread.getcpu}.";
+  needs 48 "getpriority" "See {!Luv.Thread.getpriority}.";
   needs 28 "gettimeofday" "See {!Luv.Time.gettimeofday}.";
   needs 16 "if_indextoiid" "See {!Luv.Network.if_indextoiid}.";
   needs 16 "if_indextoname" "See {!Luv.Network.if_indextoname}.";
@@ -286,7 +287,8 @@ let () =
   needs 24 "process_windows_hide_gui" "See {!Luv.Process.spawn}.";
   needs 33 "random" "See {!Luv.Random.random}.";
   needs 28 "readdir" "See {!Luv.File.readdir}.";
-  needs 45 "setaffinity" "See {!Luv.Thread.setaffinity}";
+  needs 45 "setaffinity" "See {!Luv.Thread.setaffinity}.";
+  needs 48 "setpriority" "See {!Luv.Thread.setpriority}.";
   needs 12 "signal_start_oneshot" "See {!Luv.Signal.start_oneshot}.";
   needs 34 "sleep" "See {!Luv.Time.sleep}.";
   needs 41 "socketpair" "See {!Luv.TCP.socketpair}.";

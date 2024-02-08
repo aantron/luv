@@ -53,6 +53,34 @@ let join thread =
   C.Blocking.Thread.join thread
   |> Error.to_result ()
 
+module Priority =
+struct
+  type t = [
+    | `HIGHEST
+    | `ABOVE_NORMAL
+    | `NORMAL
+    | `BELOW_NORMAL
+    | `LOWEST
+  ]
+end
+
+let setpriority thread priority =
+  let priority =
+    match priority with
+    | `HIGHEST -> C.Types.Thread.Priority.highest
+    | `ABOVE_NORMAL -> C.Types.Thread.Priority.above_normal
+    | `NORMAL -> C.Types.Thread.Priority.normal
+    | `BELOW_NORMAL -> C.Types.Thread.Priority.below_normal
+    | `LOWEST -> C.Types.Thread.Priority.lowest
+  in
+  C.Functions.Thread.setpriority (Ctypes.(!@) thread) priority
+  |> Error.to_result ()
+
+let getpriority thread =
+  let priority = Ctypes.(allocate int) 0 in
+  C.Functions.Thread.getpriority (Ctypes.(!@) thread) priority
+  |> Error.to_result_f (fun () -> Ctypes.(!@) priority)
+
 let c mask =
   mask
   |> Bytes.unsafe_to_string

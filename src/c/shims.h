@@ -758,6 +758,8 @@
 #endif
 
 #if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 47
+
+
     static size_t uv_utf16_length_as_wtf8(
         const uint16_t *utf16, ssize_t utf16_len)
     {
@@ -780,5 +782,25 @@
         const char *utf8, uint16_t *utf16, size_t utf16_len)
     {
         abort();
+    }
+#endif
+
+#if UV_VERSION_MAJOR == 1 && UV_VERSION_MINOR < 48
+    enum {
+        UV_THREAD_PRIORITY_HIGHEST = 2,
+        UV_THREAD_PRIORITY_ABOVE_NORMAL = 1,
+        UV_THREAD_PRIORITY_NORMAL = 0,
+        UV_THREAD_PRIORITY_BELOW_NORMAL = -1,
+        UV_THREAD_PRIORITY_LOWEST = -2,
+    };
+
+    static int uv_thread_setpriority(uv_thread_t id, int priority)
+    {
+        return ENOSYS;
+    }
+
+    static int uv_thread_getpriority(uv_thread_t id, int *priority)
+    {
+        return ENOSYS;
     }
 #endif

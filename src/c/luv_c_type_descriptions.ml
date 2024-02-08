@@ -813,6 +813,15 @@ struct
       let no_flags = constant "UV_THREAD_NO_FLAGS" int
       let has_stack_size = constant "UV_THREAD_HAS_STACK_SIZE" int
     end
+
+    module Priority =
+    struct
+      let highest = constant "UV_THREAD_PRIORITY_HIGHEST" int
+      let above_normal = constant "UV_THREAD_PRIORITY_ABOVE_NORMAL" int
+      let normal = constant "UV_THREAD_PRIORITY_NORMAL" int
+      let below_normal = constant "UV_THREAD_PRIORITY_BELOW_NORMAL" int
+      let lowest = constant "UV_THREAD_PRIORITY_LOWEST" int
+    end
   end
 
   module TLS =

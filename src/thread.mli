@@ -63,6 +63,44 @@ val join : t -> (unit, Error.t) result
     {{:http://man7.org/linux/man-pages/man3/pthread_join.3p.html}
     [pthread_join(3p)]}. *)
 
+(** Constants for use with {!Luv.Thread.setpriority}. *)
+module Priority :
+sig
+  type t = [
+    | `HIGHEST
+    | `ABOVE_NORMAL
+    | `NORMAL
+    | `BELOW_NORMAL
+    | `LOWEST
+  ]
+end
+
+val setpriority : t -> Priority.t -> (unit, Error.t) result
+(** Sets the given thread's priority.
+
+    Binds
+    {{:https://docs.libuv.org/en/v1.x/threading.html#c.uv_thread_setpriority}
+    [uv_thread_setpriority]}. See
+    {{:https://www.man7.org/linux/man-pages/man3/setpriority.3p.html}
+    [setpriority(3p)]}.
+
+    Requires Luv 0.5.13 and libuv 1.48.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has setpriority)] *)
+
+val getpriority : t -> (int, Error.t) result
+(** Gets the given thread's priority.
+
+    Binds
+    {{:https://docs.libuv.org/en/v1.x/threading.html#c.uv_thread_getpriority}
+    [uv_thread_getpriority]}. See
+    {{:https://www.man7.org/linux/man-pages/man3/getpriority.3p.html}
+    [getpriority(3p)]}.
+
+    Requires Luv 0.5.13 and libuv 1.48.0.
+
+    {{!Luv.Require} Feature check}: [Luv.Require.(has getpriority)] *)
+
 val setaffinity : t -> bytes -> (bytes, Error.t) result
 (** Sets the thread's processor affinity mask.
 

@@ -1483,6 +1483,14 @@ struct
       foreign "uv_thread_equal"
         (ptr t @-> ptr t @-> returning bool)
 
+    let setpriority =
+      foreign "uv_thread_setpriority"
+        (t @-> int @-> returning error_code)
+
+    let getpriority =
+      foreign "uv_thread_getpriority"
+        (t @-> ptr int @-> returning error_code)
+
     let cpumask_size =
       foreign "uv_cpumask_size"
         (void @-> returning int)
