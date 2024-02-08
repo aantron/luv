@@ -803,4 +803,6 @@
     {
         return ENOSYS;
     }
+
+    #define UV_PROCESS_WINDOWS_FILE_PATH_EXACT_NAME 0
 #endif

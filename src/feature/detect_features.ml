@@ -285,6 +285,7 @@ let () =
   needs 14 "prioritized" "See [`PRIORITIZED] in {!Luv.Poll.Event.t}.";
   needs 24 "process_windows_hide_console" "See {!Luv.Process.spawn}.";
   needs 24 "process_windows_hide_gui" "See {!Luv.Process.spawn}.";
+  needs 48 "process_windows_file_path_exact_name" "See {!Luv.Process.spawn}.";
   needs 33 "random" "See {!Luv.Random.random}.";
   needs 28 "readdir" "See {!Luv.File.readdir}.";
   needs 45 "setaffinity" "See {!Luv.Thread.setaffinity}.";

@@ -105,6 +105,7 @@ let spawn
     ?windows_hide
     ?windows_hide_console
     ?windows_hide_gui
+    ?windows_file_path_exact_name
     path arguments =
 
   let loop = Loop.or_default loop in
@@ -167,6 +168,7 @@ let spawn
     |> maybe_flag windows_hide Flag.windows_hide
     |> maybe_flag windows_hide_console Flag.windows_hide_console
     |> maybe_flag windows_hide_gui Flag.windows_hide_gui
+    |> maybe_flag windows_file_path_exact_name Flag.windows_file_path_exact_name
   in
 
   let redirections, redirection_count = build_redirection_array redirect in

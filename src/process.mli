@@ -87,6 +87,7 @@ val spawn :
   ?windows_hide:bool ->
   ?windows_hide_console:bool ->
   ?windows_hide_gui:bool ->
+  ?windows_file_path_exact_name:bool ->
   string ->
   string list ->
     (t, Error.t) result
@@ -117,12 +118,14 @@ val spawn :
     process, and redirect them to [/dev/null] or [nul].
 
     [?windows_hide_console] and [?windows_hide_gui] have no effect on libuv
-    prior to 1.24.0.
+    prior to 1.24.0. [?windows_file_path_exact_name] has no effect on libuv
+    prior to 1.48.0.
 
     {{!Luv.Require} Feature checks}:
 
     - [Luv.Require.(has process_windows_hide_console)]
-    - [Luv.Require.(has process_windows_hide_gui)] *)
+    - [Luv.Require.(has process_windows_hide_gui)]
+    - [Luv.Require.(has process_windows_file_path_exact_name)] *)
 
 val disable_stdio_inheritance : unit -> unit
 (** Disables (tries) file descriptor inheritance for inherited descriptors.
