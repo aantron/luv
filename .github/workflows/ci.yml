@@ -14,11 +14,8 @@ jobs:
         include:
           - os: macos-latest
             ocaml: 4.14.x
-          # Windows disabled due to an upstream problem with libuv's autotools
-          # build not generating a .dll file since commit 748d894e. See
-          #   https://github.com/libuv/libuv/issues/4259
-          # - os: windows-latest
-          #   ocaml: 4.14.x
+          - os: windows-latest
+            ocaml: 4.14.x
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
