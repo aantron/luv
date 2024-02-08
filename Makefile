@@ -109,7 +109,7 @@ upgrade-libuv :
 	# (cd src/c/vendor/libuv && git checkout `$(LATEST_TAG)`)
 	make clean
 	make eject-build
-	ocaml src/gen/headers.ml
+	# ocaml src/gen/headers.ml
 	(make && make test) || true
 	@echo
 	@echo "Sanity check:"

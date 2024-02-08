@@ -1,8 +1,8 @@
   $ dune exec ./version.exe
-  Numeric:    1.47.0
-  String:     1.47.0
-  Hex:        0x012F00
-  version (): 0x012F00
+  Numeric:    1.48.0
+  String:     1.48.0
+  Hex:        0x013000
+  version (): 0x013000
   is_release: true
   suffix:     ""
 

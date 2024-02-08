@@ -647,10 +647,11 @@ am__test_run_tests_SOURCES_DIST = test/blackhole-server.c \
 	test/test-tcp-write-in-a-row.c test/test-tcp-try-write-error.c \
 	test/test-tcp-write-queue-order.c test/test-test-macros.c \
 	test/test-thread-equal.c test/test-thread.c \
-	test/test-thread-affinity.c test/test-threadpool-cancel.c \
-	test/test-threadpool.c test/test-timer-again.c \
-	test/test-timer-from-check.c test/test-timer.c \
-	test/test-tmpdir.c test/test-tty-duplicate-key.c \
+	test/test-thread-affinity.c test/test-thread-priority.c \
+	test/test-threadpool-cancel.c test/test-threadpool.c \
+	test/test-timer-again.c test/test-timer-from-check.c \
+	test/test-timer.c test/test-tmpdir.c \
+	test/test-tty-duplicate-key.c \
 	test/test-tty-escape-sequence-processing.c test/test-tty.c \
 	test/test-udp-alloc-cb-fail.c test/test-udp-bind.c \
 	test/test-udp-connect.c test/test-udp-connect6.c \
@@ -810,6 +811,7 @@ am_test_run_tests_OBJECTS = test/run_tests-blackhole-server.$(OBJEXT) \
 	test/run_tests-test-thread-equal.$(OBJEXT) \
 	test/run_tests-test-thread.$(OBJEXT) \
 	test/run_tests-test-thread-affinity.$(OBJEXT) \
+	test/run_tests-test-thread-priority.$(OBJEXT) \
 	test/run_tests-test-threadpool-cancel.$(OBJEXT) \
 	test/run_tests-test-threadpool.$(OBJEXT) \
 	test/run_tests-test-timer-again.$(OBJEXT) \
@@ -1091,6 +1093,7 @@ am__depfiles_remade = src/$(DEPDIR)/libuv_la-fs-poll.Plo \
 	test/$(DEPDIR)/run_tests-test-test-macros.Po \
 	test/$(DEPDIR)/run_tests-test-thread-affinity.Po \
 	test/$(DEPDIR)/run_tests-test-thread-equal.Po \
+	test/$(DEPDIR)/run_tests-test-thread-priority.Po \
 	test/$(DEPDIR)/run_tests-test-thread.Po \
 	test/$(DEPDIR)/run_tests-test-threadpool-cancel.Po \
 	test/$(DEPDIR)/run_tests-test-threadpool.Po \
@@ -1472,10 +1475,11 @@ test_run_tests_SOURCES = test/blackhole-server.c test/echo-server.c \
 	test/test-tcp-write-in-a-row.c test/test-tcp-try-write-error.c \
 	test/test-tcp-write-queue-order.c test/test-test-macros.c \
 	test/test-thread-equal.c test/test-thread.c \
-	test/test-thread-affinity.c test/test-threadpool-cancel.c \
-	test/test-threadpool.c test/test-timer-again.c \
-	test/test-timer-from-check.c test/test-timer.c \
-	test/test-tmpdir.c test/test-tty-duplicate-key.c \
+	test/test-thread-affinity.c test/test-thread-priority.c \
+	test/test-threadpool-cancel.c test/test-threadpool.c \
+	test/test-timer-again.c test/test-timer-from-check.c \
+	test/test-timer.c test/test-tmpdir.c \
+	test/test-tty-duplicate-key.c \
 	test/test-tty-escape-sequence-processing.c test/test-tty.c \
 	test/test-udp-alloc-cb-fail.c test/test-udp-bind.c \
 	test/test-udp-connect.c test/test-udp-connect6.c \
@@ -2053,6 +2057,8 @@ test/run_tests-test-thread.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-thread-affinity.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
+test/run_tests-test-thread-priority.$(OBJEXT): test/$(am__dirstamp) \
+	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-threadpool-cancel.$(OBJEXT): test/$(am__dirstamp) \
 	test/$(DEPDIR)/$(am__dirstamp)
 test/run_tests-test-threadpool.$(OBJEXT): test/$(am__dirstamp) \
@@ -2368,6 +2374,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-test-macros.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-thread-affinity.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-thread-equal.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-thread-priority.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-thread.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-threadpool-cancel.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/run_tests-test-threadpool.Po@am__quote@ # am--include-marker
@@ -4982,6 +4989,20 @@ test/run_tests-test-thread-affinity.obj: test/test-thread-affinity.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-thread-affinity.obj `if test -f 'test/test-thread-affinity.c'; then $(CYGPATH_W) 'test/test-thread-affinity.c'; else $(CYGPATH_W) '$(srcdir)/test/test-thread-affinity.c'; fi`
 
+test/run_tests-test-thread-priority.o: test/test-thread-priority.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-thread-priority.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-thread-priority.Tpo -c -o test/run_tests-test-thread-priority.o `test -f 'test/test-thread-priority.c' || echo '$(srcdir)/'`test/test-thread-priority.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-thread-priority.Tpo test/$(DEPDIR)/run_tests-test-thread-priority.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-thread-priority.c' object='test/run_tests-test-thread-priority.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-thread-priority.o `test -f 'test/test-thread-priority.c' || echo '$(srcdir)/'`test/test-thread-priority.c
+
+test/run_tests-test-thread-priority.obj: test/test-thread-priority.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-thread-priority.obj -MD -MP -MF test/$(DEPDIR)/run_tests-test-thread-priority.Tpo -c -o test/run_tests-test-thread-priority.obj `if test -f 'test/test-thread-priority.c'; then $(CYGPATH_W) 'test/test-thread-priority.c'; else $(CYGPATH_W) '$(srcdir)/test/test-thread-priority.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-thread-priority.Tpo test/$(DEPDIR)/run_tests-test-thread-priority.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test/test-thread-priority.c' object='test/run_tests-test-thread-priority.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -c -o test/run_tests-test-thread-priority.obj `if test -f 'test/test-thread-priority.c'; then $(CYGPATH_W) 'test/test-thread-priority.c'; else $(CYGPATH_W) '$(srcdir)/test/test-thread-priority.c'; fi`
+
 test/run_tests-test-threadpool-cancel.o: test/test-threadpool-cancel.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_run_tests_CFLAGS) $(CFLAGS) -MT test/run_tests-test-threadpool-cancel.o -MD -MP -MF test/$(DEPDIR)/run_tests-test-threadpool-cancel.Tpo -c -o test/run_tests-test-threadpool-cancel.o `test -f 'test/test-threadpool-cancel.c' || echo '$(srcdir)/'`test/test-threadpool-cancel.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) test/$(DEPDIR)/run_tests-test-threadpool-cancel.Tpo test/$(DEPDIR)/run_tests-test-threadpool-cancel.Po
@@ -6167,6 +6188,7 @@ distclean: distclean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-test-macros.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-thread-affinity.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-thread-equal.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-thread-priority.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-thread.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-threadpool-cancel.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-threadpool.Po
@@ -6475,6 +6497,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f test/$(DEPDIR)/run_tests-test-test-macros.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-thread-affinity.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-thread-equal.Po
+	-rm -f test/$(DEPDIR)/run_tests-test-thread-priority.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-thread.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-threadpool-cancel.Po
 	-rm -f test/$(DEPDIR)/run_tests-test-threadpool.Po
@@ -6554,6 +6577,10 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLTLIBRARIES \
 
 .PRECIOUS: Makefile
 
+
+@WINNT_TRUE@check-am: test/run-tests_no_ext
+@WINNT_TRUE@test/run-tests_no_ext: test/run-tests$(EXEEXT)
+@WINNT_TRUE@	cp test/run-tests$(EXEEXT) test/run-tests_no_ext
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
