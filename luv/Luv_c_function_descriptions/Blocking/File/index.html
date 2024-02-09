@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>File (luv.Luv_c_function_descriptions.Blocking.File)</title><meta charset="utf-8"/><link rel="stylesheet" href="../../../../odoc.support/odoc.css"/><meta name="generator" content="odoc 2.4.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../../../../odoc.support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="../index.html">Up</a> – <a href="../../../index.html">luv</a> &#x00BB; <a href="../../index.html">Luv_c_function_descriptions</a> &#x00BB; <a href="../index.html">Blocking</a> &#x00BB; File</nav><header class="odoc-preamble"><h1>Module <code><span>Blocking.File</span></code></h1></header><div class="odoc-content"><div class="odoc-spec"><div class="spec value anchored" id="val-t"><a href="#val-t" class="anchor"></a><code><span><span class="keyword">val</span> t : <span>int <span class="xref-unresolved">Ctypes</span>.typ</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-uid"><a href="#val-uid" class="anchor"></a><code><span><span class="keyword">val</span> uid : <span>int <span class="xref-unresolved">Ctypes</span>.typ</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-gid"><a href="#val-gid" class="anchor"></a><code><span><span class="keyword">val</span> gid : <span>int <span class="xref-unresolved">Ctypes</span>.typ</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-request"><a href="#val-request" class="anchor"></a><code><span><span class="keyword">val</span> request : <span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <a href="../../../Luv_c_generated_types/index.html#type-typ">Luv_c_generated_types.typ</a></span></span></code></div></div><div class="odoc-spec"><div class="spec type anchored" id="type-trampoline"><a href="#type-trampoline" class="anchor"></a><code><span><span class="keyword">type</span> trampoline</span><span> =
+  <span><span>(<span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span> unit)</span> <span class="xref-unresolved">Ctypes</span>.static_funptr</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-trampoline"><a href="#val-trampoline" class="anchor"></a><code><span><span class="keyword">val</span> trampoline : <span><a href="#type-trampoline">trampoline</a> <span class="xref-unresolved">Ctypes</span>.typ</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_trampoline"><a href="#val-get_trampoline" class="anchor"></a><code><span><span class="keyword">val</span> get_trampoline : <span><span>(<span>unit <span class="arrow">&#45;&gt;</span></span> <span><a href="#type-trampoline">trampoline</a> <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_null_callback"><a href="#val-get_null_callback" class="anchor"></a><code><span><span class="keyword">val</span> get_null_callback : <span><span>(<span>unit <span class="arrow">&#45;&gt;</span></span> <span><a href="#type-trampoline">trampoline</a> <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-req_cleanup"><a href="#val-req_cleanup" class="anchor"></a><code><span><span class="keyword">val</span> req_cleanup : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span> <span>unit <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-close"><a href="#val-close" class="anchor"></a><code><span><span class="keyword">val</span> close : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-open_"><a href="#val-open_" class="anchor"></a><code><span><span class="keyword">val</span> open_ : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-read"><a href="#val-read" class="anchor"></a><code><span><span class="keyword">val</span> read : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">Unsigned</span>.uint <span class="arrow">&#45;&gt;</span></span>
+    <span>int64 <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-write"><a href="#val-write" class="anchor"></a><code><span><span class="keyword">val</span> write : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">Unsigned</span>.uint <span class="arrow">&#45;&gt;</span></span>
+    <span>int64 <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-unlink"><a href="#val-unlink" class="anchor"></a><code><span><span class="keyword">val</span> unlink : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-mkdir"><a href="#val-mkdir" class="anchor"></a><code><span><span class="keyword">val</span> mkdir : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-mkdtemp"><a href="#val-mkdtemp" class="anchor"></a><code><span><span class="keyword">val</span> mkdtemp : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-mkstemp"><a href="#val-mkstemp" class="anchor"></a><code><span><span class="keyword">val</span> mkstemp : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-rmdir"><a href="#val-rmdir" class="anchor"></a><code><span><span class="keyword">val</span> rmdir : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-opendir"><a href="#val-opendir" class="anchor"></a><code><span><span class="keyword">val</span> opendir : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-closedir"><a href="#val-closedir" class="anchor"></a><code><span><span class="keyword">val</span> closedir : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Dir/index.html#type-t">Types.File.Dir.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-readdir"><a href="#val-readdir" class="anchor"></a><code><span><span class="keyword">val</span> readdir : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Dir/index.html#type-t">Types.File.Dir.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-scandir"><a href="#val-scandir" class="anchor"></a><code><span><span class="keyword">val</span> scandir : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-scandir_next"><a href="#val-scandir_next" class="anchor"></a><code><span><span class="keyword">val</span> scandir_next : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Dirent/index.html#type-t">Types.File.Dirent.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-stat"><a href="#val-stat" class="anchor"></a><code><span><span class="keyword">val</span> stat : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-lstat"><a href="#val-lstat" class="anchor"></a><code><span><span class="keyword">val</span> lstat : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-fstat"><a href="#val-fstat" class="anchor"></a><code><span><span class="keyword">val</span> fstat : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-statfs"><a href="#val-statfs" class="anchor"></a><code><span><span class="keyword">val</span> statfs : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-rename"><a href="#val-rename" class="anchor"></a><code><span><span class="keyword">val</span> rename : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-fsync"><a href="#val-fsync" class="anchor"></a><code><span><span class="keyword">val</span> fsync : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-fdatasync"><a href="#val-fdatasync" class="anchor"></a><code><span><span class="keyword">val</span> fdatasync : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-ftruncate"><a href="#val-ftruncate" class="anchor"></a><code><span><span class="keyword">val</span> ftruncate : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int64 <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-copyfile"><a href="#val-copyfile" class="anchor"></a><code><span><span class="keyword">val</span> copyfile : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-sendfile"><a href="#val-sendfile" class="anchor"></a><code><span><span class="keyword">val</span> sendfile : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int64 <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">Unsigned</span>.size_t <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-access"><a href="#val-access" class="anchor"></a><code><span><span class="keyword">val</span> access : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-chmod"><a href="#val-chmod" class="anchor"></a><code><span><span class="keyword">val</span> chmod : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-fchmod"><a href="#val-fchmod" class="anchor"></a><code><span><span class="keyword">val</span> fchmod : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-utime"><a href="#val-utime" class="anchor"></a><code><span><span class="keyword">val</span> utime : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>float <span class="arrow">&#45;&gt;</span></span>
+    <span>float <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-futime"><a href="#val-futime" class="anchor"></a><code><span><span class="keyword">val</span> futime : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>float <span class="arrow">&#45;&gt;</span></span>
+    <span>float <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-lutime"><a href="#val-lutime" class="anchor"></a><code><span><span class="keyword">val</span> lutime : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>float <span class="arrow">&#45;&gt;</span></span>
+    <span>float <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-link"><a href="#val-link" class="anchor"></a><code><span><span class="keyword">val</span> link : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-symlink"><a href="#val-symlink" class="anchor"></a><code><span><span class="keyword">val</span> symlink : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-readlink"><a href="#val-readlink" class="anchor"></a><code><span><span class="keyword">val</span> readlink : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-realpath"><a href="#val-realpath" class="anchor"></a><code><span><span class="keyword">val</span> realpath : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-chown"><a href="#val-chown" class="anchor"></a><code><span><span class="keyword">val</span> chown : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-fchown"><a href="#val-fchown" class="anchor"></a><code><span><span class="keyword">val</span> fchown : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-lchown"><a href="#val-lchown" class="anchor"></a><code><span><span class="keyword">val</span> lchown : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/Loop/index.html#type-t">Types.Loop.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>string <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><a href="#type-trampoline">trampoline</a> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_result"><a href="#val-get_result" class="anchor"></a><code><span><span class="keyword">val</span> get_result : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">PosixTypes</span>.ssize_t <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_ptr"><a href="#val-get_ptr" class="anchor"></a><code><span><span class="keyword">val</span> get_ptr : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span>unit <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_ptr_as_string"><a href="#val-get_ptr_as_string" class="anchor"></a><code><span><span class="keyword">val</span> get_ptr_as_string : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span> <span>string <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_path"><a href="#val-get_path" class="anchor"></a><code><span><span class="keyword">val</span> get_path : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span> <span>string <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_statbuf"><a href="#val-get_statbuf" class="anchor"></a><code><span><span class="keyword">val</span> get_statbuf : 
+  <span><span>(<span><span><a href="../../../Luv_c_types/File/Request/index.html#type-t">Types.File.Request.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/File/Stat/index.html#type-t">Types.File.Stat.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div></div></body></html>

@@ -1,0 +1,584 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Filesystem" href="filesystem.html" /><link rel="prev" title="Introduction" href="introduction.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+        <title>Basics - Luv documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Luv  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Luv  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="networking.html">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="threads.html">Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processes.html">Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="basics">
+<h1>Basics<a class="headerlink" href="#basics" title="Link to this heading">#</a></h1>
+<p>libuv offers an <strong>asynchronous</strong>, <strong>event-driven</strong> style of programming.  Its
+core job is to provide an event loop and callback-based notifications of I/O
+and other activities.  libuv offers core utilities like timers, non-blocking
+networking support, asynchronous file system access, child processes, and more.</p>
+<section id="event-loops">
+<h2>Event loops<a class="headerlink" href="#event-loops" title="Link to this heading">#</a></h2>
+<p>In event-driven programming, an application expresses interest in certain events
+and responds to them when they occur. The responsibility of gathering events
+from the operating system or monitoring other sources of events is handled by
+libuv, and the user can register callbacks to be invoked when an event occurs.
+The event loop usually keeps running <em>forever</em>. In pseudocode:</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">there</span> <span class="n">are</span> <span class="n">still</span> <span class="n">live</span> <span class="n">objects</span> <span class="n">that</span> <span class="n">could</span> <span class="n">generate</span> <span class="n">events</span> <span class="k">do</span>
+    <span class="k">let</span> <span class="n">e</span> <span class="o">=</span> <span class="n">get</span> <span class="n">the</span> <span class="n">next</span> <span class="n">event</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="n">there</span> <span class="n">is</span> <span class="n">a</span> <span class="n">callback</span> <span class="n">waiting</span> <span class="n">on</span> <span class="n">e</span> <span class="k">then</span>
+        <span class="n">call</span> <span class="n">the</span> <span class="n">callback</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>Some examples of events are:</p>
+<ul class="simple">
+<li><p>A file is ready for writing</p></li>
+<li><p>A socket has data ready to be read</p></li>
+<li><p>A timer has timed out</p></li>
+</ul>
+<p>This event loop is inside <a class="reference external" href="luv/Luv/Loop/index.html#val-run">Luv.Loop.run</a>, which
+binds to <code class="docutils literal notranslate"><span class="pre">uv_run</span></code>, the main function of libuv.</p>
+<p>The most common activity of systems programs is to deal with input and output,
+rather than a lot of number-crunching. The problem with using conventional
+input/output functions (<code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">fprintf</span></code>, etc.) is that they are
+<strong>blocking</strong>. The actual write to a hard disk, or reading from a network, takes
+a disproportionately long time compared to the speed of the processor. The
+functions don’t return until the task is done, so that your program is blocked
+doing nothing until then. For programs which require high performance this is a
+major obstacle, as other activities and other I/O operations are kept waiting.</p>
+<p>One of the standard solutions is to use threads. Each blocking I/O operation is
+started in a separate thread, or in a thread pool. When the blocking function
+gets invoked in the thread, the processor can schedule another thread to run,
+which actually needs the CPU.</p>
+<p>The approach followed by libuv uses another style, which is the <strong>asynchronous,
+non-blocking</strong> style. Most modern operating systems provide event notification
+subsystems. For example, a normal <code class="docutils literal notranslate"><span class="pre">read</span></code> call on a socket would block until
+the sender actually sent something. Instead, the application can request the
+operating system to watch the socket and put an event notification into a queue.
+The application can inspect the events at its convenience and grab the data,
+perhaps doing some number crunching in the meantime to use the processor to the
+maximum. It is <strong>asynchronous</strong> because the application expressed interest at
+one point, then used the data at another point in its execution sequence. It is
+<strong>non-blocking</strong> because the application process was free to do other tasks. in
+between. This fits in well with libuv’s event-loop approach, since the operating
+system’s events can be treated as libuv events. The non-blocking ensures that
+other events can continue to be handled as fast as they come in (and the
+hardware allows).</p>
+</section>
+<section id="hello-world">
+<h2>Hello, world!<a class="headerlink" href="#hello-world" title="Link to this heading">#</a></h2>
+<p>With the basics out of the way, let’s write our first libuv program. It does
+nothing, except start a loop which will exit immediately.</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/hello_world.ml">hello_world.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos">2</span>  <span class="n">print_endline</span> <span class="s2">&quot;Hello, world!&quot;</span><span class="o">;</span>
+<span class="linenos">3</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>This program exits immediately because it has no events to process. A libuv
+event loop has to be told to watch out for events using the various libuv API
+functions.</p>
+<p>Here’s a slightly more interesting program, which waits for one second, prints
+“Hello, world!” and then exits:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/delay.ml">delay.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos">2</span>  <span class="k">let</span> <span class="n">timer</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Timer</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Timer</span><span class="p">.</span><span class="n">start</span> <span class="n">timer</span> <span class="mi">1000</span> <span class="o">(</span><span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+<span class="linenos">5</span>    <span class="n">print_endline</span> <span class="s2">&quot;Hello, world!&quot;</span><span class="o">));</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span>  <span class="n">print_endline</span> <span class="s2">&quot;Waiting...&quot;</span><span class="o">;</span>
+<span class="linenos">8</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="console-output">
+<h2>Console output<a class="headerlink" href="#console-output" title="Link to this heading">#</a></h2>
+<p>The first two examples used OCaml’s own <code class="docutils literal notranslate"><span class="pre">print_endline</span></code> for console output. In
+a fully asynchronous program, you may want to use libuv to write to the console
+(or STDOUT) instead. Luv offers at least three ways of doing this.</p>
+<p>Using the pre-opened file <a class="reference external" href="luv/Luv/File/index.html#val-stdout">Luv.File.stdout</a>:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/print_using_file.ml">print_using_file.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos">2</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">File</span><span class="p">.</span><span class="o">(</span><span class="n">write</span> <span class="n">stdout</span> <span class="o">[</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">from_string</span> <span class="s2">&quot;Hello, world!</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">])</span> <span class="n">ignore</span><span class="o">;</span>
+<span class="linenos">3</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Wrapping <a class="reference external" href="luv/Luv/File/index.html#val-stdout">Luv.File.stdout</a> in a pipe with
+<a class="reference external" href="luv/Luv/Pipe/index.html#val-open_">Luv.Pipe.open_</a>:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/print_using_pipe.ml">print_using_pipe.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos">2</span>  <span class="k">let</span> <span class="n">pipe</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Pipe</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos">3</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">Pipe</span><span class="p">.</span><span class="n">open_</span> <span class="n">pipe</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">File</span><span class="p">.</span><span class="n">stdout</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span><span class="o">;</span>
+<span class="linenos">4</span>
+<span class="linenos">5</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">write</span> <span class="n">pipe</span> <span class="o">[</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">from_string</span> <span class="s2">&quot;Hello, world!</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">]</span>
+<span class="linenos">6</span>    <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">()</span><span class="o">);</span>
+<span class="linenos">7</span>
+<span class="linenos">8</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Wrapping <a class="reference external" href="luv/Luv/File/index.html#val-stdout">Luv.File.stdout</a> in a TTY handle
+with <a class="reference external" href="luv/Luv/TTY/index.html#val-init">Luv.TTY.init</a>:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/print_using_tty.ml">print_using_tty.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos">2</span>  <span class="k">let</span> <span class="n">tty</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">TTY</span><span class="p">.</span><span class="n">init</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">File</span><span class="p">.</span><span class="n">stdout</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">write</span> <span class="n">tty</span> <span class="o">[</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">from_string</span> <span class="s2">&quot;Hello, world!</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">]</span>
+<span class="linenos">5</span>    <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="bp">()</span><span class="o">);</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>As you can see, all of these are too low-level and verbose for ordinary use.
+They would need to be wrapped in a higher-level library. The examples will
+continue to use <code class="docutils literal notranslate"><span class="pre">print_endline</span></code>, which is fine for most purposes.</p>
+</section>
+<section id="error-handling">
+<span id="libuv-error-handling"></span><h2>Error handling<a class="headerlink" href="#error-handling" title="Link to this heading">#</a></h2>
+<p>When functions fail, they produce one of the error codes in <a class="reference external" href="luv/Luv/Error/index.html#type-t">Luv.Error.t</a>, wrapped in the <code class="docutils literal notranslate"><span class="pre">Error</span></code> side of a <code class="docutils literal notranslate"><span class="pre">result</span></code>. In
+the last example above, we used <a class="reference external" href="luv/Luv/Timer/index.html#val-init">Luv.Timer.init</a>, which has signature</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Timer</span><span class="p">.</span><span class="n">init</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Timer</span><span class="p">.</span><span class="n">t</span><span class="o">,</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">t</span><span class="o">)</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>If a call to <code class="docutils literal notranslate"><span class="pre">Luv.Timer.init</span></code> succeeds, it will produce <code class="docutils literal notranslate"><span class="pre">Ok</span> <span class="pre">timer</span></code>. If it
+fails, it might produce <code class="docutils literal notranslate"><span class="pre">Error</span> <span class="pre">`ENOMEM</span></code>.</p>
+<p>Asynchronous operations that can fail pass the <code class="docutils literal notranslate"><span class="pre">result</span></code> to their callback,
+instead of returning it:</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Luv</span><span class="p">.</span><span class="nn">File</span><span class="p">.</span><span class="n">unlink</span> <span class="o">:</span> <span class="kt">string</span> <span class="o">-&gt;</span> <span class="o">((</span><span class="kt">unit</span><span class="o">,</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">t</span><span class="o">)</span> <span class="n">result</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="kt">unit</span>
+</pre></div>
+</div>
+<p>You can get the error name and description as strings by calling
+<a class="reference external" href="luv/Luv/Error/index.html#val-err_name">Luv.Error.err_name</a> and
+<a class="reference external" href="luv/Luv/Error/index.html#val-strerror">Luv.Error.strerror</a>, respectively.</p>
+<p>libuv has several different conventions for returning errors. Luv translates all
+of them into the above scheme: synchronous operations return a <code class="docutils literal notranslate"><span class="pre">result</span></code>, and
+asynchronous operations pass a <code class="docutils literal notranslate"><span class="pre">result</span></code> to their callback.</p>
+<p>There is only a handful of exceptions to this, but they are all easy to
+understand. For example, <a class="reference external" href="luv/Luv/Timer/index.html#val-start">Luv.Timer.start</a> can
+fail immediately, but if it starts, it can only call its callback with success.
+So, it has signature</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Timer</span><span class="p">.</span><span class="n">start</span> <span class="o">:</span>
+  <span class="nn">Luv</span><span class="p">.</span><span class="nn">Timer</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="kt">int</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">unit</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="kt">unit</span><span class="o">,</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">t</span><span class="o">)</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>Luv does not raise exceptions. In addition, callbacks you pass to Luv APIs
+shouldn’t raise exceptions at the top level (they can use exceptions interally).
+This is because such exceptions can’t be allowed to go up the stack into libuv.
+If a callback passed to Luv raises an exception, Luv catches it, prints a stack
+trace to <code class="docutils literal notranslate"><span class="pre">STDERR</span></code>, and then calls <code class="docutils literal notranslate"><span class="pre">exit</span> <span class="pre">2</span></code>. You can change this behavior by
+installing your own handler:</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">set_on_unhandled_exception</span> <span class="o">(</span><span class="k">fun</span> <span class="n">exn</span> <span class="o">-&gt;</span> <span class="c">(* ... *)</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Generally, only applications, rather than libraries, should call this function.</p>
+</section>
+<section id="handles">
+<h2>Handles<a class="headerlink" href="#handles" title="Link to this heading">#</a></h2>
+<p>libuv works by the user expressing interest in particular events. This is
+usually done by creating a <strong>handle</strong> to an I/O device, timer or process, and
+then calling a function on that handle.</p>
+<p>The following handle types are available:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="luv/Luv/Timer/index.html">Luv.Timer</a> — timers</p></li>
+<li><p><a class="reference external" href="luv/Luv/Signal/index.html">Luv.Signal</a> — signals</p></li>
+<li><p><a class="reference external" href="luv/Luv/Process/index.html">Luv.Process</a> — subprocesses</p></li>
+<li><p><a class="reference external" href="luv/Luv/TCP/index.html">Luv.TCP</a> — TCP sockets</p></li>
+<li><p><a class="reference external" href="luv/Luv/UDP/index.html">Luv.UDP</a> — UDP sockets</p></li>
+<li><p><a class="reference external" href="luv/Luv/Pipe/index.html">Luv.Pipe</a> — pipes</p></li>
+<li><p><a class="reference external" href="luv/Luv/TTY/index.html">Luv.TTY</a> — consoles</p></li>
+<li><p><a class="reference external" href="luv/Luv/FS_event/index.html">Luv.FS_event</a> — filesystem events</p></li>
+<li><p><a class="reference external" href="luv/Luv/FS_poll/index.html">Luv.FS_poll</a> — filesystem polling</p></li>
+<li><p><a class="reference external" href="luv/Luv/Poll/index.html">Luv.Poll</a> — file descriptor polling</p></li>
+<li><p><a class="reference external" href="luv/Luv/Async/index.html">Luv.Async</a> — inter-loop communication</p></li>
+<li><p><a class="reference external" href="luv/Luv/Prepare/index.html">Luv.Prepare</a> — pre-I/O callbacks</p></li>
+<li><p><a class="reference external" href="luv/Luv/Check/index.html">Luv.Check</a> — post-I/O callbacks</p></li>
+<li><p><a class="reference external" href="luv/Luv/Idle/index.html">Luv.Idle</a> — per-iteration callbacks</p></li>
+</ul>
+<p>In addition to the above true handles, there is also <a class="reference external" href="luv/Luv/File/index.html">Luv.File</a>, which has a similar basic interface, yet is not a
+proper libuv handle kind.</p>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
+<p>The remaining chapters of this guide will exercise many of the modules mentioned
+above, but let’s work with a simple one now — that is, in addition to the timer
+“Hello, world!” example we’ve already seen!</p>
+<p>Here is an example of using a <a class="reference external" href="luv/Luv/Idle/index.html#type-t">Luv.Idle.t</a> handle.
+It adds a callback, that is to be called once on every iteration of the event
+loop:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/idle.ml">idle.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos"> 2</span>  <span class="k">let</span> <span class="n">idle</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Idle</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>  <span class="k">let</span> <span class="n">counter</span> <span class="o">=</span> <span class="n">ref</span> <span class="mi">0</span> <span class="k">in</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>  <span class="n">ignore</span> <span class="o">@@</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Idle</span><span class="p">.</span><span class="n">start</span> <span class="n">idle</span> <span class="k">begin</span> <span class="k">fun</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+<span class="linenos"> 7</span>    <span class="n">counter</span> <span class="o">:=</span> <span class="o">!</span><span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+<span class="linenos"> 8</span>    <span class="n">print_endline</span> <span class="s2">&quot;Loop iteration&quot;</span><span class="o">;</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>    <span class="k">if</span> <span class="o">!</span><span class="n">counter</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="k">then</span>
+<span class="linenos">11</span>      <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Idle</span><span class="p">.</span><span class="n">stop</span> <span class="n">idle</span><span class="o">)</span>
+<span class="linenos">12</span>  <span class="k">end</span><span class="o">;</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The error handling in this example is not robust! It is using <code class="docutils literal notranslate"><span class="pre">Result.get_ok</span></code>
+and <code class="docutils literal notranslate"><span class="pre">ignore</span></code> to avoid dealing with potential <code class="docutils literal notranslate"><span class="pre">Error</span></code>. If you are writing a
+robust application, or a library, please use a better error-handling mechanism
+instead.</p>
+</section>
+<section id="requests">
+<h2>Requests<a class="headerlink" href="#requests" title="Link to this heading">#</a></h2>
+<p>libuv also has <strong>requests</strong>. Whereas handles are long-lived, a request is a
+short-lived representation of one particular instance of an asynchronous
+operation. Requests are used by libuv, for example, to return complex results.
+Luv manages requests automatically, so the user generally does not have to deal
+with them at all.</p>
+<p>A few request types are still exposed, however, because they are cancelable, and
+can be passed, at the user’s discretion, to <a class="reference external" href="luv/Luv/Request/index.html#val-cancel">Luv.Request.cancel</a>. Explicit use of these requests is still
+optional, however — they are always taken through optional arguments. So, when
+using Luv, it is possible to ignore the existence of requests entirely.</p>
+<p>See <a class="reference external" href="luv/Luv/File/Request/index.html">Luv.File.Request</a> for a typical request
+type, with example usage. This represents filesystem requests, which are
+cancelable. Functions in <a class="reference external" href="luv/Luv/File/index.html">Luv.File</a> have signatures like</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Luv</span><span class="p">.</span><span class="nn">File</span><span class="p">.</span><span class="n">unlink</span> <span class="o">:</span>
+  <span class="o">?</span><span class="n">request</span><span class="o">:</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">File</span><span class="p">.</span><span class="nn">Request</span><span class="p">.</span><span class="n">t</span> <span class="o">-&gt;</span>
+  <span class="kt">string</span> <span class="o">-&gt;</span>
+  <span class="o">((</span><span class="kt">unit</span><span class="o">,</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">t</span><span class="o">)</span> <span class="n">result</span> <span class="o">-&gt;</span> <span class="kt">unit</span><span class="o">)</span> <span class="o">-&gt;</span>
+    <span class="kt">unit</span>
+</pre></div>
+</div>
+<p>…in case the user needs the ability to cancel the request. This guide will
+generally omit the <code class="docutils literal notranslate"><span class="pre">?request</span></code> argument, because it is rarely used, and always
+has only this one purpose.</p>
+<p>Here are all the exposed request types in Luv:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="luv/Luv/File/Request/index.html">Luv.File.Request</a></p></li>
+<li><p><a class="reference external" href="luv/Luv/DNS/Addr_info/Request/index.html">Luv.DNS.Addr_info.Request</a></p></li>
+<li><p><a class="reference external" href="luv/Luv/DNS/Name_info/Request/index.html">Luv.DNS.Name_info.Request</a></p></li>
+<li><p><a class="reference external" href="luv/Luv/Random/Request/index.html">Luv.Random.Request</a></p></li>
+<li><p><a class="reference external" href="luv/Luv/Thread_pool/Request/index.html">Luv.Thread_pool.Request</a></p></li>
+</ul>
+</section>
+<section id="everything-else">
+<h2>Everything else<a class="headerlink" href="#everything-else" title="Link to this heading">#</a></h2>
+<p>libuv, and Luv, also offer a large number of other operations, all implemented
+in a cross-platform fashion. See the full module listing in the
+<a class="reference external" href="luv/Luv/index.html#api-reference">API index</a>. For example, one can list all
+environment variables using</p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Env</span><span class="p">.</span><span class="n">environ</span> <span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="o">((</span><span class="kt">string</span> <span class="o">*</span> <span class="kt">string</span><span class="o">)</span> <span class="kt">list</span><span class="o">,</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">t</span><span class="o">)</span> <span class="n">result</span>
+</pre></div>
+</div>
+</section>
+<section id="buffers">
+<h2>Buffers<a class="headerlink" href="#buffers" title="Link to this heading">#</a></h2>
+<p>Luv functions use data buffers of type <a class="reference external" href="luv/Luv/Buffer/index.html#type-t">Luv.Buffer.t</a>. These are ordinary OCaml bigstrings (that is,
+chunks of data managed from OCaml, but stored in the C heap). They are
+compatible with at least the following bigstring libraries:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://caml.inria.fr/pub/docs/manual-ocaml/libref/Bigarray.Array1.html">Bigarray</a> from OCaml’s standard library</p></li>
+<li><p><a class="reference external" href="https://ocsigen.org/lwt/dev/api/Lwt_bytes">Lwt_bytes</a> from Lwt</p></li>
+<li><p><a class="reference external" href="https://github.com/inhabitedtype/bigstringaf">bigstringaf</a></p></li>
+</ul>
+<p>System calls are usually able to work with part of a buffer, by taking a pointer
+to the buffer, an offset into the buffer, and a length of space, starting at the
+offset, to work with. Luv functions instead take only a buffer. To work with
+part of an existing buffer, use <a class="reference external" href="luv/Luv/Buffer/index.html#val-sub">Luv.Buffer.sub</a> to create a view into the buffer, and then pass the
+view to Luv.</p>
+<p>Many libuv (and Luv) functions work with <em>lists</em> of buffers. For example,
+<a class="reference external" href="luv/Luv/File/index.html#val-write">Luv.File.write</a> takes such a list. This simply
+means that libuv will pull data from the buffers consecutively for writing.
+Likewise, <a class="reference external" href="luv/Luv/File/index.html#val-read">Luv.File.read</a> takes a list of
+buffers, which it will consecutively fill. This is known as <em>scatter-gather
+I/O</em>. It could be said that libuv (and Luv) expose an API more similar to
+<a class="reference external" href="http://man7.org/linux/man-pages/man3/readv.3p.html">readv</a> and <a class="reference external" href="http://man7.org/linux/man-pages/man3/writev.3p.html">writev</a> than <a class="reference external" href="http://man7.org/linux/man-pages/man3/read.3p.html">read</a> and <a class="reference external" href="http://man7.org/linux/man-pages/man3/write.3p.html">write</a>.</p>
+<p>Luv has a couple helpers for manipulating lists of buffers:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="luv/Luv/Buffer/index.html#val-total_size">Luv.Buffer.total_size</a> returns the
+total number of bytes across all the buffers in a buffer list.</p></li>
+<li><p><a class="reference external" href="luv/Luv/Buffer/index.html#val-drop">Luv.Buffer.drop</a> returns a new buffer list,
+with the first N bytes removed from its front. This is useful to advance the
+buffer references after a partial read into, or write from, a buffer list,
+before beginning the next read or write.</p></li>
+</ul>
+</section>
+<section id="integer-types">
+<h2>Integer types<a class="headerlink" href="#integer-types" title="Link to this heading">#</a></h2>
+<p>Luv usually represents C integer types with ordinary OCaml integers, such as
+<code class="docutils literal notranslate"><span class="pre">int</span></code>, sometimes <code class="docutils literal notranslate"><span class="pre">int64</span></code>. However, in some APIs, to avoid losing precision,
+it seems important to preserve the full width and signedness of the original C
+type. In such cases, you will encounter types from <a class="reference external" href="https://github.com/ocamllabs/ocaml-integers">ocaml-integers</a>, such as
+<code class="docutils literal notranslate"><span class="pre">Unsigned.Size_t.t</span></code>. You can use module <code class="docutils literal notranslate"><span class="pre">Unsigned.Size_t</span></code> to perform
+operations at that type, or you can choose to convert to an OCaml integer with
+<code class="docutils literal notranslate"><span class="pre">Unsigned.Size_t.to_int</span></code>.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="filesystem.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Filesystem</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="introduction.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Introduction</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2012-2016, Nikhil Marathe, 2014-2020 libuv contributors, 2020-2023 Anton Bachin
+            </div>
+            Made with 
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Basics</a><ul>
+<li><a class="reference internal" href="#event-loops">Event loops</a></li>
+<li><a class="reference internal" href="#hello-world">Hello, world!</a></li>
+<li><a class="reference internal" href="#console-output">Console output</a></li>
+<li><a class="reference internal" href="#error-handling">Error handling</a></li>
+<li><a class="reference internal" href="#handles">Handles</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#requests">Requests</a></li>
+<li><a class="reference internal" href="#everything-else">Everything else</a></li>
+<li><a class="reference internal" href="#buffers">Buffers</a></li>
+<li><a class="reference internal" href="#integer-types">Integer types</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

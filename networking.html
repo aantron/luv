@@ -1,0 +1,567 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="author" title="About these documents" href="about.html" /><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Threads" href="threads.html" /><link rel="prev" title="Filesystem" href="filesystem.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+        <title>Networking - Luv documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Luv  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Luv  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Networking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="threads.html">Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processes.html">Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="networking">
+<h1>Networking<a class="headerlink" href="#networking" title="Link to this heading">#</a></h1>
+<p>The overall flow of network programming in libuv (and Luv) is very similar to
+the BSD socket interface, but all functions take callbacks, and many
+inconveniences are addressed.</p>
+<p>Networking is handled by <a class="reference external" href="luv/Luv/TCP/index.html">Luv.TCP</a>, <a class="reference external" href="luv/Luv/UDP/index.html">Luv.UDP</a>, and <a class="reference external" href="luv/Luv/DNS/index.html">Luv.DNS</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The code examples in this chapter exist to demonstrate certain Luv APIs. They
+are not always robust. For instance, they don’t always close connections
+properly, and they don’t handle all errors gracefully.</p>
+</div>
+<section id="tcp">
+<span id="id1"></span><h2>TCP<a class="headerlink" href="#tcp" title="Link to this heading">#</a></h2>
+<p>TCP is a connection-oriented stream protocol. TCP handles are therefore a kind
+of libuv <em>stream</em>. All this means is that a <a class="reference external" href="luv/Luv/TCP/index.html#type-t">Luv.TCP.t</a> is also a <a class="reference external" href="luv/Luv/Stream/index.html#type-t">Luv.Stream.t</a>, which, in turn, is also a <a class="reference external" href="luv/Luv/Handle/index.html#type-t">Luv.Handle.t</a>. So, functions from all three modules can be used
+with <a class="reference external" href="luv/Luv/TCP/index.html#type-t">Luv.TCP.t</a>. In particular, you will typically
+use…</p>
+<ul class="simple">
+<li><p><a class="reference external" href="luv/Luv/TCP/index.html">Luv.TCP</a> to initialize a TCP socket handle.</p></li>
+<li><p><a class="reference external" href="luv/Luv/Stream/index.html">Luv.Stream</a> to do I/O on the socket.</p></li>
+<li><p><a class="reference external" href="luv/Luv/Handle/index.html#val-close">Luv.Handle.close</a> to close the socket.</p></li>
+</ul>
+<section id="server">
+<h3>Server<a class="headerlink" href="#server" title="Link to this heading">#</a></h3>
+<p>A server socket is typically…</p>
+<ol class="arabic simple">
+<li><p>Created with <a class="reference external" href="luv/Luv/TCP/index.html#val-init">Luv.TCP.init</a>.</p></li>
+<li><p>Assigned an address with <a class="reference external" href="luv/Luv/TCP/index.html#val-bind">Luv.TCP.bind</a>.</p></li>
+<li><p>Made to listen on the assigned address with <a class="reference external" href="luv/Luv/Stream/index.html#val-listen">Luv.Stream.listen</a>. This will call its callback each time there
+is a client connection ready to be accepted.</p></li>
+<li><p>Told to accept a connection with <a class="reference external" href="luv/Luv/Stream/index.html#val-accept">Luv.Stream.accept</a>.</p></li>
+</ol>
+<p>After that, one has an ordinary TCP connection. <a class="reference external" href="luv/Luv/Stream/index.html#val-read_start">Luv.Stream.read_start</a> and <a class="reference external" href="luv/Luv/Stream/index.html#val-write">Luv.Stream.write</a> are used to communicate on it, and
+<a class="reference external" href="luv/Luv/Handle/index.html#val-close">Luv.Handle.close</a> is used to close it.</p>
+<p>Here is a simple echo server that puts all this together:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/tcp_echo_server.ml">tcp_echo_server.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos"> 2</span>  <span class="k">let</span> <span class="n">address</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Sockaddr</span><span class="p">.</span><span class="n">ipv4</span> <span class="s2">&quot;127.0.0.1&quot;</span> <span class="mi">7000</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos"> 3</span>  <span class="k">let</span> <span class="n">server</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">TCP</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 4</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">TCP</span><span class="p">.</span><span class="n">bind</span> <span class="n">server</span> <span class="n">address</span><span class="o">);</span>
+</span><span class="linenos"> 5</span>
+<span class="hll"><span class="linenos"> 6</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">listen</span> <span class="n">server</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos"> 7</span>    <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos"> 8</span>      <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Listen error: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">)</span>
+<span class="linenos"> 9</span>    <span class="o">|</span> <span class="nc">Ok</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+<span class="linenos">10</span>      <span class="k">let</span> <span class="n">client</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">TCP</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos">11</span>
+<span class="hll"><span class="linenos">12</span>      <span class="k">match</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">accept</span> <span class="o">~</span><span class="n">server</span> <span class="o">~</span><span class="n">client</span> <span class="k">with</span>
+</span><span class="linenos">13</span>      <span class="o">|</span> <span class="nc">Error</span> <span class="o">_</span> <span class="o">-&gt;</span>
+<span class="linenos">14</span>        <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">client</span> <span class="n">ignore</span>
+<span class="linenos">15</span>      <span class="o">|</span> <span class="nc">Ok</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+<span class="linenos">16</span>
+<span class="hll"><span class="linenos">17</span>        <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">read_start</span> <span class="n">client</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos">18</span>          <span class="o">|</span> <span class="nc">Error</span> <span class="o">`</span><span class="nc">EOF</span> <span class="o">-&gt;</span>
+<span class="linenos">19</span>            <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">client</span> <span class="n">ignore</span>
+<span class="linenos">20</span>          <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos">21</span>            <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Read error: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">);</span>
+<span class="linenos">22</span>            <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">client</span> <span class="n">ignore</span>
+<span class="linenos">23</span>          <span class="o">|</span> <span class="nc">Ok</span> <span class="n">buffer</span> <span class="o">-&gt;</span>
+<span class="hll"><span class="linenos">24</span>            <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">write</span> <span class="n">client</span> <span class="o">[</span><span class="n">buffer</span><span class="o">]</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">-&gt;</span> <span class="n">ignore</span><span class="o">)</span>
+</span><span class="linenos">25</span>        <span class="k">end</span>
+<span class="linenos">26</span>  <span class="k">end</span><span class="o">;</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The most interesting thing to note is that <a class="reference external" href="luv/Luv/Stream/index.html#val-read_start">Luv.Stream.read_start</a> doesn’t perform only one read, but reads in
+a loop until either <a class="reference external" href="luv/Luv/Stream/index.html#val-read_stop">Luv.Stream.read_stop</a> is called, or the socket is closed.</p>
+</section>
+<section id="client">
+<h3>Client<a class="headerlink" href="#client" title="Link to this heading">#</a></h3>
+<p>Client programming is very straightforward: use <a class="reference external" href="luv/Luv/TCP/index.html#val-connect">Luv.TCP.connect</a> to establish a connection. Then, use
+<a class="reference external" href="luv/Luv/Stream/index.html#val-write">Luv.Stream.write</a> and
+<a class="reference external" href="luv/Luv/Stream/index.html#val-read_start">Luv.Stream.read_start</a> to communicate.</p>
+<p>The example below sends “Hello, world!” to the echo server, waits for the
+response, and prints it:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/tcp_hello_world.ml">tcp_hello_world.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos"> 2</span>  <span class="k">let</span> <span class="n">address</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Sockaddr</span><span class="p">.</span><span class="n">ipv4</span> <span class="s2">&quot;127.0.0.1&quot;</span> <span class="mi">7000</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos"> 3</span>  <span class="k">let</span> <span class="n">client</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">TCP</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos"> 4</span>
+<span class="hll"><span class="linenos"> 5</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">TCP</span><span class="p">.</span><span class="n">connect</span> <span class="n">client</span> <span class="n">address</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos"> 6</span>    <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos"> 7</span>      <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Connect error: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">)</span>
+<span class="linenos"> 8</span>    <span class="o">|</span> <span class="nc">Ok</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+<span class="linenos"> 9</span>      <span class="k">let</span> <span class="n">message</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">from_string</span> <span class="s2">&quot;Hello, world!&quot;</span> <span class="k">in</span>
+<span class="hll"><span class="linenos">10</span>      <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">write</span> <span class="n">client</span> <span class="o">[</span><span class="n">message</span><span class="o">]</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span><span class="n">result</span> <span class="o">_</span><span class="n">bytes_written</span> <span class="o">-&gt;</span>
+</span><span class="hll"><span class="linenos">11</span>        <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">shutdown</span> <span class="n">client</span> <span class="n">ignore</span><span class="o">);</span>
+</span><span class="linenos">12</span>
+<span class="hll"><span class="linenos">13</span>      <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">read_start</span> <span class="n">client</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos">14</span>        <span class="o">|</span> <span class="nc">Error</span> <span class="o">`</span><span class="nc">EOF</span> <span class="o">-&gt;</span>
+<span class="linenos">15</span>          <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">client</span> <span class="n">ignore</span>
+<span class="linenos">16</span>        <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos">17</span>          <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Read error: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">);</span>
+<span class="linenos">18</span>          <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">client</span> <span class="n">ignore</span>
+<span class="linenos">19</span>        <span class="o">|</span> <span class="nc">Ok</span> <span class="n">response</span> <span class="o">-&gt;</span>
+<span class="linenos">20</span>          <span class="n">print_endline</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">to_string</span> <span class="n">response</span><span class="o">)</span>
+<span class="linenos">21</span>      <span class="k">end</span>
+<span class="linenos">22</span>  <span class="k">end</span><span class="o">;</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>You can run the above server and this client together with these commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dune</span> <span class="n">exec</span> <span class="n">example</span><span class="o">/</span><span class="n">tcp_echo_server</span><span class="o">.</span><span class="n">exe</span> <span class="o">&amp;</span>
+<span class="n">dune</span> <span class="n">exec</span> <span class="n">example</span><span class="o">/</span><span class="n">tcp_hello_world</span><span class="o">.</span><span class="n">exe</span>
+<span class="n">killall</span> <span class="n">tcp_echo_server</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+<p>In the <a class="reference internal" href="#dns">DNS</a> section below, we will expand this example to look up a web server
+and perform an HTTP GET request.</p>
+</section>
+</section>
+<section id="udp">
+<h2>UDP<a class="headerlink" href="#udp" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a> is a connectionless protocol. Rather than behaving as a stream, a UDP
+socket allows sending and receiving discrete <em>datagrams</em>. So, in Luv (as in
+libuv), a <a class="reference external" href="luv/Luv/UDP/index.html#type-t">Luv.UDP.t</a> is <em>not</em> a
+<a class="reference external" href="luv/Luv/Stream/index.html#type-t">Luv.Stream.t</a>. It does, however, have similar
+functions <a class="reference external" href="luv/Luv/UDP/index.html#val-send">Luv.UDP.send</a> and
+<a class="reference external" href="luv/Luv/UDP/index.html#val-recv_start">Luv.UDP.recv_start</a>. A <a class="reference external" href="luv/Luv/UDP/index.html#type-t">Luv.UDP.t</a> is still a <a class="reference external" href="luv/Luv/Handle/index.html#type-t">Luv.Handle.t</a>, however, so a UDP socket is closed with
+<a class="reference external" href="luv/Luv/Handle/index.html#val-close">Luv.Handle.close</a>.</p>
+<p>Let’s write UDP versions of the echo server and the “Hello, world!” program:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/udp_echo_server.ml">udp_echo_server.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos"> 2</span>  <span class="k">let</span> <span class="n">address</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Sockaddr</span><span class="p">.</span><span class="n">ipv4</span> <span class="s2">&quot;127.0.0.1&quot;</span> <span class="mi">7000</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos"> 3</span>  <span class="k">let</span> <span class="n">server</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">UDP</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 4</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">UDP</span><span class="p">.</span><span class="n">bind</span> <span class="n">server</span> <span class="n">address</span><span class="o">);</span>
+</span><span class="linenos"> 5</span>
+<span class="hll"><span class="linenos"> 6</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">UDP</span><span class="p">.</span><span class="n">recv_start</span> <span class="n">server</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos"> 7</span>    <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos"> 8</span>      <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Receive error: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">)</span>
+<span class="linenos"> 9</span>    <span class="o">|</span> <span class="nc">Ok</span> <span class="o">(_,</span> <span class="nc">None</span><span class="o">,</span> <span class="o">_)</span> <span class="o">-&gt;</span>
+<span class="linenos">10</span>      <span class="bp">()</span>
+<span class="linenos">11</span>    <span class="o">|</span> <span class="nc">Ok</span> <span class="o">(</span><span class="n">buffer</span><span class="o">,</span> <span class="nc">Some</span> <span class="n">client_address</span><span class="o">,</span> <span class="o">_</span><span class="n">flags</span><span class="o">)</span> <span class="o">-&gt;</span>
+<span class="hll"><span class="linenos">12</span>      <span class="nn">Luv</span><span class="p">.</span><span class="nn">UDP</span><span class="p">.</span><span class="n">send</span> <span class="n">server</span> <span class="o">[</span><span class="n">buffer</span><span class="o">]</span> <span class="n">client_address</span> <span class="n">ignore</span>
+</span><span class="linenos">13</span>  <span class="k">end</span><span class="o">;</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/udp_hello_world.ml">udp_hello_world.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos"> 2</span>  <span class="k">let</span> <span class="n">address</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Sockaddr</span><span class="p">.</span><span class="n">ipv4</span> <span class="s2">&quot;127.0.0.1&quot;</span> <span class="mi">7000</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos"> 3</span>  <span class="k">let</span> <span class="n">client</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">UDP</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>  <span class="k">let</span> <span class="n">message</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">from_string</span> <span class="s2">&quot;Hello, world!&quot;</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 6</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">UDP</span><span class="p">.</span><span class="n">send</span> <span class="n">client</span> <span class="o">[</span><span class="n">message</span><span class="o">]</span> <span class="n">address</span> <span class="n">ignore</span><span class="o">;</span>
+</span><span class="linenos"> 7</span>
+<span class="hll"><span class="linenos"> 8</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">UDP</span><span class="p">.</span><span class="n">recv_start</span> <span class="n">client</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos"> 9</span>    <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos">10</span>      <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Receive error: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">);</span>
+<span class="linenos">11</span>      <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">client</span> <span class="n">ignore</span>
+<span class="linenos">12</span>    <span class="o">|</span> <span class="nc">Ok</span> <span class="o">(</span><span class="n">response</span><span class="o">,</span> <span class="o">_</span><span class="n">server_address</span><span class="o">,</span> <span class="o">_</span><span class="n">flags</span><span class="o">)</span> <span class="o">-&gt;</span>
+<span class="linenos">13</span>      <span class="n">print_endline</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">to_string</span> <span class="n">response</span><span class="o">);</span>
+<span class="linenos">14</span>      <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">client</span> <span class="n">ignore</span>
+<span class="linenos">15</span>  <span class="k">end</span><span class="o">;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>You can run the client and the server together with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dune</span> <span class="n">exec</span> <span class="n">example</span><span class="o">/</span><span class="n">udp_echo_server</span><span class="o">.</span><span class="n">exe</span> <span class="o">&amp;</span>
+<span class="n">dune</span> <span class="n">exec</span> <span class="n">example</span><span class="o">/</span><span class="n">udp_hello_world</span><span class="o">.</span><span class="n">exe</span>
+<span class="n">killall</span> <span class="n">udp_echo_server</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+<p>The two most immediate differences, compared to the TCP functions, are:</p>
+<ol class="arabic simple">
+<li><p>There are no notions of listening or connecting.</p></li>
+<li><p>Since there is no connection, when data is received by
+<a class="reference external" href="luv/Luv/UDP/index.html#val-recv_start">Luv.UDP.recv_start</a>, the sending peer’s
+address is provided to the callback together with the data.</p></li>
+</ol>
+<p>Apart from ordinary peer-to-peer communication, UDP supports multicast. See
+<a class="reference external" href="luv/Luv/UDP/index.html">Luv.UDP</a> for multicast and other helper functions.</p>
+</section>
+<section id="querying-dns">
+<span id="dns"></span><h2>Querying DNS<a class="headerlink" href="#querying-dns" title="Link to this heading">#</a></h2>
+<p>libuv provides asynchronous DNS resolution with <a class="reference external" href="luv/Luv/DNS/index.html#val-getaddrinfo">Luv.DNS.getaddrinfo</a>. Let’s implement a clone of the <code class="docutils literal notranslate"><span class="pre">host</span></code>
+command:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/host.ml">host.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos"> 2</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">DNS</span><span class="p">.</span><span class="n">getaddrinfo</span> <span class="o">~</span><span class="n">family</span><span class="o">:`</span><span class="nc">INET</span> <span class="o">~</span><span class="n">node</span><span class="o">:</span><span class="nn">Sys</span><span class="p">.</span><span class="n">argv</span><span class="o">.(</span><span class="mi">1</span><span class="o">)</span> <span class="bp">()</span> <span class="k">begin</span> <span class="k">function</span>
+<span class="linenos"> 3</span>    <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos"> 4</span>      <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Cannot resolve host: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">)</span>
+<span class="linenos"> 5</span>    <span class="o">|</span> <span class="nc">Ok</span> <span class="n">addr_infos</span> <span class="o">-&gt;</span>
+<span class="linenos"> 6</span>      <span class="n">print_endline</span>
+<span class="linenos"> 7</span>        <span class="o">(</span><span class="nn">Option</span><span class="p">.</span><span class="n">get</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Sockaddr</span><span class="p">.</span><span class="n">to_string</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">hd</span> <span class="n">addr_infos</span><span class="o">).</span><span class="n">addr</span><span class="o">))</span>
+<span class="linenos"> 8</span>  <span class="k">end</span><span class="o">;</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="luv/Luv/DNS/index.html#val-getaddrinfo">Luv.DNS.getaddrinfo</a> has a large number
+of optional arguments for fine-tuning the lookup. These correspond to the fields
+and flags documented at <a class="reference external" href="http://man7.org/linux/man-pages/man3/getaddrinfo.3p.html">getaddrinfo(3p)</a>.</p>
+<p>libuv also provides reverse lookup, which is exposed as
+<a class="reference external" href="luv/Luv/DNS/index.html#val-getnameinfo">Luv.DNS.getnameinfo</a>.</p>
+</section>
+<section id="example-http-get">
+<h2>Example: HTTP GET<a class="headerlink" href="#example-http-get" title="Link to this heading">#</a></h2>
+<p>We can use <a class="reference external" href="luv/Luv/TCP/index.html">Luv.TCP</a> and <a class="reference external" href="luv/Luv/DNS/index.html">Luv.DNS</a>
+to run fairly complete HTTP GET requests:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/http_get.ml">http_get.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos"> 2</span>  <span class="k">let</span> <span class="n">host</span> <span class="o">=</span> <span class="nn">Sys</span><span class="p">.</span><span class="n">argv</span><span class="o">.(</span><span class="mi">1</span><span class="o">)</span> <span class="k">in</span>
+<span class="linenos"> 3</span>  <span class="k">let</span> <span class="n">path</span> <span class="o">=</span> <span class="nn">Sys</span><span class="p">.</span><span class="n">argv</span><span class="o">.(</span><span class="mi">2</span><span class="o">)</span> <span class="k">in</span>
+<span class="linenos"> 4</span>
+<span class="hll"><span class="linenos"> 5</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">DNS</span><span class="p">.</span><span class="n">getaddrinfo</span> <span class="o">~</span><span class="n">family</span><span class="o">:`</span><span class="nc">INET</span> <span class="o">~</span><span class="n">node</span><span class="o">:</span><span class="n">host</span> <span class="o">~</span><span class="n">service</span><span class="o">:</span><span class="s2">&quot;80&quot;</span> <span class="bp">()</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos"> 6</span>    <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos"> 7</span>      <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Cannot resolve host: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">)</span>
+<span class="linenos"> 8</span>    <span class="o">|</span> <span class="nc">Ok</span> <span class="n">addr_infos</span> <span class="o">-&gt;</span>
+<span class="linenos"> 9</span>      <span class="k">let</span> <span class="n">address</span> <span class="o">=</span> <span class="o">(</span><span class="nn">List</span><span class="p">.</span><span class="n">hd</span> <span class="n">addr_infos</span><span class="o">).</span><span class="n">addr</span> <span class="k">in</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>      <span class="k">let</span> <span class="n">socket</span> <span class="o">=</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">TCP</span><span class="p">.</span><span class="n">init</span> <span class="bp">()</span> <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span> <span class="k">in</span>
+<span class="hll"><span class="linenos">12</span>      <span class="nn">Luv</span><span class="p">.</span><span class="nn">TCP</span><span class="p">.</span><span class="n">connect</span> <span class="n">socket</span> <span class="n">address</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos">13</span>        <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos">14</span>          <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Cannot connect: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">)</span>
+<span class="linenos">15</span>        <span class="o">|</span> <span class="nc">Ok</span> <span class="bp">()</span> <span class="o">-&gt;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>          <span class="k">let</span> <span class="n">request</span> <span class="o">=</span>
+<span class="linenos">18</span>            <span class="nn">Printf</span><span class="p">.</span><span class="n">ksprintf</span>
+<span class="hll"><span class="linenos">19</span>              <span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">from_string</span> <span class="s2">&quot;GET %s HTTP/1.1</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span> <span class="n">path</span>
+</span><span class="linenos">20</span>          <span class="k">in</span>
+<span class="hll"><span class="linenos">21</span>          <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">write</span> <span class="n">socket</span> <span class="o">[</span><span class="n">request</span><span class="o">]</span> <span class="o">(</span><span class="k">fun</span> <span class="o">_</span> <span class="o">_</span> <span class="o">-&gt;</span>
+</span><span class="hll"><span class="linenos">22</span>            <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">shutdown</span> <span class="n">socket</span> <span class="n">ignore</span><span class="o">);</span>
+</span><span class="linenos">23</span>
+<span class="hll"><span class="linenos">24</span>          <span class="nn">Luv</span><span class="p">.</span><span class="nn">Stream</span><span class="p">.</span><span class="n">read_start</span> <span class="n">socket</span> <span class="k">begin</span> <span class="k">function</span>
+</span><span class="linenos">25</span>            <span class="o">|</span> <span class="nc">Error</span> <span class="o">`</span><span class="nc">EOF</span> <span class="o">-&gt;</span>
+<span class="linenos">26</span>              <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">socket</span> <span class="n">ignore</span>
+<span class="linenos">27</span>            <span class="o">|</span> <span class="nc">Error</span> <span class="n">e</span> <span class="o">-&gt;</span>
+<span class="linenos">28</span>              <span class="nn">Printf</span><span class="p">.</span><span class="n">eprintf</span> <span class="s2">&quot;Read error: %s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Error</span><span class="p">.</span><span class="n">strerror</span> <span class="n">e</span><span class="o">);</span>
+<span class="linenos">29</span>              <span class="nn">Luv</span><span class="p">.</span><span class="nn">Handle</span><span class="p">.</span><span class="n">close</span> <span class="n">socket</span> <span class="n">ignore</span>
+<span class="linenos">30</span>            <span class="o">|</span> <span class="nc">Ok</span> <span class="n">response</span> <span class="o">-&gt;</span>
+<span class="hll"><span class="linenos">31</span>              <span class="n">print_endline</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Buffer</span><span class="p">.</span><span class="n">to_string</span> <span class="n">response</span><span class="o">)</span>
+</span><span class="linenos">32</span>          <span class="k">end</span>
+<span class="linenos">33</span>      <span class="k">end</span>
+<span class="linenos">34</span>  <span class="k">end</span><span class="o">;</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>  <span class="n">ignore</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Loop</span><span class="p">.</span><span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="kt">bool</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>You can try this in the Luv repo with the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dune</span> <span class="n">exec</span> <span class="n">example</span><span class="o">/</span><span class="n">http_get</span><span class="o">.</span><span class="n">exe</span> <span class="o">--</span> <span class="n">google</span><span class="o">.</span><span class="n">com</span> <span class="o">/</span>
+</pre></div>
+</div>
+</section>
+<section id="network-interfaces">
+<h2>Network interfaces<a class="headerlink" href="#network-interfaces" title="Link to this heading">#</a></h2>
+<p>Information about the system’s network interfaces can be obtained by calling
+<a class="reference external" href="luv/Luv/Network/index.html#val-interface_addresses">Luv.Network.interface_addresses</a>. This simple program prints out
+all the interface details made available by libuv:</p>
+<p class="rubric"><a class="reference external" href="https://github.com/aantron/luv/blob/master/example/ifconfig.ml">ifconfig.ml</a></p>
+<div class="highlight-ocaml notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">let</span> <span class="bp">()</span> <span class="o">=</span>
+<span class="linenos"> 2</span>  <span class="nn">Luv</span><span class="p">.</span><span class="nn">Network</span><span class="p">.</span><span class="n">interface_addresses</span> <span class="bp">()</span>
+<span class="linenos"> 3</span>  <span class="o">|&gt;</span> <span class="nn">Result</span><span class="p">.</span><span class="n">get_ok</span>
+<span class="linenos"> 4</span>  <span class="o">|&gt;</span> <span class="nn">List</span><span class="p">.</span><span class="n">iter</span> <span class="k">begin</span> <span class="k">fun</span> <span class="n">interface</span> <span class="o">-&gt;</span>
+<span class="linenos"> 5</span>    <span class="k">let</span> <span class="k">open</span> <span class="nn">Luv</span><span class="p">.</span><span class="nn">Network</span><span class="p">.</span><span class="nc">Interface_address</span> <span class="k">in</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="n">print_endline</span> <span class="n">interface</span><span class="o">.</span><span class="n">name</span><span class="o">;</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>    <span class="k">if</span> <span class="n">interface</span><span class="o">.</span><span class="n">is_internal</span> <span class="k">then</span>
+<span class="linenos">10</span>      <span class="n">print_endline</span> <span class="s2">&quot; Internal&quot;</span><span class="o">;</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>    <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot; Physical: %02x:%02x:%02x:%02x:%02x:%02x</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="linenos">13</span>      <span class="o">(</span><span class="nn">Char</span><span class="p">.</span><span class="n">code</span> <span class="n">interface</span><span class="o">.</span><span class="n">physical</span><span class="o">.[</span><span class="mi">0</span><span class="o">])</span>
+<span class="linenos">14</span>      <span class="o">(</span><span class="nn">Char</span><span class="p">.</span><span class="n">code</span> <span class="n">interface</span><span class="o">.</span><span class="n">physical</span><span class="o">.[</span><span class="mi">1</span><span class="o">])</span>
+<span class="linenos">15</span>      <span class="o">(</span><span class="nn">Char</span><span class="p">.</span><span class="n">code</span> <span class="n">interface</span><span class="o">.</span><span class="n">physical</span><span class="o">.[</span><span class="mi">2</span><span class="o">])</span>
+<span class="linenos">16</span>      <span class="o">(</span><span class="nn">Char</span><span class="p">.</span><span class="n">code</span> <span class="n">interface</span><span class="o">.</span><span class="n">physical</span><span class="o">.[</span><span class="mi">3</span><span class="o">])</span>
+<span class="linenos">17</span>      <span class="o">(</span><span class="nn">Char</span><span class="p">.</span><span class="n">code</span> <span class="n">interface</span><span class="o">.</span><span class="n">physical</span><span class="o">.[</span><span class="mi">4</span><span class="o">])</span>
+<span class="linenos">18</span>      <span class="o">(</span><span class="nn">Char</span><span class="p">.</span><span class="n">code</span> <span class="n">interface</span><span class="o">.</span><span class="n">physical</span><span class="o">.[</span><span class="mi">5</span><span class="o">]);</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>    <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot; Address:  %s</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="linenos">21</span>      <span class="o">(</span><span class="nn">Option</span><span class="p">.</span><span class="n">get</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Sockaddr</span><span class="p">.</span><span class="n">to_string</span> <span class="n">interface</span><span class="o">.</span><span class="n">address</span><span class="o">));</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span>    <span class="nn">Printf</span><span class="p">.</span><span class="n">printf</span> <span class="s2">&quot; Netmask:  %s</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="linenos">24</span>      <span class="o">(</span><span class="nn">Option</span><span class="p">.</span><span class="n">get</span> <span class="o">(</span><span class="nn">Luv</span><span class="p">.</span><span class="nn">Sockaddr</span><span class="p">.</span><span class="n">to_string</span> <span class="n">interface</span><span class="o">.</span><span class="n">netmask</span><span class="o">))</span>
+<span class="linenos">25</span>  <span class="k">end</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">is_internal</span></code> is true for loopback interfaces. Note that if an interface has
+multiple addresses (for example, an IPv4 address and an IPv6 address), the
+interface will be reported multiple times, once with each address.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="threads.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Threads</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="filesystem.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Filesystem</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2012-2016, Nikhil Marathe, 2014-2020 libuv contributors, 2020-2023 Anton Bachin
+            </div>
+            Made with 
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Networking</a><ul>
+<li><a class="reference internal" href="#tcp">TCP</a><ul>
+<li><a class="reference internal" href="#server">Server</a></li>
+<li><a class="reference internal" href="#client">Client</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#udp">UDP</a></li>
+<li><a class="reference internal" href="#querying-dns">Querying DNS</a></li>
+<li><a class="reference internal" href="#example-http-get">Example: HTTP GET</a></li>
+<li><a class="reference internal" href="#network-interfaces">Network interfaces</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

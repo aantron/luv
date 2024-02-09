@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Stream (luv.Luv_c_function_descriptions.Descriptions.Stream)</title><meta charset="utf-8"/><link rel="stylesheet" href="../../../../odoc.support/odoc.css"/><meta name="generator" content="odoc 2.4.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../../../../odoc.support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="../index.html">Up</a> – <a href="../../../index.html">luv</a> &#x00BB; <a href="../../index.html">Luv_c_function_descriptions</a> &#x00BB; <a href="../index.html">Descriptions</a> &#x00BB; Stream</nav><header class="odoc-preamble"><h1>Module <code><span>Descriptions.Stream</span></code></h1></header><div class="odoc-content"><div class="odoc-spec"><div class="spec module anchored" id="module-Connect_request"><a href="#module-Connect_request" class="anchor"></a><code><span><span class="keyword">module</span> <a href="Connect_request/index.html">Connect_request</a></span><span> : <span class="keyword">sig</span> ... <span class="keyword">end</span></span></code></div></div><div class="odoc-spec"><div class="spec module anchored" id="module-Shutdown_request"><a href="#module-Shutdown_request" class="anchor"></a><code><span><span class="keyword">module</span> <a href="Shutdown_request/index.html">Shutdown_request</a></span><span> : <span class="keyword">sig</span> ... <span class="keyword">end</span></span></code></div></div><div class="odoc-spec"><div class="spec module anchored" id="module-Write_request"><a href="#module-Write_request" class="anchor"></a><code><span><span class="keyword">module</span> <a href="Write_request/index.html">Write_request</a></span><span> : <span class="keyword">sig</span> ... <span class="keyword">end</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-t"><a href="#val-t" class="anchor"></a><code><span><span class="keyword">val</span> t : <span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <a href="../../../Luv_c_generated_types/index.html#type-typ">Luv_c_generated_types.typ</a></span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-connection_trampoline"><a href="#val-connection_trampoline" class="anchor"></a><code><span><span class="keyword">val</span> connection_trampoline : 
+  <span><span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    unit)</span>
+    <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span>
+    <span class="xref-unresolved">Ctypes</span>.typ</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-read_trampoline"><a href="#val-read_trampoline" class="anchor"></a><code><span><span class="keyword">val</span> read_trampoline : 
+  <span><span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">PosixTypes</span>.ssize_t <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    unit)</span>
+    <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span>
+    <span class="xref-unresolved">Ctypes</span>.typ</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_connection_trampoline"><a href="#val-get_connection_trampoline" class="anchor"></a><code><span><span class="keyword">val</span> get_connection_trampoline : 
+  <span><span>(<span>unit <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      <span>int <span class="arrow">&#45;&gt;</span></span>
+      unit)</span>
+      <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span>
+      <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_read_trampoline"><a href="#val-get_read_trampoline" class="anchor"></a><code><span><span class="keyword">val</span> get_read_trampoline : 
+  <span><span>(<span>unit <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      <span><span class="xref-unresolved">PosixTypes</span>.ssize_t <span class="arrow">&#45;&gt;</span></span>
+      <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      unit)</span>
+      <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span>
+      <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-shutdown"><a href="#val-shutdown" class="anchor"></a><code><span><span class="keyword">val</span> shutdown : 
+  <span><span>(<span><span><span><span>[ `Shutdown ]</span> <a href="../../../Luv_c_types/Request/index.html#type-t">Luv_c_types.Request.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span>(<span><span><span><span>[ `Shutdown ]</span> <a href="../../../Luv_c_types/Request/index.html#type-t">Luv_c_types.Request.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      <span>int <span class="arrow">&#45;&gt;</span></span>
+      unit)</span>
+      <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-listen"><a href="#val-listen" class="anchor"></a><code><span><span class="keyword">val</span> listen : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      <span>int <span class="arrow">&#45;&gt;</span></span>
+      unit)</span>
+      <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-accept"><a href="#val-accept" class="anchor"></a><code><span><span class="keyword">val</span> accept : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-read_start"><a href="#val-read_start" class="anchor"></a><code><span><span class="keyword">val</span> read_start : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Handle/index.html#type-t">Types.Handle.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      <span><span class="xref-unresolved">Unsigned</span>.size_t <span class="arrow">&#45;&gt;</span></span>
+      <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      unit)</span>
+      <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      <span><span class="xref-unresolved">PosixTypes</span>.ssize_t <span class="arrow">&#45;&gt;</span></span>
+      <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      unit)</span>
+      <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-read_stop"><a href="#val-read_stop" class="anchor"></a><code><span><span class="keyword">val</span> read_stop : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span> <span>int <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-write2"><a href="#val-write2" class="anchor"></a><code><span><span class="keyword">val</span> write2 : 
+  <span><span>(<span><span><span><span>[ `Write ]</span> <a href="../../../Luv_c_types/Request/index.html#type-t">Luv_c_types.Request.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">Unsigned</span>.uint <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span>(<span><span><span><span>[ `Write ]</span> <a href="../../../Luv_c_types/Request/index.html#type-t">Luv_c_types.Request.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+      <span>int <span class="arrow">&#45;&gt;</span></span>
+      unit)</span>
+      <span class="xref-unresolved">Ctypes_static</span>.static_funptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-try_write"><a href="#val-try_write" class="anchor"></a><code><span><span class="keyword">val</span> try_write : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">Unsigned</span>.uint <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-try_write2"><a href="#val-try_write2" class="anchor"></a><code><span><span class="keyword">val</span> try_write2 : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span><a href="../../../Luv_c_types/Buf/index.html#type-t">Types.Buf.t</a> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">Unsigned</span>.uint <span class="arrow">&#45;&gt;</span></span>
+    <span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span>int <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-is_readable"><a href="#val-is_readable" class="anchor"></a><code><span><span class="keyword">val</span> is_readable : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span> <span>bool <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-is_writable"><a href="#val-is_writable" class="anchor"></a><code><span><span class="keyword">val</span> is_writable : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span> <span>bool <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-set_blocking"><a href="#val-set_blocking" class="anchor"></a><code><span><span class="keyword">val</span> set_blocking : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span> <span>bool <span class="arrow">&#45;&gt;</span></span> <span>int <span class="xref-unresolved">F</span>.return</span>)</span> <span class="xref-unresolved">F</span>.result</span></span></code></div></div><div class="odoc-spec"><div class="spec value anchored" id="val-get_write_queue_size"><a href="#val-get_write_queue_size" class="anchor"></a><code><span><span class="keyword">val</span> get_write_queue_size : 
+  <span><span>(<span><span><span><span>[ `Base ]</span> <a href="../../../Luv_c_types/Stream/index.html#type-t">Types.Stream.t</a></span> <span class="xref-unresolved">Ctypes_static</span>.ptr</span> <span class="arrow">&#45;&gt;</span></span>
+    <span><span class="xref-unresolved">Unsigned</span>.size_t <span class="xref-unresolved">F</span>.return</span>)</span>
+    <span class="xref-unresolved">F</span>.result</span></span></code></div></div></div></body></html>
