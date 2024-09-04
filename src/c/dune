@@ -135,12 +135,12 @@ let () = Jbuild_plugin.V1.send @@ {|
   if [ '%{ocaml-config:ccomp_type}' = 'msvc' ]; then \
     %{cc} %{c} \
     -I '%{lib:ctypes:.}' \
-    -I %{ocaml_where} \
+    -I '%{ocaml_where}' \
     |}^ i_option ^{| /Fe\"%{targets}\"; \
   else \
     %{cc} %{c} \
     -I '%{lib:ctypes:.}' \
-    -I %{ocaml_where} \
+    -I '%{ocaml_where}' \
     |}^ i_option ^{| -o %{targets}; \
   fi")))
 
