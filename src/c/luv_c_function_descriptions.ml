@@ -1353,7 +1353,7 @@ struct
           (void @-> returning trampoline)
 
       let getnameinfo =
-        foreign "luv_getnameinfo"
+        foreign "uv_getnameinfo"
           (ptr Loop.t @->
            ptr t @->
            trampoline @->

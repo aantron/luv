@@ -181,7 +181,8 @@ static void luv_getaddrinfo_trampoline(
 }
 
 static void luv_getnameinfo_trampoline(
-    uv_getnameinfo_t *c_request, int status, char *hostname, char *service)
+    uv_getnameinfo_t *c_request, int status, const char *hostname,
+    const char *service)
 {
     caml_acquire_runtime_system();
     value callback;
@@ -413,7 +414,7 @@ uv_getaddrinfo_cb luv_get_getaddrinfo_trampoline(void)
     return luv_getaddrinfo_trampoline;
 }
 
-luv_getnameinfo_cb luv_get_getnameinfo_trampoline(void)
+uv_getnameinfo_cb luv_get_getnameinfo_trampoline(void)
 {
     return luv_getnameinfo_trampoline;
 }
@@ -617,15 +618,6 @@ int luv_fs_poll_start(
     unsigned int interval)
 {
     return uv_fs_poll_start(handle, (uv_fs_poll_cb)poll_cb, path, interval);
-}
-
-int luv_getnameinfo(
-    uv_loop_t *loop, uv_getnameinfo_t *req, luv_getnameinfo_cb getnameinfo_cb,
-    const struct sockaddr *addr, int flags)
-{
-    return
-        uv_getnameinfo(
-            loop, req, (uv_getnameinfo_cb)getnameinfo_cb, addr, flags);
 }
 
 int luv_read_start(
