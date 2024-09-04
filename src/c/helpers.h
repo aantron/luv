@@ -55,9 +55,6 @@ typedef void (*luv_fs_event_cb)(
 typedef void (*luv_fs_poll_cb)(
     uv_fs_poll_t *handle, int status, uv_stat_t *prev, uv_stat_t *curr);
 
-typedef void (*luv_getnameinfo_cb)(
-    uv_getnameinfo_t *req, int status, char *hostname, char *service);
-
 typedef void (*luv_read_cb)(uv_stream_t *stream, ssize_t nread, uv_buf_t *buf);
 
 typedef void (*luv_udp_recv_cb)(
@@ -78,7 +75,7 @@ uv_fs_cb luv_null_fs_callback_pointer(void);
 luv_fs_event_cb luv_get_fs_event_trampoline(void);
 luv_fs_poll_cb luv_get_fs_poll_trampoline(void);
 uv_getaddrinfo_cb luv_get_getaddrinfo_trampoline(void);
-luv_getnameinfo_cb luv_get_getnameinfo_trampoline(void);
+uv_getnameinfo_cb luv_get_getnameinfo_trampoline(void);
 uv_idle_cb luv_get_idle_trampoline(void);
 luv_once_cb luv_get_once_trampoline(void);
 uv_poll_cb luv_get_poll_trampoline(void);
@@ -172,10 +169,6 @@ int luv_fs_event_start(
 int luv_fs_poll_start(
     uv_fs_poll_t *handle, luv_fs_poll_cb poll_cb, const char *path,
     unsigned int interval);
-
-int luv_getnameinfo(
-    uv_loop_t *loop, uv_getnameinfo_t *req, luv_getnameinfo_cb getnameinfo_cb,
-    const struct sockaddr *addr, int flags);
 
 int luv_read_start(
     uv_stream_t *stream, uv_alloc_cb alloc_cb, luv_read_cb read_cb);
