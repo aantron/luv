@@ -249,7 +249,7 @@ release : check-ejected-build clean
 	cd test/headers && dune exec ./headers.exe --root .
 	opam remove -y luv
 	opam pin remove -y luv
-	md5sum $(RELEASE).tar.gz
+	sha256sum $(RELEASE).tar.gz
 	ls -l $(RELEASE).tar.gz
 
 .PHONY : clean
