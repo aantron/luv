@@ -15,7 +15,7 @@ jobs:
           - os: macos-latest
             ocaml: 4
           - os: windows-latest
-            ocaml: 4
+            ocaml: 5
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
