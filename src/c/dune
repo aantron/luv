@@ -13,7 +13,11 @@ let foreign_archives, uv_library_flag, include_dirs, i_option, install_h =
     match Sys.getenv "LUV_USE_SYSTEM_LIBUV" with
     | "yes" -> true
     | _ -> false
-    | exception Not_found -> false
+    | exception Not_found ->
+      match Sys.getenv "LUV_USE_SYSTEM_LIBUV_DEFAULT" with
+      | "yes" -> true
+      | _ -> false
+      | exception Not_found -> false
   in
 
   if use_system_libuv then
