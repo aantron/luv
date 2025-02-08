@@ -15,6 +15,7 @@ depends: [
   "base-unix"
   "ctypes" {>= "0.14.0"}  # Ctypes.CArray.of_string.
   "dune" {>= "2.0.0"}
+  "dune-configurator"
   "luv" {>= "0.5.8"}  # uv.h.
   "ocaml" {>= "4.03.0"}
 ]

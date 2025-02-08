@@ -43,7 +43,7 @@ let () = Jbuild_plugin.V1.send @@ {|
   (names c_generated_functions helpers)
   |}^ include_dirs ^{|)
  |}^ foreign_archives ^{|
- (c_library_flags |}^ uv_library_flag ^{| (:include extra_libs.sexp)))
+ (c_library_flags |}^ uv_library_flag ^{| (:include ../../config/extra_libs.sexp)))
 
 |}^ (if not install_h then "" else {|
 
@@ -96,15 +96,6 @@ let () = Jbuild_plugin.V1.send @@ {|
     cp vendor/libuv/libuv.1.dylib dlluv.so || \
     cp vendor/bin/libuv-1.dll dlluv.dll")))))
 
-(rule
- (targets extra_libs.sexp)
- (action (ignore-outputs (bash "\
-   if ocamlc -config | grep mingw; then \
-     echo '(-ldbghelp -liphlpapi -lole32 -lpsapi -luserenv)' > extra_libs.sexp; \
-   else \
-     echo '()' > extra_libs.sexp; \
-   fi"))))
-
 
 
 ; Everything below is the bindings generation process using ctypes. It produces
@@ -131,18 +122,12 @@ let () = Jbuild_plugin.V1.send @@ {|
 (rule
  (targets generate_types_step_2.exe)
  (deps (:c generate_types_step_2.c) helpers.h shims.h)
- (action (bash "\
-  if [ '%{ocaml-config:ccomp_type}' = 'msvc' ]; then \
-    %{cc} %{c} \
-    -I '%{lib:ctypes:.}' \
-    -I '%{ocaml_where}' \
-    |}^ i_option ^{| /Fe\"%{targets}\"; \
-  else \
-    %{cc} %{c} \
-    -I '%{lib:ctypes:.}' \
-    -I '%{ocaml_where}' \
-    |}^ i_option ^{| -o %{targets}; \
-  fi")))
+ (action (run
+    %{cc} %{c}
+    -I "%{lib:ctypes:.}"
+    -I "%{ocaml_where}"
+    |}^ i_option ^{| %{read-lines:../../config/compiler_output_flag} %{targets}
+  )))
 
 (rule
  (with-stdout-to luv_c_generated_types.ml

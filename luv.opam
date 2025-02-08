@@ -15,6 +15,7 @@ depends: [
   "base-unix" {build}
   "ctypes" {>= "0.14.0"}
   "dune" {>= "2.7.0"}
+  "dune-configurator"
   "integers" {>= "0.3.0"}
   "ocaml" {>= "4.03.0"}
 
