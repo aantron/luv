@@ -5,17 +5,23 @@ jobs:
   opam:
     strategy:
       matrix:
-        os:
-          - ubuntu-latest
-        ocaml:
-          - 5
-          - 4
-          - 4.03.x
         include:
+          - os: ubuntu-latest
+            ocaml: 5
+          - os: ubuntu-latest
+            ocaml: 4
+          - os: ubuntu-latest
+            ocaml: 4.11.0
           - os: macos-latest
             ocaml: 4
           - os: windows-latest
             ocaml: 4
+          - os: ubuntu-24.04
+            ocaml: ocaml-variants.5.5.1+options,ocaml-option-static
+            static: true
+          - os: ubuntu-24.04-arm
+            ocaml: ocaml-variants.5.5.1+options,ocaml-option-static
+            static: true
       fail-fast: false
     runs-on: ${{ matrix.os }}
 
@@ -29,7 +35,19 @@ jobs:
           ocaml-compiler: ${{ matrix.ocaml }}
 
       - run: opam install -y --deps-only .
-      - run: opam exec -- dune build -p luv
+
+      - if: ${{ !matrix.static }}
+        run: opam exec -- dune build -p luv
+
+      - name: Test a luv user linking luv into a static executable
+        if: ${{ matrix.static }}
+        run: |
+          opam pin add --yes --no-action --kind=path luv.dev .
+          opam install --yes luv ocamlfind
+          opam exec -- ocamlfind ocamlopt -thread -package luv -linkpkg \
+            -ccopt -static -o hello_world example/hello_world.ml
+          file hello_world | grep 'statically linked'
+          ./hello_world
 
   old-libuv:
     strategy:
