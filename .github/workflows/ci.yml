@@ -35,12 +35,14 @@ jobs:
           ocaml-compiler: ${{ matrix.ocaml }}
 
       - run: opam install -y --deps-only .
-      - run: opam exec -- dune build -p luv
-        if: ${{ !matrix.static }}
-      - name: Link and run a static executable
-        if: matrix.static
+
+      - if: ${{ !matrix.static }}
+        run: opam exec -- dune build -p luv
+
+      - name: Test a luv user linking luv into a static executable
+        if: ${{ matrix.static }}
         run: |
-          opam pin add --yes --no-action --kind=path luv.0.5.14 .
+          opam pin add --yes --no-action --kind=path luv.dev .
           opam install --yes luv ocamlfind
           opam exec -- ocamlfind ocamlopt -thread -package luv -linkpkg \
             -ccopt -static -o hello_world example/hello_world.ml
